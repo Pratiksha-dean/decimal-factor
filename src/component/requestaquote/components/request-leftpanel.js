@@ -79,19 +79,13 @@ function RequestLeftPanel({ step, setStep }) {
 
       <ul id="progressbar">
         {stepsList.map((item, i) => {
-          console.log(
-            'direction === "forward" && step > i ',
-            direction,
-            step,
-            i
-          );
           return (
             <li
               className={direction === "forward" && step > i ? "active" : ""}
-              onClick={() => {
-                setStepNo(item.value);
-                setStep(item.value);
-              }}
+              // onClick={() => {
+              //   setStepNo(item.value);
+              //   setStep(item.value);
+              // }}
               key={i}
             >
               <span>

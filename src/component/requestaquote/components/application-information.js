@@ -7,6 +7,7 @@ import axios from "axios";
 import clsx from "clsx";
 import * as Yup from "yup";
 import { setStepNo } from "./request-leftpanel";
+import { setBusinessInfo } from "./business-information";
 
 export const fieldNames = {
   AMOUNT: "amount",
@@ -321,7 +322,12 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   getOptionValue={(e) => e}
                   loadOptions={loadOptions}
                   onChange={(selectedOption) => {
+                    console.log(
+                      "🚀 ~ file: application-information.js ~ line 325 ~ ApplicationInformation ~ selectedOption",
+                      selectedOption
+                    );
                     setFieldValue(fieldNames.BUSINESSNAME, selectedOption);
+                    setBusinessInfo(selectedOption);
                   }}
                   components={{
                     IndicatorSeparator: () => null,

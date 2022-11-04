@@ -4,6 +4,7 @@ import RequestAQuote from "./component/requestaquote/requestaquote"
 import Login from './component/login/loginpage'
 import Authentication from './component/authentication/authentication'
 import ForgotPassword from './component/forgot/forgot-password';
+import Dashboard from './component/dashboard/dashboard';
 
 const RoutePage = () => {
   return (
@@ -13,10 +14,10 @@ const RoutePage = () => {
 <Route path="/login" element={ <Login /> } />
 <Route path="/authantication" element={ <Authentication/> } />
 <Route path="/forgot-password" element={ <ForgotPassword/> } />
-
+<Route path="/dashboard" element={ <Dashboard/> } />
 
 </Routes>
-
+      
   )
 }
 

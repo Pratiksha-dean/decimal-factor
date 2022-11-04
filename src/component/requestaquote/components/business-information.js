@@ -36,15 +36,47 @@ const businessSectorList = [
   { value: "49027", label: "Other" },
 ];
 
+export const setBusinessInfo = (data) => {
+  console.log(
+    "🚀 ~ file: business-information.js ~ line 40 ~ setBusinessInfo ~ data",
+    data
+  );
+  localStorage.setItem("companyInfo", JSON.stringify(data));
+};
+
+export const getBusinessInfo = () => {
+  return JSON.parse(localStorage.getItem("companyInfo"));
+};
+
 function BusinessInformation({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("businessInfo"));
+  const businessInfo = getBusinessInfo();
+  console.log(
+    "🚀 ~ file: business-information.js ~ line 50 ~ BusinessInformation ~ businessInfo",
+    businessInfo
+  );
 
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
     [fieldNames.ISPAYMENTPENDING]: Yup.boolean().required(),
+    [fieldNames.SUPPLIERDUEAMOUNT]: Yup.string().when(
+      fieldNames.ISPAYMENTPENDING,
+      {
+        is: true,
+        then: Yup.string().required(),
+      }
+    ),
+
+    [fieldNames.CARDPAYMENTAMOUNT]: Yup.string().when(
+      fieldNames.ISPAYMENTPROCESSED,
+      {
+        is: true,
+        then: Yup.string().required(),
+      }
+    ),
+
     [fieldNames.ISPAYMENTPROCESSED]: Yup.boolean().required(),
-    [fieldNames.SUPPLIERDUEAMOUNT]: Yup.number().required(),
     [fieldNames.BUSINESSSECTOR]: Yup.string().required(),
   });
   const initialValues = {
@@ -53,6 +85,8 @@ function BusinessInformation({ setStep, showSelectedState }) {
       : "",
     [fieldNames.BUSINESSSTARTDATE]: storedData
       ? storedData[fieldNames.BUSINESSSTARTDATE]
+      : businessInfo["date_of_creation"]
+      ? businessInfo["date_of_creation"]
       : "",
     [fieldNames.ISPAYMENTPENDING]: storedData
       ? storedData[fieldNames.ISPAYMENTPENDING]
@@ -199,33 +233,36 @@ function BusinessInformation({ setStep, showSelectedState }) {
               </div>
             </div>
 
-            <div className="form-group monthly-card-payment">
-              <label>Monthly Card Payments Amount</label>
-              <span className="dollor-col">
-                <i className="fa fa-usd"></i>
-              </span>
-              <input
-                type="number  "
-                placeholder="Monthly Card Payments Amount"
-                name={fieldNames.CARDPAYMENTAMOUNT}
-                className={clsx(
-                  "form-control ",
-                  {
-                    "is-invalid":
-                      touched[fieldNames.CARDPAYMENTAMOUNT] &&
-                      errors[fieldNames.CARDPAYMENTAMOUNT],
-                  },
-                  {
-                    "is-valid":
-                      touched[fieldNames.CARDPAYMENTAMOUNT] &&
-                      !errors[fieldNames.CARDPAYMENTAMOUNT],
-                  }
-                )}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values[fieldNames.CARDPAYMENTAMOUNT]}
-              />
-            </div>
+            {values[fieldNames.ISPAYMENTPROCESSED] && (
+              <div className="form-group monthly-card-payment">
+                <label>Monthly Card Payments Amount</label>
+                <span className="dollor-col">
+                  <i className="fa fa-usd"></i>
+                </span>
+                <input
+                  type="number  "
+                  placeholder="Monthly Card Payments Amount"
+                  name={fieldNames.CARDPAYMENTAMOUNT}
+                  className={clsx(
+                    "form-control ",
+                    {
+                      "is-invalid":
+                        touched[fieldNames.CARDPAYMENTAMOUNT] &&
+                        errors[fieldNames.CARDPAYMENTAMOUNT],
+                    },
+                    {
+                      "is-valid":
+                        touched[fieldNames.CARDPAYMENTAMOUNT] &&
+                        !errors[fieldNames.CARDPAYMENTAMOUNT],
+                    }
+                  )}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values[fieldNames.CARDPAYMENTAMOUNT]}
+                />
+              </div>
+            )}
+
             <div className="form-group card-payment">
               <label>Any pending supplier payments due to you?</label>
               <div className="form-check form-switch">
@@ -257,34 +294,38 @@ function BusinessInformation({ setStep, showSelectedState }) {
                 </div>
               </div>
             </div>
-            <div className="form-group Term-found">
-              <label>Approx Amount due to you from supplier</label>
-              <span className="dollor-col">
-                <i className="fa fa-usd"></i>
-              </span>
-              <input
-                type="number"
-                placeholder="Approx Amount due to you from supplier"
-                name={fieldNames.SUPPLIERDUEAMOUNT}
-                className={clsx(
-                  "form-control ",
-                  {
-                    "is-invalid":
-                      touched[fieldNames.SUPPLIERDUEAMOUNT] &&
-                      errors[fieldNames.SUPPLIERDUEAMOUNT],
-                  },
-                  {
-                    "is-valid":
-                      touched[fieldNames.SUPPLIERDUEAMOUNT] &&
-                      !errors[fieldNames.SUPPLIERDUEAMOUNT],
-                  }
-                )}
-                min="0"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values[fieldNames.SUPPLIERDUEAMOUNT]}
-              />
-            </div>
+
+            {values[fieldNames.ISPAYMENTPENDING] && (
+              <div className="form-group Term-found">
+                <label>Approx Amount due to you from supplier</label>
+                <span className="dollor-col">
+                  <i className="fa fa-usd"></i>
+                </span>
+                <input
+                  type="number"
+                  placeholder="Approx Amount due to you from supplier"
+                  name={fieldNames.SUPPLIERDUEAMOUNT}
+                  className={clsx(
+                    "form-control ",
+                    {
+                      "is-invalid":
+                        touched[fieldNames.SUPPLIERDUEAMOUNT] &&
+                        errors[fieldNames.SUPPLIERDUEAMOUNT],
+                    },
+                    {
+                      "is-valid":
+                        touched[fieldNames.SUPPLIERDUEAMOUNT] &&
+                        !errors[fieldNames.SUPPLIERDUEAMOUNT],
+                    }
+                  )}
+                  min="0"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values[fieldNames.SUPPLIERDUEAMOUNT]}
+                />
+              </div>
+            )}
+
             <button
               className="btn btn-primary back-btn"
               onClick={() => goBack()}

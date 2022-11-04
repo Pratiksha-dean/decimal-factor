@@ -1,3 +1,5 @@
+
+body{font-size: 14px; font-family: "Montserrat";}
 .left-panel{width: 100%; background: url(../images/left_panel_bg.png); background-repeat: no-repeat; background-size:100% 100%;
 margin: 12px 0; padding: 0 0 30px 0; }
 .logo-request{width: 100px;}
@@ -169,7 +171,7 @@ button.btn.btn-primary.next-btn:hover{ background: #06415d;}
 .loginnow-btn a{text-decoration: underline;}
 
 .copyright {
-    width: 100%;
+    width: auto;
     float: left;
     text-align: right;
     position: absolute;
@@ -217,22 +219,21 @@ button.btn.btn-primary.back-btn {
 }
 
 button.btn.btn-primary.back-btn:hover{background: #ccc;}
-
 span.dollor-col {
     position: absolute;
-    margin-top: 33px;
-    margin-left: 20px;
+    margin-top: 30px;
+    margin-left: 16px;
     left: 0px;
+    border-radius: 5px 0px 0px 5px;
     width: 48px;
     background: #e2e2e2;
-    height: 41px;
+    height: 43px;
     text-align: center;
     padding-top: 8px;
     z-index: 9;
 }
-
 input.form-control {
-    height: 42px !important;
+    height: 45px !important;
 }
 select.form-control {
     height: 42px !important;
@@ -312,7 +313,7 @@ select.form-control {
     margin-bottom: 10px;
     margin-right: 20px;
     position: relative;
-}
+} 
 
 .no-checkbox {
     width: 80px;
@@ -435,4 +436,383 @@ button.btn.btn-primary.login-btn i.fa.fa-chevron-right {
 
 img.login-logo {
     width: 140px;
+}
+
+header{background: #006090; width: 100%;}
+.bg-dark {
+    background-color: #006090 !important;
+}
+
+img.user-img {
+    margin-right: 12px;
+    width: 26px;
+}
+
+li.nav-item.business-btn {
+    padding: 2px 20px;
+    background: #02547a;
+    border-radius: 5px;
+    position: relative;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: #fff !important;
+}
+
+.border-divider {
+   
+   border-left: 1px #ccc solid;
+    width: 20px;
+    height: 30px;
+    margin-top: 7px;
+    margin-left: 10px;
+}
+
+li.nav-item.dropdown.float-right {
+    position: absolute;
+    right: 0;
+}
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
+}
+
+.verify-panel{margin:20px 0px 20px 0; text-align: left;}
+
+button.close {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 22px;
+}
+
+.card.dashboard-card {
+    padding: 20px;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 1%), 0 2px 10px rgb(0 0 0 / 23%);
+    border-radius: 6px;
+    margin-top: 42px;
+    padding-bottom: 70px;
+}
+
+.stepswrapperClass {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.titlelabel {
+    min-width: 162px;
+    font-size: 15px;
+}
+._2Jtxm._35Ago .titlelabel{font-weight: bold !important; color: #006090;}
+._2Jtxm._2ZUAI .titlelabel{font-weight: bold !important; color: #198754;}
+
+.buttonsdiv a:first-child {
+    background: #e2e2e2 !important;
+    color: #000 !important;
+    font-weight: bold;
+    padding: 5px 20px;
+    margin-left: 40px;
+    font-size: 15px;
+    filter: opacity(1);
+}
+.buttonsdiv a:nth-child(2) {
+    background: #006090 !important;
+    color: #fff !important;
+    font-weight: bold;
+    padding: 5px 20px;
+    margin-right: 40px;
+    font-size: 15px;
+    filter: opacity(1);
+}
+
+.stepClassdiv._2Jtxm._35Ago ._2kL0S {
+    background: #006090;
+}
+.stepClassdiv ._1hzhf {
+    color: #006090;
+}
+
+._3uApM.buttonsdiv {
+    position: relative;
+    margin-top: -70px;
+}
+
+.tooltippanel {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.3);
+}
+
+button.btn.btn-primary.banking-btn {
+    background: #006090;
+    border: 0px;
+    padding: 10px 30px;
+    margin-right: 20px;
+    margin: 20px 20px 20 0px;
+}
+button.btn.btn-primary.banking-btn:hover {
+    background: #024f76;
+}
+
+button.btn.btn-primary.accounting-btn {
+    background: #C3181E;
+    border: 0px;
+    padding: 10px 30px;
+    margin-right: 20px;
+    margin: 20px 0px  20px 0;
+}
+button.btn.btn-primary.accounting-btn:hover {
+    background: #ab1318;
+}
+
+button.btn.btn-primary.accounting-btn i.fa.fa-chevron-right {
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+button.btn.btn-primary.banking-btn i.fa.fa-chevron-right {
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+button.copyicon-col.btn.btn-primary {
+    background: #006090;
+    border: 0px;
+    padding: 10.5px 20px;
+    position: absolute;
+    right: 0px;
+    margin-top: -45px;
+    border-radius: 0px 5px 5px 0px;
+}
+button.checkstatus-btn.btn.btn-primary {
+    background: #006090;
+    border: 0px;
+    padding: 10.5px 20px;
+    position: absolute;
+    right: 0px;
+    margin-top: -45px;
+    border-radius: 0px 5px 5px 0px;
+}
+
+.banking-url .form-group {
+    max-width: 432px;
+    position: relative;
+}
+
+.upload-doc-panel {
+    width: 100%;
+    float: left;
+    position: relative;
+    min-height: 300px;
+    padding: 20px;
+}
+.upload-doc-panel:before{position: absolute; content: ''; width: 1px;
+background: #ccc; height: 250px; top: 30px; left: 0;}
+
+.dashboard-card h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+label {
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+._2Jtxm._2ZUAI ._2JvrO {
+    background-color: #198754;
+    color: white;
+    
+}
+.form-control {
+    font-size: 14px !important;
+}
+input.upload-checkbox {
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+}
+.upload-doc-panel label {
+    font-size: 14px !important;
+    font-weight: normal !important;
+    margin: 0 !important;
+    vertical-align: top;
+    line-height: 28px;
+}
+
+
+.upload-box {
+    background: #f6fafc;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px #006090 dashed;
+}
+
+.upload-area p {
+    margin: 0px;
+}
+
+.upload-area ul {
+    padding-left: 25px;
+    line-height: 26px;
+}
+.upload-box input.upload-doc {
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    cursor: pointer;
+    z-index: 9;
+    border: 0px;
+    font-size: 0px;
+    background: url(../images/file-pdf.png) !important;
+    padding: 0px !important;
+    height: 26px;
+    margin-top: 0;
+    margin-bottom: 12px;
+    box-shadow: none !important;
+    outline: none !important;
+}
+button.btn.btn-primary.upload-btn {
+    background: #006090;
+    border: 0px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.upload-box p {
+    font-size: 12px;
+}
+
+.director-panel h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+
+
+.accordion-wrapper {
+     
+      margin-top: 0.5em;
+    }
+  
+  
+  .accordion-item {
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+    height: auto;
+    max-height: 9999px;
+  }
+  
+  .accordion-item.collapsed {
+    max-height: 0;
+    transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
+  }
+  
+  .accordion-title {
+    font-weight: 600;
+    cursor: pointer;
+    color: #666;
+    padding: 0.5em 1.5em;
+    border: solid 1px #ccc;
+    border-radius: 1.5em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+    .accordion-title::after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid currentColor;
+    }
+  
+    .accordion-title:hover, .accordion-title.open {
+      color: black;
+    }
+  
+   
+    .accordion-title.open::after {
+        content: "";
+        border-top: 0;
+        border-bottom: 5px solid;
+      }
+    
+  
+  
+  .accordion-content {
+    padding: 1em 1.5em;
+  }
+  
+
+  input.primary-checkbox {
+    width: 20px;
+    height: 20px;
+    margin: 5px 5px 0px 0px;
+    vertical-align: top;
+}
+
+label.set-primary {
+    line-height: 32px;
+    padding-left: 10px;
+    vertical-align: top;
+}
+.accordion-title {
+    background: #ececec;
+    border: 0px;
+    border-radius: 6px;
+    line-height: 50px;
+}
+
+.accordion-item  {
+    background: #ececec;
+    border: 0px;
+    border-radius: 6px;
+    line-height: 50px;
+    margin: 10px 0px;
+}
+
+.form-group.consent-panel label {
+    vertical-align: top;
+    line-height: 30px;
+    padding-left: 5px;
+}
+
+.uploaded-file p span {
+    color: #006090;
+    margin-bottom: 20px;
+    display: inline-block;
+    text-transform: uppercase;
+}
+.uploaded-file i.fa.fa-trash {
+   
+    float: right;
+    font-size: 20px;
+    color: red;
+}
+
+span.logo-icon {
+    background: #005479;
+    width: 65px;
+    height: 57px;
+    display: inline-block;
+    left: -15px;
+    line-height: 52px;
+    position: absolute;
+    top: 0;
+}
+
+.navbar-dark .navbar-brand strong {
+    padding-left: 50px;
+}
+img.logo-dashboard {
+    width: 26px;
 }

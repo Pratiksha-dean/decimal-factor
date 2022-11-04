@@ -6,6 +6,7 @@ import { Formik } from "formik";
 import { setStepNo } from "./request-leftpanel";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { createAccount } from "../../../request";
 
 function PersonalDetails({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("personalInfo"));
@@ -66,6 +67,15 @@ function PersonalDetails({ setStep, showSelectedState }) {
           showSelectedState(4);
           setStepNo(4);
           setBusinessInfo(values);
+          const payload = {};
+          createAccount(payload)
+            .then((resp) => {})
+            .catch((err) => {
+              console.log(
+                "🚀 ~ file: personal-details.js ~ line 74 ~ createAccount ~ err",
+                err
+              );
+            });
           setTimeout(() => {
             setSubmitting(false);
           }, 400);
