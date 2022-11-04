@@ -1,0 +1,438 @@
+.left-panel{width: 100%; background: url(../images/left_panel_bg.png); background-repeat: no-repeat; background-size:100% 100%;
+margin: 12px 0; padding: 0 0 30px 0; }
+.logo-request{width: 100px;}
+
+.logo-panel {
+    padding:30px 20px 20px 20px;
+    text-align: left;
+}
+.left-panel h3 {
+    text-align: left;
+    color: #fff;
+    padding-left: 20px;
+    font-size: 32px;
+    margin-top: 20px;
+    font-weight: 600;
+    font-family: Montserrat;
+}
+
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    counter-reset: step;
+    margin-left: 0;
+}
+#progressbar li {
+    list-style-type: none;
+    color:#5E99B7;
+    text-transform: capitalize;
+    width: 100%;
+    float: none;
+    position: relative;
+    text-align: left;
+    font-size: 16px;
+    margin-bottom: 20px;
+    height: 58px;
+    line-height: 22px;
+}
+#progressbar li.active{color: #fff;}
+#progressbar li.active:before, #progressbar li.active:after {
+    background: #fff;
+    color: white;
+}
+#progressbar li:before {
+    content: '';
+    width: 20px;
+    display: inline-block;
+    font-size: 10px;
+    height: 20px;
+    left: 0;
+    background: #015a84;
+    border: 1px #81878a solid;
+    border-radius: 100%;
+    position: relative;
+    margin: 0px 10px 0px 0;
+    text-align: center;
+    z-index: 99;
+    top: 4px;
+
+}
+
+#progressbar li span{width: 8px;
+    height: 8px;
+    background: #5E99B7;
+    color: #5E99B7;
+    position: absolute;
+    left: 6px;
+    border-radius: 100%;
+    top: 10px;
+    z-index: 99;}
+#progressbar li.active span{width: 8px;
+        height: 8px;
+        background: #006090;
+        color: #006090;
+        position: absolute;
+        left: 6px;
+        border-radius: 100%;
+        top: 10px;
+        z-index: 99;}
+#progressbar li:after {
+    content: '';
+    width: 1px;
+    height: 62px;
+    background: #709db3;
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    z-index: 1;
+}
+
+strong.tab-content {
+    font-weight: normal;
+}
+#progressbar li:last-child:after{ display: none;}
+
+.left-panel h4 {
+    color: #fff;
+    text-align: left;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+.left-panel p {
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+    padding: 0 20px 20px 20px;
+}
+ul#progressbar {
+    padding-left: 20px;
+}
+
+.email-id-col {
+    width: 100%;
+    bottom: 0px;
+    position: relative;
+    display: block;
+    text-align: right;
+    padding-right: 20px;
+    padding-top: 70px;
+}
+.email-id-col a{color: #fff;}
+.right-panel {
+    width: 60%;
+    padding: 0px 20px;
+    position: relative;
+    left: 30%;
+    top: 50%;
+    float: left;
+    transform: translate(-50%, -50%);
+}
+.right-panel h2 {
+    text-align: left;
+    font-size: 32px;
+}
+.right-panel h5 {
+    text-align: left;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+.right-panel .form-group label {
+    text-align: left;
+    width: 100%;
+    color: #000;
+    font-weight: 500;
+}
+
+button.btn.btn-primary.next-btn {
+    float: right;
+    margin: 30px 0;
+    position: relative;
+    background: #006090;
+    border: 0px;
+    padding: 5px 20px;
+}
+button.btn.btn-primary.next-btn:hover{ background: #06415d;}
+
+.divider {
+    background: #E2E2E2;
+    height: 1px;
+    width: 80%;
+    clear: both;
+    margin: 0 auto;
+}
+
+.loginnow-btn {
+    margin-top: 20px;
+}
+
+.loginnow-btn a{text-decoration: underline;}
+
+.copyright {
+    width: 100%;
+    float: left;
+    text-align: right;
+    position: absolute;
+    right: 30px;
+    bottom: 40px;
+}
+
+ul.steps-right {
+    width: 20px;
+    position: absolute;
+    float: right;
+    margin-right: 30px;
+    right: 0;
+    top: 35%;
+}
+
+ul.steps-right li {
+    list-style: none;
+    width: 7px;
+    height: 30px;
+    background: #e2e2e2;
+    border-radius: 10px;
+    margin: 10px 0px 10px 0px;
+}
+ul.steps-right li.active{background: #006090;}
+button.btn.btn-primary.next-btn i.fa.fa-chevron-right {
+    font-size: 12px;
+}
+
+
+button.btn.btn-primary.back-btn i.fa.fa-chevron-left {
+    font-size: 12px;
+}
+.form-group.monthly-card-payment input.form-control {
+    position: relative;
+}
+
+button.btn.btn-primary.back-btn {
+    background: #E2E2E2;
+    border: 0px;
+    color: #000;
+    float: left;
+    margin-top: 30px;
+    padding: 5px 20px;
+}
+
+button.btn.btn-primary.back-btn:hover{background: #ccc;}
+
+span.dollor-col {
+    position: absolute;
+    margin-top: 33px;
+    margin-left: 20px;
+    left: 0px;
+    width: 48px;
+    background: #e2e2e2;
+    height: 41px;
+    text-align: center;
+    padding-top: 8px;
+    z-index: 9;
+}
+
+input.form-control {
+    height: 42px !important;
+}
+select.form-control {
+    height: 42px !important;
+}
+
+.form-group.amount-required input.form-control {
+    padding-left: 52px;
+}
+
+.form-group.monthly-card-payment input.form-control {
+    padding-left: 52px;
+}
+
+.form-check.form-switch input[type=checkbox] {
+    height: 0;
+    width: 0;
+    font-size: 0;
+    visibility: hidden;
+    display: none;
+}
+.form-check.form-switch .yes-checkbox label {
+    cursor: pointer;
+    text-indent: 8px;
+    width: 60px;
+    height: 25px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+    color: #fff;
+}
+.form-check.form-switch .no-checkbox label {
+    cursor: pointer;
+    text-indent: 30px;
+    width: 60px;
+    height: 25px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+    color: #fff;
+}
+
+.form-check.form-switch label:after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+.form-check.form-switch input:checked + label {
+    background: #006090;
+}
+
+.form-check.form-switch input:checked + label:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
+}
+
+.form-check.form-switch label:active:after {
+	width: 30px;
+}
+
+.form-check {
+    position: relative;
+    display: block;
+    padding-left: 0;
+}
+.yes-checkbox {
+    width: 80px;
+    float: left;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    position: relative;
+}
+
+.no-checkbox {
+    width: 80px;
+    float: left;
+    margin-bottom: 10px;
+}
+.Term-found input.form-control {
+    padding-left: 52px;
+}
+
+.confirmation-screen {
+    background: #D1E7DD;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: left;
+}
+.confirmation-screen h3 {
+    font-size: 20px;
+    color: #0F5132;
+    margin-bottom: 20px;
+}
+
+.confirmation-screen h3 i.fa.fa-check-circle {
+    font-size: 26px;
+    margin: 0px 5px 0 0;
+}
+
+.note {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+button.btn.btn-primary.confirm-btn {
+    background: #006090;
+    border: 0px;
+    text-transform: capitalize;
+    padding: 10px 30px;
+}
+
+div#confirmationModalCenter button.close {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    color: red;
+    z-index: 9;
+}
+
+img.icon-div {
+    position: absolute;
+    width: 50px;
+    margin: 0 auto;
+    display: block;
+    left: 50%;
+    transform: translate(-50%);
+    top: -24px;
+}
+
+h5#confirmationModalCenterTitle {
+    margin-top: 20px;
+}
+.App.login-page {
+    background: #f6f2ea;
+    width: 100%;
+    
+}
+
+.login-screen {
+    width: 100%;
+    max-width: 400px;
+    margin: 40px auto;
+    height: 100vh;
+}
+
+.login-box {
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 1%), 0 2px 10px rgb(0 0 0 / 23%);
+    border-radius: 20px;
+    margin: 12px 0px;
+    border: 10px #f6f5f1 solid;
+}
+
+.login-box h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.login-box h5 {
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.remember-div {
+    width: auto;
+    float: left;
+}
+button.btn.btn-primary.login-btn {
+    width: 100%;
+    display: block;
+    background: #006090;
+    border: 0px;
+    margin-bottom: 30px;
+}
+
+.forgot-div {
+    float: right;
+}
+
+button.btn.btn-primary.login-btn:hover{ background: #06415d;}
+button.btn.btn-primary.login-btn i.fa.fa-chevron-right {
+    font-size: 12px;
+}
+
+.form-group.loginnow-btn {
+    text-align: center;
+}
+
+img.login-logo {
+    width: 140px;
+}
