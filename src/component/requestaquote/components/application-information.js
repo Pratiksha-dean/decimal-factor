@@ -126,6 +126,11 @@ function ApplicationInformation({ setStep, showSelectedState }) {
   };
 
   const setApplicationInfo = (info) => {
+    console.log(
+      "🚀 ~ file: application-information.js ~ line 129 ~ setApplicationInfo ~ info",
+      info
+    );
+
     localStorage.setItem("applicationInfo", JSON.stringify(info));
   };
 
@@ -198,7 +203,10 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 )}
                 name={fieldNames.AMOUNT}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={(e) => {
+                  console.log(e.target.value);
+                  setApplicationInfo(values);
+                }}
                 value={values[fieldNames.AMOUNT]}
               />
             </div>
@@ -206,13 +214,11 @@ function ApplicationInformation({ setStep, showSelectedState }) {
               <label>Purpose of Loan</label>
               <Select
                 closeMenuOnSelect={true}
-                onBlur={handleBlur}
                 onChange={(selectedOption) => {
-                  console.log(
-                    "🚀 ~ file: application-information.js ~ line 202 ~ ApplicationInformation ~ value",
-                    selectedOption
-                  );
                   setFieldValue(fieldNames.LOANPURPOSE, selectedOption);
+                }}
+                onBlur={(selectedOption) => {
+                  setApplicationInfo(values);
                 }}
                 options={loadPurposeList}
                 name={fieldNames.LOANPURPOSE}
@@ -234,15 +240,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 }}
                 value={values[fieldNames.LOANPURPOSE]}
               />
-
-              {/* <select
-                placeholder="Enter purpose of loan"
-                className="form-control"
-                name="Purpose of Loan"
-              >
-                <option>Enter purpose of loan</option>
-                <option>Enter purpose of loan</option>
-              </select> */}
             </div>
             <div className="form-group">
               <label>Term of Funds Required (Months)</label>
@@ -251,7 +248,10 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 placeholder="12"
                 name={fieldNames.REQUIREDFUND}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={(e) => {
+                  console.log(e.target.value);
+                  setApplicationInfo(values);
+                }}
                 value={values[fieldNames.REQUIREDFUND]}
                 className={clsx(
                   "form-control ",
@@ -285,10 +285,12 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   }
                 )}
                 closeMenuOnSelect={true}
-                onBlur={handleBlur}
-                onChange={(selectedOption) =>
-                  setFieldValue(fieldNames.BUSINESSENTITY, selectedOption)
-                }
+                onChange={(selectedOption) => {
+                  setFieldValue(fieldNames.BUSINESSENTITY, selectedOption);
+                }}
+                onBlur={(selectedOption) => {
+                  setApplicationInfo(values);
+                }}
                 options={businessEntityList}
                 name={fieldNames.BUSINESSENTITY}
                 placeholder="Select Business Entity"
@@ -322,17 +324,18 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   getOptionValue={(e) => e}
                   loadOptions={loadOptions}
                   onChange={(selectedOption) => {
-                    console.log(
-                      "🚀 ~ file: application-information.js ~ line 325 ~ ApplicationInformation ~ selectedOption",
-                      selectedOption
-                    );
                     setFieldValue(fieldNames.BUSINESSNAME, selectedOption);
                     setBusinessInfo(selectedOption);
+                    setApplicationInfo(values);
                   }}
                   components={{
                     IndicatorSeparator: () => null,
+                    DropdownIndicator: () => null,
                   }}
                   // onInputChange={handleInputChange}
+                  onBlur={(selectedOption) => {
+                    setApplicationInfo(values);
+                  }}
                   placeholder="Select Business Name"
                   styles={{
                     control: (styles, state) => {

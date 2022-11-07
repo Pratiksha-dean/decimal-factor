@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
 function ConfirmationModal() {
+  const [show, setShow] = useState();
   return (
     <div>
-      <div
+      {/* <div
         className="modal fade"
         id="confirmationModalCenter"
         tabindex={1}
@@ -32,28 +33,17 @@ function ConfirmationModal() {
                 Verify Email Address!
               </h5>
               <p>Don’t forget to verify email before accessing account.</p>
-              <button type="button" className="btn btn-primary confirm-btn">
+              <button
+                type="button"
+                className="btn btn-primary confirm-btn"
+                onClick={() => setShow(true)}
+              >
                 confirm
               </button>
             </div>
           </div>
         </div>
-      </div>
-
-      <Modal.Dialog>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>Modal body text goes here.</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          {/* <Button variant="secondary">Close</Button>
-          <Button variant="primary">Save changes</Button> */}
-        </Modal.Footer>
-      </Modal.Dialog>
+      </div> */}
     </div>
   );
 }

@@ -25,6 +25,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
       : "",
   };
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const passwordRegex = /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/;
 
   const validationSchema = Yup.object().shape({
     [fieldNames.FIRSTNAME]: Yup.string().required(),
@@ -36,17 +37,19 @@ function PersonalDetails({ setStep, showSelectedState }) {
       .required("Email is required"),
     [fieldNames.PHONE]: Yup.string().required("required"),
     [fieldNames.PASSWORD]: Yup.string()
-      .min(6, "Minimum 3 symbols")
-      .max(8, "Maximum 50 symbols")
-      .required("Password is required"),
+      .required("required")
+      .matches(passwordRegex, "Phone number is not valid"),
+    // [fieldNames.PASSWORD]: Yup.string()
+    //   .min(6, "Minimum 3 symbols")
+    //   .max(8, "Maximum 50 symbols")
+    //   .required("Password is required"),
     [fieldNames.CONFIRMPASSWORD]: Yup.string()
-      .min(6, "Minimum 3 symbols")
-      .max(8, "Maximum 50 symbols")
+      .matches(passwordRegex, "Phone number is not valid")
       .required("New password is required")
       .oneOf([Yup.ref("password")], "Your passwords do not match."),
   });
 
-  const setBusinessInfo = (info) => {
+  const setPersonalInfo = (info) => {
     localStorage.setItem("personalInfo", JSON.stringify(info));
   };
 
@@ -66,7 +69,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
           setStep(4);
           showSelectedState(4);
           setStepNo(4);
-          setBusinessInfo(values);
+          setPersonalInfo(values);
           const payload = {};
           createAccount(payload)
             .then((resp) => {})
@@ -115,7 +118,9 @@ function PersonalDetails({ setStep, showSelectedState }) {
                       }
                     )}
                     onChange={handleChange}
-                    onBlur={handleBlur}
+                    onBlur={() => {
+                      setPersonalInfo(values);
+                    }}
                     value={values[fieldNames.FIRSTNAME]}
                   />
                 </div>
@@ -141,7 +146,9 @@ function PersonalDetails({ setStep, showSelectedState }) {
                       }
                     )}
                     onChange={handleChange}
-                    onBlur={handleBlur}
+                    onBlur={() => {
+                      setPersonalInfo(values);
+                    }}
                     value={values[fieldNames.LASTNAME]}
                   />
                 </div>
@@ -165,7 +172,9 @@ function PersonalDetails({ setStep, showSelectedState }) {
                   }
                 )}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={() => {
+                  setPersonalInfo(values);
+                }}
                 value={values[fieldNames.EMAIL]}
               />
             </div>
@@ -183,6 +192,9 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 }
                 onChange={(phone) => {
                   setFieldValue(fieldNames.PHONE, phone);
+                }}
+                onBlur={() => {
+                  setPersonalInfo(values);
                 }}
                 inputClass={"w-100"}
                 placeholder="Enter Phone Number"
@@ -208,9 +220,18 @@ function PersonalDetails({ setStep, showSelectedState }) {
                   }
                 )}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={() => {
+                  setPersonalInfo(values);
+                }}
                 value={values[fieldNames.PASSWORD]}
               />
+              {
+                <small>
+                  Password should contain minimum six characters, at least one
+                  upper case English letter, one lower case English letter, one
+                  number and one special character
+                </small>
+              }
             </div>
             <div className="form-group">
               <label>Confirm Password</label>
@@ -232,9 +253,18 @@ function PersonalDetails({ setStep, showSelectedState }) {
                   }
                 )}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={() => {
+                  setPersonalInfo(values);
+                }}
                 value={values[fieldNames.CONFIRMPASSWORD]}
               />
+
+              {touched[fieldNames.CONFIRMPASSWORD] &&
+                errors[fieldNames.CONFIRMPASSWORD] &&
+                values[fieldNames.CONFIRMPASSWORD] !==
+                  values[fieldNames.PASSWORD] && (
+                  <p className="text-danger">Password must match</p>
+                )}
             </div>
             <button
               className="btn btn-primary back-btn"

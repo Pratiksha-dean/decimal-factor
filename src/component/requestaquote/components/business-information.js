@@ -36,7 +36,7 @@ const businessSectorList = [
   { value: "49027", label: "Other" },
 ];
 
-export const setBusinessInfo = (data) => {
+export const setCompanyInfo = (data) => {
   console.log(
     "🚀 ~ file: business-information.js ~ line 40 ~ setBusinessInfo ~ data",
     data
@@ -44,17 +44,20 @@ export const setBusinessInfo = (data) => {
   localStorage.setItem("companyInfo", JSON.stringify(data));
 };
 
+export const setBusinessInfo = (info) => {
+  localStorage.setItem("businessInfo", JSON.stringify(info));
+};
 export const getBusinessInfo = () => {
   return JSON.parse(localStorage.getItem("companyInfo"));
 };
 
 function BusinessInformation({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("businessInfo"));
-  const businessInfo = getBusinessInfo();
   console.log(
-    "🚀 ~ file: business-information.js ~ line 50 ~ BusinessInformation ~ businessInfo",
-    businessInfo
+    "🚀 ~ file: business-information.js ~ line 56 ~ BusinessInformation ~ storedData",
+    storedData
   );
+  const businessInfo = getBusinessInfo();
 
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
@@ -102,10 +105,6 @@ function BusinessInformation({ setStep, showSelectedState }) {
       : "",
   };
 
-  const setBusinessInfo = (info) => {
-    localStorage.setItem("businessInfo", JSON.stringify(info));
-  };
-
   const goBack = () => {
     setStep(1);
     showSelectedState(1);
@@ -150,7 +149,9 @@ function BusinessInformation({ setStep, showSelectedState }) {
               <label>Business Sector</label>
               <Select
                 closeMenuOnSelect={true}
-                onBlur={handleBlur}
+                onBlur={() => {
+                  setBusinessInfo(values);
+                }}
                 onChange={(selectedOption) =>
                   setFieldValue(fieldNames.BUSINESSSECTOR, selectedOption)
                 }
@@ -196,7 +197,9 @@ function BusinessInformation({ setStep, showSelectedState }) {
                   }
                 )}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={() => {
+                  setBusinessInfo(values);
+                }}
                 value={values[fieldNames.BUSINESSSTARTDATE]}
               />
             </div>
@@ -210,7 +213,17 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     id="switch"
                     name={fieldNames.ISPAYMENTPROCESSED}
                     onChange={handleChange}
-                    onBlur={handleBlur}
+                    onClick={(e) => {
+                      console.log("e", e.target.checked, values);
+                      // setFieldValue(
+                      //   fieldNames.ISPAYMENTPROCESSED,
+                      //   e.target.checked
+                      // );
+                      let obj = { ...values };
+                      obj[fieldNames.ISPAYMENTPROCESSED] = e.target.checked;
+
+                      setBusinessInfo(obj);
+                    }}
                     checked={values[fieldNames.ISPAYMENTPROCESSED]}
                   />
                   <label
@@ -240,7 +253,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
                   <i className="fa fa-usd"></i>
                 </span>
                 <input
-                  type="number  "
+                  type="number"
                   placeholder="Monthly Card Payments Amount"
                   name={fieldNames.CARDPAYMENTAMOUNT}
                   className={clsx(
@@ -257,7 +270,9 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     }
                   )}
                   onChange={handleChange}
-                  onBlur={handleBlur}
+                  onBlur={() => {
+                    setBusinessInfo(values);
+                  }}
                   value={values[fieldNames.CARDPAYMENTAMOUNT]}
                 />
               </div>
@@ -272,8 +287,17 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     id="switch3"
                     name={fieldNames.ISPAYMENTPENDING}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                     checked={values[fieldNames.ISPAYMENTPENDING]}
+                    onClick={(e) => {
+                      // setFieldValue(
+                      //   fieldNames.ISPAYMENTPENDING,
+                      //   e.target.checked
+                      // );
+                      let obj = { ...values };
+
+                      obj[fieldNames.ISPAYMENTPENDING] = e.target.checked;
+                      setBusinessInfo(obj);
+                    }}
                   />
                   <label
                     for="switch3"
@@ -320,7 +344,9 @@ function BusinessInformation({ setStep, showSelectedState }) {
                   )}
                   min="0"
                   onChange={handleChange}
-                  onBlur={handleBlur}
+                  onBlur={() => {
+                    setBusinessInfo(values);
+                  }}
                   value={values[fieldNames.SUPPLIERDUEAMOUNT]}
                 />
               </div>
