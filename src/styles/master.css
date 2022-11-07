@@ -592,7 +592,8 @@ button.btn.btn-primary.banking-btn {
   border: 0px;
   padding: 10px 30px;
   margin-right: 20px;
-  margin: 20px 20px 20 0px;
+  margin: 0px 20px 20px 0px;
+  float: left;
 }
 button.btn.btn-primary.banking-btn:hover {
   background: #024f76;
@@ -604,6 +605,7 @@ button.btn.btn-primary.accounting-btn {
   padding: 10px 30px;
   margin-right: 20px;
   margin: 20px 0px 20px 0;
+  float: left;
 }
 button.btn.btn-primary.accounting-btn:hover {
   background: #ab1318;
@@ -658,6 +660,15 @@ button.checkstatus-btn.btn.btn-primary {
   height: 250px;
   top: 30px;
   left: 0;
+}
+.upload-doc-panel:before {
+  position: absolute;
+  content: "";
+  width: 1px;
+  background: #ccc;
+  height: 350px;
+  top: 100px;
+  left: -50px;
 }
 
 .dashboard-card h3 {
@@ -849,13 +860,40 @@ span.logo-icon {
 .navbar-dark .navbar-brand strong {
   padding-left: 50px;
 }
-img.logo-dashboard {
-  width: 26px;
-}
 
 .react-tel-input .flag-dropdown {
   background-color: unset !important;
   border-left: unset !important;
   border-top: unset !important;
   border-bottom: unset !important;
+}
+
+img.logo-dashboard {
+  width: 26px;
+}
+
+.tooltip-panel {
+  width: auto;
+  float: left;
+}
+.banking-url label {
+  display: block;
+  width: 100%;
+}
+
+.banking-url {
+  width: 100%;
+  float: left;
+}
+
+.tooltip-panel {
+  width: auto;
+  float: left;
+  position: relative;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.accounting-tooltip {
+  margin-top: 30px;
 }
