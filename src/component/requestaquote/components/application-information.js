@@ -8,6 +8,8 @@ import clsx from "clsx";
 import * as Yup from "yup";
 import { setStepNo } from "./request-leftpanel";
 import { setBusinessInfo } from "./business-information";
+import { NavLink } from "react-router-dom";
+import { SEARCH_COMPANY_URL } from "../../../request";
 
 export const fieldNames = {
   AMOUNT: "amount",
@@ -105,10 +107,6 @@ const businessEntityList = [
 
 function ApplicationInformation({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("applicationInfo"));
-  console.log(
-    "🚀 ~ file: application-information.js ~ line 107 ~ ApplicationInformation ~ storedData",
-    storedData
-  );
   const initialValues = {
     [fieldNames.AMOUNT]: storedData ? storedData[fieldNames.AMOUNT] : "",
     [fieldNames.REQUIREDFUND]: storedData
@@ -126,18 +124,11 @@ function ApplicationInformation({ setStep, showSelectedState }) {
   };
 
   const setApplicationInfo = (info) => {
-    console.log(
-      "🚀 ~ file: application-information.js ~ line 129 ~ setApplicationInfo ~ info",
-      info
-    );
-
     localStorage.setItem("applicationInfo", JSON.stringify(info));
   };
 
   const loadOptions = async (inputValue) => {
-    const res = await axios.get(
-      `https://sales.decimalfactor.com/staging/api/SearchCompanies.php?SearchValue=${inputValue}`
-    );
+    const res = await axios.get(`${SEARCH_COMPANY_URL}${inputValue}`);
     const data = res.data.items;
     return data;
   };
@@ -359,7 +350,8 @@ function ApplicationInformation({ setStep, showSelectedState }) {
             <div className="divider"></div>
             <div className="form-group loginnow-btn">
               <p>
-                Already have an Account? <Link href="#">Login Now</Link>
+                Already have an Account?{" "}
+                <NavLink to="/login">Login Now</NavLink>
               </p>
             </div>
           </form>
