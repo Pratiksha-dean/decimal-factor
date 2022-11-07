@@ -1,16 +1,18 @@
 import React from "react";
 import clsx from "clsx";
 import * as Yup from "yup";
-import { fieldNames } from "./application-information";
+import { fieldNames, getApplicationInfo } from "./application-information";
 import { Formik } from "formik";
 import { setStepNo } from "./request-leftpanel";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { createAccount } from "../../../request";
+import { getBusinessInfo, getCompanyInfo } from "./business-information";
+import { useState } from "react";
 
 function PersonalDetails({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("personalInfo"));
-
+  const [error, setError] = useState("");
   const initialValues = {
     [fieldNames.FIRSTNAME]: storedData ? storedData[fieldNames.FIRSTNAME] : "",
     [fieldNames.LASTNAME]: storedData ? storedData[fieldNames.LASTNAME] : "",
@@ -24,8 +26,10 @@ function PersonalDetails({ setStep, showSelectedState }) {
       ? storedData[fieldNames.CONFIRMPASSWORD]
       : "",
   };
-  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-  const passwordRegex = /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/;
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const passwordRegex =
+    /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/;
 
   const validationSchema = Yup.object().shape({
     [fieldNames.FIRSTNAME]: Yup.string().required(),
@@ -62,17 +66,80 @@ function PersonalDetails({ setStep, showSelectedState }) {
     <div className="right-panel">
       <h2>Personal Details</h2>
       <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
+
+      {error.type == "email" && (
+        <p className="text-danger text-left">{error.text}</p>
+      )}
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          setStep(4);
-          showSelectedState(4);
-          setStepNo(4);
           setPersonalInfo(values);
-          const payload = {};
+          const applicationInfo = getApplicationInfo();
+          const businesssInfo = getBusinessInfo();
+          const companyInfo = getCompanyInfo();
+          console.log(
+            "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ companyInfo",
+            companyInfo
+          );
+          let payload = { ...applicationInfo, ...businesssInfo, ...values };
+          payload["businessSector"] = payload["businessSector"].value;
+          payload["businessId"] = companyInfo["company_number"];
+          payload["businessAddress"] =
+            companyInfo["address"]["locality"] +
+            "," +
+            companyInfo["address"]["address_line_1"];
+          payload["businessZipcode"] = companyInfo["address"]["postal_code"];
+          payload["businessName"] = companyInfo["title"];
+          payload["businessEntity"] = payload["businessEntity"].value;
+          payload["loanPurpose"] = payload["loanPurpose"].value;
+
+          if (!payload["isPaymentPending"]) {
+            payload["cardPaymentAmount"] = 0;
+          }
+
+          if (!payload["isPaymentProcessed"]) {
+            payload["supplierDueAmount"] = 0;
+          }
+
+          // const payload = {
+          //   amount: applicationInfo["applicationInfo"],
+          //   loanPurpose: "42001",
+          //   requiredFund: applicationInfo[""],
+          //   businessEntity: "Private Limited Company",
+          //   businessName: "ASD LIMITED [ 01370600 ]",
+          //   businessId: "01370600",
+          //   businessSector: "49008",
+          //   businessAddress: "Valley Farm Road, Stourton, Leeds, LS10 1SD",
+          //   businessZipcode: "LS10 1SD",
+          //   businessStartDate: businesssInfo["businessStartDate"],
+          //   isPaymentProcessed: "yes",
+          //   cardPaymentAmount: "3000",
+          //   isPaymentPending: 1,
+          //   supplierDueAmount: "400",
+          //   firstName: "ravi",
+          //   lastName: "prakash",
+          //   email: "pravi@deaninfotech1.com",
+          //   phone: "4335345345",
+          //   password: "admin@admin",
+          // };
           createAccount(payload)
-            .then((resp) => {})
+            .then((resp) => {
+              if (resp.data.status == "error") {
+                if (resp.data.message_text == "Email already Exist") {
+                  setError({ type: "email", text: resp.data.message_text });
+                }
+              } else {
+                setStep(4);
+                showSelectedState(4);
+                setStepNo(4);
+              }
+              console.log(
+                "🚀 ~ file: personal-details.js ~ line 339 ~ .then ~ resp",
+                resp
+              );
+            })
             .catch((err) => {
               console.log(
                 "🚀 ~ file: personal-details.js ~ line 74 ~ createAccount ~ err",
@@ -226,11 +293,17 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 value={values[fieldNames.PASSWORD]}
               />
               {
-                <small>
-                  Password should contain minimum six characters, at least one
-                  upper case English letter, one lower case English letter, one
-                  number and one special character
-                </small>
+                <>
+                  <p className="text-left mb-1 mt-1">Password should contain</p>
+                  <small className="text-left">
+                    <ul className="pl-4">
+                      <li>Minimum six characters</li>
+                      <li>At least one upper case English letter</li>
+                      <li>One lower case English letter</li>
+                      <li>One number and one special character</li>
+                    </ul>
+                  </small>
+                </>
               }
             </div>
             <div className="form-group">

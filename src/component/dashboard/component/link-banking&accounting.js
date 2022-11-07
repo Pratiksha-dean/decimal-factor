@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactTooltip from 'react-tooltip';
 
 
 function checkMe(selected)
@@ -28,7 +29,9 @@ function LinkBankingAccounting() {
                   <div className="col-md-7">
                     <div className="Accounting-left-panel">
                       <button className="btn btn-primary banking-btn">Link To Banking <i className="fa fa-chevron-right"></i></button>
-                      <button className="btn btn-primary accounting-btn">Link To Accounting <i className="fa fa-chevron-right"></i></button>
+                      <div className="tooltip-panel">
+                      <tooltip><i className="fa fa-info-circle" data-tip="Use Open Banking to directly link your bank account information without the need of providing bank statements."><ReactTooltip className={"tooltippanel"} /></i></tooltip>
+                      </div>
 
                       <div className="banking-url">
                         <div className="form-group">
@@ -45,6 +48,26 @@ function LinkBankingAccounting() {
                         </div>
                       </div>
 
+                      <button className="btn btn-primary accounting-btn">Link To Accounting <i className="fa fa-chevron-right"></i>
+                      </button>
+                      <div className="tooltip-panel accounting-tooltip">
+                      <tooltip><i className="fa fa-info-circle" data-tip="Connect your Accounting software to seamlessly view all your data on the portal and help increase your loan acceptance rate."><ReactTooltip className={"tooltippanel"} /></i></tooltip>
+                       </div>
+                     
+                      <div className="banking-url">
+                        <div className="form-group">
+                          <label>Accounting URL</label>
+                          <input type="text" name="url" placeholder="https://www.domain.com/dummy-url-will-be-here" className="form-control" />
+                          <button className="copyicon-col btn btn-primary"><i class="fa fa-clone" aria-hidden="true"></i></button>
+                        </div>
+                      </div>
+                      <div className="banking-url">
+                        <div className="form-group">
+                          <label>Status</label>
+                          <input type="text" name="Status" placeholder="Unlinked" className="form-control" />
+                          <button className="checkstatus-btn btn btn-primary">Check status</button>
+                        </div>
+                      </div>
                     </div>
 
                   </div>

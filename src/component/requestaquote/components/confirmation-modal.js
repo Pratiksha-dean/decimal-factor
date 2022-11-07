@@ -1,34 +1,26 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 
-function ConfirmationModal() {
-  const [show, setShow] = useState();
+function ConfirmationModal({ setShow }) {
   return (
     <div>
-      {/* <div
-        className="modal fade"
-        id="confirmationModalCenter"
-        tabindex={1}
-        role="dialog"
-        aria-labelledby="confirmationModalCenterTitle"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
+      <div className="text-center">
+        <div role="document">
+          <div className="">
             <img
               src={require("../../../images/i-icon.png")}
               alt=""
               className="icon-div"
             />
-            <button
+            {/* <button
               type="button"
               className="close"
               data-dismiss="modal"
               aria-label="Close"
             >
               <span aria-hidden="true">&times;</span>
-            </button>
-            <div className="modal-body">
+            </button> */}
+            <div className="">
               <h5 className="modal-title" id="confirmationModalCenterTitle">
                 Verify Email Address!
               </h5>
@@ -36,14 +28,14 @@ function ConfirmationModal() {
               <button
                 type="button"
                 className="btn btn-primary confirm-btn"
-                onClick={() => setShow(true)}
+                onClick={() => setShow(false)}
               >
                 confirm
               </button>
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

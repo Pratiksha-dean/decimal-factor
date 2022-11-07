@@ -61,7 +61,7 @@ function ForgotPassword() {
                   />
                 </div>
 
-                <button className="btn btn-primary login-btn">
+                <button type="submit" className="btn btn-primary login-btn">
                   Submit <i className="fa fa-chevron-right"></i>
                 </button>
                 <div className="divider"></div>
