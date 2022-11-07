@@ -15,8 +15,8 @@ function Authentication() {
   const [isCodeValid, setIsCodeValid] = useState(null);
   const naviagte = useNavigate();
 
-  const forgotPasswordSchema = Yup.object().shape({
-    code: Yup.number().required(),
+  const authenticationSchema = Yup.object().shape({
+    code: Yup.string().min(6, "Too Short!").max(6, "Too Long!").required(),
   });
 
   const initialValues = {
@@ -25,7 +25,7 @@ function Authentication() {
 
   const formik = useFormik({
     initialValues,
-    validationSchema: forgotPasswordSchema,
+    validationSchema: authenticationSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       console.log(
         "🚀 ~ file: authentication.js ~ line 28 ~ onSubmit: ~ values",
@@ -123,6 +123,9 @@ function Authentication() {
                       }
                     )}
                   />
+                  {formik.touched.code && formik.errors.code && (
+                    <p className="text-danger">Please enter 6 digit code</p>
+                  )}
                 </div>
 
                 <button className="btn btn-primary login-btn" type="submit">

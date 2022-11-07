@@ -8,9 +8,11 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { createAccount } from "../../../request";
 import { getBusinessInfo, getCompanyInfo } from "./business-information";
+import { useState } from "react";
 
 function PersonalDetails({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("personalInfo"));
+  const [error,setError]=useState("")
   const initialValues = {
     [fieldNames.FIRSTNAME]: storedData ? storedData[fieldNames.FIRSTNAME] : "",
     [fieldNames.LASTNAME]: storedData ? storedData[fieldNames.LASTNAME] : "",
@@ -64,6 +66,8 @@ function PersonalDetails({ setStep, showSelectedState }) {
     <div className="right-panel">
       <h2>Personal Details</h2>
       <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
+
+      <p className="error"></p>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -100,6 +104,14 @@ function PersonalDetails({ setStep, showSelectedState }) {
             payload
           );
 
+          if (!payload["isPaymentPending"]) {
+            payload["cardPaymentAmount"] = 0;
+          }
+
+          if (!payload["isPaymentProcessed"]) {
+            payload["supplierDueAmount"] = 0;
+          }
+
           // const payload = {
           //   amount: applicationInfo["applicationInfo"],
           //   loanPurpose: "42001",
@@ -123,7 +135,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
           // };
           createAccount(payload)
             .then((resp) => {
-              if (resp.data) {
+              if (resp.data.status=='error') {
                 setStep(4);
                 showSelectedState(4);
                 setStepNo(4);
