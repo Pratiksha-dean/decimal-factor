@@ -1,10 +1,7 @@
 import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
-console.log("🚀 ~ file: request.js ~ line 3 ~ API_URL", API_URL);
-
 export const SEARCH_COMPANY_URL = `${API_URL}SearchCompanies.php?SearchValue=`;
 export const CREATE_ACCOUNT_URL = `${API_URL}CreateCustomerForUK`;
-//sales.decimalfactor.com/staging/api/
 export const USER_LOGIN_URL = `${API_URL}/login`;
 export const DASHBOARD_DATA_URL = `${API_URL}GetLeadMaster/6140`;
 

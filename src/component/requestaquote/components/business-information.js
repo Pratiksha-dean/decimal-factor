@@ -150,7 +150,6 @@ function BusinessInformation({ setStep, showSelectedState }) {
                 }
                 name={fieldNames.BUSINESSSECTOR}
                 options={businessSectorList}
-                // name={fieldNames.LOANPURPOSE}
                 placeholder="Enter business sector"
                 styles={{
                   control: (styles, state) => {

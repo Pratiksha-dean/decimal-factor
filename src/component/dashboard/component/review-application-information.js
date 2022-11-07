@@ -33,7 +33,6 @@ function ReviewApplicationInformation({ data }) {
     [fieldNames.BUSINESSNAME]: data["lf_business_name"],
   };
 
-  console.log(initialValues);
 
   return (
     <div className="dashboard-box position-relative card dashboard-card">

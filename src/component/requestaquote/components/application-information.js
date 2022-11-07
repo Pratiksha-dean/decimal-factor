@@ -120,10 +120,6 @@ export const getApplicationInfo = () => {
 export const loadOptions = async (inputValue) => {
   const res = await axios.get(`${SEARCH_COMPANY_URL}${inputValue}`);
   const data = res.data.items;
-  console.log(
-    "🚀 ~ file: application-information.js ~ line 145 ~ loadOptions ~ data",
-    data
-  );
   let list = res.data.items.map((item) => {
     return { label: item.title, value: item.title, data: item };
   });
@@ -148,10 +144,7 @@ function ApplicationInformation({ setStep, showSelectedState }) {
       ? storedData[fieldNames.BUSINESSNAME]
       : "",
   };
-  console.log(
-    "🚀 ~ file: application-information.js ~ line 133 ~ ApplicationInformation ~ initialValues",
-    initialValues
-  );
+
 
   const setApplicationInfo = (info) => {
     localStorage.setItem("applicationInfo", JSON.stringify(info));
@@ -211,7 +204,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 name={fieldNames.AMOUNT}
                 onChange={handleChange}
                 onBlur={(e) => {
-                  console.log(e.target.value);
                   setApplicationInfo(values);
                 }}
                 value={values[fieldNames.AMOUNT]}
@@ -330,14 +322,8 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                     value: values[fieldNames.BUSINESSNAME],
                   }}
                   name={fieldNames.BUSINESSNAME}
-                  // getOptionLabel={(e) => e.title}
-                  // getOptionValue={(e) => e.title}
                   loadOptions={loadOptions}
                   onChange={(selectedOption) => {
-                    console.log(
-                      "🚀 ~ file: application-information.js ~ line 319 ~ ApplicationInformation ~ selectedOption",
-                      selectedOption
-                    );
                     setFieldValue(
                       fieldNames.BUSINESSNAME,
                       selectedOption.value
@@ -349,7 +335,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                     IndicatorSeparator: () => null,
                     DropdownIndicator: () => null,
                   }}
-                  // onInputChange={handleInputChange}
                   onBlur={(selectedOption) => {
                     setApplicationInfo(values);
                   }}

@@ -27,10 +27,6 @@ function Authentication() {
     initialValues,
     validationSchema: authenticationSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      console.log(
-        "🚀 ~ file: authentication.js ~ line 28 ~ onSubmit: ~ values",
-        values
-      );
       const { base32, hex } = secret;
       const isVerified = speakeasy.totp.verify({
         secret: hex,
@@ -39,7 +35,6 @@ function Authentication() {
         window: 1,
       });
 
-      console.log("isVerified -->", isVerified);
       setIsCodeValid(isVerified);
       if (isCodeValid) {
         naviagte("dashboard");

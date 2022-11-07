@@ -17,10 +17,6 @@ function onFormSubmit() {}
 
 function Dashboard() {
   const [dasboardData, setDashboardData] = useState();
-  console.log(
-    "🚀 ~ file: dashboard.js ~ line 20 ~ Dashboard ~ dasboardData",
-    dasboardData
-  );
   useEffect(() => {
     getDashboardData().then((resp) => {
       setDashboardData(resp.records[0]);

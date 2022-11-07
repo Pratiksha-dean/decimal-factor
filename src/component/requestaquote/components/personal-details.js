@@ -12,7 +12,7 @@ import { useState } from "react";
 
 function PersonalDetails({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("personalInfo"));
-  const [error,setError]=useState("")
+  const [error, setError] = useState("");
   const initialValues = {
     [fieldNames.FIRSTNAME]: storedData ? storedData[fieldNames.FIRSTNAME] : "",
     [fieldNames.LASTNAME]: storedData ? storedData[fieldNames.LASTNAME] : "",
@@ -67,27 +67,23 @@ function PersonalDetails({ setStep, showSelectedState }) {
       <h2>Personal Details</h2>
       <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
 
-      <p className="error"></p>
+      {error.type == "email" && (
+        <p className="text-danger text-left">{error.text}</p>
+      )}
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           setPersonalInfo(values);
           const applicationInfo = getApplicationInfo();
-
           const businesssInfo = getBusinessInfo();
           const companyInfo = getCompanyInfo();
           console.log(
-            "🚀 ~ file: personal-details.js ~ line 79 ~ PersonalDetails ~ companyInfo",
+            "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ companyInfo",
             companyInfo
           );
-
           let payload = { ...applicationInfo, ...businesssInfo, ...values };
-          console.log(
-            "🚀 ~ file: personal-details.js ~ line 86 ~ PersonalDetails ~ payload",
-            payload
-          );
-
           payload["businessSector"] = payload["businessSector"].value;
           payload["businessId"] = companyInfo["company_number"];
           payload["businessAddress"] =
@@ -98,11 +94,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
           payload["businessName"] = companyInfo["title"];
           payload["businessEntity"] = payload["businessEntity"].value;
           payload["loanPurpose"] = payload["loanPurpose"].value;
-
-          console.log(
-            "🚀 ~ file: personal-details.js ~ line 86 ~ PersonalDetails ~ payload",
-            payload
-          );
 
           if (!payload["isPaymentPending"]) {
             payload["cardPaymentAmount"] = 0;
@@ -135,7 +126,11 @@ function PersonalDetails({ setStep, showSelectedState }) {
           // };
           createAccount(payload)
             .then((resp) => {
-              if (resp.data.status=='error') {
+              if (resp.data.status == "error") {
+                if (resp.data.message_text == "Email already Exist") {
+                  setError({ type: "email", text: resp.data.message_text });
+                }
+              } else {
                 setStep(4);
                 showSelectedState(4);
                 setStepNo(4);
@@ -298,11 +293,17 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 value={values[fieldNames.PASSWORD]}
               />
               {
-                <small>
-                  Password should contain minimum six characters, at least one
-                  upper case English letter, one lower case English letter, one
-                  number and one special character
-                </small>
+                <>
+                  <p className="text-left mb-1 mt-1">Password should contain</p>
+                  <small className="text-left">
+                    <ul className="pl-4">
+                      <li>Minimum six characters</li>
+                      <li>At least one upper case English letter</li>
+                      <li>One lower case English letter</li>
+                      <li>One number and one special character</li>
+                    </ul>
+                  </small>
+                </>
               }
             </div>
             <div className="form-group">
