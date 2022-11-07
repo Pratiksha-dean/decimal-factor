@@ -37,27 +37,24 @@ const businessSectorList = [
 ];
 
 export const setCompanyInfo = (data) => {
-  console.log(
-    "🚀 ~ file: business-information.js ~ line 40 ~ setBusinessInfo ~ data",
-    data
-  );
   localStorage.setItem("companyInfo", JSON.stringify(data));
+};
+
+export const getCompanyInfo = (data) => {
+  return JSON.parse(localStorage.getItem("companyInfo"));
 };
 
 export const setBusinessInfo = (info) => {
   localStorage.setItem("businessInfo", JSON.stringify(info));
 };
+
 export const getBusinessInfo = () => {
-  return JSON.parse(localStorage.getItem("companyInfo"));
+  return JSON.parse(localStorage.getItem("businessInfo"));
 };
 
 function BusinessInformation({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("businessInfo"));
-  console.log(
-    "🚀 ~ file: business-information.js ~ line 56 ~ BusinessInformation ~ storedData",
-    storedData
-  );
-  const businessInfo = getBusinessInfo();
+  const businessInfo = getCompanyInfo();
 
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
@@ -88,7 +85,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
       : "",
     [fieldNames.BUSINESSSTARTDATE]: storedData
       ? storedData[fieldNames.BUSINESSSTARTDATE]
-      : businessInfo["date_of_creation"]
+      : businessInfo && businessInfo["date_of_creation"]
       ? businessInfo["date_of_creation"]
       : "",
     [fieldNames.ISPAYMENTPENDING]: storedData
@@ -119,10 +116,6 @@ function BusinessInformation({ setStep, showSelectedState }) {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(
-            "🚀 ~ file: application-information.js ~ line 134 ~ ApplicationInformation ~ values",
-            values
-          );
           setStep(3);
           showSelectedState(3);
           setStepNo(3);
@@ -215,13 +208,12 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     onChange={handleChange}
                     onClick={(e) => {
                       console.log("e", e.target.checked, values);
-                      // setFieldValue(
-                      //   fieldNames.ISPAYMENTPROCESSED,
-                      //   e.target.checked
-                      // );
+                      setFieldValue(
+                        fieldNames.ISPAYMENTPROCESSED,
+                        e.target.checked
+                      );
                       let obj = { ...values };
                       obj[fieldNames.ISPAYMENTPROCESSED] = e.target.checked;
-
                       setBusinessInfo(obj);
                     }}
                     checked={values[fieldNames.ISPAYMENTPROCESSED]}

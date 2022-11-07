@@ -7,7 +7,7 @@ import axios from "axios";
 import clsx from "clsx";
 import * as Yup from "yup";
 import { setStepNo } from "./request-leftpanel";
-import { setBusinessInfo } from "./business-information";
+import { setBusinessInfo, setCompanyInfo } from "./business-information";
 import { NavLink } from "react-router-dom";
 import { SEARCH_COMPANY_URL } from "../../../request";
 
@@ -31,7 +31,7 @@ export const fieldNames = {
   CONFIRMPASSWORD: "confirmPassword",
 };
 
-const loadPurposeList = [
+export const loadPurposeList = [
   { value: "42001", label: "Cash Flow / Working Capital" },
   { value: "42002", label: "Expansion" },
   { value: "42003", label: "Stock" },
@@ -81,7 +81,7 @@ const loadPurposeList = [
   { value: "42038", label: "Management Buy-Out" },
 ];
 
-const businessEntityList = [
+export const businessEntityList = [
   { value: "Sole Trader", label: "Sole Trader" },
   { value: "Non-Ltd Partnership", label: "Non-Ltd Partnership" },
   { value: "Private Limited Company", label: "Private limited company" },
@@ -105,8 +105,34 @@ const businessEntityList = [
   },
 ];
 
+export const validationSchema = Yup.object().shape({
+  [fieldNames.AMOUNT]: Yup.number().required(),
+  [fieldNames.REQUIREDFUND]: Yup.string().required(),
+  [fieldNames.LOANPURPOSE]: Yup.string().required(),
+  [fieldNames.BUSINESSENTITY]: Yup.string().required(),
+  [fieldNames.BUSINESSNAME]: Yup.string().required(),
+});
+
+export const getApplicationInfo = () => {
+  return JSON.parse(localStorage.getItem("applicationInfo"));
+};
+
+export const loadOptions = async (inputValue) => {
+  const res = await axios.get(`${SEARCH_COMPANY_URL}${inputValue}`);
+  const data = res.data.items;
+  console.log(
+    "🚀 ~ file: application-information.js ~ line 145 ~ loadOptions ~ data",
+    data
+  );
+  let list = res.data.items.map((item) => {
+    return { label: item.title, value: item.title, data: item };
+  });
+
+  return list;
+};
+
 function ApplicationInformation({ setStep, showSelectedState }) {
-  const storedData = JSON.parse(localStorage.getItem("applicationInfo"));
+  const storedData = getApplicationInfo();
   const initialValues = {
     [fieldNames.AMOUNT]: storedData ? storedData[fieldNames.AMOUNT] : "",
     [fieldNames.REQUIREDFUND]: storedData
@@ -122,24 +148,14 @@ function ApplicationInformation({ setStep, showSelectedState }) {
       ? storedData[fieldNames.BUSINESSNAME]
       : "",
   };
+  console.log(
+    "🚀 ~ file: application-information.js ~ line 133 ~ ApplicationInformation ~ initialValues",
+    initialValues
+  );
 
   const setApplicationInfo = (info) => {
     localStorage.setItem("applicationInfo", JSON.stringify(info));
   };
-
-  const loadOptions = async (inputValue) => {
-    const res = await axios.get(`${SEARCH_COMPANY_URL}${inputValue}`);
-    const data = res.data.items;
-    return data;
-  };
-
-  const validationSchema = Yup.object().shape({
-    [fieldNames.AMOUNT]: Yup.number().required(),
-    [fieldNames.REQUIREDFUND]: Yup.string().required(),
-    [fieldNames.LOANPURPOSE]: Yup.string().required(),
-    [fieldNames.BUSINESSENTITY]: Yup.string().required(),
-    [fieldNames.BUSINESSNAME]: Yup.string().required(),
-  });
 
   return (
     <div className="right-panel">
@@ -309,15 +325,25 @@ function ApplicationInformation({ setStep, showSelectedState }) {
 
                 <AsyncSelect
                   closeMenuOnSelect={true}
-                  value={values[fieldNames.BUSINESSNAME]}
+                  value={{
+                    label: values[fieldNames.BUSINESSNAME],
+                    value: values[fieldNames.BUSINESSNAME],
+                  }}
                   name={fieldNames.BUSINESSNAME}
-                  getOptionLabel={(e) => e.title}
-                  getOptionValue={(e) => e}
+                  // getOptionLabel={(e) => e.title}
+                  // getOptionValue={(e) => e.title}
                   loadOptions={loadOptions}
                   onChange={(selectedOption) => {
-                    setFieldValue(fieldNames.BUSINESSNAME, selectedOption);
-                    setBusinessInfo(selectedOption);
+                    console.log(
+                      "🚀 ~ file: application-information.js ~ line 319 ~ ApplicationInformation ~ selectedOption",
+                      selectedOption
+                    );
+                    setFieldValue(
+                      fieldNames.BUSINESSNAME,
+                      selectedOption.value
+                    );
                     setApplicationInfo(values);
+                    setCompanyInfo(selectedOption.data);
                   }}
                   components={{
                     IndicatorSeparator: () => null,
@@ -331,7 +357,7 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   styles={{
                     control: (styles, state) => {
                       const borderColor =
-                        !state.hasValue &&
+                        !values[fieldNames.BUSINESSNAME] &&
                         touched[fieldNames.BUSINESSNAME] &&
                         errors[fieldNames.BUSINESSNAME]
                           ? "red"

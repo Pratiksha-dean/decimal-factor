@@ -14,10 +14,7 @@ import clsx from "clsx";
 
 function RequestAQuote() {
   const stepNo = getStepNo();
-  console.log(
-    "🚀 ~ file: requestaquote.js ~ line 13 ~ RequestAQuote ~ stepNo",
-    stepNo
-  );
+
   const [step, setStep] = useState(stepNo);
 
   useEffect(() => {
