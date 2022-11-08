@@ -1,4 +1,6 @@
 import React from 'react';
+import Header from '../header/header';
+import SiderBarMenu from './component/sidebar'
 
 const Accordion = ({ title, children }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -18,13 +20,23 @@ const Accordion = ({ title, children }) => {
   );
 };
 
-function ReviewBusinessInformation() {
+function BusinessInformation() {
   
   
   return (
+    
+    <div className="dashboard-panel">
+    <Header />
+     <div className="dashboard-body bg-change-color">
+     <div className="container-fluid  merchant-body">
+    
+     <SiderBarMenu />
+ 
+     <div className="right-panel-main">
+     <h3><i className="fas fa-user-tie" aria-hidden="true"></i> Business Information</h3>
     <div className="dashboard-box position-relative card dashboard-card">
                 <div className="review-application">
-                   <h3>Review Business Information</h3>
+                
                    <div className="row">
                    <div className="col-md-4">
                       <div className="form-group">
@@ -215,11 +227,18 @@ function ReviewBusinessInformation() {
                   </div>
                   </div>
                   </div>
+                  <button className="btn btn-primary save-btn next-btn">Save <i className="fa fa-file-image-o"></i></button>
+  
                  </div>
                
                 
                 </div>
+     </div>
+     </div>
+     </div>
+    </div>
+   
   );
 }
 
-export default ReviewBusinessInformation;
+export default BusinessInformation;

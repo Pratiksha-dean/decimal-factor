@@ -1,12 +1,26 @@
 import React from 'react';
+import Header from '../header/header';
+import SiderBarMenu from './component/sidebar'
 
-function ReviewApplicationInformation() {
+
+function ApplicationInformation() {
   
   
   return (
+
+    
+     <div className="dashboard-panel">
+     <Header />
+      <div className="dashboard-body bg-change-color">
+      <div className="container-fluid  merchant-body">
+     
+      <SiderBarMenu />
+  
+      <div className="right-panel-main">
+      <h3><i className="fa fa-laptop" aria-hidden="true"></i>  Application Information </h3>
     <div className="dashboard-box position-relative card dashboard-card">
                 <div className="review-application">
-                   <h3>Review Application information</h3>
+                 
                    <div className="row">
                      <div className="col-md-4">
                       <div className="form-group amount-required">
@@ -51,12 +65,18 @@ function ReviewApplicationInformation() {
                    
   
                    </div>
+                   <button className="btn btn-primary save-btn next-btn">Save <i className="fa fa-file-image-o"></i></button>
   
                  </div>
                
                 
                 </div>
+      </div>
+      </div>
+      </div>
+     </div>
+   
   );
 }
 
-export default ReviewApplicationInformation;
+export default ApplicationInformation;
