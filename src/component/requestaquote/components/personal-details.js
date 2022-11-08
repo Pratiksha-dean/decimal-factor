@@ -9,10 +9,33 @@ import "react-phone-input-2/lib/style.css";
 import { createAccount } from "../../../request";
 import { getBusinessInfo, getCompanyInfo } from "./business-information";
 import { useState } from "react";
+import { Alert } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
+
+export const setVerificationToken = (token) => {
+  localStorage.setItem("verificationToken", token);
+};
+
+export const getVerificationToken = () => {
+  return localStorage.getItem("verificationToken");
+};
+
+export const removeData = () => {
+  localStorage.removeItem("personalInfo");
+  localStorage.removeItem("businessInfo");
+  localStorage.removeItem("applicationInfo");
+  localStorage.removeItem("applicationInfo");
+  localStorage.removeItem("stepNumber");
+  localStorage.removeItem("companyInfo");
+};
 
 function PersonalDetails({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("personalInfo"));
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState({
+    type: "",
+    text: "",
+  });
   const initialValues = {
     [fieldNames.FIRSTNAME]: storedData ? storedData[fieldNames.FIRSTNAME] : "",
     [fieldNames.LASTNAME]: storedData ? storedData[fieldNames.LASTNAME] : "",
@@ -58,23 +81,22 @@ function PersonalDetails({ setStep, showSelectedState }) {
   };
 
   const goBack = () => {
+    console.log("goback");
     setStep(2);
     showSelectedState(2);
     setStepNo(2);
   };
+
   return (
     <div className="right-panel">
       <h2>Personal Details</h2>
       <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
 
-      {error.type == "email" && (
-        <p className="text-danger text-left">{error.text}</p>
-      )}
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
+          setLoading(true);
           setPersonalInfo(values);
           const applicationInfo = getApplicationInfo();
           const businesssInfo = getBusinessInfo();
@@ -85,7 +107,9 @@ function PersonalDetails({ setStep, showSelectedState }) {
           );
           let payload = { ...applicationInfo, ...businesssInfo, ...values };
           payload["businessSector"] = payload["businessSector"].value;
-          payload["businessId"] = companyInfo["company_number"];
+          payload["businessId"] = companyInfo["company_number"]
+            ? companyInfo["company_number"]
+            : "";
           payload["businessAddress"] =
             companyInfo["address"]["locality"] +
             "," +
@@ -129,11 +153,18 @@ function PersonalDetails({ setStep, showSelectedState }) {
               if (resp.data.status == "error") {
                 if (resp.data.message_text == "Email already Exist") {
                   setError({ type: "email", text: resp.data.message_text });
+                } else if (
+                  resp.data.message_text == "Error! This Lead already exists."
+                ) {
+                  setError({ type: "lead", text: resp.data.message_text });
                 }
+                setLoading(false);
               } else {
+                setVerificationToken(resp.data.token);
                 setStep(4);
                 showSelectedState(4);
                 setStepNo(4);
+                setLoading(false);
               }
               console.log(
                 "🚀 ~ file: personal-details.js ~ line 339 ~ .then ~ resp",
@@ -249,7 +280,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
               <label>Phone Number</label>
               <PhoneInput
                 name={fieldNames.PHONE}
-                country={"in"}
+                country={"gb"}
                 value={values[fieldNames.PHONE]}
                 inputStyle={
                   touched[fieldNames.PHONE] &&
@@ -339,13 +370,40 @@ function PersonalDetails({ setStep, showSelectedState }) {
                   <p className="text-danger">Password must match</p>
                 )}
             </div>
+
+            {error.type && error.text && (
+              <>
+                <Alert variant="danger">
+                  {error.text}
+                  {error.type == "lead" && (
+                    <>
+                      <br />
+                      Click here to{" "}
+                      <NavLink
+                        to="/login"
+                        onClick={() => {
+                          removeData();
+                        }}
+                      >
+                        Login
+                      </NavLink>
+                    </>
+                  )}
+                </Alert>
+              </>
+            )}
             <button
+              type="button"
               className="btn btn-primary back-btn"
               onClick={() => goBack()}
             >
               <i className="fa fa-chevron-left"></i> Back{" "}
             </button>
-            <button className="btn btn-primary next-btn" type="submit">
+            <button
+              className="btn btn-primary next-btn"
+              type="submit"
+              disabled={loading}
+            >
               Create an Account <i className="fa fa-chevron-right"></i>
             </button>
           </form>

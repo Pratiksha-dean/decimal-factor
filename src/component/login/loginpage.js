@@ -5,9 +5,37 @@ import { useFormik } from "formik";
 import clsx from "clsx";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../request";
+import { useState } from "react";
+import { Alert } from "react-bootstrap";
 
+const setEmailPassword = (data) => {
+  localStorage.setItem("creds", data);
+};
+
+const setUserDetails = (data) => {
+  localStorage.setItem("userDetails", JSON.stringify(data));
+};
+
+export const getUserDetails = () => {
+  return JSON.parse(localStorage.getItem("userDetails"));
+};
+
+const setToken = (data) => {
+  localStorage.setItem("token", data);
+};
+
+export const getToken = (data) => {
+  return localStorage.getItem("token");
+};
 function Login() {
   const navigate = useNavigate();
+  const [error, setError] = useState();
+  const savedCredentials = JSON.parse(localStorage.getItem("creds"));
+  const [rememberMe, setRememberMe] = useState(savedCredentials ? true : false);
+  console.log(
+    "🚀 ~ file: loginpage.js ~ line 19 ~ Login ~ savedCredentials",
+    savedCredentials
+  );
   const loginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Wrong email format")
@@ -21,19 +49,31 @@ function Login() {
   });
 
   const initialValues = {
-    email: "",
-    password: "",
+    email: savedCredentials ? savedCredentials.email : "",
+    password: savedCredentials ? savedCredentials.password : "",
   };
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
-      // setLoading(true)/;
-      try {
-        const { data: auth } = await login(values.email, values.password);
-        navigate("/authentication");
-      } catch (error) {}
+      login(values.email, values.password)
+        .then((resp) => {
+          if (resp.data.status == "error") {
+            setError(resp.data.message_text);
+          } else {
+            setUserDetails(resp.data.data);
+            setToken(resp.data.data.token);
+            navigate("/authentication");
+          }
+          console.log(
+            "🚀 ~ file: loginpage.js ~ line 33 ~ awaitlogin ~ resp",
+            resp
+          );
+        })
+        .catch((err) => {
+          console.log("🚀 ~ file: loginpage.js ~ line 38 ~ login ~ err", err);
+        });
     },
   });
 
@@ -91,9 +131,25 @@ function Login() {
                     )}
                   />
                 </div>
+
+                {error && <Alert variant="danger">{error}</Alert>}
+
                 <div className="form-group">
                   <div className="remember-div">
-                    <input type="checkbox" name="remember me" />{" "}
+                    <input
+                      type="checkbox"
+                      name="remember me"
+                      checked={rememberMe}
+                      onChange={(e) => {
+                        setRememberMe(e.target.checked);
+                        if (e.target.checked) {
+                          setEmailPassword(JSON.stringify(formik.values));
+                        } else {
+                          localStorage.removeItem("creds");
+                        }
+                        console.log(e.target.checked);
+                      }}
+                    />{" "}
                     <label>Remember Me</label>
                   </div>
                   <div className="forgot-div">

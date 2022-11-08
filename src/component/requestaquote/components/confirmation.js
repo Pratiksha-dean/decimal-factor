@@ -1,10 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom/dist";
 import ConfirmationModal from "./confirmation-modal";
+import { removeData } from "./personal-details";
 
 function Confirmation() {
   const [show, setShow] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <div className="right-panel">
@@ -38,7 +41,9 @@ function Confirmation() {
           type="button"
           className="btn btn-primary next-btn"
           onClick={() => {
-            setShow(true);
+            // setShow(true);
+            removeData();
+            navigate("/login");
           }}
         >
           Access Account <i className="fa fa-chevron-right"></i>

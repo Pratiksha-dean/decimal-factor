@@ -1,7 +1,33 @@
 import React, { useState } from "react";
-import Modal from "react-bootstrap/Modal";
+import { useNavigate } from "react-router-dom/dist";
+import { verifyAccount } from "../../../request";
+import { getVerificationToken, removeData } from "./personal-details";
 
 function ConfirmationModal({ setShow }) {
+  const token = getVerificationToken();
+  const navigate = useNavigate();
+
+  const confirmAccount = () => {
+    verifyAccount(token)
+      .then((resp) => {
+        if (resp.status == "success") {
+          console.log(
+            "🚀 ~ file: confirmation-modal.js ~ line 10 ~ verifyAccount ~ resp",
+            resp
+          );
+          setShow(false);
+          navigate("/login");
+          removeData();
+        }
+      })
+      .catch((err) => {
+        console.log(
+          "🚀 ~ file: confirmation-modal.js ~ line 13 ~ verifyAccount ~ err",
+          err
+        );
+        setShow(false);
+      });
+  };
   return (
     <div>
       <div className="text-center">
@@ -28,7 +54,7 @@ function ConfirmationModal({ setShow }) {
               <button
                 type="button"
                 className="btn btn-primary confirm-btn"
-                onClick={() => setShow(false)}
+                onClick={() => confirmAccount()}
               >
                 confirm
               </button>

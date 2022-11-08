@@ -29,7 +29,53 @@ export const fieldNames = {
   PHONE: "phone",
   PASSWORD: "password",
   CONFIRMPASSWORD: "confirmPassword",
+  DIRECTORINFO: "directorInfo",
+  NATUREOFCONTROL: "natures_of_control",
+  TOTALSHARECOUNT: "totalShareCount",
+  DATEOFBIRTH: "dateOfBirth",
+  POSTCODE: "postal_code",
+  ADDRESS: "address_line_1",
+  HOUSENUMBER: "houseNumber",
+  HOUSENAME: "houseName",
+  STREET: "street",
+  COUNTY: "county",
+  TOWN: "town",
+  RESIDENTIALSTATUS: "residentialStatus",
+  LIVINGSINCE: "living_since",
+  BUSINESSPHONE: "businessPhone",
+  ISPRIMARY: "is_primary",
+  PHONENUMBER: "phonenumber",
+  EMAILID: "email_id",
 };
+
+// "PreviousAddress": [],
+// "shareHolderID": "7404",
+// "kindofShareHolder": "",
+// "nationality": null,
+// "natures_of_control": "individual-beneficial-owner",
+// "country_of_residence": null,
+// "fullName": "Hilary Phillips",
+// "firstName": "Hilary",
+// "lastName": "Phillips",
+// "DOB_day": "01",
+// "DOB_month": "04",
+// "DOB_year": "1944",
+// "locality": null,
+// "address_line_1": "Old Gloucester Street",
+// "postal_code": "WC1N 3AX",
+// "notified_on": null,
+// "phonenumber": "789654478555",
+// "email_id": "badhwaryash@gmail.com",
+// "is_primary": "1",
+// "residentialStatus": "18003",
+// "houseNumber": "27",
+// "houseName": "27",
+// "street": "Old Gloucester Street",
+// "city": null,
+// "town": "United Kingdom",
+// "county": "London",
+// "living_since": "04/11/2015",
+// "companyName": ""
 
 export const loadPurposeList = [
   { value: "42001", label: "Cash Flow / Working Capital" },
@@ -144,7 +190,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
       ? storedData[fieldNames.BUSINESSNAME]
       : "",
   };
-
 
   const setApplicationInfo = (info) => {
     localStorage.setItem("applicationInfo", JSON.stringify(info));

@@ -8,6 +8,10 @@ import { useFormik } from "formik";
 import clsx from "clsx";
 import { useNavigate } from "react-router";
 
+const isAuthenticated = (value) => {
+  localStorage.setItem("isAuthenticated", value);
+};
+
 function Authentication() {
   const [image, setImage] = useState("");
   const [secret, setSecret] = useState("");
@@ -35,10 +39,11 @@ function Authentication() {
         window: 1,
       });
 
-      setIsCodeValid(isVerified);
-      if (isCodeValid) {
-        naviagte("dashboard");
+      if (isVerified) {
+        naviagte("/dashboard");
+        isAuthenticated(isVerified);
       }
+      setIsCodeValid(isVerified);
     },
   });
 

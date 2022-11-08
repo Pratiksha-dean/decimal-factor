@@ -13,8 +13,19 @@ import {
 } from "../../requestaquote/components/application-information";
 import { SEARCH_COMPANY_URL } from "../../../request";
 import axios from "axios";
+import { useEffect } from "react";
+import {
+  getReviewAppData,
+  setDashboardStepNo,
+  setReviewAppData,
+} from "../dashboard";
 
-function ReviewApplicationInformation({ data }) {
+function ReviewApplicationInformation({ data, setIsFormValid }) {
+  console.log(
+    "🚀 ~ file: review-application-information.js ~ line 24 ~ ReviewApplicationInformation ~ step1Validator",
+    setIsFormValid
+  );
+  const storedData = getReviewAppData();
   const initialValues = {
     [fieldNames.AMOUNT]: data["lf_amount_required"],
     [fieldNames.REQUIREDFUND]: data["lm_Funds"],
@@ -33,7 +44,6 @@ function ReviewApplicationInformation({ data }) {
     [fieldNames.BUSINESSNAME]: data["lf_business_name"],
   };
 
-
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <div className="review-application">
@@ -44,6 +54,7 @@ function ReviewApplicationInformation({ data }) {
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
               // alert(JSON.stringify(values, null, 2));
+              // setIsFormValid(true);
               setSubmitting(false);
             }, 400);
           }}
@@ -89,7 +100,7 @@ function ReviewApplicationInformation({ data }) {
                       onChange={handleChange}
                       onBlur={(e) => {
                         console.log(e.target.value);
-                        // setApplicationInfo(values);
+                        setReviewAppData(values);
                       }}
                       value={values[fieldNames.AMOUNT]}
                     />
@@ -104,7 +115,7 @@ function ReviewApplicationInformation({ data }) {
                         setFieldValue(fieldNames.LOANPURPOSE, selectedOption);
                       }}
                       onBlur={(selectedOption) => {
-                        // setApplicationInfo(values);
+                        setReviewAppData(values);
                       }}
                       options={loadPurposeList}
                       name={fieldNames.LOANPURPOSE}
@@ -138,8 +149,7 @@ function ReviewApplicationInformation({ data }) {
                       name={fieldNames.REQUIREDFUND}
                       onChange={handleChange}
                       onBlur={(e) => {
-                        console.log(e.target.value);
-                        // setApplicationInfo(values);
+                        setReviewAppData(values);
                       }}
                       value={values[fieldNames.REQUIREDFUND]}
                       className={clsx(
@@ -183,7 +193,7 @@ function ReviewApplicationInformation({ data }) {
                         );
                       }}
                       onBlur={(selectedOption) => {
-                        // setApplicationInfo(values);
+                        setReviewAppData(values);
                       }}
                       options={businessEntityList}
                       name={fieldNames.BUSINESSENTITY}
@@ -221,7 +231,7 @@ function ReviewApplicationInformation({ data }) {
                           selectedOption.value
                         );
                         // setBusinessInfo(selectedOption);
-                        // setApplicationInfo(values);
+                        setReviewAppData(values);
                       }}
                       components={{
                         IndicatorSeparator: () => null,
@@ -229,7 +239,7 @@ function ReviewApplicationInformation({ data }) {
                       }}
                       // onInputChange={handleInputChange}
                       onBlur={(selectedOption) => {
-                        // setApplicationInfo(values);
+                        setReviewAppData(values);
                       }}
                       placeholder="Select Business Name"
                       styles={{
@@ -246,6 +256,13 @@ function ReviewApplicationInformation({ data }) {
                       }}
                     />
                   </div>
+                  <button
+                    type="submit"
+                    id="submit-btn-verify-app-info"
+                    style={{ visibility: "hidden" }}
+                  >
+                    submit
+                  </button>
                 </div>
               </div>
             </form>
