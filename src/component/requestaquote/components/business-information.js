@@ -6,7 +6,7 @@ import clsx from "clsx";
 import * as Yup from "yup";
 import { setStepNo } from "./request-leftpanel";
 
-const businessSectorList = [
+export const businessSectorList = [
   { value: "49001", label: "Hospitality - Cafe" },
   { value: "49002", label: "Hospitality - Restaurant" },
   { value: "49003", label: "Hospitality - Bar" },
@@ -55,7 +55,6 @@ export const getBusinessInfo = () => {
 function BusinessInformation({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("businessInfo"));
   const businessInfo = getCompanyInfo();
-
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
@@ -346,6 +345,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
             <button
               className="btn btn-primary back-btn"
               onClick={() => goBack()}
+              type="button"
             >
               <i className="fa fa-chevron-left"></i> Back{" "}
             </button>

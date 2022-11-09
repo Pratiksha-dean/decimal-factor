@@ -27,6 +27,7 @@
     <link href="https://cdn.usebootstrap.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"  rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <title>Decimal Factor</title>
   </head>
   <body>
@@ -45,6 +46,27 @@
     <script  src="https://code.jquery.com/jquery-3.6.1.min.js"  integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
   crossorigin="anonymous"></script>
     <script src="https://cdn.usebootstrap.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
+    <script>
+      $(document).ready(function () {
+        active: type;
+    $('#nav').children('li').first().children('a').addClass('active')
+        .next().addClass('is-open').show();
+        
+    $('#nav').on('click', 'li > a', function() {
+        
+      if (!$(this).hasClass('active')) {
+
+        $('#nav .is-open').removeClass('is-open').hide();
+        $(this).next().toggleClass('is-open').toggle();
+          
+        $('#nav').find('.active').removeClass('active');
+        $(this).addClass('active');
+      } else {
+        $('#nav .is-open').removeClass('is-open').hide();
+        $(this).removeClass('active');
+      }
+   });
+});
+    </script>
   </body>
 </html>

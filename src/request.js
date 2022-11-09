@@ -2,8 +2,10 @@ import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
 export const SEARCH_COMPANY_URL = `${API_URL}SearchCompanies.php?SearchValue=`;
 export const CREATE_ACCOUNT_URL = `${API_URL}CreateCustomerForUK`;
-export const USER_LOGIN_URL = `${API_URL}/login`;
-export const DASHBOARD_DATA_URL = `${API_URL}GetLeadMaster/6140`;
+export const USER_LOGIN_URL = `${API_URL}UKCustomerLogin`;
+export const DASHBOARD_DATA_URL = `${API_URL}GetLeadMaster/`;
+export const VERIFY_ACCOUNT_URL = `${API_URL}UKCustomerVerify`;
+export const FORGOT_PASSWORD_URL = `${API_URL}UKForgetPassword`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -21,7 +23,17 @@ export function login(email, password) {
   });
 }
 
-export async function getDashboardData() {
-  const { data } = await axios.get(DASHBOARD_DATA_URL);
+export async function getDashboardData(id) {
+  const { data } = await axios.get(`${DASHBOARD_DATA_URL}${id}`);
   return data;
+}
+
+export function verifyAccount(token) {
+  return axios.post(VERIFY_ACCOUNT_URL, {
+    token: token,
+  });
+}
+
+export function forgotPassword(payload) {
+  return axios.post(FORGOT_PASSWORD_URL, payload);
 }
