@@ -4,6 +4,9 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import { NavLink } from "react-router-dom";
+import { forgotPassword } from "../../request";
+import { useState } from "react";
+import { Alert } from "react-bootstrap";
 
 function ForgotPassword() {
   const forgotPasswordSchema = Yup.object().shape({
@@ -17,11 +20,34 @@ function ForgotPassword() {
   const initialValues = {
     email: "",
   };
+  const [message, setMessage] = useState({ type: "", text: "" });
 
   const formik = useFormik({
     initialValues,
     validationSchema: forgotPasswordSchema,
-    onSubmit: async (values, { setStatus, setSubmitting }) => {},
+    onSubmit: async (values, { setStatus, setSubmitting }) => {
+      forgotPassword(values).then((resp) => {
+        if (resp.data.status == "success") {
+          console.log(
+            "🚀 ~ file: forgot-password.js ~ line 30 ~ forgotPassword ~ success"
+          );
+          setMessage({
+            type: "success",
+            text: "Password reset link has been sent to your email id!",
+          });
+        } else {
+          setMessage({
+            type: "error",
+            text: "Something went wrong!",
+          });
+        }
+        console.log(
+          "🚀 ~ file: forgot-password.js ~ line 31 ~ forgotPassword ~ resp",
+          resp
+        );
+        console.log(message);
+      });
+    },
   });
   return (
     <div className="App login-page">
@@ -60,6 +86,14 @@ function ForgotPassword() {
                     )}
                   />
                 </div>
+
+                {message.type == "success" && (
+                  <Alert variant="success">{message.text}</Alert>
+                )}
+
+                {message.type == "error" && (
+                  <Alert variant="danger">{message.text}</Alert>
+                )}
 
                 <button type="submit" className="btn btn-primary login-btn">
                   Submit <i className="fa fa-chevron-right"></i>

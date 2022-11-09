@@ -5,6 +5,7 @@ export const CREATE_ACCOUNT_URL = `${API_URL}CreateCustomerForUK`;
 export const USER_LOGIN_URL = `${API_URL}UKCustomerLogin`;
 export const DASHBOARD_DATA_URL = `${API_URL}GetLeadMaster/`;
 export const VERIFY_ACCOUNT_URL = `${API_URL}UKCustomerVerify`;
+export const FORGOT_PASSWORD_URL = `${API_URL}UKForgetPassword`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -31,4 +32,8 @@ export function verifyAccount(token) {
   return axios.post(VERIFY_ACCOUNT_URL, {
     token: token,
   });
+}
+
+export function forgotPassword(payload) {
+  return axios.post(FORGOT_PASSWORD_URL, payload);
 }
