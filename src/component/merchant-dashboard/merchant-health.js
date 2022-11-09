@@ -4,6 +4,7 @@ import Header from '../header/header';
 import SiderBarMenu from './component/sidebar'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import Codat from '../Codat';
 
  
 
@@ -213,32 +214,8 @@ function MerchantHealth() {
                       <button class="checkstatus-btn btn btn-primary" onClick={() => togglePanel4(!showPanel4) } >Check status</button></div></div>
                       {showPanel4 && ( <div className="data-panel">
                        <h3>Accounting Data</h3> 
-                       <div className="row">
-                         <div className="col-md-4">
-                           <div className="form-group">
-                           <select className="form-control">
-                             <option>--Select--</option>
-                             <option>Accounting</option>
-                             <option>Assess</option>
-                             <option>Commerce</option>
-                           </select>
-                           </div>
-                         </div>
-                         <div className="col-md-4">
-                           <div className="form-group">
-                           <select className="form-control">
-                             <option>--Select--</option>
-                             <option>Accounting</option>
-                             <option>Assess</option>
-                             <option>Commerce</option>
-                           </select>
-                           </div>
-                         </div>
-                         <div className="col-md-4">
-                           <button className="btn btn-primary exportdata-btn next-btn"><i class="fa fa-cloud-arrow-down"></i> Export <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
-                         </div>
-
-                       </div>
+                      
+                        <Codat />
                       </div>)}
               </div>)}
               </section>

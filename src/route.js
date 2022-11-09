@@ -11,10 +11,11 @@ import ApplicationInformation from "./component/merchant-dashboard/application-i
 import BusinessInformation from "./component/merchant-dashboard/business-information";
 import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
+import ChangePassword from "./component/change-password/change-password";
+import InnerChangePassword from "./component/change-password/inner-change-password";
 
 const RoutePage = () => {
-  const token = getToken();
-  const isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+
 
   const PrivateRoute = ({ children }) => {
     let token = getToken();
@@ -55,6 +56,8 @@ const RoutePage = () => {
 
   const PublicRoute = ({ children }) => {
     let token = localStorage.getItem("token");
+    let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+
     if (token !== "" && token !== null && isAuthenticated) {
       return <Navigate to="/dashboard" />;
     }
