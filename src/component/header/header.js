@@ -30,8 +30,8 @@ function Header() {
                 Kunal
               </a>
               <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Action</a></li>
-                <li><a className="dropdown-item" href="#">Another action</a></li>
+                <li><a className="dropdown-item" href="/change-password">Change Password</a></li>
+                <li><a className="dropdown-item" href="#">Logout</a></li>
                
               </ul>
             </li>

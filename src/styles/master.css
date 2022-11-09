@@ -464,6 +464,8 @@ button.btn.btn-primary.login-btn i.fa.fa-chevron-right {
 
 img.login-logo {
   width: 140px;
+  margin: 0 auto;
+  display: block;
 }
 
 header {
@@ -996,6 +998,7 @@ li.sc-ksBlkl.gmgIpm.menu-item {
 .right-panel-main {
     margin-top: 20px;
     width: 100%;
+    overflow: hidden;
 }
 .right-panel-main .card.dashboard-card{margin-top: 25px; padding-bottom: 0px; margin-bottom: 30px;
 min-height: 510px;}
@@ -1247,10 +1250,11 @@ input#input-file {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 button.btn.btn-primary.exportdata-btn.next-btn {
-    margin: 0px 40px 0px 0px !important;
+    margin: 32px 40px 0px 0px !important;
     height: 42px;
     float: right;
 }
@@ -1337,5 +1341,108 @@ button.btn.btn-primary.banking-btn.download-btn {
     padding: 20px;
 }
 
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+  position: relative;
+}
+a.nav-link.dropdown-toggle {
+  text-align: right;
+}
 
 
+.copy-right {
+  width: 100%;
+  text-align: center;
+}
+button.btn.btn-primary.go-btn {
+  background: #006090;
+  border: 0px;
+}
+.accouting-info label {
+  margin-bottom: 12px !important;
+  font-size: 14px !important;
+}
+
+.rdt_TableHeadRow {
+  background: #cadfe9 !important;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.sc-bjfHbI.kNxEtY {
+  margin-top: 32px;
+  font-weight: bold;
+  font-size: 20px;
+}
+.rdt_TableBody {
+  overflow-y: auto;
+  padding-right: 0px !important;
+  max-height: 400px;
+  
+  background-attachment:  scroll, scroll, local, local;
+  -webkit-overflow-scrolling: touch;
+   -overflow-scrolling: touch;
+
+}
+.rdt_TableBody::-webkit-scrollbar {
+      width: 4px;
+      background-color: #ccc;
+      border-radius: 20px;
+  }
+
+  .rdt_TableBody::-webkit-scrollbar-thumb {
+       width: 4px;
+      background-color: #999;
+      border-radius: 20px;
+      
+  }
+
+  .rdt_TableBody::-webkit-scrollbar-button {
+      display: none;
+  }
+
+
+  
+  .sc-dmctIk.WQNxq{
+  overflow-x: auto;
+  padding-bottom: 20px !important;
+
+  max-width: 100%;
+  background-attachment: local, local, scroll, scroll;
+  -webkit-overflow-scrolling: touch;
+
+}
+.sc-dmctIk.WQNxq::-webkit-scrollbar {
+      height: 4px;
+      background-color: #ccc;
+      border-radius: 20px;
+  }
+
+  .sc-dmctIk.WQNxq::-webkit-scrollbar-thumb {
+       height: 4px;
+      background-color: #999;
+      border-radius: 20px;
+      
+  }
+
+  .sc-dmctIk.WQNxq::-webkit-scrollbar-button {
+      display: none;
+  }
+
+
+  .rdt_Table{width: 100%; max-width: 100%;}
+
+
+  header.sc-dIfARi.kDEcCH {
+    margin: 0px 0px 10px 0px !important;
+}
+
+button.btn.btn-primary.paid-btn {
+  background: #006090;
+  border: 0px;
+  font-size: 12px;
+}
+
+button.btn.btn-primary.paid-btn:hover {
+  background: #05537a;
+ 
+}
