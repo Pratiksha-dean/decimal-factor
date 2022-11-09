@@ -7,8 +7,9 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import { useNavigate } from "react-router";
+import { getToken } from "../login/loginpage";
 
-const isAuthenticated = (value) => {
+export const isAuthenticated = (value) => {
   localStorage.setItem("isAuthenticated", value);
 };
 
@@ -18,6 +19,8 @@ function Authentication() {
   const [validCode, setValidCode] = useState("");
   const [isCodeValid, setIsCodeValid] = useState(null);
   const naviagte = useNavigate();
+  const token = getToken();
+  const authenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
 
   const authenticationSchema = Yup.object().shape({
     code: Yup.string().min(6, "Too Short!").max(6, "Too Long!").required(),
@@ -40,6 +43,10 @@ function Authentication() {
       });
 
       if (isVerified) {
+        console.log(
+          "🚀 ~ file: authentication.js ~ line 43 ~ onSubmit: ~ isVerified",
+          isVerified
+        );
         naviagte("/dashboard");
         isAuthenticated(isVerified);
       }

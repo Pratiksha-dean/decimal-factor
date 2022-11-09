@@ -37,3 +37,10 @@ export function verifyAccount(token) {
 export function forgotPassword(payload) {
   return axios.post(FORGOT_PASSWORD_URL, payload);
 }
+
+export const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userDetails");
+  localStorage.removeItem("isAuthenticated");
+  localStorage.removeItem("dashboardStepNumber");
+};

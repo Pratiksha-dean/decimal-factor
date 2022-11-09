@@ -13,9 +13,12 @@ import { useEffect } from "react";
 import { getDashboardData } from "../../request";
 import { useState } from "react";
 import { getUserDetails } from "../login/loginpage";
+import { Stepper, Step } from "react-form-stepper";
+import StepWizard from "react-step-wizard";
+import { isAuthenticated } from "../authentication/authentication";
+import { useNavigate } from "react-router-dom/dist";
 
-function onFormSubmit() {
-}
+function onFormSubmit() {}
 
 export const setDashboardStepNo = (no) => {
   localStorage.setItem("dashboardStepNumber", no);
@@ -30,40 +33,120 @@ export const getReviewAppData = () => {
 };
 
 export const getDashboardStepNo = () => {
-  return localStorage.getItem("dashboardStepNumber");
+  let stepNo = localStorage.getItem("dashboardStepNumber");
+  if (!stepNo) {
+    localStorage.setItem("dashboardStepNumber", 0);
+  }
+  return Number(localStorage.getItem("dashboardStepNumber"));
 };
 
 function Dashboard() {
   const [dasboardData, setDashboardData] = useState();
   const [isFormValid, setIsFormValid] = useState();
   const [stepNumber, setStepNumber] = useState();
+  const [stepWizard, setStepWizard] = useState(null);
+  const isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+  const naviagte = useNavigate();
+
   const userDetails = getUserDetails();
   useEffect(() => {
-    getDashboardData(userDetails.lead_id).then((resp) => {
-      setDashboardData(resp.records[0]);
-    });
+    if (userDetails && userDetails.lead_id) {
+      getDashboardData(userDetails.lead_id).then((resp) => {
+        setDashboardData(resp.records[0]);
+      });
+    }
 
     return () => {};
   }, []);
 
-  function step1Validator(value) {
-    console.log(
-      "🚀 ~ file: dashboard.js ~ line 51 ~ step1Validator ~ value",
-      value
-    );
-    // let isSubmitting = false;
-    // if (
-    //   document.getElementById("submit-btn-verify-app-info") &&
-    //   !isSubmitting
-    // ) {
-    //   document.getElementById("submit-btn-verify-app-info").click();
-    //   isSubmitting = true;
-    // }
-    // return value;
+  const steps = [
+    {
+      label: "Review Application information",
+      name: "Review Application information",
+      children1: <ReviewApplicationInformation data={dasboardData} />,
+      current: 1,
+    },
+    {
+      label: "Review Business Information",
+      name: "Review Business Information",
+      children1: <ReviewBusinessInformation data={dasboardData} />,
+    },
+    {
+      label: "Review Personal Details",
+      name: "Review Personal Details",
+      children1: <ReviewPersonalDetails data={dasboardData} />,
+    },
+    {
+      label: "Link Banking & Accounting",
+      left: "0%",
+      name: "Link Banking & Accounting",
+      children1: <LinkBankingAccounting />,
+    },
+    {
+      label: "Provide consent",
+      width: "20%",
+      name: "Provide consent",
+      children1: <ProvideConsent />,
+    },
+  ];
 
-    return true;
-  }
+  const stepNo = getDashboardStepNo();
 
+  const [activeStep, setActiveStep] = useState(stepNo);
+
+  const assignStepWizard = (instance) => {
+    setStepWizard(instance);
+  };
+
+  const showComponents = (step) => {
+    let component;
+    switch (step) {
+      case 0:
+        component = (
+          <ReviewApplicationInformation
+            data={dasboardData}
+            setActiveStep={setActiveStep}
+            activeStep={activeStep}
+          />
+        );
+        break;
+      case 1:
+        component = (
+          <ReviewBusinessInformation
+            data={dasboardData}
+            setActiveStep={setActiveStep}
+            activeStep={activeStep}
+          />
+        );
+        break;
+      case 2:
+        component = (
+          <ReviewPersonalDetails
+            data={dasboardData}
+            setActiveStep={setActiveStep}
+            activeStep={activeStep}
+          />
+        );
+        break;
+      case 3:
+        component = (
+          <LinkBankingAccounting
+            data={dasboardData}
+            setActiveStep={setActiveStep}
+            activeStep={activeStep}
+          />
+        );
+        break;
+      case 4:
+        component = <ProvideConsent />;
+        break;
+    }
+    return component;
+  };
+
+  const handleStepChange = (e) => {
+    setActiveStep(e.activeStep - 1);
+  };
   return (
     <div className="App">
       <div className="dashboard-panel">
@@ -73,8 +156,20 @@ function Dashboard() {
             <div className="verify-panel">
               {dasboardData && (
                 <>
-                  <VerifyAlert />
-                  <StepProgressBar
+                  {activeStep == 0 && <VerifyAlert />}
+
+                  <Stepper
+                    activeStep={activeStep}
+                    steps={steps}
+                    stepClassName="stepper"
+                  />
+
+                  {showComponents(activeStep)}
+                  <StepWizard
+                    instance={assignStepWizard}
+                    onStepChange={handleStepChange}
+                  ></StepWizard>
+                  {/* <StepProgressBar
                     startingStep={0}
                     onSubmit={onFormSubmit}
                     labelClass={"titlelabel"}
@@ -121,7 +216,7 @@ function Dashboard() {
                         content: <ProvideConsent />,
                       },
                     ]}
-                  />
+                  /> */}
                 </>
               )}
             </div>

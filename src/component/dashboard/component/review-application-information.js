@@ -20,28 +20,33 @@ import {
   setReviewAppData,
 } from "../dashboard";
 
-function ReviewApplicationInformation({ data, setIsFormValid }) {
-  console.log(
-    "🚀 ~ file: review-application-information.js ~ line 24 ~ ReviewApplicationInformation ~ step1Validator",
-    setIsFormValid
-  );
+function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
   const storedData = getReviewAppData();
+
   const initialValues = {
-    [fieldNames.AMOUNT]: data["lf_amount_required"],
-    [fieldNames.REQUIREDFUND]: data["lm_Funds"],
-    [fieldNames.LOANPURPOSE]:
-      loadPurposeList[
-        loadPurposeList.findIndex(
-          (item) => data.ApptxtLoanPurpose == item.value
-        )
-      ],
-    [fieldNames.BUSINESSENTITY]:
-      businessEntityList[
-        businessEntityList.findIndex(
-          (item) => data.lf_business_activity == item.value
-        )
-      ],
-    [fieldNames.BUSINESSNAME]: data["lf_business_name"],
+    [fieldNames.AMOUNT]: storedData
+      ? storedData["amount"]
+      : data["lf_amount_required"],
+    [fieldNames.REQUIREDFUND]: storedData
+      ? storedData["requiredFund"]
+      : data["lm_Funds"],
+    [fieldNames.LOANPURPOSE]: storedData
+      ? storedData["loanPurpose"]
+      : loadPurposeList[
+          loadPurposeList.findIndex(
+            (item) => data.ApptxtLoanPurpose == item.value
+          )
+        ],
+    [fieldNames.BUSINESSENTITY]: storedData
+      ? storedData["businessEntity"]
+      : businessEntityList[
+          businessEntityList.findIndex(
+            (item) => data.lf_business_activity == item.value
+          )
+        ],
+    [fieldNames.BUSINESSNAME]: storedData
+      ? storedData["businessName"]
+      : data["lf_business_name"],
   };
 
   return (
@@ -52,9 +57,10 @@ function ReviewApplicationInformation({ data, setIsFormValid }) {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            setActiveStep(activeStep + 1);
+            setDashboardStepNo(activeStep + 1);
+
             setTimeout(() => {
-              // alert(JSON.stringify(values, null, 2));
-              // setIsFormValid(true);
               setSubmitting(false);
             }, 400);
           }}
@@ -256,14 +262,20 @@ function ReviewApplicationInformation({ data, setIsFormValid }) {
                       }}
                     />
                   </div>
-                  <button
-                    type="submit"
-                    id="submit-btn-verify-app-info"
-                    style={{ visibility: "hidden" }}
-                  >
-                    submit
-                  </button>
                 </div>
+              </div>
+              <div className="d-flex justify-content-end mt-3">
+                {/* <button className="btn btn-secondary">
+                  {" "}
+                  <i className="bi bi-chevron-left"></i>Back
+                </button> */}
+                <button
+                  className="btn btn-primary"
+                  style={{ backgroundColor: "#006090" }}
+                  type="submit"
+                >
+                  Next <i className="bi bi-chevron-right"></i>
+                </button>
               </div>
             </form>
           )}

@@ -81,7 +81,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
   };
 
   const goBack = () => {
-    console.log("goback");
     setStep(2);
     showSelectedState(2);
     setStepNo(2);
@@ -101,10 +100,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
           const applicationInfo = getApplicationInfo();
           const businesssInfo = getBusinessInfo();
           const companyInfo = getCompanyInfo();
-          console.log(
-            "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ companyInfo",
-            companyInfo
-          );
+
           let payload = { ...applicationInfo, ...businesssInfo, ...values };
           payload["businessSector"] = payload["businessSector"].value;
           payload["businessId"] = companyInfo["company_number"]
@@ -166,10 +162,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 setStepNo(4);
                 setLoading(false);
               }
-              console.log(
-                "🚀 ~ file: personal-details.js ~ line 339 ~ .then ~ resp",
-                resp
-              );
             })
             .catch((err) => {
               console.log(

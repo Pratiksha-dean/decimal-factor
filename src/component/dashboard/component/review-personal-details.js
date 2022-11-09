@@ -7,14 +7,36 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { fieldNames } from "../../requestaquote/components/application-information";
 import { getUserDetails } from "../../login/loginpage";
+import { setDashboardStepNo } from "../dashboard";
 
-function ReviewPersonalDetails({ data }) {
+export const setReviewPersonalData = (data) => {
+  localStorage.setItem("reviewPersonalInfo", JSON.stringify(data));
+};
+
+export const getReviewPersonalData = () => {
+  return JSON.parse(localStorage.getItem("reviewPersonalInfo"));
+};
+
+function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
   const userDetails = getUserDetails();
+  const storeData = getReviewPersonalData();
+  console.log(
+    "🚀 ~ file: review-personal-details.js ~ line 23 ~ ReviewPersonalDetails ~ storeData",
+    storeData
+  );
   const initialValues = {
-    [fieldNames.FIRSTNAME]: userDetails ? userDetails["first_name"] : "",
-    [fieldNames.LASTNAME]: userDetails ? userDetails["last_name"] : "",
-    [fieldNames.EMAIL]: data ? data["lf_business_email"] : "",
-    [fieldNames.PHONE]: data ? data["lf_telephone"] : "",
+    [fieldNames.FIRSTNAME]: storeData
+      ? storeData[fieldNames.FIRSTNAME]
+      : userDetails["first_name"],
+    [fieldNames.LASTNAME]: storeData
+      ? storeData[fieldNames.LASTNAME]
+      : userDetails["last_name"],
+    [fieldNames.EMAIL]: storeData
+      ? storeData[fieldNames.EMAIL]
+      : data["lf_business_email"],
+    [fieldNames.PHONE]: storeData
+      ? storeData[fieldNames.PHONE]
+      : data["lf_telephone"],
   };
 
   const validationSchema = Yup.object().shape({
@@ -36,6 +58,9 @@ function ReviewPersonalDetails({ data }) {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            setActiveStep(activeStep + 1);
+            setDashboardStepNo(activeStep + 1);
+
             setTimeout(() => {
               setSubmitting(false);
             }, 400);
@@ -77,7 +102,7 @@ function ReviewPersonalDetails({ data }) {
                       )}
                       onChange={handleChange}
                       onBlur={() => {
-                        // setPersonalInfo(values);
+                        setReviewPersonalData(values);
                       }}
                       value={values[fieldNames.FIRSTNAME]}
                     />
@@ -106,7 +131,7 @@ function ReviewPersonalDetails({ data }) {
                       )}
                       onChange={handleChange}
                       onBlur={() => {
-                        // setPersonalInfo(values);
+                        setReviewPersonalData(values);
                       }}
                       value={values[fieldNames.LASTNAME]}
                     />
@@ -145,7 +170,7 @@ function ReviewPersonalDetails({ data }) {
                       )}
                       onChange={handleChange}
                       onBlur={() => {
-                        // setPersonalInfo(values);
+                        setReviewPersonalData(values);
                       }}
                       value={values[fieldNames.EMAIL]}
                     />
@@ -169,13 +194,34 @@ function ReviewPersonalDetails({ data }) {
                         setFieldValue(fieldNames.PHONE, phone);
                       }}
                       onBlur={() => {
-                        // setPersonalInfo(values);
+                        setReviewPersonalData(values);
                       }}
                       inputClass={"w-100"}
                       placeholder="Enter Phone Number"
                     />
                   </div>
                 </div>
+              </div>
+              <div className="d-flex justify-content-between mt-3">
+                <button
+                  className="btn"
+                  onClick={() => {
+                    setActiveStep(activeStep - 1);
+                    setDashboardStepNo(activeStep - 1);
+                  }}
+                  type="button"
+                  style={{ backgroundColor: "#E2E2E2" }}
+                >
+                  {" "}
+                  <i className="bi bi-chevron-left"></i>Back
+                </button>
+                <button
+                  className="btn btn-primary"
+                  style={{ backgroundColor: "#006090" }}
+                  type="submit"
+                >
+                  Next <i className="bi bi-chevron-right"></i>
+                </button>
               </div>
             </form>
           )}

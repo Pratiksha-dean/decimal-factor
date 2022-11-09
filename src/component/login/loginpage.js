@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../request";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
+import { isAuthenticated } from "../authentication/authentication";
 
 const setEmailPassword = (data) => {
   localStorage.setItem("creds", data);
@@ -32,10 +33,7 @@ function Login() {
   const [error, setError] = useState();
   const savedCredentials = JSON.parse(localStorage.getItem("creds"));
   const [rememberMe, setRememberMe] = useState(savedCredentials ? true : false);
-  console.log(
-    "🚀 ~ file: loginpage.js ~ line 19 ~ Login ~ savedCredentials",
-    savedCredentials
-  );
+
   const loginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Wrong email format")
@@ -62,14 +60,15 @@ function Login() {
           if (resp.data.status == "error") {
             setError(resp.data.message_text);
           } else {
-            setUserDetails(resp.data.data);
-            setToken(resp.data.data.token);
-            navigate("/authentication");
+            if (resp.data.data.status == 1) {
+              navigate("/authentication");
+              setUserDetails(resp.data.data);
+              setToken(resp.data.data.token);
+              isAuthenticated(false);
+            } else {
+              setError("Please verify your email to login");
+            }
           }
-          console.log(
-            "🚀 ~ file: loginpage.js ~ line 33 ~ awaitlogin ~ resp",
-            resp
-          );
         })
         .catch((err) => {
           console.log("🚀 ~ file: loginpage.js ~ line 38 ~ login ~ err", err);
@@ -147,7 +146,6 @@ function Login() {
                         } else {
                           localStorage.removeItem("creds");
                         }
-                        console.log(e.target.checked);
                       }}
                     />{" "}
                     <label>Remember Me</label>
@@ -156,14 +154,14 @@ function Login() {
                     <NavLink to="/forgot-password">Forgot Password?</NavLink>
                   </div>
                 </div>
-                <button className="btn btn-primary login-btn">
+                <button className="btn btn-primary login-btn" type="submit">
                   Login Now <i className="fa fa-chevron-right"></i>
                 </button>
                 <div className="divider"></div>
                 <div className="form-group loginnow-btn">
                   <p>
                     Don’t have an Account?{" "}
-                    <NavLink href="#">Create Account</NavLink>
+                    <NavLink to="/request-a-quote">Create Account</NavLink>
                   </p>
                 </div>
               </form>

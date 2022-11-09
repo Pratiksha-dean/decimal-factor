@@ -6,9 +6,19 @@ import Select from "react-select";
 import clsx from "clsx";
 import * as Yup from "yup";
 import PhoneInput from "react-phone-input-2";
+import { setDashboardStepNo } from "../dashboard";
+
+export const setReviewBusinessData = (data) => {
+  localStorage.setItem("reviewBusinessInfo", JSON.stringify(data));
+};
+
+export const getReviewBusinessData = () => {
+  return JSON.parse(localStorage.getItem("reviewBusinessInfo"));
+};
 
 const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
+
   return (
     <div className="accordion-wrapper">
       <div
@@ -33,34 +43,19 @@ const Accordion = ({ title, children, isPrimary }) => {
   );
 };
 
-function ReviewBusinessInformation({ data }) {
+function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
+  const storedData = getReviewBusinessData();
+
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
-    [fieldNames.ISPAYMENTPENDING]: Yup.boolean().required(),
-    [fieldNames.SUPPLIERDUEAMOUNT]: Yup.string().when(
-      fieldNames.ISPAYMENTPENDING,
-      {
-        is: true,
-        then: Yup.string().required(),
-      }
-    ),
-
-    [fieldNames.CARDPAYMENTAMOUNT]: Yup.string().when(
-      fieldNames.ISPAYMENTPROCESSED,
-      {
-        is: true,
-        then: Yup.string().required(),
-      }
-    ),
-
-    [fieldNames.ISPAYMENTPROCESSED]: Yup.boolean().required(),
+    [fieldNames.SUPPLIERDUEAMOUNT]: Yup.string().required(),
     [fieldNames.BUSINESSSECTOR]: Yup.string().required(),
 
     [fieldNames.DIRECTORINFO]: Yup.array().of(
       Yup.object().shape({
-        [fieldNames.NATUREOFCONTROL]: Yup.string().required(),
-        [fieldNames.TOTALSHARECOUNT]: Yup.string().required(),
+        [fieldNames.NATUREOFCONTROL]: Yup.string(),
+        [fieldNames.TOTALSHARECOUNT]: Yup.string(),
         [fieldNames.DATEOFBIRTH]: Yup.string(),
         [fieldNames.POSTCODE]: Yup.string(),
         [fieldNames.ADDRESS]: Yup.string(),
@@ -79,16 +74,8 @@ function ReviewBusinessInformation({ data }) {
     ),
   });
   const patchDirectorData = (data) => {
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 96 ~ patchDirectorData ~ dataShareHolderList",
-      data
-    );
-
     let values = data["ShareHolderList"];
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 77 ~ patchDirectorData ~ values",
-      values
-    );
+
     if (values && values.length) {
       values = values.map((item) => {
         item[fieldNames.DATEOFBIRTH] =
@@ -100,22 +87,26 @@ function ReviewBusinessInformation({ data }) {
     return values;
   };
   const initialValues = {
-    [fieldNames.BUSINESSSECTOR]: data
-      ? businessSectorList[
+    [fieldNames.BUSINESSSECTOR]: storedData
+      ? storedData[fieldNames.BUSINESSSECTOR]
+      : businessSectorList[
           businessSectorList.findIndex(
             (item) => data.lf_business_sector == item.value
           )
-        ]
-      : "",
-    [fieldNames.BUSINESSSTARTDATE]: data ? data["AppBusinessStartDate"] : "",
+        ],
+    [fieldNames.BUSINESSSTARTDATE]: storedData
+      ? storedData[fieldNames.BUSINESSSTARTDATE]
+      : data["AppBusinessStartDate"],
 
-    [fieldNames.CARDPAYMENTAMOUNT]: data
-      ? data["lf_monthly_credit_card_volume"]
+    [fieldNames.CARDPAYMENTAMOUNT]: storedData
+      ? storedData[fieldNames.CARDPAYMENTAMOUNT]
+      : data["lf_monthly_credit_card_volume"],
+    [fieldNames.SUPPLIERDUEAMOUNT]: storedData
+      ? storedData[fieldNames.SUPPLIERDUEAMOUNT]
+      : data["AppCurrentValueOverdueInvoices"],
+    [fieldNames.BUSINESSLEGALNUMBER]: storedData
+      ? storedData[fieldNames.BUSINESSLEGALNUMBER]
       : "",
-    [fieldNames.SUPPLIERDUEAMOUNT]: data
-      ? data["AppCurrentValueOverdueInvoices"]
-      : "",
-    [fieldNames.BUSINESSPHONE]: data ? data["lf_telephone"] : "",
     [fieldNames.DIRECTORINFO]: patchDirectorData(data),
   };
 
@@ -128,6 +119,9 @@ function ReviewBusinessInformation({ data }) {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
+          setActiveStep(activeStep + 1);
+          setDashboardStepNo(activeStep + 1);
+
           setTimeout(() => {
             setSubmitting(false);
           }, 400);
@@ -154,7 +148,7 @@ function ReviewBusinessInformation({ data }) {
                     <Select
                       closeMenuOnSelect={true}
                       onBlur={() => {
-                        // setBusinessInfo(values);
+                        setReviewBusinessData(values);
                       }}
                       onChange={(selectedOption) =>
                         setFieldValue(fieldNames.BUSINESSSECTOR, selectedOption)
@@ -204,7 +198,7 @@ function ReviewBusinessInformation({ data }) {
                       )}
                       onChange={handleChange}
                       onBlur={() => {
-                        // setBusinessInfo(values);
+                        setReviewBusinessData(values);
                       }}
                       value={values[fieldNames.BUSINESSSTARTDATE]}
                     />
@@ -235,7 +229,7 @@ function ReviewBusinessInformation({ data }) {
                       )}
                       onChange={handleChange}
                       onBlur={() => {
-                        // setBusinessInfo(values);
+                        setReviewBusinessData(values);
                       }}
                       value={values[fieldNames.CARDPAYMENTAMOUNT]}
                     />
@@ -268,7 +262,7 @@ function ReviewBusinessInformation({ data }) {
                       min="0"
                       onChange={handleChange}
                       onBlur={() => {
-                        // setBusinessInfo(values);
+                        setReviewBusinessData(values);
                       }}
                       value={values[fieldNames.SUPPLIERDUEAMOUNT]}
                     />
@@ -276,27 +270,52 @@ function ReviewBusinessInformation({ data }) {
                 </div>
                 <div className="col-md-4">
                   <div className="form-group">
-                    <label>Business Number</label>
+                    <label>Business Legal Number</label>
 
-                    <PhoneInput
-                      name={fieldNames.BUSINESSPHONE}
+                    <input
+                      type="text"
+                      placeholder="Business Legal Number"
+                      name={fieldNames.BUSINESSLEGALNUMBER}
+                      className={clsx(
+                        "form-control ",
+                        {
+                          "is-invalid":
+                            touched[fieldNames.BUSINESSLEGALNUMBER] &&
+                            errors[fieldNames.BUSINESSLEGALNUMBER],
+                        },
+                        {
+                          "is-valid":
+                            touched[fieldNames.BUSINESSLEGALNUMBER] &&
+                            !errors[fieldNames.BUSINESSLEGALNUMBER],
+                        }
+                      )}
+                      min="0"
+                      onChange={handleChange}
+                      onBlur={() => {
+                        setReviewBusinessData(values);
+                      }}
+                      value={values[fieldNames.BUSINESSLEGALNUMBER]}
+                    />
+
+                    {/* <PhoneInput
+                      name={fieldNames.BUSINESSLEGALNUMBER}
                       country={"uk"}
-                      value={values[fieldNames.BUSINESSPHONE]}
+                      value={values[fieldNames.BUSINESSLEGALNUMBER]}
                       inputStyle={
-                        touched[fieldNames.BUSINESSPHONE] &&
-                        errors[fieldNames.BUSINESSPHONE] && {
+                        touched[fieldNames.BUSINESSLEGALNUMBER] &&
+                        errors[fieldNames.BUSINESSLEGALNUMBER] && {
                           borderColor: "red",
                         }
                       }
                       onChange={(phone) => {
-                        setFieldValue(fieldNames.BUSINESSPHONE, phone);
+                        setFieldValue(fieldNames.BUSINESSLEGALNUMBER, phone);
                       }}
                       onBlur={() => {
-                        // setPersonalInfo(values);
+                        setReviewBusinessData(values);
                       }}
                       inputClass={"w-100"}
                       placeholder="Enter Phone Number"
-                    />
+                    /> */}
 
                     {/* <input
                       type="text"
@@ -353,6 +372,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.FIRSTNAME}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.FIRSTNAME]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -366,6 +388,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.LASTNAME}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.LASTNAME]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -381,6 +406,9 @@ function ReviewBusinessInformation({ data }) {
                                           value={
                                             item[fieldNames.NATUREOFCONTROL]
                                           }
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -396,6 +424,9 @@ function ReviewBusinessInformation({ data }) {
                                           }
                                           className="form-control"
                                           placeholder="% of Total Share Count"
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -409,6 +440,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.EMAILID}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.EMAILID]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -441,7 +475,7 @@ function ReviewBusinessInformation({ data }) {
                                             );
                                           }}
                                           onBlur={() => {
-                                            // setPersonalInfo(values);
+                                            setReviewBusinessData(values);
                                           }}
                                           inputClass={"w-100"}
                                           placeholder="Enter Phone Number"
@@ -458,6 +492,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.DATEOFBIRTH}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.DATEOFBIRTH]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -471,6 +508,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.POSTCODE}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.POSTCODE]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -497,6 +537,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.HOUSENUMBER}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.HOUSENUMBER]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -510,6 +553,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.HOUSENAME}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.HOUSENAME]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -523,6 +569,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.STREET}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.STREET]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -536,6 +585,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.COUNTY}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.COUNTY]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -549,6 +601,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.TOWN}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.TOWN]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -564,6 +619,9 @@ function ReviewBusinessInformation({ data }) {
                                           value={
                                             item[fieldNames.RESIDENTIALSTATUS]
                                           }
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -577,6 +635,9 @@ function ReviewBusinessInformation({ data }) {
                                           name={`${fieldNames.DIRECTORINFO}.${index}.${fieldNames.LIVINGSINCE}`}
                                           onChange={handleChange}
                                           value={item[fieldNames.LIVINGSINCE]}
+                                          onBlur={() => {
+                                            setReviewBusinessData(values);
+                                          }}
                                         />
                                       </div>
                                     </div>
@@ -592,6 +653,27 @@ function ReviewBusinessInformation({ data }) {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="d-flex justify-content-between mt-3">
+              <button
+                className="btn"
+                onClick={() => {
+                  setActiveStep(activeStep - 1);
+                  setDashboardStepNo(activeStep - 1);
+                }}
+                style={{ backgroundColor: "#E2E2E2" }}
+                type="button"
+              >
+                {" "}
+                <i className="bi bi-chevron-left"></i>Back
+              </button>
+              <button
+                className="btn btn-primary"
+                style={{ backgroundColor: "#006090" }}
+                type="submit"
+              >
+                Next <i className="bi bi-chevron-right"></i>
+              </button>
             </div>
           </form>
         )}

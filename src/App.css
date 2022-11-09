@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.stepper.completed {
+  background-color: #198754 !important;
+}
+
+#RFS-Label {
+  color: #646464;
+  /* font-weight: 600; */
+  font-size: 16px;
+  font-family: "Montserrat";
+}
+
+.stepper.active {
+  background-color: #006090 !important;
+}

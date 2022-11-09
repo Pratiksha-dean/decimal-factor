@@ -42,7 +42,7 @@ export const fieldNames = {
   TOWN: "town",
   RESIDENTIALSTATUS: "residentialStatus",
   LIVINGSINCE: "living_since",
-  BUSINESSPHONE: "businessPhone",
+  BUSINESSLEGALNUMBER: "businessLegalNumber",
   ISPRIMARY: "is_primary",
   PHONENUMBER: "phonenumber",
   EMAILID: "email_id",
@@ -293,7 +293,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 name={fieldNames.REQUIREDFUND}
                 onChange={handleChange}
                 onBlur={(e) => {
-                  console.log(e.target.value);
                   setApplicationInfo(values);
                 }}
                 value={values[fieldNames.REQUIREDFUND]}
