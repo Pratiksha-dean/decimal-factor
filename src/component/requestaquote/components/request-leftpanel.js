@@ -5,10 +5,6 @@ export const getStepNo = () => {
   if (step == null) {
     localStorage.setItem("stepNumber", 1);
   }
-  console.log(
-    "🚀 ~ file: request-leftpanel.js ~ line 5 ~ getStepNo ~ step",
-    step
-  );
   return JSON.parse(localStorage.getItem("stepNumber"));
 };
 
@@ -100,58 +96,7 @@ function RequestLeftPanel({ step, setStep }) {
             </li>
           );
         })}
-        {/* <li
-          className={step === stepNo ? "active" : ""}
-          onClick={() => {
-            setStepNo(1);
-            setStep(1);
-          }}
-        >
-          <span>
-            <i className="fa-solid fa-floppy-disk"></i>
-          </span>
-          <strong className="tab-content">Application Information</strong>
-        </li>
-        <li
-          className={step == stepNo ? "active" : ""}
-          onClick={() => {
-            setStepNo(2);
-            setStep(2);
-          }}
-        >
-          <span>
-            <i className="fa-solid fa-floppy-disk"></i>
-          </span>
-          <strong className="tab-content">Business Information</strong>
-        </li>
-        <li
-          className={step == stepNo ? "active" : ""}
-          onClick={() => {
-            setStepNo(3);
-            setStep(3);
-          }}
-        >
-          <span>
-            <i className="fa-solid fa-floppy-disk"></i>
-          </span>
-          <strong className="tab-content">Personal Details</strong>
-        </li>
-        <li
-          className={step == stepNo ? "active" : ""}
-          onClick={() => {
-            setStepNo(4);
-            setStep(4);
-          }}
-        >
-          <span>
-            <i className="fa-solid fa-floppy-disk"></i>
-          </span>
-          <strong className="tab-content">Confirmation</strong>
-        </li> */}
       </ul>
-      {/* <div className="email-id-col">
-        <Link href="mailt0:info@decimalfactor.com"><i className="fa fa-envelope"></i> info@decimalfactor.com</Link>
-      </div> */}
     </div>
   );
 }

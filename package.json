@@ -1,5 +1,6 @@
 {
   "name": "decimal-fector",
+  "homepage": "https://portal.decimalfactor.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,9 +11,11 @@
     "bootstrap": "^5.2.2",
     "clsx": "^1.2.1",
     "formik": "^2.2.9",
+    "html-react-parser": "^3.0.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-collapsed": "^3.5.0",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0",
     "react-intl-tel-input": "^8.2.0",
     "react-phone-input-2": "^2.15.1",
@@ -24,6 +27,9 @@
     "react-tabs": "^5.1.0",
     "react-tooltip": "^4.4.3",
     "react-yup": "^1.24.1",
+    "crypto-js": "^4.1.1",
+    "speakeasy": "^2.0.0",
+        "qrcode": "^1.5.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

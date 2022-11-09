@@ -7,7 +7,9 @@ import axios from "axios";
 import clsx from "clsx";
 import * as Yup from "yup";
 import { setStepNo } from "./request-leftpanel";
-import { setBusinessInfo } from "./business-information";
+import { setBusinessInfo, setCompanyInfo } from "./business-information";
+import { NavLink } from "react-router-dom";
+import { SEARCH_COMPANY_URL } from "../../../request";
 
 export const fieldNames = {
   AMOUNT: "amount",
@@ -27,9 +29,55 @@ export const fieldNames = {
   PHONE: "phone",
   PASSWORD: "password",
   CONFIRMPASSWORD: "confirmPassword",
+  DIRECTORINFO: "directorInfo",
+  NATUREOFCONTROL: "natures_of_control",
+  TOTALSHARECOUNT: "totalShareCount",
+  DATEOFBIRTH: "dateOfBirth",
+  POSTCODE: "postal_code",
+  ADDRESS: "address_line_1",
+  HOUSENUMBER: "houseNumber",
+  HOUSENAME: "houseName",
+  STREET: "street",
+  COUNTY: "county",
+  TOWN: "town",
+  RESIDENTIALSTATUS: "residentialStatus",
+  LIVINGSINCE: "living_since",
+  BUSINESSPHONE: "businessPhone",
+  ISPRIMARY: "is_primary",
+  PHONENUMBER: "phonenumber",
+  EMAILID: "email_id",
 };
 
-const loadPurposeList = [
+// "PreviousAddress": [],
+// "shareHolderID": "7404",
+// "kindofShareHolder": "",
+// "nationality": null,
+// "natures_of_control": "individual-beneficial-owner",
+// "country_of_residence": null,
+// "fullName": "Hilary Phillips",
+// "firstName": "Hilary",
+// "lastName": "Phillips",
+// "DOB_day": "01",
+// "DOB_month": "04",
+// "DOB_year": "1944",
+// "locality": null,
+// "address_line_1": "Old Gloucester Street",
+// "postal_code": "WC1N 3AX",
+// "notified_on": null,
+// "phonenumber": "789654478555",
+// "email_id": "badhwaryash@gmail.com",
+// "is_primary": "1",
+// "residentialStatus": "18003",
+// "houseNumber": "27",
+// "houseName": "27",
+// "street": "Old Gloucester Street",
+// "city": null,
+// "town": "United Kingdom",
+// "county": "London",
+// "living_since": "04/11/2015",
+// "companyName": ""
+
+export const loadPurposeList = [
   { value: "42001", label: "Cash Flow / Working Capital" },
   { value: "42002", label: "Expansion" },
   { value: "42003", label: "Stock" },
@@ -79,7 +127,7 @@ const loadPurposeList = [
   { value: "42038", label: "Management Buy-Out" },
 ];
 
-const businessEntityList = [
+export const businessEntityList = [
   { value: "Sole Trader", label: "Sole Trader" },
   { value: "Non-Ltd Partnership", label: "Non-Ltd Partnership" },
   { value: "Private Limited Company", label: "Private limited company" },
@@ -103,12 +151,30 @@ const businessEntityList = [
   },
 ];
 
+export const validationSchema = Yup.object().shape({
+  [fieldNames.AMOUNT]: Yup.number().required(),
+  [fieldNames.REQUIREDFUND]: Yup.string().required(),
+  [fieldNames.LOANPURPOSE]: Yup.string().required(),
+  [fieldNames.BUSINESSENTITY]: Yup.string().required(),
+  [fieldNames.BUSINESSNAME]: Yup.string().required(),
+});
+
+export const getApplicationInfo = () => {
+  return JSON.parse(localStorage.getItem("applicationInfo"));
+};
+
+export const loadOptions = async (inputValue) => {
+  const res = await axios.get(`${SEARCH_COMPANY_URL}${inputValue}`);
+  const data = res.data.items;
+  let list = res.data.items.map((item) => {
+    return { label: item.title, value: item.title, data: item };
+  });
+
+  return list;
+};
+
 function ApplicationInformation({ setStep, showSelectedState }) {
-  const storedData = JSON.parse(localStorage.getItem("applicationInfo"));
-  console.log(
-    "🚀 ~ file: application-information.js ~ line 107 ~ ApplicationInformation ~ storedData",
-    storedData
-  );
+  const storedData = getApplicationInfo();
   const initialValues = {
     [fieldNames.AMOUNT]: storedData ? storedData[fieldNames.AMOUNT] : "",
     [fieldNames.REQUIREDFUND]: storedData
@@ -128,22 +194,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
   const setApplicationInfo = (info) => {
     localStorage.setItem("applicationInfo", JSON.stringify(info));
   };
-
-  const loadOptions = async (inputValue) => {
-    const res = await axios.get(
-      `https://sales.decimalfactor.com/staging/api/SearchCompanies.php?SearchValue=${inputValue}`
-    );
-    const data = res.data.items;
-    return data;
-  };
-
-  const validationSchema = Yup.object().shape({
-    [fieldNames.AMOUNT]: Yup.number().required(),
-    [fieldNames.REQUIREDFUND]: Yup.string().required(),
-    [fieldNames.LOANPURPOSE]: Yup.string().required(),
-    [fieldNames.BUSINESSENTITY]: Yup.string().required(),
-    [fieldNames.BUSINESSNAME]: Yup.string().required(),
-  });
 
   return (
     <div className="right-panel">
@@ -198,7 +248,9 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 )}
                 name={fieldNames.AMOUNT}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={(e) => {
+                  setApplicationInfo(values);
+                }}
                 value={values[fieldNames.AMOUNT]}
               />
             </div>
@@ -206,13 +258,11 @@ function ApplicationInformation({ setStep, showSelectedState }) {
               <label>Purpose of Loan</label>
               <Select
                 closeMenuOnSelect={true}
-                onBlur={handleBlur}
                 onChange={(selectedOption) => {
-                  console.log(
-                    "🚀 ~ file: application-information.js ~ line 202 ~ ApplicationInformation ~ value",
-                    selectedOption
-                  );
                   setFieldValue(fieldNames.LOANPURPOSE, selectedOption);
+                }}
+                onBlur={(selectedOption) => {
+                  setApplicationInfo(values);
                 }}
                 options={loadPurposeList}
                 name={fieldNames.LOANPURPOSE}
@@ -234,15 +284,6 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 }}
                 value={values[fieldNames.LOANPURPOSE]}
               />
-
-              {/* <select
-                placeholder="Enter purpose of loan"
-                className="form-control"
-                name="Purpose of Loan"
-              >
-                <option>Enter purpose of loan</option>
-                <option>Enter purpose of loan</option>
-              </select> */}
             </div>
             <div className="form-group">
               <label>Term of Funds Required (Months)</label>
@@ -251,7 +292,10 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 placeholder="12"
                 name={fieldNames.REQUIREDFUND}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                onBlur={(e) => {
+                  console.log(e.target.value);
+                  setApplicationInfo(values);
+                }}
                 value={values[fieldNames.REQUIREDFUND]}
                 className={clsx(
                   "form-control ",
@@ -285,10 +329,12 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   }
                 )}
                 closeMenuOnSelect={true}
-                onBlur={handleBlur}
-                onChange={(selectedOption) =>
-                  setFieldValue(fieldNames.BUSINESSENTITY, selectedOption)
-                }
+                onChange={(selectedOption) => {
+                  setFieldValue(fieldNames.BUSINESSENTITY, selectedOption);
+                }}
+                onBlur={(selectedOption) => {
+                  setApplicationInfo(values);
+                }}
                 options={businessEntityList}
                 name={fieldNames.BUSINESSENTITY}
                 placeholder="Select Business Entity"
@@ -316,28 +362,32 @@ function ApplicationInformation({ setStep, showSelectedState }) {
 
                 <AsyncSelect
                   closeMenuOnSelect={true}
-                  value={values[fieldNames.BUSINESSNAME]}
+                  value={{
+                    label: values[fieldNames.BUSINESSNAME],
+                    value: values[fieldNames.BUSINESSNAME],
+                  }}
                   name={fieldNames.BUSINESSNAME}
-                  getOptionLabel={(e) => e.title}
-                  getOptionValue={(e) => e}
                   loadOptions={loadOptions}
                   onChange={(selectedOption) => {
-                    console.log(
-                      "🚀 ~ file: application-information.js ~ line 325 ~ ApplicationInformation ~ selectedOption",
-                      selectedOption
+                    setFieldValue(
+                      fieldNames.BUSINESSNAME,
+                      selectedOption.value
                     );
-                    setFieldValue(fieldNames.BUSINESSNAME, selectedOption);
-                    setBusinessInfo(selectedOption);
+                    setApplicationInfo(values);
+                    setCompanyInfo(selectedOption.data);
                   }}
                   components={{
                     IndicatorSeparator: () => null,
+                    DropdownIndicator: () => null,
                   }}
-                  // onInputChange={handleInputChange}
+                  onBlur={(selectedOption) => {
+                    setApplicationInfo(values);
+                  }}
                   placeholder="Select Business Name"
                   styles={{
                     control: (styles, state) => {
                       const borderColor =
-                        !state.hasValue &&
+                        !values[fieldNames.BUSINESSNAME] &&
                         touched[fieldNames.BUSINESSNAME] &&
                         errors[fieldNames.BUSINESSNAME]
                           ? "red"
@@ -356,7 +406,8 @@ function ApplicationInformation({ setStep, showSelectedState }) {
             <div className="divider"></div>
             <div className="form-group loginnow-btn">
               <p>
-                Already have an Account? <Link href="#">Login Now</Link>
+                Already have an Account?{" "}
+                <NavLink to="/login">Login Now</NavLink>
               </p>
             </div>
           </form>

@@ -1,20 +1,39 @@
 import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL;
-console.log("🚀 ~ file: request.js ~ line 3 ~ API_URL", API_URL);
-
 export const SEARCH_COMPANY_URL = `${API_URL}SearchCompanies.php?SearchValue=`;
-export const CREATE_ACCOUNT_URL = `${API_URL}SearchCompanies.php?SearchValue=`;
+export const CREATE_ACCOUNT_URL = `${API_URL}CreateCustomerForUK`;
+export const USER_LOGIN_URL = `${API_URL}UKCustomerLogin`;
+export const DASHBOARD_DATA_URL = `${API_URL}GetLeadMaster/`;
+export const VERIFY_ACCOUNT_URL = `${API_URL}UKCustomerVerify`;
+export const FORGOT_PASSWORD_URL = `${API_URL}UKForgetPassword`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
   return data;
 }
 
-export async function getComapanyList(searchString) {
-  const { data } = await axios.get(`SEARCH_COMPANY_URL${searchString}`);
+export function createAccount(payload) {
+  return axios.post(CREATE_ACCOUNT_URL, payload);
+}
+
+export function login(email, password) {
+  return axios.post(USER_LOGIN_URL, {
+    email,
+    password,
+  });
+}
+
+export async function getDashboardData(id) {
+  const { data } = await axios.get(`${DASHBOARD_DATA_URL}${id}`);
   return data;
 }
 
-export function createAccount(payload) {
-  return axios.post(CREATE_ACCOUNT_URL, payload);
+export function verifyAccount(token) {
+  return axios.post(VERIFY_ACCOUNT_URL, {
+    token: token,
+  });
+}
+
+export function forgotPassword(payload) {
+  return axios.post(FORGOT_PASSWORD_URL, payload);
 }
