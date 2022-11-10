@@ -13,7 +13,7 @@ import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
 import ChangePassword from "./component/change-password/change-password";
 import InnerChangePassword from "./component/change-password/inner-change-password";
-import NotFound from "./component/NotFound";
+import NoData from "./component/no-data";
 
 const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
@@ -80,11 +80,10 @@ const RoutePage = () => {
             element={<BusinessInformation />}
           />
           <Route path="/personal-details" element={<PersonalDetails />} />
-        </>
-      ) : (
-        <>
-          <Route path="/*" element={<Navigate to="/login" />} />
-          <Route path="/request-a-quote" element={<RequestAQuote />} />
+          <Route path="/change-password" element={<ChangePassword /> } />
+          <Route path="/inner-change-password" element={<InnerChangePassword /> } />
+          <Route path="/no-data" element={<NoData />} />
+          <Route path="/*" element={<RequestAQuote />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify/:token" element={<EmailVerification />} />
@@ -218,8 +217,6 @@ const RoutePage = () => {
           </PrivateRoute>
         }
       />
-
-      <Route path="*" component={NotFound} />
     </Routes>
   );
 };

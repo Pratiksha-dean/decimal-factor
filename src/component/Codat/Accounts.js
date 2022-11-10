@@ -45,6 +45,6 @@ export default function Accounts(props) {
         const finalUrl = `${props.endUrl}/CODAT/Accounts/${props.leadId}`;
         
       return (
-        <Datatables apiUrl={finalUrl} apiColumn={columns} />
+        <Datatables apiUrl={finalUrl} apiColumn={columns} title={props.title} />
     );
 }

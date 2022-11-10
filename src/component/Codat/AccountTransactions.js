@@ -1,6 +1,7 @@
 import React from "react";
 import Datatables from "./Datatables";
 import Parser from 'html-react-parser';
+
 export default function AccountTransactions(props) {
     
     const columns= [
