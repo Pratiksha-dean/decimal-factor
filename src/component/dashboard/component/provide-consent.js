@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 
-function ProvideConsent() {
+function ProvideConsent({ setActiveStep, activeStep }) {
   const loginSchema = Yup.object().shape({
     softCreditCheck: Yup.boolean().required(),
     finalInformation: Yup.boolean().required(),
@@ -87,7 +87,15 @@ function ProvideConsent() {
           </div>
         </div>
 
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-between mt-2">
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={() => setActiveStep(activeStep - 1)}
+          >
+            {" "}
+            <i className="bi bi-chevron-left"></i>Back
+          </button>
           <button
             className="btn btn-primary"
             style={{ backgroundColor: "#006090" }}

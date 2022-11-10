@@ -46,6 +46,8 @@ export const fieldNames = {
   ISPRIMARY: "is_primary",
   PHONENUMBER: "phonenumber",
   EMAILID: "email_id",
+  CHOOSEADDRESS: "choose_address",
+  CURRENTPASSWORD: "currentpassword",
 };
 
 // "PreviousAddress": [],
@@ -198,7 +200,7 @@ function ApplicationInformation({ setStep, showSelectedState }) {
   return (
     <div className="right-panel">
       <h2>Application Information</h2>
-      <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
+      <h5>Please enter the details below</h5>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

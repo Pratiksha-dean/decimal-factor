@@ -19,6 +19,7 @@ import {
   setDashboardStepNo,
   setReviewAppData,
 } from "../dashboard";
+import { getCompanyInfo } from "../../requestaquote/components/business-information";
 
 function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
   const storedData = getReviewAppData();
@@ -57,6 +58,10 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
+            console.log(
+              "🚀 ~ file: review-application-information.js ~ line 61 ~ ReviewApplicationInformation ~ values",
+              values
+            );
             setActiveStep(activeStep + 1);
             setDashboardStepNo(activeStep + 1);
 

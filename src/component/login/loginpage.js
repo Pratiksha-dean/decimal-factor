@@ -72,6 +72,7 @@ function Login() {
         })
         .catch((err) => {
           console.log("🚀 ~ file: loginpage.js ~ line 38 ~ login ~ err", err);
+          setError("Something went wrong!");
         });
     },
   });

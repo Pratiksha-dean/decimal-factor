@@ -99,6 +99,10 @@ function Dashboard() {
   };
 
   const showComponents = (step) => {
+    console.log(
+      "🚀 ~ file: dashboard.js ~ line 104 ~ showComponents ~ step",
+      step
+    );
     let component;
     switch (step) {
       case 0:
@@ -138,7 +142,12 @@ function Dashboard() {
         );
         break;
       case 4:
-        component = <ProvideConsent />;
+        component = (
+          <ProvideConsent
+            setActiveStep={setActiveStep}
+            activeStep={activeStep}
+          />
+        );
         break;
     }
     return component;

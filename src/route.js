@@ -13,10 +13,9 @@ import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
 import ChangePassword from "./component/change-password/change-password";
 import InnerChangePassword from "./component/change-password/inner-change-password";
+import NotFound from "./component/NotFound";
 
 const RoutePage = () => {
-
-
   const PrivateRoute = ({ children }) => {
     let token = getToken();
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
@@ -94,6 +93,7 @@ const RoutePage = () => {
       <Route path="/authentication" element={<Authentication />} /> */}
       <Route
         path="/*"
+        exact
         element={
           <PublicRoute>
             <Login />
@@ -101,10 +101,10 @@ const RoutePage = () => {
         }
       />
       <Route
-        path="/login"
+        path="/verify/:token"
         element={
           <PublicRoute>
-            <Login />
+            <EmailVerification />
           </PublicRoute>
         }
       />
@@ -115,6 +115,25 @@ const RoutePage = () => {
           <PublicRoute>
             <ForgotPassword />
           </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/reset/:token"
+        element={
+          <PublicRoute>
+            <ChangePassword />
+          </PublicRoute>
+        }
+        exact
+      />
+
+      <Route
+        path="/change-password"
+        element={
+          <PrivateRoute>
+            <InnerChangePassword />
+          </PrivateRoute>
         }
       />
 
@@ -164,7 +183,17 @@ const RoutePage = () => {
       />
 
       <Route
+        path="/merchant-health"
+        element={
+          <PrivateRoute>
+            <MerchantHealth />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
         path="/application-information"
+        exact
         element={
           <PrivateRoute>
             <ApplicationInformation />
@@ -189,6 +218,8 @@ const RoutePage = () => {
           </PrivateRoute>
         }
       />
+
+      <Route path="*" component={NotFound} />
     </Routes>
   );
 };

@@ -2,7 +2,14 @@ import React from "react";
 import { useRef } from "react";
 import { useState } from "react";
 import ReactTooltip from "react-tooltip";
-import { setDashboardStepNo } from "../dashboard";
+import {
+  checkLinkingStatus,
+  getCompanyID,
+  getLinkToAccountingData,
+} from "../../../request";
+import { getUserDetails } from "../../login/loginpage";
+import { getCompanyInfo } from "../../requestaquote/components/business-information";
+import { getReviewAppData, setDashboardStepNo } from "../dashboard";
 
 function checkMe(selected) {
   if (selected) {
@@ -20,15 +27,49 @@ export const getLinkingAndBankingData = () => {
   return JSON.parse(localStorage.getItem("reviewLinkingAndBankingData"));
 };
 
-function LinkBankingAccounting({ activeStep, setActiveStep }) {
+function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
+  console.log(
+    "🚀 ~ file: link-banking&accounting.js ~ line 31 ~ LinkBankingAccounting ~ data",
+    data
+  );
   const [file, setFile] = useState();
   const storedData = getLinkingAndBankingData();
+  const appData = getReviewAppData();
+  console.log(
+    "🚀 ~ file: link-banking&accounting.js ~ line 34 ~ LinkBankingAccounting ~ appData",
+    appData
+  );
+  const userDetails = getUserDetails();
+  const [accoutingUrl, setAccoutingUrl] = useState();
+  const [copiedaccoutingUrl, setCopiedAccoutingUrl] = useState();
+  const [accountingStatus, setAccoutingStatus] = useState(false);
+  console.log(
+    "🚀 ~ file: link-banking&accounting.js ~ line 30 ~ LinkBankingAccounting ~ userDetails",
+    userDetails
+  );
+  const companyInfo = getCompanyInfo();
+  console.log(
+    "🚀 ~ file: link-banking&accounting.js ~ line 29 ~ LinkBankingAccounting ~ companyInfo",
+    companyInfo
+  );
   const [uploadBankStatementToggle, setUploadBankStatementToggle] =
     useState(false);
 
   const [fileList, setFileList] = useState([]);
 
   const hiddenFileInput = useRef(null);
+  const accountingUrlRef = useRef(null);
+
+  const copyAccoutingUrl = (url) => {
+    console.log(
+      "🚀 ~ file: link-banking&accounting.js ~ line 54 ~ copyAccoutingUrl ~ url",
+      url
+    );
+    if (document.getElementById("accouting-url")) {
+      document.getElementById("accouting-url").select();
+      document.execCommand("copy");
+    }
+  };
 
   function handleChange(event) {
     let list = [...fileList];
@@ -54,6 +95,63 @@ function LinkBankingAccounting({ activeStep, setActiveStep }) {
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
+
+  const getLinkToAccouting = () => {
+    let payload = {
+      lm_id: userDetails["lead_id"],
+      name: data["lf_business_name"],
+      platformType: "0",
+    };
+
+    getLinkToAccountingData(payload).then((resp) => {
+      console.log(
+        "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
+        resp,
+        resp.success == "false" && resp.status == 500
+      );
+      if (resp.success == "false" && resp.code == 500) {
+        getCompanyID(payload.lm_id).then((resp) => {
+          setAccoutingUrl(
+            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+          );
+          console.log(
+            "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
+            resp
+          );
+          // window.open(
+          //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+          //   "_blank"
+          // );
+        });
+      } else {
+        setAccoutingUrl(resp.data.id);
+        window.open(
+          `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+          "_blank"
+        );
+      }
+    });
+  };
+
+  const checkLinkingStatusClick = () => {
+    checkLinkingStatus(userDetails["lead_id"])
+      .then((resp) => {
+        setAccoutingStatus(true);
+
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
+          resp
+        );
+      })
+      .catch((err) => {
+        setAccoutingStatus(false);
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
+          err
+        );
+      });
+  };
+
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <div className="review-application">
@@ -110,7 +208,12 @@ function LinkBankingAccounting({ activeStep, setActiveStep }) {
                 </div>
               </div>
 
-              <button className="btn btn-primary accounting-btn">
+              <button
+                className="btn btn-primary accounting-btn"
+                onClick={() => {
+                  getLinkToAccouting();
+                }}
+              >
                 Link To Accounting <i className="fa fa-chevron-right"></i>
               </button>
               <div className="tooltip-panel accounting-tooltip">
@@ -124,34 +227,53 @@ function LinkBankingAccounting({ activeStep, setActiveStep }) {
                 </tooltip>
               </div>
 
-              <div className="banking-url">
-                <div className="form-group">
-                  <label>Accounting URL</label>
-                  <input
-                    type="text"
-                    name="url"
-                    placeholder="https://www.domain.com/dummy-url-will-be-here"
-                    className="form-control"
-                  />
-                  <button className="copyicon-col btn btn-primary">
-                    <i class="fa fa-clone" aria-hidden="true"></i>
-                  </button>
-                </div>
-              </div>
-              <div className="banking-url">
-                <div className="form-group">
-                  <label>Status</label>
-                  <input
-                    type="text"
-                    name="Status"
-                    placeholder="Unlinked"
-                    className="form-control"
-                  />
-                  <button className="checkstatus-btn btn btn-primary">
-                    Check status
-                  </button>
-                </div>
-              </div>
+              {accoutingUrl && (
+                <>
+                  {" "}
+                  <div className="banking-url">
+                    <div className="form-group">
+                      <label>Accounting URL</label>
+                      <input
+                        type="text"
+                        name="url"
+                        placeholder="https://www.domain.com/dummy-url-will-be-here"
+                        className="form-control"
+                        value={accoutingUrl}
+                        disabled
+                        id="accouting-url"
+                      />
+
+                      <button
+                        className="copyicon-col btn btn-primary"
+                        type="button"
+                        onClick={copyAccoutingUrl(accoutingUrl)}
+                      >
+                        <i class="fa fa-clone" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="banking-url">
+                    <div className="form-group">
+                      <label>Status</label>
+                      <input
+                        type="text"
+                        name="Status"
+                        placeholder="Unlinked"
+                        className="form-control"
+                        disabled
+                        value={accountingStatus ? "Linked" : "Unlinked"}
+                      />
+                      <button
+                        className="checkstatus-btn btn btn-primary"
+                        type="button"
+                        onClick={() => checkLinkingStatusClick()}
+                      >
+                        Check status
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="col-md-5">

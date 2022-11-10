@@ -69,8 +69,8 @@ function RequestLeftPanel({ step, setStep }) {
         Step {step} of {stepsList.length}
       </h4>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        To get started, we require some basic information to determine the right
+        finance for you.
       </p>
 
       <ul id="progressbar">

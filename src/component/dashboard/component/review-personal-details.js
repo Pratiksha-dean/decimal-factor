@@ -27,10 +27,10 @@ function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
   const initialValues = {
     [fieldNames.FIRSTNAME]: storeData
       ? storeData[fieldNames.FIRSTNAME]
-      : userDetails["first_name"],
+      : data["lf_opener_name"].split(" ")[0],
     [fieldNames.LASTNAME]: storeData
       ? storeData[fieldNames.LASTNAME]
-      : userDetails["last_name"],
+      : data["lf_opener_name"].split(" ")[1],
     [fieldNames.EMAIL]: storeData
       ? storeData[fieldNames.EMAIL]
       : data["lf_business_email"],

@@ -89,7 +89,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
   return (
     <div className="right-panel">
       <h2>Personal Details</h2>
-      <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
+      <h5>Please enter the details below </h5>
 
       <Formik
         initialValues={initialValues}
