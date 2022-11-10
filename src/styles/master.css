@@ -1,6 +1,6 @@
 body {
   font-size: 14px;
-  font-family: "Montserrat";
+  /* font-family: "Montserrat"; */
 }
 .left-panel {
   width: 100%;
@@ -470,7 +470,10 @@ img.login-logo {
 
 header {
   background: #006090;
+  position: fixed;
   width: 100%;
+  height: 60px;
+  z-index: 99;
 }
 .bg-dark {
   background-color: #006090 !important;
@@ -919,7 +922,7 @@ img.logo-dashboard {
 }
 
 .accounting-tooltip{margin-top: 30px;}
-.sidebar-panel{display: flex; height: 100%; margin:20px 20px 0 0; }
+.sidebar-panel{display: flex; height: 100%; margin:80px 20px 0 0;}
 aside.sc-gswNZR.bOQEtf.sidebar {
     box-shadow: 0 1px 1px rgb(0 0 0 / 1%), 0 2px 10px rgb(0 0 0 / 23%);
    width: 300px;
@@ -932,9 +935,17 @@ li.sc-ksBlkl.gmgIpm.menu-item {
 }
 
 button.siderbar-btn {
-    border: 0px;
-    background: #006090;
-    color: #fff;
+  border: 0px;
+  background: #006090;
+  color: #fff;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  margin-left: -20px;
+  z-index: 9;
+  margin-top: 41px;
+  position: relative;
 }
 
 .sidebar-panel .menu a i.fa {
@@ -996,7 +1007,7 @@ li.sc-ksBlkl.gmgIpm.menu-item {
 }
 
 .right-panel-main {
-    margin-top: 20px;
+    margin-top: 80px;
     width: 100%;
     overflow: hidden;
 }
@@ -1242,8 +1253,10 @@ input#input-file {
 .bottom-2{background: #e2e2e2;}    
 
 .data-panel {
-    width: 100%;
-    float: left;
+  width: 100%;
+  float: left;
+  z-index: 0;
+  position: relative;
 }
 
 .data-panel h3 {
@@ -1289,11 +1302,7 @@ i.fa.fa-chevron-down {
     margin: 0px !important;
 }
 
-button.btn.btn-primary.banking-btn.download-btn {
-    position: absolute;
-    margin-top: 174px;
-    z-index: 9;
-}
+
 .react-tabs__tab--selected:before, .react-tabs__tab--selected:after{display: none;}
 .react-tabs__tab--selected {
     background: none !important;
@@ -1303,35 +1312,40 @@ button.btn.btn-primary.banking-btn.download-btn {
     border-bottom: 3px #006090 solid !important;
     border-radius: 0 !important;
     margin-bottom: 0px !important;
-    border-left: 0px !important;
-    border-right: 0px !important;
+    border-left:1px solid transparent !important;
+    border-right: 1px solid transparent !important;
     border-top: 0px !important;
     padding: 15px 30px  !important;
 
 }
+
  .react-tabs__tab:hover {
     background: none !important;
     border-color: #aaa;
     color:#006090  !important;
-    padding: 15px 31px  !important;
+    padding: 15px 30px  !important;
     font-weight: bold;
     border-bottom: 3px #006090 solid !important;
     border-radius: 0 !important;
     margin-bottom: 0px !important;
-    border-left: 0px !important;
-    border-right: 0px !important;
+    border-left:1px solid transparent !important;
+    border-right: 1px solid transparent !important;
     border-top: 0px !important;
 
 }
 .react-tabs__tab {
     display: inline-block;
-    border: 0px solid transparent;
+    border: 1px solid transparent;
     border-bottom: 0px;
     bottom: 0;
     position: relative;
     list-style: none;
     padding: 15px 30px  !important;
     cursor: pointer;
+    font-weight: bold;
+    color: rgb(0 0 0 / 50%);
+   
+    
 }
 
 
@@ -1363,7 +1377,7 @@ button.btn.btn-primary.go-btn {
 }
 
 .rdt_TableHeadRow {
-  background: #cadfe9 !important;
+  background: #e7f2f7 !important;
   font-size: 14px;
   font-weight: bold;
 }
@@ -1445,4 +1459,137 @@ button.btn.btn-primary.paid-btn {
 button.btn.btn-primary.paid-btn:hover {
   background: #05537a;
  
+}
+
+.djZVNf {
+  
+  width: 50px !important;
+  min-width: 50px !important;
+  
+}
+
+.sidebar.collapsed p.bottom-text {
+  display: none;
+} 
+div#cell-1-undefined {
+  min-width: 270px !important;
+}
+
+.rdt_TableHeadRow .rdt_TableCol:first-child {
+  min-width: 270px;
+}
+
+.rdt_TableCell {
+  line-height: 18px !important;
+  font-size: 12px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  color: #000 !important;
+}
+
+.rdt_TableRow {
+  min-height: 75px !important;
+}
+
+.rdt_TableCol {
+  font-size: 13px;
+  color: #767676;
+}
+
+.btn-primary.focus, .btn-primary:focus {
+  box-shadow: none !important;
+}
+
+button:focus {
+  outline: 0px;
+  outline: 0px !important;
+}
+button.btn.btn-primary.unreconciled-btn {
+  background: #d3cfcf;
+  border: 0px;
+  color: #000;
+  font-size: 12px;
+}
+button.btn.btn-primary.active-btn {
+  font-size: 12px;
+  border: 0px;
+  background: #006090;
+}
+
+button.btn.btn-primary.partially-btn {
+  color: #704100;
+  background: #eee;
+  border: 0px;
+  font-size: 12px;
+}
+button.btn.btn-primary.void-btn {
+  font-size: 12px;
+  border: 0px;
+  background-color: #1fb5ad;
+  border-color: #1fb5ad;
+  color: #FFFFFF;
+}
+
+button.btn.btn-primary.open-btn{ font-size: 12px;
+  border: 0px;
+  background: #006090;}
+
+button.btn.btn-primary.draft-btn{color: #704100;
+    background: #eee;
+    border: 0px;
+    font-size: 12px;}
+    
+.no-data-panel {
+      width: 100%;
+      float: left;
+      position: relative;
+      background: #f6f2ea;
+      height: 100vh;
+     
+  }    
+.no-data {
+      width: 100%;
+      float: left;
+      position: relative;     
+      display: block;
+      text-align: center;
+      transform: translate(-50%,-50%);
+      top: 50%;
+      left: 50%;
+  }
+
+  .after-check-status ul.menu {
+    position: relative;
+    margin-right: 20px;
+    padding: 10px 10px 10px 26px;
+    background: #fff;
+    box-shadow: 0px 1px 1px rgb(0 0 1);
+    border-radius: 0px 0px 5px 5px;
+    margin-top: -20px;
+}
+.after-check-status ul.menu li.menu-item {
+  line-height: 25px;
+}
+.after-check-status ul.menu li.menu-item a {
+  color: #000;
+}
+
+.after-check-status ul.menu li.menu-item a:hover {
+ text-decoration: none;
+ color: #006090;
+}
+
+
+
+.download-panel {
+  position: absolute;
+  z-index: 9;
+  width: 200px;
+  right: 0px;
+  top: 0;
+  margin-top: 135px;
+}
+
+button.btn.btn-primary.banking-btn.download-btn {
+  margin: 0px 20px 0px 0px;
 }

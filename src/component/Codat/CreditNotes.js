@@ -1,11 +1,14 @@
 import React from "react";
 import Datatables from "./Datatables";
+import Parser from 'html-react-parser';
+
+
 export default function CreditNotes(props) {
     
     const columns= [
             {
                 name : "Customer",
-                selector: row => row.customerRef,
+                selector: row => Parser(row.customerRef),
                 sortable: true
             },
             {
@@ -35,7 +38,7 @@ export default function CreditNotes(props) {
             },
             {
                 name : "Status",
-                selector: row => row.status.replace('class="','className="'),
+                selector: row => Parser(row.status.replace('class="','className="')),
                 sortable: true
             }
 

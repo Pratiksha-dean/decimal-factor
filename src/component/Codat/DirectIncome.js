@@ -1,11 +1,14 @@
 import React from "react";
 import Datatables from "./Datatables";
+import Parser from 'html-react-parser';
+
+
 export default function DirectIncome(props) {
     
     const columns= [
             {
                 name : "Contact",
-                selector: row => row.contactRef,
+                selector: row => Parser(row.contactRef),
                 sortable: true
             },
             {
@@ -30,7 +33,7 @@ export default function DirectIncome(props) {
             },
             {
                 name : "Total Amount",
-                selector: row => row.totalAmount,
+                selector: row => Parser(row.totalAmount),
                 sortable: true
             }
 

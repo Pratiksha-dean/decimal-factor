@@ -5,6 +5,7 @@ import SiderBarMenu from './component/sidebar'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Codat from '../Codat';
+import { Link } from "react-router-dom";
 
  
 
@@ -30,6 +31,10 @@ function MerchantHealth() {
   const [showPanel3, togglePanel3] = useState(false);
   const [showPanel4, togglePanel4] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(!open);
+  };
 
   return (
     
@@ -75,7 +80,31 @@ function MerchantHealth() {
                   </div>
                  </div>
                  {showPanel2 && ( <div className="after-check-status">
-                 <button class="btn btn-primary banking-btn download-btn"> <i class="fa fa-download" aria-hidden="true"></i> Download <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                
+                   <div className="download-panel">
+                 <button class="btn btn-primary banking-btn download-btn" onClick={handleOpen}> 
+                 <i class="fa fa-download" aria-hidden="true"></i> Download <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                 </button>
+                 {open ? (
+                  <ul className="menu">
+                    <li className="menu-item">
+                    <Link to="#">PDF last 90 days</Link>
+                    </li>
+                    <li className="menu-item">
+                    <Link to="#">PDF underwriters</Link>
+                    </li>
+                    <li className="menu-item">
+                    <Link to="#">PDF raw transactions</Link>
+                    </li>
+                    <li className="menu-item">
+                    <Link to="#">PDF full data range</Link>
+                    </li>
+                    <li className="menu-item">
+                      <Link to="#">CSV all transactions</Link>
+                    </li>
+                  </ul>
+                ) : null}
+                </div>
                  <div className="row">
                    <div className="col-md-6">
                      <div className="financial-service">

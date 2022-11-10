@@ -13,6 +13,7 @@ import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
 import ChangePassword from "./component/change-password/change-password";
 import InnerChangePassword from "./component/change-password/inner-change-password";
+import NoData from "./component/no-data";
 
 const RoutePage = () => {
  
@@ -35,6 +36,7 @@ const RoutePage = () => {
           <Route path="/personal-details" element={<PersonalDetails />} />
           <Route path="/change-password" element={<ChangePassword /> } />
           <Route path="/inner-change-password" element={<InnerChangePassword /> } />
+          <Route path="/no-data" element={<NoData />} />
           <Route path="/*" element={<RequestAQuote />} />
           <Route path="/login" element={<Login />} />
           <Route path="/authentication" element={<Authentication />} />

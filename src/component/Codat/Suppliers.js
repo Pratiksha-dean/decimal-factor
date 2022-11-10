@@ -1,11 +1,13 @@
 import React from "react";
 import Datatables from "./Datatables";
+import Parser from 'html-react-parser';
+
 export default function Suppliers(props) {
     
     const columns= [
             {
                 name : "supplierName",
-                selector: row => row.supplierName,
+                selector: row => Parser(row.supplierName),
                 sortable: true
             },
             {
@@ -25,7 +27,7 @@ export default function Suppliers(props) {
             },
             {
                 name : "taxNumber",
-                selector: row => row.taxNumber,
+                selector: row => Parser(row.taxNumber),
                 sortable: true
             }
 

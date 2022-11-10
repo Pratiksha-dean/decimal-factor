@@ -1,6 +1,7 @@
 import React from "react";
 import Datatables from "./Datatables";
 import Parser from 'html-react-parser';
+
 export default function BillCreditNotes(props) {
     
     const columns= [
@@ -45,6 +46,6 @@ export default function BillCreditNotes(props) {
         const finalUrl = `${props.endUrl}/CODAT/Bill_Credit_Notes/${props.leadId}`;
         
       return (
-        <Datatables apiUrl={finalUrl} apiColumn={columns} />
+        <Datatables apiUrl={finalUrl} apiColumn={columns} title={props.title} />
     );
 }

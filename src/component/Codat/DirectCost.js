@@ -39,6 +39,6 @@ export default function DirectCost(props) {
         const finalUrl = `${props.endUrl}/CODAT/Direct_costs/${props.leadId}`;
         
       return (
-        <Datatables apiUrl={finalUrl} apiColumn={columns} />
+        <Datatables title={props.title} apiUrl={finalUrl} apiColumn={columns} />
     );
 }
