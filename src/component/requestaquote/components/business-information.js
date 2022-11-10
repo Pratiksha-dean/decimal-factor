@@ -110,7 +110,9 @@ function BusinessInformation({ setStep, showSelectedState }) {
   return (
     <div className="right-panel">
       <h2>Business Information</h2>
-      <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
+      <h5>
+        We require some business information to determine your eligibility{" "}
+      </h5>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

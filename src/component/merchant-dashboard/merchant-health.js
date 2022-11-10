@@ -4,15 +4,17 @@ import Header from '../header/header';
 import SiderBarMenu from './component/sidebar'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import Codat from '../Codat';
+import { Link } from "react-router-dom";
 
- 
+
 
 function checkMe(selected)
 {
 if(selected)
 {
 document.getElementById("divcheck").style.display = "block";
-} 
+}
 else
 {
 document.getElementById("divcheck").style.display = "none";
@@ -29,16 +31,20 @@ function MerchantHealth() {
   const [showPanel3, togglePanel3] = useState(false);
   const [showPanel4, togglePanel4] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(!open);
+  };
 
   return (
-    
+
      <div className="dashboard-panel">
      <Header />
       <div className="dashboard-body bg-change-color">
       <div className="container-fluid merchant-body">
-     
+
       <SiderBarMenu />
-  
+
       <div className="right-panel-main">
       <h3><i className="fa fa-id-card" aria-hidden="true"></i> Merchant Health Insights </h3>
       <div className="dashboard-box position-relative card dashboard-card no-padding">
@@ -53,7 +59,7 @@ function MerchantHealth() {
           <TabPanel>
           <section>
                 {!showPanel && <button class="btn btn-primary banking-btn" onClick={() => togglePanel(!showPanel) } >Link To Banking <i class="fa fa-chevron-right" aria-hidden="true"></i></button>}
-             
+
               {showPanel && ( <div className="banking-panel">
                 <div className="row">
                   <div className="col-md-9">
@@ -70,11 +76,35 @@ function MerchantHealth() {
                  </div>
                  </div>
                   <div className="col-md-3">
-                 
+
                   </div>
                  </div>
                  {showPanel2 && ( <div className="after-check-status">
-                 <button class="btn btn-primary banking-btn download-btn"> <i class="fa fa-download" aria-hidden="true"></i> Download <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                
+                   <div className="download-panel">
+                 <button class="btn btn-primary banking-btn download-btn" onClick={handleOpen}> 
+                 <i class="fa fa-download" aria-hidden="true"></i> Download <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                 </button>
+                 {open ? (
+                  <ul className="menu">
+                    <li className="menu-item">
+                    <Link to="#">PDF last 90 days</Link>
+                    </li>
+                    <li className="menu-item">
+                    <Link to="#">PDF underwriters</Link>
+                    </li>
+                    <li className="menu-item">
+                    <Link to="#">PDF raw transactions</Link>
+                    </li>
+                    <li className="menu-item">
+                    <Link to="#">PDF full data range</Link>
+                    </li>
+                    <li className="menu-item">
+                      <Link to="#">CSV all transactions</Link>
+                    </li>
+                  </ul>
+                ) : null}
+                </div>
                  <div className="row">
                    <div className="col-md-6">
                      <div className="financial-service">
@@ -156,10 +186,10 @@ function MerchantHealth() {
                      <div className="financial-service">
                        <h4>Regular Outgoings <span>(0)</span></h4>
                        <div className="scroll-bar-2">
-                     
-                       
+
+
                        </div>
-                      
+
                      </div>
                    </div>
                    <div className="col-md-6">
@@ -189,7 +219,7 @@ function MerchantHealth() {
                           <p>Last credit on 2020-06-05T00:00:00+01:00</p>
                        </div>
                        </div>
-                      
+
                      </div>
                    </div>
                  </div>
@@ -212,33 +242,9 @@ function MerchantHealth() {
                       <input type="text" name="Status" placeholder="Unlinked" class="form-control" />
                       <button class="checkstatus-btn btn btn-primary" onClick={() => togglePanel4(!showPanel4) } >Check status</button></div></div>
                       {showPanel4 && ( <div className="data-panel">
-                       <h3>Accounting Data</h3> 
-                       <div className="row">
-                         <div className="col-md-4">
-                           <div className="form-group">
-                           <select className="form-control">
-                             <option>--Select--</option>
-                             <option>Accounting</option>
-                             <option>Assess</option>
-                             <option>Commerce</option>
-                           </select>
-                           </div>
-                         </div>
-                         <div className="col-md-4">
-                           <div className="form-group">
-                           <select className="form-control">
-                             <option>--Select--</option>
-                             <option>Accounting</option>
-                             <option>Assess</option>
-                             <option>Commerce</option>
-                           </select>
-                           </div>
-                         </div>
-                         <div className="col-md-4">
-                           <button className="btn btn-primary exportdata-btn next-btn"><i class="fa fa-cloud-arrow-down"></i> Export <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
-                         </div>
+                       <h3>Accounting Data</h3>
 
-                       </div>
+                        <Codat />
                       </div>)}
               </div>)}
               </section>
@@ -246,15 +252,15 @@ function MerchantHealth() {
           <TabPanel>  <section>
              <div className="business-panel">
                <div className="row">
-                 <div className="col-md-12"> 
+                 <div className="col-md-12">
                  <div className="form-group">
-                        
+
                         <input type="checkbox" onClick={(e)=>checkMe(e.target.checked)} name="Upload Bank Statement Copies Instead" className="upload-checkbox" />
                         <label>Some Checkbox condition will be here for KYC.</label>
                       </div>
                  </div>
                 <div className="col-md-12">
-                  
+
                 <div className="upload-doc-panel" id="divcheck" style={{display:"none"}}>
                 <div className="row">
                     <div className="col-md-5">
@@ -269,37 +275,37 @@ function MerchantHealth() {
                         <p><strong>File Uploaded:</strong></p>
                         <p><span>MY-ID-PROOF.JPG</span> <i className="fa fa-trash"></i></p>
                       </div>
-                    
+
                       </div>
                     </div>
                     <div className="col-md-1"></div>
                 <div className="col-md-6">
                 <div className="upload-box" >
-                     
+
                      <input type="file" name="file" className="upload-doc" />
                      <button className="btn btn-primary upload-btn">Upload</button>
                      <p>Max file size: 2MB each</p>
                      <p>Supported file types: PDF, JPG, PNG Bitmap etc.</p>
                    </div>
                 </div>
-                
+
                 </div>
                 <button className="btn btn-primary save-btn next-btn">Save <i className="fa fa-file-image-o"></i></button>
-  
+
                 </div>
                 </div>
                 </div>
              </div>
               </section></TabPanel>
         </Tabs>
-         
+
         </div></div>
       </div>
       </div>
       </div>
      </div>
-   
+
   );
-} 
+}
 
 export default MerchantHealth;

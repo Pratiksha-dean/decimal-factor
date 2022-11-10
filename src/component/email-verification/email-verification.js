@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Alert } from "react-bootstrap";
 import { useParams } from "react-router";
 import { NavLink } from "react-router-dom";
 import { verifyAccount } from "../../request";
@@ -50,16 +51,19 @@ export default function EmailVerification() {
               alt=""
               className="login-logo"
             />
-            <div className="my-3">
-              <h4>{message.text}</h4>
-              {message.type == "success" && (
-                <div>
-                  Click here to <NavLink to="/login">Login</NavLink>{" "}
-                </div>
-              )}
+            {message.text && (
+              <div className="my-3">
+                <Alert variant="success">
+                  <h5>{message.text}</h5>
+                </Alert>
 
-              <h5></h5>
-            </div>
+                {message.type == "success" && (
+                  <div>
+                    Click here to <NavLink to="/login">Login</NavLink>{" "}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

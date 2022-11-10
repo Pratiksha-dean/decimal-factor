@@ -21,10 +21,10 @@ function SiderBarMenu() {
         </Menu>
         <p className="bottom-text">Version - 1.0.06 <br></br>01-Dec-2022</p>
       </Sidebar>
-      {/* <main>
-        <button onClick={() => collapseSidebar()} className="siderbar-btn"><i className="fa fa-bars"></i></button>
+      <main>
+        <button onClick={() => collapseSidebar()} className="siderbar-btn"><i className="fa fa-chevron-left"></i></button>
       </main>
-      */}
+     
     </div>
   );
 }

@@ -28,9 +28,6 @@ function ForgotPassword() {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       forgotPassword(values).then((resp) => {
         if (resp.data.status == "success") {
-          console.log(
-            "🚀 ~ file: forgot-password.js ~ line 30 ~ forgotPassword ~ success"
-          );
           setMessage({
             type: "success",
             text: "Password reset link has been sent to your email id!",
@@ -41,11 +38,6 @@ function ForgotPassword() {
             text: "Something went wrong!",
           });
         }
-        console.log(
-          "🚀 ~ file: forgot-password.js ~ line 31 ~ forgotPassword ~ resp",
-          resp
-        );
-        console.log(message);
       });
     },
   });

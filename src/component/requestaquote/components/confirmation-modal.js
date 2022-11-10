@@ -11,10 +11,6 @@ function ConfirmationModal({ setShow }) {
     verifyAccount(token)
       .then((resp) => {
         if (resp.status == "success") {
-          console.log(
-            "🚀 ~ file: confirmation-modal.js ~ line 10 ~ verifyAccount ~ resp",
-            resp
-          );
           setShow(false);
           navigate("/login");
           removeData();
