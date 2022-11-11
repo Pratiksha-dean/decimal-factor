@@ -1670,3 +1670,7 @@ label.btn.btn-primary.upload-btn {
 .accouting-info {
   margin-top: 20px;
 }
+
+.rdt_TableRow .rdt_TableCell:first-child {
+  min-width: 270px;
+}
