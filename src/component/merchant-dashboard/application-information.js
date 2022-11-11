@@ -16,6 +16,7 @@ import { useState } from "react";
 import { getUserDetails } from "../login/loginpage";
 import { getDashboardData } from "../../request";
 import { useEffect } from "react";
+import StickyBox from "react-sticky-box";
 
 function ApplicationInformation() {
   const [dasboardData, setDashboardData] = useState();
@@ -56,13 +57,18 @@ function ApplicationInformation() {
   };
 
   return (
-    <div className="dashboard-panel">
-      <Header />
-      <div className="dashboard-body bg-change-color">
-        <div className="container-fluid  merchant-body">
-          <SiderBarMenu />
 
-          <div className="right-panel-main">
+     <div className="dashboard-panel">
+     <Header />
+      <div className="dashboard-body bg-change-color">
+      <div className="container-fluid  merchant-body">
+
+      <div style={{display: "flex", alignItems: "flex-start", width:"100%"}}>
+      <StickyBox>
+      <SiderBarMenu />
+      </StickyBox>
+
+       <div className="right-panel-main">
             <h3>
               <i className="fa fa-laptop" aria-hidden="true"></i> Application
               Information{" "}
@@ -302,9 +308,11 @@ function ApplicationInformation() {
               </Formik>
             </div>
           </div>
-        </div>
       </div>
-    </div>
+      </div>
+      </div>
+     </div>
+
   );
 }
 
