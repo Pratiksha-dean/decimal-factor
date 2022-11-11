@@ -11,6 +11,7 @@ import { getBusinessInfo, getCompanyInfo } from "./business-information";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import { ToastMessage } from "../../ToastMessage";
 
 export const setVerificationToken = (token) => {
   localStorage.setItem("verificationToken", token);
@@ -149,10 +150,12 @@ function PersonalDetails({ setStep, showSelectedState }) {
               if (resp.data.status == "error") {
                 if (resp.data.message_text == "Email already Exist") {
                   setError({ type: "email", text: resp.data.message_text });
+                  ToastMessage(resp.data.message_text, "error");
                 } else if (
                   resp.data.message_text == "Error! This Lead already exists."
                 ) {
                   setError({ type: "lead", text: resp.data.message_text });
+                  ToastMessage(resp.data.message_text, "error");
                 }
                 setLoading(false);
               } else {
@@ -161,6 +164,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 showSelectedState(4);
                 setStepNo(4);
                 setLoading(false);
+                ToastMessage("Account created successfully", "success");
               }
             })
             .catch((err) => {
@@ -315,19 +319,18 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 }}
                 value={values[fieldNames.PASSWORD]}
               />
-              {
-                <>
-                  <p className="text-left mb-1 mt-1">Password should contain</p>
-                  <small className="text-left">
-                    <ul className="pl-4">
-                      <li>Minimum six characters</li>
-                      <li>At least one upper case English letter</li>
-                      <li>One lower case English letter</li>
-                      <li>One number and one special character</li>
-                    </ul>
-                  </small>
-                </>
-              }
+
+              <>
+                <p className="text-left mb-1 mt-1">Password should contain</p>
+                <small className="text-left">
+                  <ul className="pl-4">
+                    <li>Minimum six characters</li>
+                    <li>At least one upper case English letter</li>
+                    <li>One lower case English letter</li>
+                    <li>One number and one special character</li>
+                  </ul>
+                </small>
+              </>
             </div>
             <div className="form-group">
               <label>Confirm Password</label>

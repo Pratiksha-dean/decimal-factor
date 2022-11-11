@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
+import { getReviewAppData } from "../dashboard";
+import { getReviewBusinessData } from "./review-business-information";
+import { getReviewPersonalData } from "./review-personal-details";
+import { updateUpdateCustomerInfo } from "../../../request";
+import { getUserDetails } from "../../login/loginpage";
+import { useNavigate } from "react-router";
+import { ToastMessage } from "../../ToastMessage";
 
 function ProvideConsent({ setActiveStep, activeStep }) {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const loginSchema = Yup.object().shape({
     softCreditCheck: Yup.boolean().required(),
     finalInformation: Yup.boolean().required(),
@@ -18,6 +27,61 @@ function ProvideConsent({ setActiveStep, activeStep }) {
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
+      const applicationInfo = getReviewAppData();
+      const businessData = getReviewBusinessData();
+      const personalData = getReviewPersonalData();
+      const userDetails = getUserDetails();
+      setLoading(true);
+
+      const payload = {
+        ...applicationInfo,
+        ...personalData,
+        ...businessData,
+        ...values,
+      };
+      payload["businessEntity"] = payload["businessEntity"].value;
+      payload["businessSector"] = payload["businessSector"].value;
+      payload["loanPurpose"] = payload["loanPurpose"].value;
+      payload["navigationType"] = "left";
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 36 ~ onSubmit: ~ payload",
+        payload
+      );
+      updateUpdateCustomerInfo(payload, userDetails["lead_id"])
+        .then((resp) => {
+          setLoading(false);
+          if (resp.isSuccess == 1) {
+            navigate("/merchant-health");
+            localStorage.removeItem("reviewPersonalInfo");
+            localStorage.removeItem("reviewBusinessInfo");
+            localStorage.removeItem("reviewAppInfo");
+            ToastMessage("Data saved successfully!", "success");
+          }
+
+          console.log(
+            "🚀 ~ file: provide-consent.js ~ line 59 ~ updateUpdateCustomerInfo ~ resp",
+            resp
+          );
+        })
+        .catch((err) => {
+          setLoading(false);
+
+          console.log(
+            "🚀 ~ file: provide-consent.js ~ line 43 ~ updateUpdateCustomerInfo ~ err",
+            err
+          );
+        });
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 29 ~ onSubmit: ~ payload",
+        payload
+      );
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 25 ~ onSubmit: ~ applicationInfo",
+        applicationInfo,
+        businessData,
+        personalData
+      );
+
       console.log(
         "🚀 ~ file: provide-consent.js ~ line 21 ~ ProvideConsent ~ values",
         values
@@ -101,7 +165,9 @@ function ProvideConsent({ setActiveStep, activeStep }) {
             style={{ backgroundColor: "#006090" }}
             type="submit"
             disabled={
-              !formik.values.finalInformation || !formik.values.softCreditCheck
+              !formik.values.finalInformation ||
+              !formik.values.softCreditCheck ||
+              loading
             }
             // onClick={() => setActiveStep(activeStep + 1)}
           >

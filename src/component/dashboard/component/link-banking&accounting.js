@@ -41,6 +41,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   );
   const userDetails = getUserDetails();
   const [accoutingUrl, setAccoutingUrl] = useState();
+  const [bankingUrl, setBankingUrl] = useState();
   const [copiedaccoutingUrl, setCopiedAccoutingUrl] = useState();
   const [accountingStatus, setAccoutingStatus] = useState(false);
   console.log(
@@ -118,10 +119,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
             "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
             resp
           );
-          // window.open(
-          //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-          //   "_blank"
-          // );
+          window.open(
+            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+            "_blank"
+          );
         });
       } else {
         setAccoutingUrl(resp.data.id);
@@ -152,6 +153,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
       });
   };
 
+  const deleteFile = (i) => {
+    let list = [...fileList];
+    list.splice(i, 1);
+    setFileList(list);
+  };
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <div className="review-application">
@@ -312,11 +318,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                             key={i}
                           >
                             <div>{item.name}</div>{" "}
-                            <div>
+                            <div className="cursor-pointer">
                               {" "}
                               <i
                                 className="fa fa-trash cursor-pointer"
-                                onClick={() => setFile("")}
+                                onClick={() => deleteFile(i)}
                               ></i>
                             </div>
                           </div>
@@ -378,7 +384,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
           <button
             className="btn btn-primary"
             style={{ backgroundColor: "#006090" }}
-            onClick={() => setActiveStep(activeStep + 1)}
+            onClick={() => {
+              setActiveStep(activeStep + 1);
+              setDashboardStepNo(activeStep + 1);
+            }}
+            disabled={
+              (uploadBankStatementToggle && !fileList.length) ||
+              (!uploadBankStatementToggle && !accoutingUrl && !bankingUrl)
+            }
           >
             Next <i className="bi bi-chevron-right"></i>
           </button>

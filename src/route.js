@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import RequestAQuote from "./component/requestaquote/requestaquote";
-import Login, { getToken } from "./component/login/loginpage";
+import Login, { getToken, getUserDetails } from "./component/login/loginpage";
 import Authentication from "./component/authentication/authentication";
 import ForgotPassword from "./component/forgot/forgot-password";
 import MerchantDashboard from "./component/merchant-dashboard/merchant-dashboard";
@@ -12,12 +12,19 @@ import BusinessInformation from "./component/merchant-dashboard/business-informa
 import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
 import ChangePassword from "./component/change-password/change-password";
-import InnerChangePassword from "./component/change-password/inner-change-password";
+
 import NoData from "./component/no-data";
+import ChangePasswordWrapper from "./component/change-password/change-password-wrapper";
 
 const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
     let token = getToken();
+    let userDetails = getUserDetails();
+    console.log(
+      "🚀 ~ file: route.js ~ line 23 ~ PrivateRoute ~ userDetails",
+      userDetails
+    );
+
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (
       (!token && !isAuthenticated) ||
@@ -38,6 +45,11 @@ const RoutePage = () => {
 
   const ProtectedRoute = ({ children }) => {
     let token = getToken();
+    let userDetails = getUserDetails();
+    console.log(
+      "🚀 ~ file: route.js ~ line 42 ~ ProtectedRoute ~ userDetails",
+      userDetails
+    );
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (token && isAuthenticated) {
       return <Navigate to="/dashboard" />;
@@ -131,7 +143,7 @@ const RoutePage = () => {
         path="/change-password"
         element={
           <PrivateRoute>
-            <InnerChangePassword />
+            <ChangePasswordWrapper />
           </PrivateRoute>
         }
       />

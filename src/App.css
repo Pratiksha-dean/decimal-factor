@@ -51,3 +51,7 @@
 .stepper.active {
   background-color: #006090 !important;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

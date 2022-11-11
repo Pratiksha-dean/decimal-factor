@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import { forgotPassword } from "../../request";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
+import { ToastMessage } from "../ToastMessage";
 
 function ForgotPassword() {
   const forgotPasswordSchema = Yup.object().shape({
@@ -32,11 +33,16 @@ function ForgotPassword() {
             type: "success",
             text: "Password reset link has been sent to your email id!",
           });
+          ToastMessage(
+            "Password reset link has been sent to your email id!",
+            "success"
+          );
         } else {
           setMessage({
             type: "error",
             text: "Something went wrong!",
           });
+          ToastMessage("Something went wrong!", "success");
         }
       });
     },

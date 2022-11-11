@@ -7,7 +7,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import { useNavigate } from "react-router";
-import { getToken } from "../login/loginpage";
+import { getToken, getUserDetails } from "../login/loginpage";
+import { ToastMessage } from "../ToastMessage";
 
 export const isAuthenticated = (value) => {
   localStorage.setItem("isAuthenticated", value);
@@ -17,10 +18,13 @@ function Authentication() {
   const [image, setImage] = useState("");
   const [secret, setSecret] = useState("");
   const [validCode, setValidCode] = useState("");
-  const [isCodeValid, setIsCodeValid] = useState(null);
+  const [isCodeValid, setIsCodeValid] = useState(true);
   const naviagte = useNavigate();
-  const token = getToken();
-  const authenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+  const userDetails = getUserDetails();
+  console.log(
+    "🚀 ~ file: authentication.js ~ line 23 ~ Authentication ~ userDetails",
+    userDetails
+  );
 
   const authenticationSchema = Yup.object().shape({
     code: Yup.string().min(6, "Too Short!").max(6, "Too Long!").required(),
@@ -41,13 +45,18 @@ function Authentication() {
         token: values.code,
         window: 1,
       });
-
       if (isVerified) {
         console.log(
           "🚀 ~ file: authentication.js ~ line 43 ~ onSubmit: ~ isVerified",
           isVerified
         );
-        naviagte("/dashboard");
+        if (userDetails["navigation_type"] == "left") {
+          naviagte("/merchant-health");
+          ToastMessage("Authentication successful!", "success");
+        } else {
+          naviagte("/dashboard");
+          ToastMessage("Authentication successful!", "success");
+        }
         isAuthenticated(isVerified);
       }
       setIsCodeValid(isVerified);
@@ -60,7 +69,7 @@ function Authentication() {
       base32: "H45FGRBFN5CEIPCFEFPHCXRRJYUTUPZ7EZIWWZLRKJVWQ23QOQTA",
       hex: "3f3a5344256f44443c45215e715e314e293a3f3f26516b6571526b686b707426",
       otpauth_url:
-        "otpauth://totp/Adidas%Adidas?secret=H45FGRBFN5CEIPCFEFPHCXRRJYUTUPZ7EZIWWZLRKJVWQ23QOQTA",
+        "otpauth://totp/decimalfactor.com?secret=H45FGRBFN5CEIPCFEFPHCXRRJYUTUPZ7EZIWWZLRKJVWQ23QOQTA",
     };
 
     const backupCodes = [];
@@ -120,6 +129,10 @@ function Authentication() {
                     name="Enter Authentication Code"
                     placeholder="6 Digit Code"
                     {...formik.getFieldProps("code")}
+                    onChange={(e) => {
+                      formik.setFieldValue("code", e.target.value);
+                      setIsCodeValid(true);
+                    }}
                     className={clsx(
                       "form-control form-control-lg form-control-solid",
                       {
@@ -129,9 +142,13 @@ function Authentication() {
                         "is-valid": formik.touched.code && !formik.errors.code,
                       }
                     )}
+                    value={formik.values.code}
                   />
                   {formik.touched.code && formik.errors.code && (
                     <p className="text-danger">Please enter 6 digit code</p>
+                  )}
+                  {!isCodeValid && formik.values.code.length == 6 && (
+                    <p className="text-danger">Please enter valid code</p>
                   )}
                 </div>
 

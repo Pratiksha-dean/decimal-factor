@@ -46,7 +46,7 @@ function ApplicationInformation() {
     [fieldNames.BUSINESSENTITY]: dasboardData
       ? businessEntityList[
           businessEntityList.findIndex(
-            (item) => dasboardData["lf_business_activity"] == item.value
+            (item) => dasboardData["lf_business_entity"] == item.value
           )
         ]
       : "",
