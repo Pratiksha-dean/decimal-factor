@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../header/header';
-import SiderBarMenu from './component/sidebar'
+import SiderBarMenu from './component/sidebar';
+import StickyBox from "react-sticky-box";
 
 const Accordion = ({ title, children }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -30,7 +31,10 @@ function BusinessInformation() {
      <div className="dashboard-body bg-change-color">
      <div className="container-fluid  merchant-body">
     
-     <SiderBarMenu />
+     <div style={{display: "flex", alignItems: "flex-start", width:"100%"}}>
+      <StickyBox>
+      <SiderBarMenu />
+      </StickyBox>
  
      <div className="right-panel-main">
      <h3><i className="fas fa-user-tie" aria-hidden="true"></i> Business Information</h3>
@@ -233,6 +237,7 @@ function BusinessInformation() {
                
                 
                 </div>
+     </div>
      </div>
      </div>
      </div>

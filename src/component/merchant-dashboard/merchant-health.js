@@ -6,7 +6,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Codat from '../Codat';
 import { Link } from "react-router-dom";
-
+import StickyBox from "react-sticky-box";
  
 
 function checkMe(selected)
@@ -32,9 +32,11 @@ function MerchantHealth() {
   const [showPanel4, togglePanel4] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const [open, setOpen] = React.useState(false);
+  
   const handleOpen = () => {
     setOpen(!open);
   };
+  
 
   return (
     
@@ -42,9 +44,10 @@ function MerchantHealth() {
      <Header />
       <div className="dashboard-body bg-change-color">
       <div className="container-fluid merchant-body">
-     
+      <div style={{display: "flex", alignItems: "flex-start", width:"100%"}}>
+      <StickyBox>
       <SiderBarMenu />
-  
+      </StickyBox>
       <div className="right-panel-main">
       <h3><i className="fa fa-id-card" aria-hidden="true"></i> Merchant Health Insights </h3>
       <div className="dashboard-box position-relative card dashboard-card no-padding">
@@ -242,7 +245,7 @@ function MerchantHealth() {
                       <input type="text" name="Status" placeholder="Unlinked" class="form-control" />
                       <button class="checkstatus-btn btn btn-primary" onClick={() => togglePanel4(!showPanel4) } >Check status</button></div></div>
                       {showPanel4 && ( <div className="data-panel">
-                       <h3>Accounting Data</h3> 
+                      
                       
                         <Codat />
                       </div>)}
@@ -282,8 +285,11 @@ function MerchantHealth() {
                 <div className="col-md-6">
                 <div className="upload-box" >
                      
-                     <input type="file" name="file" className="upload-doc" />
-                     <button className="btn btn-primary upload-btn">Upload</button>
+                     <input type="file" id="upload-file" name="file" className="upload-doc" />
+                     
+                     <img src={require('../../images/file-pdf.png')} alt="" className="upload-icon" />
+                     <label for="upload-file" className="btn btn-primary upload-btn"> Upload</label>
+                    
                      <p>Max file size: 2MB each</p>
                      <p>Supported file types: PDF, JPG, PNG Bitmap etc.</p>
                    </div>
@@ -300,6 +306,7 @@ function MerchantHealth() {
         </Tabs>
          
         </div></div>
+      </div>
       </div>
       </div>
       </div>

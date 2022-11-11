@@ -17,6 +17,9 @@ import TrackingCategories from "./Codat/TrackingCategories";
 import AccountTransactions from "./Codat/AccountTransactions";
 import Transfers from "./Codat/Transfers";
 import Items from "./Codat/Items";
+import { Link } from "react-router-dom";
+
+
 
 
 export default function Codat() {
@@ -80,7 +83,10 @@ export default function Codat() {
         { label: "Location", value: "Commerce_Location" },
       ];
 
-    
+      const [openexport, setOpenexport] = React.useState(false);
+      const handleOpenexport = () => {
+        setOpenexport(!openexport);
+      };
 
 
     return(
@@ -90,7 +96,7 @@ export default function Codat() {
                 <div className="row">
                     <div className="col-md-3">
                         <label for="basic-url" className="form-label mb-0">
-                            Accouting API
+                            Accouting 
                         </label>
 
                         <div className="d-flex">
@@ -141,7 +147,7 @@ export default function Codat() {
                     </div>
                     <div className="col-md-3">
                         <label for="basic-url" className="form-label mb-0">
-                            Commerce API
+                            Commerce 
                         </label>
 
                         <div className="d-flex">
@@ -164,9 +170,39 @@ export default function Codat() {
                             </button>
                         </div>
                     </div>
-                    <div className="col-md-3">
-                    <button className="btn btn-primary exportdata-btn next-btn"><i class="fa fa-cloud-arrow-down"></i> Export <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
-                      
+                    <div className="col-md-3 export-area">
+                    <button className="btn btn-primary exportdata-btn next-btn" onClick={handleOpenexport} ><i class="fa fa-cloud-arrow-down"></i> Export <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                    {openexport ? (
+                    <div className="export-data-div">
+                    <div className="export-panel">
+                    <h3>Export data</h3>
+                    <p>Generate a new file or download last available report</p>
+                    <button className="btn btn-primary create-new-data" id="export-codat-data">Create New Data Export</button>
+                   <button className="btn btn-primary create-new-data" id="export-assess-codat-data">Create New Audit Export</button>
+                    <p>Export accounting and banking data shared by the company</p>
+                </div>
+                <p><strong>Last export</strong></p>
+                <div className="row" id="codat-download-cointainer">
+                    <div className="col-md-8">
+                        <p><i className="fa fa-calendar"></i> 
+                            <span>All Data Export </span></p>
+                    </div>
+                    <div className="col-md-4">
+                        
+                        <Link to="#" className="export-download">Download!</Link>
+
+                    </div><div className="col-md-8">
+                        <p><i className="fa fa-calendar"></i> 
+                            <span>Audit Data Export</span></p>
+                    </div>
+                    <div className="col-md-4">
+                        
+                        <Link to="#"  className="export-download">Download!</Link>
+
+                    </div></div>
+                 <button className="btn btn-primary refresh-btn" id="export-data-refresh">Refresh</button> 
+                </div>
+                ) : null}
                     </div>
                 </div>
             </div>

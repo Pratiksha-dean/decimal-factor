@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../header/header';
 import SiderBarMenu from './component/sidebar'
+import StickyBox from "react-sticky-box";
 
 
 function ApplicationInformation() {
@@ -14,7 +15,10 @@ function ApplicationInformation() {
       <div className="dashboard-body bg-change-color">
       <div className="container-fluid  merchant-body">
      
+      <div style={{display: "flex", alignItems: "flex-start", width:"100%"}}>
+      <StickyBox>
       <SiderBarMenu />
+      </StickyBox>
   
       <div className="right-panel-main">
       <h3><i className="fa fa-laptop" aria-hidden="true"></i>  Application Information </h3>
@@ -71,6 +75,7 @@ function ApplicationInformation() {
                
                 
                 </div>
+      </div>
       </div>
       </div>
       </div>

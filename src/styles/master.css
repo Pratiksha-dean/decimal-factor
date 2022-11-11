@@ -743,22 +743,7 @@ input.upload-checkbox {
   padding-left: 25px;
   line-height: 26px;
 }
-.upload-box input.upload-doc {
-  text-align: center;
-  margin: 0 auto;
-  display: block;
-  cursor: pointer;
-  z-index: 9;
-  border: 0px;
-  font-size: 0px;
-  background: url(../images/file-pdf.png) !important;
-  padding: 0px !important;
-  height: 26px;
-  margin-top: 0;
-  margin-bottom: 12px;
-  box-shadow: none !important;
-  outline: none !important;
-}
+
 button.btn.btn-primary.upload-btn {
   background: #006090;
   border: 0px;
@@ -933,7 +918,6 @@ aside.sc-gswNZR.bOQEtf.sidebar {
 li.sc-ksBlkl.gmgIpm.menu-item {
     text-align: left;
 }
-
 button.siderbar-btn {
   border: 0px;
   background: #006090;
@@ -944,8 +928,8 @@ button.siderbar-btn {
   text-align: center;
   margin-left: -20px;
   z-index: 9;
-  margin-top: 41px;
-  position: relative;
+  position: absolute;
+  bottom: 55px;
 }
 
 .sidebar-panel .menu a i.fa {
@@ -1233,13 +1217,13 @@ input#input-file {
 
   }
     .scroll-bar-2::-webkit-scrollbar {
-        width: 4px;
+        width: 8px;
         background-color: #ccc;
         border-radius: 20px;
     }
 
     .scroll-bar-2::-webkit-scrollbar-thumb {
-         width: 4px;
+         width: 8px;
         background-color: #999;
         border-radius: 20px;
         
@@ -1377,7 +1361,7 @@ button.btn.btn-primary.go-btn {
 }
 
 .rdt_TableHeadRow {
-  background: #e7f2f7 !important;
+  background: #e2eff4 !important;
   font-size: 14px;
   font-weight: bold;
 }
@@ -1398,13 +1382,13 @@ button.btn.btn-primary.go-btn {
 
 }
 .rdt_TableBody::-webkit-scrollbar {
-      width: 4px;
+      width: 8px;
       background-color: #ccc;
       border-radius: 20px;
   }
 
   .rdt_TableBody::-webkit-scrollbar-thumb {
-       width: 4px;
+       width: 8px;
       background-color: #999;
       border-radius: 20px;
       
@@ -1426,13 +1410,13 @@ button.btn.btn-primary.go-btn {
 
 }
 .sc-dmctIk.WQNxq::-webkit-scrollbar {
-      height: 4px;
+      height: 8px;
       background-color: #ccc;
       border-radius: 20px;
   }
 
   .sc-dmctIk.WQNxq::-webkit-scrollbar-thumb {
-       height: 4px;
+       height: 8px;
       background-color: #999;
       border-radius: 20px;
       
@@ -1493,7 +1477,8 @@ div#cell-1-undefined {
 
 .rdt_TableCol {
   font-size: 13px;
-  color: #767676;
+  color: #000;
+  text-transform: capitalize;
 }
 
 .btn-primary.focus, .btn-primary:focus {
@@ -1557,8 +1542,7 @@ button.btn.btn-primary.draft-btn{color: #704100;
       top: 50%;
       left: 50%;
   }
-
-  .after-check-status ul.menu {
+.after-check-status ul.menu {
     position: relative;
     margin-right: 20px;
     padding: 10px 10px 10px 26px;
@@ -1592,4 +1576,97 @@ button.btn.btn-primary.draft-btn{color: #704100;
 
 button.btn.btn-primary.banking-btn.download-btn {
   margin: 0px 20px 0px 0px;
+}
+
+.export-data-div {
+  width: 400px;
+  float: right;
+  background: #fff;
+  position: absolute;
+  box-shadow: 0px 2px 2px rgba(0,0,0,0.5);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 80px 0 0 0;
+  z-index: 9999;
+  right: 20px;
+}
+
+.export-data-div h3 {
+  margin: 0px;
+}
+.export-data-div p {
+  margin: 10px 0;
+  display: block;
+  width: 100%;
+  float: left;
+}
+.create-new-data {
+  background: #006090;
+  border: 0px;
+  font-size: 12px;
+  padding: 10px 20px !important;
+}
+.create-new-data:hover {
+  background: #065278;
+}
+
+
+button#export-assess-codat-data {
+  float: right;
+}
+div#codat-download-cointainer {
+  padding: 0px !important;
+  border-bottom: 1px #ccc solid;
+  padding-bottom: 12px !important;
+  margin-bottom: 12px;
+}
+.btn.btn-primary.refresh-btn {
+  margin: 0 auto;
+  display: block;
+  background:#ccc;
+  border: 0px;
+  color: #000;
+}
+a.export-download {
+  background: #006090;
+  border: 0px;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+
+a.export-download:hover {
+  background: #065278;
+}
+
+div#codat-download-cointainer p {
+  margin:0px 0px 10px 0px;
+}
+
+div#codat-download-cointainer span {
+  padding-left: 10px;
+}
+
+.export-area{position: relative;}
+input#upload-file {
+  display: none;
+}
+img.upload-icon {
+  margin: 10px auto;
+  display: block;
+}
+
+label.btn.btn-primary.upload-btn {
+  background: #006090;
+  border: 0px;
+  cursor: pointer;
+  padding: 0px 10px;
+  margin-bottom: 5px !important;
+}
+
+.accouting-info {
+  margin-top: 20px;
 }
