@@ -4,17 +4,13 @@ import { Sidebar, Menu, MenuItem, useProSidebar } from 'react-pro-sidebar';
 import { NavLink } from 'react-router-dom';
 
 
- 
-
-
-
-function SiderBarMenu() {
+ function SiderBarMenu() {
   const { collapseSidebar } = useProSidebar();
-  
+
   return (
-  
+
     <div className="sidebar-panel">
-      
+
       <Sidebar >
         <Menu>
           <MenuItem >  <NavLink to="/merchant-health" ><i className="fa fa-id-card" aria-hidden="true"></i> Merchant Health Insights </NavLink></MenuItem>
@@ -27,9 +23,9 @@ function SiderBarMenu() {
       <main>
         <button onClick={() => collapseSidebar()} className="siderbar-btn"><i className="fa fa-chevron-left"></i></button>
       </main>
-     
+
     </div>
-   
+
   );
 }
 
