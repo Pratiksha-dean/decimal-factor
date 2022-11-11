@@ -9,7 +9,11 @@ export const VERIFY_ACCOUNT_URL = `${API_URL}UKCustomerVerify`;
 export const FORGOT_PASSWORD_URL = `${API_URL}UKForgetPassword`;
 export const DIRECTOR_LIST_API = `${API_URL}SearchCompanies.php?companyNumber=`;
 export const LINK_ACCOUTING_URL = `${API_URL}CODAT/CreateCodatAccount`;
-export const CHANGE_PASSWORD_URL = `${API_URL}UKChangePassword`;
+export const CHANGE_PASSWORD_URL = `${API_URL}UKPasswordChange`;
+export const USER_DETAILS_URL = `${API_URL}getUkCustomerDetails/`;
+export const UPDATE_USER_DETAILS_URL = `${API_URL}UpdateCustomerForUK/`;
+
+export const RESET_PASSWORD_URL = `${API_URL}UKChangePassword`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -29,6 +33,10 @@ export function login(email, password) {
 
 export function changePassword(payload) {
   return axios.post(CHANGE_PASSWORD_URL, payload);
+}
+
+export function resetPassword(payload) {
+  return axios.post(RESET_PASSWORD_URL, payload);
 }
 
 export async function getDashboardData(id) {
@@ -84,4 +92,16 @@ export async function checkLinkingStatus(id) {
   return data;
 }
 
-// https://sales.decimalfactor.com/staging/api/CODAT/6150/getCompanyId
+export async function getUserDetailsApi(id) {
+  const { data } = await axios.get(`${USER_DETAILS_URL}${id}`);
+  return data;
+}
+
+export async function updateUpdateCustomerInfo(payload, id) {
+  const { data } = await axios.post(`${UPDATE_USER_DETAILS_URL}${id}`, payload);
+  console.log(
+    "🚀 ~ file: request.js ~ line 58 ~ getLinkToAccountingData ~ data",
+    data
+  );
+  return data;
+}

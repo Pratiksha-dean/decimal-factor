@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-link";
 import "../../styles/master.css";
 import clsx from "clsx";
 import * as Yup from "yup";
-import { Formik } from "formik";
 import { fieldNames } from "../requestaquote/components/application-information";
 import { useFormik } from "formik/dist";
-import { useNavigate } from "react-router-dom/dist";
-import { changePassword } from "../../request";
-import { getToken } from "../login/loginpage";
+import { useNavigate, useParams } from "react-router-dom/dist";
+import { logout, resetPassword } from "../../request";
 import { passwordRegex } from "../Constants";
+import { Alert } from "react-bootstrap";
+import { ToastMessage } from "../ToastMessage";
 
 function ChangePassword() {
   const navigate = useNavigate();
+  const { token } = useParams();
+  const [message, setMessage] = useState();
 
   const initialValues = {
     [fieldNames.PASSWORD]: "",
@@ -34,21 +36,34 @@ function ChangePassword() {
     validationSchema: validationSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       const payload = {
-        token: getToken(),
+        token: token,
         password: values.password,
       };
-      changePassword(payload)
+
+      resetPassword(payload)
         .then((resp) => {
-          console.log(
-            "🚀 ~ file: change-password.js ~ line 41 ~ changePassword ~ resp",
-            resp
-          );
+          if (resp.data.isSuccess == 1) {
+            setMessage({
+              type: "success",
+              text: "Password changed successfully",
+            });
+            formik.resetForm();
+            ToastMessage("Password changed successfully!", "success");
+          } else {
+            setMessage({
+              type: "error",
+              text: "Invalid current password",
+            });
+
+            ToastMessage("Invalid current password!", "error");
+          }
         })
         .catch((err) => {
-          console.log(
-            "🚀 ~ file: change-password.js ~ line 40 ~ changePassword ~ err",
-            err
-          );
+          setMessage({
+            type: "error",
+            text: "Something went wrong!",
+          });
+          ToastMessage("Something went wrong!", "error");
         });
     },
   });
@@ -116,6 +131,15 @@ function ChangePassword() {
                       formik.values[fieldNames.PASSWORD] && (
                       <p className="text-danger">Password must match</p>
                     )}
+                </div>
+                <div className="my-3">
+                  {message && message.type && (
+                    <Alert
+                      variant={message.type == "success" ? "success" : "danger"}
+                    >
+                      <h5 className="mb-0">{message.text}</h5>
+                    </Alert>
+                  )}
                 </div>
 
                 <button className="btn btn-primary login-btn" type="submit">

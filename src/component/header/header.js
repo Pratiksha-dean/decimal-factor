@@ -39,10 +39,16 @@ function Header() {
           <div className="collapse navbar-collapse" id="navbarScroll">
             <ul className="navbar-nav  navbar-nav-scroll">
               <li className="nav-item">
-                <a className="nav-link border-divider" href="#"></a>
+                <a className="nav-link border-divider"></a>
               </li>
-              <li className="nav-item business-btn">
-                <a className="nav-link " href="#">
+              <li
+                className="nav-item business-btn cursor-pointer"
+                onClick={() => navigate("/merchant-health")}
+              >
+                <a
+                  className="nav-link cursor-pointer"
+                  onClick={() => navigate("/merchant-health")}
+                >
                   My Business{" "}
                 </a>
               </li>
@@ -65,8 +71,8 @@ function Header() {
                 <ul className="dropdown-menu">
                   <li>
                     <a
-                      className="dropdown-item"
-                      href="#"
+                      className="dropdown-item cursor-pointer"
+                      // href="#"
                       onClick={() => {
                         navigate("/change-password");
                       }}
@@ -77,7 +83,7 @@ function Header() {
                   <li>
                     <a
                       className="dropdown-item"
-                      href="#"
+                      // href="#"
                       onClick={() => logoutUser()}
                     >
                       Logout

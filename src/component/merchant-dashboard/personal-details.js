@@ -12,6 +12,7 @@ import { useState } from "react";
 import { getUserDetails } from "../login/loginpage";
 import { useEffect } from "react";
 import { getDashboardData } from "../../request";
+import StickyBox from "react-sticky-box";
 
 function PersonalDetails() {
   const storeData = {};
@@ -84,240 +85,246 @@ function PersonalDetails() {
       <Header />
       <div className="dashboard-body bg-change-color">
         <div className="container-fluid  merchant-body">
-          <SiderBarMenu />
+          <div
+            style={{ display: "flex", alignItems: "flex-start", width: "100%" }}
+          >
+            <StickyBox>
+              <SiderBarMenu />
+            </StickyBox>
+            <div className="right-panel-main">
+              <h3>
+                <i className="fa fa-user" aria-hidden="true"></i> Personal
+                Details
+              </h3>
+              <div className="dashboard-box position-relative card dashboard-card">
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  enableReinitialize
+                  onSubmit={(values, { setSubmitting }) => {
+                    console.log(
+                      "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ values",
+                      values
+                    );
+                    // setActiveStep(activeStep + 1);
+                    // setDashboardStepNo(activeStep + 1);
 
-          <div className="right-panel-main">
-            <h3>
-              <i className="fa fa-user" aria-hidden="true"></i> Personal Details
-            </h3>
-            <div className="dashboard-box position-relative card dashboard-card">
-              <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                enableReinitialize
-                onSubmit={(values, { setSubmitting }) => {
-                  console.log(
-                    "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ values",
-                    values
-                  );
-                  // setActiveStep(activeStep + 1);
-                  // setDashboardStepNo(activeStep + 1);
+                    setTimeout(() => {
+                      setSubmitting(false);
+                    }, 400);
+                  }}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isSubmitting,
+                    setFieldValue,
+                    /* and other goodies */
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <div className="review-application">
+                        <div className="row">
+                          <div className="col-md-8">
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="form-group">
+                                  <label>First Name</label>
 
-                  setTimeout(() => {
-                    setSubmitting(false);
-                  }, 400);
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                  setFieldValue,
-                  /* and other goodies */
-                }) => (
-                  <form onSubmit={handleSubmit}>
-                    <div className="review-application">
-                      <div className="row">
-                        <div className="col-md-8">
-                          <div className="row">
-                            <div className="col-md-6">
-                              <div className="form-group">
-                                <label>First Name</label>
-
-                                <input
-                                  type="text"
-                                  placeholder="First Name"
-                                  name={fieldNames.FIRSTNAME}
-                                  className={clsx(
-                                    "form-control ",
-                                    {
-                                      "is-invalid":
-                                        touched[fieldNames.FIRSTNAME] &&
-                                        errors[fieldNames.FIRSTNAME],
-                                    },
-                                    {
-                                      "is-valid":
-                                        touched[fieldNames.FIRSTNAME] &&
-                                        !errors[fieldNames.FIRSTNAME],
-                                    }
-                                  )}
-                                  onChange={handleChange}
-                                  onBlur={() => {
-                                    // setReviewPersonalData(values);
-                                  }}
-                                  value={values[fieldNames.FIRSTNAME]}
-                                />
+                                  <input
+                                    type="text"
+                                    placeholder="First Name"
+                                    name={fieldNames.FIRSTNAME}
+                                    className={clsx(
+                                      "form-control ",
+                                      {
+                                        "is-invalid":
+                                          touched[fieldNames.FIRSTNAME] &&
+                                          errors[fieldNames.FIRSTNAME],
+                                      },
+                                      {
+                                        "is-valid":
+                                          touched[fieldNames.FIRSTNAME] &&
+                                          !errors[fieldNames.FIRSTNAME],
+                                      }
+                                    )}
+                                    onChange={handleChange}
+                                    onBlur={() => {
+                                      // setReviewPersonalData(values);
+                                    }}
+                                    value={values[fieldNames.FIRSTNAME]}
+                                  />
+                                </div>
                               </div>
-                            </div>
-                            <div className="col-md-6">
-                              <div className="form-group ">
-                                <label>Last Name</label>
-                                <input
-                                  type="text"
-                                  placeholder="Last Name"
-                                  name={fieldNames.LASTNAME}
-                                  className={clsx(
-                                    "form-control ",
-                                    {
-                                      "is-invalid":
-                                        touched[fieldNames.LASTNAME] &&
-                                        errors[fieldNames.LASTNAME],
-                                    },
-                                    {
-                                      "is-valid":
-                                        touched[fieldNames.LASTNAME] &&
-                                        !errors[fieldNames.LASTNAME],
-                                    }
-                                  )}
-                                  onChange={handleChange}
-                                  onBlur={() => {
-                                    // setReviewPersonalData(values);
-                                  }}
-                                  value={values[fieldNames.LASTNAME]}
-                                />
+                              <div className="col-md-6">
+                                <div className="form-group ">
+                                  <label>Last Name</label>
+                                  <input
+                                    type="text"
+                                    placeholder="Last Name"
+                                    name={fieldNames.LASTNAME}
+                                    className={clsx(
+                                      "form-control ",
+                                      {
+                                        "is-invalid":
+                                          touched[fieldNames.LASTNAME] &&
+                                          errors[fieldNames.LASTNAME],
+                                      },
+                                      {
+                                        "is-valid":
+                                          touched[fieldNames.LASTNAME] &&
+                                          !errors[fieldNames.LASTNAME],
+                                      }
+                                    )}
+                                    onChange={handleChange}
+                                    onBlur={() => {
+                                      // setReviewPersonalData(values);
+                                    }}
+                                    value={values[fieldNames.LASTNAME]}
+                                  />
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="col-md-6">
-                              <div className="form-group">
-                                <label>
-                                  Email Address{" "}
-                                  <tooltip>
-                                    <i
-                                      className="fa fa-info-circle"
-                                      data-tip="This is the email address where all communication will sent to."
-                                    >
-                                      <ReactTooltip
-                                        className={"tooltippanel"}
-                                      />
-                                    </i>
-                                  </tooltip>
-                                </label>
-                                <input
-                                  type="email"
-                                  placeholder="Email Address"
-                                  name={fieldNames.EMAIL}
-                                  className={clsx(
-                                    "form-control ",
-                                    {
-                                      "is-invalid":
-                                        touched[fieldNames.EMAIL] &&
-                                        errors[fieldNames.EMAIL],
-                                    },
-                                    {
-                                      "is-valid":
-                                        touched[fieldNames.EMAIL] &&
-                                        !errors[fieldNames.EMAIL],
-                                    }
-                                  )}
-                                  onChange={handleChange}
-                                  onBlur={() => {
-                                    // setReviewPersonalData(values);
-                                  }}
-                                  value={values[fieldNames.EMAIL]}
-                                />
+                              <div className="col-md-6">
+                                <div className="form-group">
+                                  <label>
+                                    Email Address{" "}
+                                    <tooltip>
+                                      <i
+                                        className="fa fa-info-circle"
+                                        data-tip="This is the email address where all communication will sent to."
+                                      >
+                                        <ReactTooltip
+                                          className={"tooltippanel"}
+                                        />
+                                      </i>
+                                    </tooltip>
+                                  </label>
+                                  <input
+                                    type="email"
+                                    placeholder="Email Address"
+                                    name={fieldNames.EMAIL}
+                                    className={clsx(
+                                      "form-control ",
+                                      {
+                                        "is-invalid":
+                                          touched[fieldNames.EMAIL] &&
+                                          errors[fieldNames.EMAIL],
+                                      },
+                                      {
+                                        "is-valid":
+                                          touched[fieldNames.EMAIL] &&
+                                          !errors[fieldNames.EMAIL],
+                                      }
+                                    )}
+                                    onChange={handleChange}
+                                    onBlur={() => {
+                                      // setReviewPersonalData(values);
+                                    }}
+                                    value={values[fieldNames.EMAIL]}
+                                  />
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="col-md-6">
-                              <div className="form-group business-entity">
-                                <label>Phone Number</label>
-                                <PhoneInput
-                                  name={fieldNames.PHONE}
-                                  country={"gb"}
-                                  value={values[fieldNames.PHONE]}
-                                  inputStyle={
-                                    touched[fieldNames.PHONE] &&
-                                    errors[fieldNames.PHONE] && {
-                                      borderColor: "red",
+                              <div className="col-md-6">
+                                <div className="form-group business-entity">
+                                  <label>Phone Number</label>
+                                  <PhoneInput
+                                    name={fieldNames.PHONE}
+                                    country={"gb"}
+                                    value={values[fieldNames.PHONE]}
+                                    inputStyle={
+                                      touched[fieldNames.PHONE] &&
+                                      errors[fieldNames.PHONE] && {
+                                        borderColor: "red",
+                                      }
                                     }
-                                  }
-                                  onChange={(phone) => {
-                                    setFieldValue(fieldNames.PHONE, phone);
-                                  }}
-                                  onBlur={() => {
-                                    // setReviewPersonalData(values);
-                                  }}
-                                  inputClass={"w-100"}
-                                  placeholder="Enter Phone Number"
-                                />
+                                    onChange={(phone) => {
+                                      setFieldValue(fieldNames.PHONE, phone);
+                                    }}
+                                    onBlur={() => {
+                                      // setReviewPersonalData(values);
+                                    }}
+                                    inputClass={"w-100"}
+                                    placeholder="Enter Phone Number"
+                                  />
+                                </div>
                               </div>
-                            </div>
-                            <div className="col-md-12">
-                              <div className="form-group business-entity">
-                                <label>Address</label>
-                                <input
-                                  type="text"
-                                  placeholder="Address"
-                                  name="address"
-                                  className={clsx(
-                                    "form-control ",
-                                    {
-                                      "is-invalid":
-                                        touched.address && errors.address,
-                                    },
-                                    {
-                                      "is-valid":
-                                        touched.address && !errors.address,
-                                    }
-                                  )}
-                                  onChange={handleChange}
-                                  onBlur={() => {
-                                    // setReviewPersonalData(values);
-                                  }}
-                                  value={values.address}
-                                />
+                              <div className="col-md-12">
+                                <div className="form-group business-entity">
+                                  <label>Address</label>
+                                  <input
+                                    type="text"
+                                    placeholder="Address"
+                                    name="address"
+                                    className={clsx(
+                                      "form-control ",
+                                      {
+                                        "is-invalid":
+                                          touched.address && errors.address,
+                                      },
+                                      {
+                                        "is-valid":
+                                          touched.address && !errors.address,
+                                      }
+                                    )}
+                                    onChange={handleChange}
+                                    onBlur={() => {
+                                      // setReviewPersonalData(values);
+                                    }}
+                                    value={values.address}
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="col-md-4">
-                          <div className="upload-image">
-                            <input
-                              type="file"
-                              id="input-file"
-                              name="upload image"
-                              className=""
-                              onChange={handleFileChange}
-                              ref={hiddenFileInput}
-                            />
-                            <label for="input-file">
-                              <img
-                                height="120px"
-                                width="120px"
-                                src={
-                                  file && file.preview
-                                    ? file.preview
-                                    : require("../../images/upload-img.png")
-                                }
-                                alt=""
-                                className="upload-img"
+                          <div className="col-md-4">
+                            <div className="upload-image">
+                              <input
+                                type="file"
+                                id="input-file"
+                                name="upload image"
+                                className=""
+                                onChange={handleFileChange}
+                                ref={hiddenFileInput}
                               />
-                            </label>
-                            <button
-                              className="btn btn-primary upload-image"
-                              onClick={handleClick}
-                              type="button"
-                            >
-                              Upload Image
-                            </button>
+                              <label for="input-file">
+                                <img
+                                  height="120px"
+                                  width="120px"
+                                  src={
+                                    file && file.preview
+                                      ? file.preview
+                                      : require("../../images/upload-img.png")
+                                  }
+                                  alt=""
+                                  className="upload-img"
+                                />
+                              </label>
+                              <button
+                                className="btn btn-primary upload-image"
+                                onClick={handleClick}
+                                type="button"
+                              >
+                                Upload Image
+                              </button>
+                            </div>
                           </div>
                         </div>
+                        <button
+                          className="btn btn-primary save-btn next-btn"
+                          type="submit"
+                        >
+                          Save <i className="fa fa-file-image-o"></i>
+                        </button>
                       </div>
-                      <button
-                        className="btn btn-primary save-btn next-btn"
-                        type="submit"
-                      >
-                        Save <i className="fa fa-file-image-o"></i>
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </Formik>
+                    </form>
+                  )}
+                </Formik>
+              </div>
             </div>
           </div>
         </div>

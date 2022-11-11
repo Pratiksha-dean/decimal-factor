@@ -56,6 +56,10 @@ function Dashboard() {
       });
     }
 
+    if (userDetails["navigation_type"] == "left") {
+      naviagte("/merchant-health");
+    }
+
     return () => {};
   }, []);
 

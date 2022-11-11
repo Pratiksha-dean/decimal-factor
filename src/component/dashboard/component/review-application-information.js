@@ -22,7 +22,15 @@ import {
 import { getCompanyInfo } from "../../requestaquote/components/business-information";
 
 function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
+  console.log(
+    "🚀 ~ file: review-application-information.js ~ line 25 ~ ReviewApplicationInformation ~ data",
+    data
+  );
   const storedData = getReviewAppData();
+  console.log(
+    "🚀 ~ file: review-application-information.js ~ line 26 ~ ReviewApplicationInformation ~ storedData",
+    storedData
+  );
 
   const initialValues = {
     [fieldNames.AMOUNT]: storedData
@@ -42,13 +50,20 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
       ? storedData["businessEntity"]
       : businessEntityList[
           businessEntityList.findIndex(
-            (item) => data.lf_business_activity == item.value
+            (item) => data["lf_business_entity"] == item.value
           )
         ],
     [fieldNames.BUSINESSNAME]: storedData
       ? storedData["businessName"]
       : data["lf_business_name"],
   };
+
+  useEffect(() => {
+    if (!storedData) {
+      console.log("no stored dara", initialValues);
+      setReviewAppData(initialValues);
+    }
+  }, []);
 
   return (
     <div className="dashboard-box position-relative card dashboard-card">

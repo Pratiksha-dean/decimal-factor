@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactTooltip from "react-tooltip";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -19,25 +19,32 @@ export const getReviewPersonalData = () => {
 
 function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
   const userDetails = getUserDetails();
-  const storeData = getReviewPersonalData();
+  const storedData = getReviewPersonalData();
   console.log(
-    "🚀 ~ file: review-personal-details.js ~ line 23 ~ ReviewPersonalDetails ~ storeData",
-    storeData
+    "🚀 ~ file: review-personal-details.js ~ line 23 ~ ReviewPersonalDetails ~ storedData",
+    storedData
   );
   const initialValues = {
-    [fieldNames.FIRSTNAME]: storeData
-      ? storeData[fieldNames.FIRSTNAME]
+    [fieldNames.FIRSTNAME]: storedData
+      ? storedData[fieldNames.FIRSTNAME]
       : data["lf_opener_name"].split(" ")[0],
-    [fieldNames.LASTNAME]: storeData
-      ? storeData[fieldNames.LASTNAME]
+    [fieldNames.LASTNAME]: storedData
+      ? storedData[fieldNames.LASTNAME]
       : data["lf_opener_name"].split(" ")[1],
-    [fieldNames.EMAIL]: storeData
-      ? storeData[fieldNames.EMAIL]
+    [fieldNames.EMAIL]: storedData
+      ? storedData[fieldNames.EMAIL]
       : data["lf_business_email"],
-    [fieldNames.PHONE]: storeData
-      ? storeData[fieldNames.PHONE]
+    [fieldNames.PHONE]: storedData
+      ? storedData[fieldNames.PHONE]
       : data["lf_telephone"],
   };
+
+  useEffect(() => {
+    if (!storedData) {
+      console.log("no stored dara", initialValues);
+      setReviewPersonalData(initialValues);
+    }
+  }, []);
 
   const validationSchema = Yup.object().shape({
     [fieldNames.FIRSTNAME]: Yup.string().required(),

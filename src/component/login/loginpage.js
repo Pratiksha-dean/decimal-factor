@@ -4,10 +4,12 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import { NavLink, useNavigate } from "react-router-dom";
-import { login } from "../../request";
+import { getUserDetailsApi, login } from "../../request";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { isAuthenticated } from "../authentication/authentication";
+import { ToastContainer } from "react-toastify";
+import { ToastMessage } from "../ToastMessage";
 
 const setEmailPassword = (data) => {
   localStorage.setItem("creds", data);
@@ -33,6 +35,7 @@ function Login() {
   const [error, setError] = useState();
   const savedCredentials = JSON.parse(localStorage.getItem("creds"));
   const [rememberMe, setRememberMe] = useState(savedCredentials ? true : false);
+  const [loading, setLoading] = useState(false);
 
   const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -55,24 +58,46 @@ function Login() {
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
+      setLoading(true);
       login(values.email, values.password)
         .then((resp) => {
           if (resp.data.status == "error") {
             setError(resp.data.message_text);
+            setLoading(false);
+            ToastMessage("Something went wrong!", "error");
           } else {
             if (resp.data.data.status == 1) {
+              ToastMessage("Login successful! Verify code to proceed further.", "success");
               navigate("/authentication");
               setUserDetails(resp.data.data);
               setToken(resp.data.data.token);
               isAuthenticated(false);
+              setLoading(false);
+
+              // getUserDetailsApi(resp.data.data.lead_id)
+              //   .then((response) => {
+              //     console.log(
+              //       "🚀 ~ file: loginpage.js ~ line 65 ~ getUserDetails ~ response",
+              //       response
+              //     );
+              //   })
+              //   .catch((err) => {
+              //     console.log(
+              //       "🚀 ~ file: loginpage.js ~ line 68 ~ getUserDetails ~ err",
+              //       err
+              //     );
+              //   });
             } else {
               setError("Please verify your email to login");
+              setLoading(false);
+              ToastMessage("Please verify your email to login!", "error");
             }
           }
         })
         .catch((err) => {
           console.log("🚀 ~ file: loginpage.js ~ line 38 ~ login ~ err", err);
           setError("Something went wrong!");
+          ToastMessage("Something went wrong!", "error");
         });
     },
   });
@@ -90,6 +115,7 @@ function Login() {
             <div className="login-box">
               <h3>Login to Your Account</h3>
               <h5>Welcome back! Please enter your details below...</h5>
+
               <form onSubmit={formik.handleSubmit}>
                 <div className="form-group">
                   <label>Email Address</label>
@@ -155,7 +181,11 @@ function Login() {
                     <NavLink to="/forgot-password">Forgot Password?</NavLink>
                   </div>
                 </div>
-                <button className="btn btn-primary login-btn" type="submit">
+                <button
+                  className="btn btn-primary login-btn"
+                  type="submit"
+                  disabled={loading}
+                >
                   Login Now <i className="fa fa-chevron-right"></i>
                 </button>
                 <div className="divider"></div>

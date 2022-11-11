@@ -23,7 +23,7 @@ export const getReviewBusinessData = () => {
   return JSON.parse(localStorage.getItem("reviewBusinessInfo"));
 };
 
-const Accordion = ({ title, children, isPrimary }) => {
+const Accordion = ({ title, children, isPrimary, id }) => {
   const [isOpen, setOpen] = React.useState(false);
 
   return (
@@ -44,7 +44,9 @@ const Accordion = ({ title, children, isPrimary }) => {
         )}
       </div>
       <div className={`accordion-item ${!isOpen ? "collapsed" : ""}`}>
-        <div className="accordion-content">{children}</div>
+        <div className="accordion-content" id={id}>
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -52,17 +54,11 @@ const Accordion = ({ title, children, isPrimary }) => {
 
 function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
   const storedData = getReviewBusinessData();
-  const companyInfo = getCompanyInfo();
   const [directorList, setDirectorList] = useState([]);
 
-  console.log(
-    "🚀 ~ file: review-application-information.js ~ line 26 ~ ReviewApplicationInformation ~ companyInfo",
-    companyInfo
-  );
-
   useEffect(() => {
-    if (companyInfo && companyInfo["company_number"]) {
-      getDirectorList(companyInfo["company_number"]).then((resp) => {
+    if (data && data["lmc_bi_business_number"]) {
+      getDirectorList(data["lmc_bi_business_number"]).then((resp) => {
         console.log(
           "🚀 ~ file: review-business-information.js ~ line 59 ~ getDirectorList ~ resp",
           resp
@@ -187,6 +183,12 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
     [fieldNames.DIRECTORINFO]: patchDirectorData(data),
   };
 
+  useEffect(() => {
+    if (!storedData) {
+      console.log("no stored dara", initialValues);
+      setReviewBusinessData(initialValues);
+    }
+  }, []);
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <Formik
@@ -410,415 +412,442 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                 <div className="col-md-12">
                   <div className="director-panel">
                     <h4>Directors of Business Name</h4>
-                    {values.directorInfo.length > 0 && (
-                      <FieldArray
-                        name={fieldNames.DIRECTORINFO}
-                        render={(arrayHelpers) => (
-                          <>
-                            {values.directorInfo &&
-                              values.directorInfo.length &&
-                              values.directorInfo.map((item, index) => (
-                                <Accordion
-                                  title={
-                                    item[fieldNames.FIRSTNAME] +
-                                    " " +
-                                    item[fieldNames.LASTNAME]
-                                  }
-                                  key={index}
-                                  isPrimary={item[directorFieldNames.ISPRIMARY]}
-                                >
-                                  <div className="director-field">
-                                    <div className="row">
-                                      <div className="col-md-12">
-                                        <div className="form-group">
-                                          <input
-                                            type="checkbox"
-                                            className="primary-checkbox"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.ISPRIMARY]
-                                            }
-                                          />
-                                          <label className="set-primary">
-                                            Set as Primary
-                                          </label>
+                    {values["directorInfo"] &&
+                      values["directorInfo"].length > 0 && (
+                        <FieldArray
+                          name={fieldNames.DIRECTORINFO}
+                          render={(arrayHelpers) => (
+                            <>
+                              {values.directorInfo &&
+                                values.directorInfo.length &&
+                                values.directorInfo.map((item, index) => (
+                                  <Accordion
+                                    title={
+                                      item[fieldNames.FIRSTNAME] +
+                                      " " +
+                                      item[fieldNames.LASTNAME]
+                                    }
+                                    key={index}
+                                    isPrimary={
+                                      item[directorFieldNames.ISPRIMARY]
+                                    }
+                                    id={`accordian${index}`}
+                                  >
+                                    <div className="director-field">
+                                      <div className="row">
+                                        <div className="col-md-12">
+                                          <div className="form-group">
+                                            <input
+                                              type="checkbox"
+                                              className="primary-checkbox"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.ISPRIMARY
+                                                ]
+                                              }
+                                            />
+                                            <label className="set-primary">
+                                              Set as Primary
+                                            </label>
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>First Name</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Joana"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.FIRSTNAME}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.FIRSTNAME]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>First Name</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Joana"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.FIRSTNAME}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.FIRSTNAME
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Last Name</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Last Name"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LASTNAME}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.LASTNAME]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Last Name</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Last Name"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LASTNAME}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.LASTNAME
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Nature of Control</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Nature of Control"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.NATUREOFCONTROL}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[
-                                                directorFieldNames
-                                                  .NATUREOFCONTROL
-                                              ]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Nature of Control</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Nature of Control"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.NATUREOFCONTROL}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames
+                                                    .NATUREOFCONTROL
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>% of Total Share Count</label>
-                                          <input
-                                            type="text"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[
-                                                directorFieldNames
-                                                  .TOTALSHARECOUNT
-                                              ]
-                                            }
-                                            className="form-control"
-                                            placeholder="% of Total Share Count"
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>
+                                              % of Total Share Count
+                                            </label>
+                                            <input
+                                              type="text"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames
+                                                    .TOTALSHARECOUNT
+                                                ]
+                                              }
+                                              className="form-control"
+                                              placeholder="% of Total Share Count"
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Email Address</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Email Address"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAILID}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.EMAILID]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Email Address</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Email Address"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAILID}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[directorFieldNames.EMAILID]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Phone</label>
-                                          {/* <input
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Phone</label>
+                                            {/* <input
                                           type="text"
                                           name="Phone"
                                           className="form-control"
                                           placeholder="Phone"
                                         /> */}
 
-                                          <PhoneInput
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
-                                            country={"gb"}
-                                            value={
-                                              item[
-                                                directorFieldNames.PHONENUMBER
-                                              ]
-                                            }
-                                            inputStyle={
-                                              touched[
-                                                directorFieldNames.PHONENUMBER
-                                              ] &&
-                                              errors[
-                                                directorFieldNames.PHONENUMBER
-                                              ] && {
-                                                borderColor: "red",
-                                              }
-                                            }
-                                            onChange={(phone) => {
-                                              setFieldValue(
-                                                fieldNames.DIRECTORINFO[index][
+                                            <PhoneInput
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
+                                              country={"gb"}
+                                              value={
+                                                item[
                                                   directorFieldNames.PHONENUMBER
-                                                ],
-                                                phone
-                                              );
-                                            }}
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                            inputClass={"w-100"}
-                                            placeholder="Enter Phone Number"
-                                          />
+                                                ]
+                                              }
+                                              inputStyle={
+                                                touched[
+                                                  directorFieldNames.PHONENUMBER
+                                                ] &&
+                                                errors[
+                                                  directorFieldNames.PHONENUMBER
+                                                ] && {
+                                                  borderColor: "red",
+                                                }
+                                              }
+                                              onChange={(phone) => {
+                                                setFieldValue(
+                                                  fieldNames.DIRECTORINFO[
+                                                    index
+                                                  ][
+                                                    directorFieldNames
+                                                      .PHONENUMBER
+                                                  ],
+                                                  phone
+                                                );
+                                              }}
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                              inputClass={"w-100"}
+                                              placeholder="Enter Phone Number"
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Date of Birth</label>
-                                          <input
-                                            type="date"
-                                            className="form-control"
-                                            placeholder="04/11/2022"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.DATEOFBIRTH}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[
-                                                directorFieldNames.DATEOFBIRTH
-                                              ]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Date of Birth</label>
+                                            <input
+                                              type="date"
+                                              className="form-control"
+                                              placeholder="04/11/2022"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.DATEOFBIRTH}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.DATEOFBIRTH
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Postcode</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Postcode"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTCODE}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.POSTCODE]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Postcode</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Postcode"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTCODE}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.POSTCODE
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Choose Address</label>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Choose Address</label>
 
-                                          <select
-                                            class="form-select form-control"
-                                            aria-label="Default select example"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[
-                                                directorFieldNames.CHOOSEADDRESS
-                                              ]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          >
-                                            <option selected disabled>
-                                              Choose Address
-                                            </option>
-                                          </select>
+                                            <select
+                                              class="form-select form-control"
+                                              aria-label="Default select example"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames
+                                                    .CHOOSEADDRESS
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            >
+                                              <option selected disabled>
+                                                Choose Address
+                                              </option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="row">
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>House Number</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="House Number"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSENUMBER}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.HOUSENUMBER
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>House Name</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="House Name"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSENAME}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.HOUSENAME
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Street</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Street"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.STREET}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[directorFieldNames.STREET]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>County</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="County"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.COUNTY}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[directorFieldNames.COUNTY]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Town</label>
+                                            <input
+                                              type="text"
+                                              className="form-control"
+                                              placeholder="Town"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOWN}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[directorFieldNames.TOWN]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Residential Status</label>
+                                            <Select
+                                              // menuIsOpen={true}
+                                              closeMenuOnSelect={true}
+                                              onChange={(selectedOption) =>
+                                                setFieldValue(
+                                                  directorFieldNames.RESIDENTIALSTATUS,
+                                                  selectedOption
+                                                )
+                                              }
+                                              name={
+                                                directorFieldNames.RESIDENTIALSTATUS
+                                              }
+                                              options={residentialStatusList}
+                                              // menuPortalTarget={document.getElementById(
+                                              //   `accordian${index}`
+                                              // )}
+                                              placeholder="Select Residential Status"
+                                              styles={{
+                                                control: (styles, state) => {
+                                                  const borderColor =
+                                                    !state.hasValue &&
+                                                    touched[
+                                                      directorFieldNames
+                                                        .RESIDENTIALSTATUS
+                                                    ] &&
+                                                    errors[
+                                                      directorFieldNames
+                                                        .RESIDENTIALSTATUS
+                                                    ]
+                                                      ? "red"
+                                                      : "#ced4da";
+
+                                                  return {
+                                                    ...styles,
+                                                    borderColor,
+                                                  };
+                                                },
+                                                menuPortal: (base) => ({
+                                                  ...base,
+                                                  zIndex: 9999,
+                                                }),
+                                              }}
+                                              components={{
+                                                IndicatorSeparator: () => null,
+                                              }}
+                                              value={
+                                                values[
+                                                  directorFieldNames
+                                                    .RESIDENTIALSTATUS
+                                                ]
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                          <div className="form-group">
+                                            <label>Living Since</label>
+                                            <input
+                                              type="date"
+                                              className="form-control"
+                                              placeholder="Living Since"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames.LIVINGSINCE
+                                                ]
+                                              }
+                                              onBlur={() => {
+                                                setReviewBusinessData(values);
+                                              }}
+                                            />
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div className="row">
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>House Number</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="House Number"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSENUMBER}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[
-                                                directorFieldNames.HOUSENUMBER
-                                              ]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>House Name</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="House Name"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSENAME}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.HOUSENAME]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Street</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Street"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.STREET}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.STREET]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>County</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="County"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.COUNTY}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.COUNTY]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Town</label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Town"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOWN}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[directorFieldNames.TOWN]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Residential Status</label>
-                                          <Select
-                                            menuIsOpen={true}
-                                            closeMenuOnSelect={true}
-                                            onChange={(selectedOption) =>
-                                              setFieldValue(
-                                                directorFieldNames.RESIDENTIALSTATUS,
-                                                selectedOption
-                                              )
-                                            }
-                                            name={
-                                              directorFieldNames.RESIDENTIALSTATUS
-                                            }
-                                            options={residentialStatusList}
-                                            placeholder="Select Residential Status"
-                                            styles={{
-                                              control: (styles, state) => {
-                                                const borderColor =
-                                                  !state.hasValue &&
-                                                  touched[
-                                                    directorFieldNames
-                                                      .RESIDENTIALSTATUS
-                                                  ] &&
-                                                  errors[
-                                                    directorFieldNames
-                                                      .RESIDENTIALSTATUS
-                                                  ]
-                                                    ? "red"
-                                                    : "#ced4da";
-
-                                                return {
-                                                  ...styles,
-                                                  borderColor,
-                                                };
-                                              },
-                                            }}
-                                            components={{
-                                              IndicatorSeparator: () => null,
-                                            }}
-                                            value={
-                                              values[
-                                                directorFieldNames
-                                                  .RESIDENTIALSTATUS
-                                              ]
-                                            }
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="col-md-3">
-                                        <div className="form-group">
-                                          <label>Living Since</label>
-                                          <input
-                                            type="date"
-                                            className="form-control"
-                                            placeholder="Living Since"
-                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
-                                            onChange={handleChange}
-                                            value={
-                                              item[
-                                                directorFieldNames.LIVINGSINCE
-                                              ]
-                                            }
-                                            onBlur={() => {
-                                              setReviewBusinessData(values);
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </Accordion>
-                              ))}
-                          </>
-                        )}
-                      />
-                    )}
+                                  </Accordion>
+                                ))}
+                            </>
+                          )}
+                        />
+                      )}
 
                     {/* <Accordion title="Joanna Kii"></Accordion>
                     <Accordion title="Cajetan Kii"></Accordion> */}
