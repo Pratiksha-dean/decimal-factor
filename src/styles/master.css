@@ -1242,10 +1242,10 @@ input#input-file {
 }
 
 .data-panel h3 {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 button.btn.btn-primary.exportdata-btn.next-btn {
@@ -1443,7 +1443,7 @@ div#cell-1-undefined {
 }
 
 .rdt_TableHeadRow .rdt_TableCol:first-child {
-  min-width: 270px;
+  min-width: 270px !important;
 }
 
 .rdt_TableCell {
@@ -1462,6 +1462,7 @@ div#cell-1-undefined {
   font-size: 13px;
   color: #000;
   text-transform: capitalize;
+  min-width: 150px !important;
 }
 
 .btn-primary.focus,
@@ -1666,4 +1667,285 @@ label.btn.btn-primary.upload-btn {
 
 .fa-pound-sign {
   color: #000000;
+}
+.sidebar.collapsed li.menu-item a span a {
+  padding-left: 14px !important;
+  text-align: center;
+}
+.chart-panel{width: 100%; margin: 20px 0;}
+
+.col-for-logo {
+  float: right;
+  margin-top: 3px;
+  width: 182px;
+}
+.col-for-logo img {
+  width: 30px;
+  float: left;
+}
+.col-for-logo h3 {
+  float: left;
+  margin-left: 10px !important;
+  width: calc(100% - 50px);
+  vertical-align: top;
+  line-height: 16px;
+  font-size: 14px;
+  margin: 2px 0px 0px 0px;
+}
+.col-for-logo h3 span {
+  display: block;
+  font-size: 12px;
+}
+.box-shape {
+  height: 42px;
+  background: #fff;
+  box-shadow: 0px 2px 3px rgba(0,0,0,0.5);
+  float: left;
+  padding: 0px 10px;
+  border-radius: 5px;
+  line-height: 42px;
+  width: 100%;
+}
+.box-shape label {
+  font-size: 13px;
+}
+input.period-start {
+  border: 0px;
+  background: 0px;
+  float: right;
+  width: 100px;
+}
+input.period-start:focus, .box-shape input.period-compare:focus{outline: none; box-shadow: none;}
+.box-shape select {
+  border: 0px;
+  float: right;
+  margin-top: 8px;
+  height: auto !important;
+}
+
+.box-shape input.period-compare {
+  border-radius: 10px;
+  border: 1px #ccc solid;
+  padding: 8px;
+  width: 62px;
+  float: right;
+  height: 30px !important;
+  margin-top: 5px;
+}
+
+.chart-div{margin-top: 30px;}
+
+.col-md-3.source-sandbox {
+  margin-top: 10px;
+  text-align: center;
+}
+img.commerce-img {
+  width: 24px;
+}
+.value-box {
+  background: #f7fafd;
+  width: 150px;
+  border-radius: 10px;
+  text-align: left;
+  padding: 10px;
+  float: right;
+  margin-left: 12px;
+}
+
+.value-box h2 {
+  margin: 0px;
+  color: #000;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.select-graph {
+  width: auto;
+
+  float: right;
+  clear: both;
+  margin: 20px 0px;
+}
+.select-graph select {
+  margin-top: 11px !important;
+}
+
+.chart-second{width: 100%; display: block;}
+
+
+.table-data-div table th{ background: #e8fdfc; }
+
+.table-data-div .dataTables_wrapper {
+    position: relative;
+}
+
+
+.table-data-div {
+  margin-top: 20px;
+}
+
+.table-data-div table th:first-child{font-size: 14px !important;}
+
+.padding-left-td {
+    margin-left: 1rem !important;
+    display: inline-block;
+    border: 0px !important;
+}
+
+.table-data-div table td, .table-data-div table th {
+    min-width: 170px;
+    text-align: right;
+    vertical-align: middle;
+    padding: 26px 12px;
+}
+.table-data-div table strong{color: #000 !important; font-size: 12px !important;}
+
+.table-data-div table th {
+
+    font-size: 12px !important;
+}
+.table-data-div table td{color: #2a2929 !important; font-size: 12px !important;}
+
+.table-data-div table th:first-child, .table-data-div table td:first-child{text-align: left !important;
+  min-width: 230px  !important;}
+.table-striped.table-bordered th, .table-striped.table-bordered td {
+    text-align: left !important;
+    border:0px !important;
+    min-width: 85px !important;
+    vertical-align: middle;
+}
+
+
+.table-striped.table-bordered th:first-child{min-width: 150px !important;}
+.table-data-div table {
+    border: 0px !important;
+    margin-bottom: 0px !important;
+}
+.table-data-div table tr{border-bottom: 1px #ccc solid !important;}
+.table-data-div input[type=checkbox] {
+  height: auto !important;
+  margin: 0px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background: none !important;
+}
+
+.rdt_TableCell div {
+  white-space: pre-wrap !important;
+}
+
+table.company_info_table {
+  max-width: 70% !important;
+}
+
+.table-data-div table {
+  border: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+table#company-table  tr td:first-child, table#commerce_Company-table tr td:first-child {
+  background: #d8f5f4;
+  font-size: 13px !important;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+table#company-table td, table#commerce_Company-table td {
+  background: #f0f4fa;
+  border: 5px #fff solid !important;
+}
+
+button.btn.btn-primary.inquiryprocessing-btn{  background: #006090;
+  border: 0px;
+  font-size: 12px;}
+button.btn.btn-primary.won-btn{background: #1fb5ad;
+  border: 0px;
+  font-size: 12px;}
+button.btn.btn-primary.inquiryevidencerequired-btn{background: #006090;
+  border: 0px;
+  font-size: 12px;}
+
+
+button.btn.btn-primary.inquiryprocessing-btn:hover {
+  background: #05537a;
+
+}
+
+button.btn.btn-primary.processing-btn {
+  font-size: 12px;
+  background: #efef6d;
+  color: #000;
+  border: 0px;
+}
+
+
+button.btn.btn-primary.processing-btn:hover{ background: #e9e95f;}
+
+button.btn.btn-primary.accepted-btn {
+  background: #72b572;
+  border: 0px;
+  font-size: 12px;
+}
+
+button.btn.btn-primary.accepted-btn:hover{ background: #6bbd6b;}
+
+button.btn.btn-primary.inquiryclosed-btn {
+  font-size: 12px;
+  border: 0px;
+}
+button.btn.btn-primary.unknown-btn {
+  background: #ccc;
+  color: #000;
+  border: 0px;
+  font-size: 12px;
+}
+
+.rdt_TableHeader {
+  padding: 0px  !important;
+}
+
+button.btn.btn-primary.authorized-btn{font-size: 12px;
+  background: #006090;
+  color: #fff;
+  border: 0px;}
+button.btn.btn-primary.pending-btn{ background: #ccc;
+  color: #000;
+  border: 0px;
+  font-size: 12px;}
+
+  button.btn.btn-primary.failed-btn {
+    background: red;
+    border: 0px;
+    font-size: 12px;
+}
+
+button.btn.btn-primary.cancelled-btn {
+  background: red;
+  border: 0px;
+  font-size: 12px;
+}
+
+
+ .table-data-div .padding-left-1 {
+  padding-left: 20px !important;
+}
+.table-data-div .padding-left-2 {
+  padding-left: 30px !important;
+}
+
+ .table-data-div .margin-left-3 {
+  margin-left: 40px !important;
+}
+
+.chart-panel i.fa.fa-caret-down {
+  color: red;
+}
+
+.chart-panel i.fa.fa-caret-up {
+  color: green;
+}
+
+.table-data-div i.fa.fa-chevron-down, .table-data-div i.fa.fa-chevron-right {
+  margin-right: 5px;
 }
