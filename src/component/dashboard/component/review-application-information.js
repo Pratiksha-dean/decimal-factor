@@ -50,7 +50,9 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
       ? storedData["businessEntity"]
       : businessEntityList[
           businessEntityList.findIndex(
-            (item) => data["lf_business_entity"] == item.value
+            (item) =>
+              data["lf_business_entity"] == item.value ||
+              data["lf_business_activity"] == item.value
           )
         ],
     [fieldNames.BUSINESSNAME]: storedData
@@ -101,35 +103,39 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
             <form onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-md-4">
-                  <div className="form-group amount-required">
+                  <div className="form-group">
                     <label>Amount Required</label>
-                    <span className="dollor-col">
-                      <i className="fa fa-usd"></i>
-                    </span>
-                    <input
-                      type="text"
-                      placeholder="90,000"
-                      className={clsx(
-                        "form-control ",
-                        {
-                          "is-invalid":
-                            touched[fieldNames.AMOUNT] &&
-                            errors[fieldNames.AMOUNT],
-                        },
-                        {
-                          "is-valid":
-                            touched[fieldNames.AMOUNT] &&
-                            !errors[fieldNames.AMOUNT],
-                        }
-                      )}
-                      name={fieldNames.AMOUNT}
-                      onChange={handleChange}
-                      onBlur={(e) => {
-                        console.log(e.target.value);
-                        setReviewAppData(values);
-                      }}
-                      value={values[fieldNames.AMOUNT]}
-                    />
+                    <div className="input-group mb-3">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text" id="basic-addon1">
+                          <i className="fa fa-pound-sign"></i>
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="90,000"
+                        className={clsx(
+                          "form-control ",
+                          {
+                            "is-invalid":
+                              touched[fieldNames.AMOUNT] &&
+                              errors[fieldNames.AMOUNT],
+                          },
+                          {
+                            "is-valid":
+                              touched[fieldNames.AMOUNT] &&
+                              !errors[fieldNames.AMOUNT],
+                          }
+                        )}
+                        name={fieldNames.AMOUNT}
+                        onChange={handleChange}
+                        onBlur={(e) => {
+                          console.log(e.target.value);
+                          setReviewAppData(values);
+                        }}
+                        value={values[fieldNames.AMOUNT]}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="col-md-4">

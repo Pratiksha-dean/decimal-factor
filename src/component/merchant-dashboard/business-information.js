@@ -13,11 +13,26 @@ import {
 import { Formik } from "formik";
 import { FieldArray } from "formik";
 import { useState } from "react";
-import { getDashboardData, getDirectorList } from "../../request";
+import {
+  getDashboardData,
+  getDirectorList,
+  updateUpdateCustomerInfo,
+} from "../../request";
 import { useEffect } from "react";
 import { getUserDetails } from "../login/loginpage";
 import { directorFieldNames, residentialStatusList } from "../Constants";
 import StickyBox from "react-sticky-box";
+import { ToastMessage } from "../ToastMessage";
+import { generateDirectorListPayload } from "../requestaquote/components/personal-details";
+// import { setMerchantDirectorData } from "../dashboard/component/review-business-information";
+
+export const setMerchantDirectorData = (data) => {
+  localStorage.setItem("merchantDirectorData", JSON.stringify(data));
+};
+
+export const getMerchantDirectorData = () => {
+  return JSON.parse(localStorage.getItem("merchantDirectorData"));
+};
 
 const Accordion = ({ title, children }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -52,52 +67,60 @@ function BusinessInformation() {
 
     [fieldNames.DIRECTORINFO]: Yup.array().of(
       Yup.object().shape({
-        [directorFieldNames.NATUREOFCONTROL]: Yup.string(),
-        [directorFieldNames.TOTALSHARECOUNT]: Yup.string(),
-        [directorFieldNames.DATEOFBIRTH]: Yup.string(),
-        [directorFieldNames.POSTCODE]: Yup.string(),
-        [directorFieldNames.ADDRESS]: Yup.string(),
-        [directorFieldNames.HOUSENUMBER]: Yup.string(),
-        [directorFieldNames.HOUSENAME]: Yup.string(),
-        [directorFieldNames.STREET]: Yup.string(),
-        [directorFieldNames.COUNTY]: Yup.string(),
-        [directorFieldNames.TOWN]: Yup.string(),
-        [directorFieldNames.RESIDENTIALSTATUS]: Yup.string(),
-        [directorFieldNames.LIVINGSINCE]: Yup.string(),
-        [directorFieldNames.FIRSTNAME]: Yup.boolean(),
-        [directorFieldNames.LASTNAME]: Yup.string(),
-        [directorFieldNames.PHONENUMBER]: Yup.string(),
-        [directorFieldNames.EMAIL]: Yup.string(),
+        [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
+        [directorFieldNames.TOTALSHARECOUNT]: Yup.string().nullable(true),
+        [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
+          Yup.string().nullable(true),
+        [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
+        [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
+        [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
+        [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
+        [directorFieldNames.STREET]: Yup.string().nullable(true),
+        [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+        [directorFieldNames.TOWN]: Yup.string().nullable(true),
+        [directorFieldNames.RESIDENTIALSTATUS]: Yup.string().nullable(true),
+        [directorFieldNames.LIVINGSINCE]: Yup.string().nullable(true),
+        [directorFieldNames.FIRSTNAME]: Yup.string().nullable(true),
+        [directorFieldNames.LASTNAME]: Yup.string().nullable(true),
+        [directorFieldNames.PHONENUMBER]: Yup.string().nullable(true),
+        [directorFieldNames.EMAIL]: Yup.string().nullable(true),
+        [directorFieldNames.ISPRIMARY]: Yup.string().nullable(true),
+        [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
+        [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
+        [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
       })
     ),
   });
 
   const [dasboardData, setDashboardData] = useState();
   const userDetails = getUserDetails();
+  const [loading, setLoading] = useState(false);
 
   console.log(initialValues);
 
   useEffect(() => {
-    if (userDetails && userDetails.lead_id) {
-      getDashboardData(userDetails.lead_id).then((resp) => {
-        setDashboardData(resp.records[0]);
-      });
-    }
+    getData();
 
     return () => {};
   }, []);
 
-  useEffect(() => {
-    if (companyInfo && companyInfo["company_number"]) {
-      getDirectorList(companyInfo["company_number"]).then((resp) => {
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 59 ~ getDirectorList ~ resp",
-          resp
-        );
-        setDirectorList(resp.items);
+  const getData = () => {
+    if (userDetails && userDetails.lead_id) {
+      getDashboardData(userDetails.lead_id).then((resp) => {
+        setDashboardData(resp.records[0]);
+        setDirectorList(resp.records[0]["ShareHolderList"]);
+        console.log("dashboarddara", dasboardData);
       });
     }
-  }, []);
+  };
+
+  // useEffect(() => {
+  //   if (companyInfo && companyInfo["company_number"]) {
+  //     getDirectorList(companyInfo["company_number"]).then((resp) => {
+  //       setDirectorList(resp.items);
+  //     });
+  //   }
+  // }, []);
 
   const patchDirectorData = (data) => {
     let values = directorList;
@@ -105,40 +128,37 @@ function BusinessInformation() {
 
     if (values && values.length) {
       values = directorList.map((item) => {
-        let name = item.name.split(",");
-        item["firstName"] = name[0];
-        item["lastName"] = name[1];
+        // let name = item.name.split(",");
+        item["fullName"] = item["firstName"];
+        item["lastName"] = item["lastName"];
         if (item["address"]) {
-          item[fieldNames.POSTCODE] = item["address"][fieldNames.POSTCODE];
-          item[fieldNames.STREET] = item["address"]["address_line_1"];
-          item[fieldNames.COUNTY] = item["address"]["locality"];
-          item[fieldNames.HOUSENAME] = item["address"]["premises"];
-          item[fieldNames.HOUSENUMBER] = "";
-          item[fieldNames.TOWN] = "";
-          item[fieldNames.RESIDENTIALSTATUS] = "";
+          item[directorFieldNames.POSTCODE] =
+            item["address"][directorFieldNames.POSTCODE];
+          item[directorFieldNames.STREET] = item["address"]["address_line_1"];
+          item[directorFieldNames.COUNTY] = item["address"]["locality"];
+          item[directorFieldNames.HOUSENAME] = item["address"]["premises"];
+          item[directorFieldNames.HOUSENUMBER] = "";
+          item[directorFieldNames.TOWN] = "";
+          item[directorFieldNames.RESIDENTIALSTATUS] = "";
         }
-        item[fieldNames.LIVINGSINCE] = "";
-        item[fieldNames.NATUREOFCONTROL] = "";
-        item[fieldNames.EMAIL] = item["email"] ? item["email"] : "";
-        item[fieldNames.PHONE] = item["phone"] ? item["phone"] : "";
-        item[fieldNames.TOTALSHARECOUNT] = item["share_count"]
+        item[directorFieldNames.LIVINGSINCE] = "";
+        item[directorFieldNames.NATUREOFCONTROL] = "";
+        item[directorFieldNames.EMAIL] = item["email"] ? item["email"] : "";
+        item[directorFieldNames.PHONENUMBER] = item["phone"]
+          ? item["phone"]
+          : "";
+        item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
           ? item["share_count"]
           : "";
 
-        item[fieldNames.ISPRIMARY] = false;
-        item[fieldNames.CHOOSEADDRESS] = "";
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 109 ~ values=directorList.map ~ name",
-          name
-        );
-        if (item["date_of_birth"]) {
-          item[fieldNames.DATEOFBIRTH] =
-            item["date_of_birth"]["year"] +
-            "-" +
-            item["date_of_birth"]["month"] +
-            "-" +
-            item["date_of_birth"]["day"];
-        }
+        item[directorFieldNames.ISPRIMARY] = false;
+        item[directorFieldNames.CHOOSEADDRESS] = "";
+
+        // if (item["date_of_birth"]) {
+        item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
+          item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
+        // }
+
         // delete item["address"];
         delete item["address"];
         delete item["appointed_on"];
@@ -153,11 +173,6 @@ function BusinessInformation() {
         return item;
       });
     }
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 116 ~ patchDirectorData ~ values",
-      values
-    );
-
     return values;
   };
 
@@ -182,13 +197,8 @@ function BusinessInformation() {
     [fieldNames.BUSINESSLEGALNUMBER]: dasboardData
       ? dasboardData["lmc_bi_business_number"]
       : "",
-    [fieldNames.DIRECTORINFO]: patchDirectorData(data),
+    [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
   };
-  console.log(
-    "🚀 ~ file: business-information.js ~ line 169 ~ BusinessInformation ~ initialValues",
-    initialValues
-  );
-
   console.log(initialValues);
 
   return (
@@ -213,9 +223,30 @@ function BusinessInformation() {
                   initialValues={initialValues}
                   validationSchema={validationSchema}
                   enableReinitialize
-                  onSubmit={(values, { setSubmitting }) => {
-                    // setActiveStep(activeStep + 1);
-                    // setDashboardStepNo(activeStep + 1);
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
+                    let payload = { ...values };
+                    payload["businessSector"] = payload["businessSector"].value;
+                    // payload["ShareHolderArr"] = payload["directorInfo"];
+                    payload["ShareHolderArr"] = generateDirectorListPayload(
+                      payload["directorInfo"]
+                    );
+                    delete payload["directorInfo"];
+                    // return;
+                    updateUpdateCustomerInfo(payload, userDetails["lead_id"])
+                      .then((resp) => {
+                        setLoading(false);
+                        if (resp.isSuccess == 1) {
+                          ToastMessage("Data saved successfully!", "success");
+                          resetForm({});
+                          getData();
+                        } else {
+                          ToastMessage("Something went wrong!", "error");
+                        }
+                      })
+                      .catch((err) => {
+                        setLoading(false);
+                        ToastMessage("Something went wrong!", "error");
+                      });
 
                     setTimeout(() => {
                       setSubmitting(false);
@@ -302,67 +333,81 @@ function BusinessInformation() {
                             </div>
                           </div>
                           <div className="col-md-4">
-                            <div className="form-group monthly-card-payment">
+                            <div className="form-group">
                               <label>Monthly Card Takings</label>
-                              <span className="dollor-col">
-                                <i className="fa fa-usd"></i>
-                              </span>
-                              <input
-                                type="text"
-                                placeholder="90,000"
-                                name={fieldNames.CARDPAYMENTAMOUNT}
-                                className={clsx(
-                                  "form-control ",
-                                  {
-                                    "is-invalid":
-                                      touched[fieldNames.CARDPAYMENTAMOUNT] &&
-                                      errors[fieldNames.CARDPAYMENTAMOUNT],
-                                  },
-                                  {
-                                    "is-valid":
-                                      touched[fieldNames.CARDPAYMENTAMOUNT] &&
-                                      !errors[fieldNames.CARDPAYMENTAMOUNT],
-                                  }
-                                )}
-                                onChange={handleChange}
-                                onBlur={() => {
-                                  // setReviewBusinessData(values);
-                                }}
-                                value={values[fieldNames.CARDPAYMENTAMOUNT]}
-                              />
+                              <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                  <span
+                                    className="input-group-text"
+                                    id="basic-addon1"
+                                  >
+                                    <i className="fa fa-pound-sign"></i>
+                                  </span>
+                                </div>
+                                <input
+                                  type="text"
+                                  placeholder="90,000"
+                                  name={fieldNames.CARDPAYMENTAMOUNT}
+                                  className={clsx(
+                                    "form-control ",
+                                    {
+                                      "is-invalid":
+                                        touched[fieldNames.CARDPAYMENTAMOUNT] &&
+                                        errors[fieldNames.CARDPAYMENTAMOUNT],
+                                    },
+                                    {
+                                      "is-valid":
+                                        touched[fieldNames.CARDPAYMENTAMOUNT] &&
+                                        !errors[fieldNames.CARDPAYMENTAMOUNT],
+                                    }
+                                  )}
+                                  onChange={handleChange}
+                                  onBlur={() => {
+                                    // setReviewBusinessData(values);
+                                  }}
+                                  value={values[fieldNames.CARDPAYMENTAMOUNT]}
+                                />
+                              </div>
                             </div>
                           </div>
 
                           <div className="col-md-4">
-                            <div className="form-group Term-found">
+                            <div className="form-group">
                               <label>Business Invoiced</label>
-                              <span className="dollor-col">
-                                <i className="fa fa-usd"></i>
-                              </span>
-                              <input
-                                type="text"
-                                placeholder="Business Invoiced"
-                                name={fieldNames.SUPPLIERDUEAMOUNT}
-                                className={clsx(
-                                  "form-control ",
-                                  {
-                                    "is-invalid":
-                                      touched[fieldNames.SUPPLIERDUEAMOUNT] &&
-                                      errors[fieldNames.SUPPLIERDUEAMOUNT],
-                                  },
-                                  {
-                                    "is-valid":
-                                      touched[fieldNames.SUPPLIERDUEAMOUNT] &&
-                                      !errors[fieldNames.SUPPLIERDUEAMOUNT],
-                                  }
-                                )}
-                                min="0"
-                                onChange={handleChange}
-                                onBlur={() => {
-                                  // setReviewBusinessData(values);
-                                }}
-                                value={values[fieldNames.SUPPLIERDUEAMOUNT]}
-                              />
+                              <div className="input-group mb-3">
+                                <div className="input-group-prepend">
+                                  <span
+                                    className="input-group-text"
+                                    id="basic-addon1"
+                                  >
+                                    <i className="fa fa-pound-sign"></i>
+                                  </span>
+                                </div>
+                                <input
+                                  type="text"
+                                  placeholder="Business Invoiced"
+                                  name={fieldNames.SUPPLIERDUEAMOUNT}
+                                  className={clsx(
+                                    "form-control ",
+                                    {
+                                      "is-invalid":
+                                        touched[fieldNames.SUPPLIERDUEAMOUNT] &&
+                                        errors[fieldNames.SUPPLIERDUEAMOUNT],
+                                    },
+                                    {
+                                      "is-valid":
+                                        touched[fieldNames.SUPPLIERDUEAMOUNT] &&
+                                        !errors[fieldNames.SUPPLIERDUEAMOUNT],
+                                    }
+                                  )}
+                                  min="0"
+                                  onChange={handleChange}
+                                  onBlur={() => {
+                                    // setReviewBusinessData(values);
+                                  }}
+                                  value={values[fieldNames.SUPPLIERDUEAMOUNT]}
+                                />
+                              </div>
                             </div>
                           </div>
                           <div className="col-md-4">
@@ -408,12 +453,17 @@ function BusinessInformation() {
                                       values.directorInfo.map((item, index) => (
                                         <Accordion
                                           title={
-                                            item[fieldNames.FIRSTNAME] +
-                                            " " +
-                                            item[fieldNames.LASTNAME]
+                                            item["firstName"] +
+                                              " " +
+                                              item[
+                                                directorFieldNames.LASTNAME
+                                              ] || ""
                                           }
                                           key={index}
-                                          isPrimary={item[fieldNames.ISPRIMARY]}
+                                          isPrimary={
+                                            item[directorFieldNames.ISPRIMARY]
+                                          }
+                                          id={`accordian${index}`}
                                         >
                                           <div className="director-field">
                                             <div className="row">
@@ -423,8 +473,24 @@ function BusinessInformation() {
                                                     type="checkbox"
                                                     className="primary-checkbox"
                                                     name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
-                                                    onChange={handleChange}
-                                                    value={
+                                                    onChange={(e) => {
+                                                      values.directorInfo.forEach(
+                                                        (item, i) => {
+                                                          if (index == i) {
+                                                            setFieldValue(
+                                                              `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`,
+                                                              e.target.checked
+                                                            );
+                                                          } else {
+                                                            setFieldValue(
+                                                              `${fieldNames.DIRECTORINFO}.${i}.${directorFieldNames.ISPRIMARY}`,
+                                                              false
+                                                            );
+                                                          }
+                                                        }
+                                                      );
+                                                    }}
+                                                    checked={
                                                       item[
                                                         directorFieldNames
                                                           .ISPRIMARY
@@ -452,9 +518,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -475,9 +541,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -500,9 +566,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -525,9 +591,9 @@ function BusinessInformation() {
                                                     className="form-control"
                                                     placeholder="% of Total Share Count"
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -539,17 +605,18 @@ function BusinessInformation() {
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="Email Address"
-                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAIL}`}
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAILID}`}
                                                     onChange={handleChange}
                                                     value={
                                                       item[
-                                                        directorFieldNames.EMAIL
+                                                        directorFieldNames
+                                                          .EMAILID
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -563,6 +630,12 @@ function BusinessInformation() {
                                           className="form-control"
                                           placeholder="Phone"
                                         /> */}
+                                                  {
+                                                    item[
+                                                      directorFieldNames
+                                                        .PHONENUMBER
+                                                    ]
+                                                  }
 
                                                   <PhoneInput
                                                     name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
@@ -597,9 +670,9 @@ function BusinessInformation() {
                                                       );
                                                     }}
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                     inputClass={"w-100"}
                                                     placeholder="Enter Phone Number"
@@ -613,41 +686,41 @@ function BusinessInformation() {
                                                     type="date"
                                                     className="form-control"
                                                     placeholder="04/11/2022"
-                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.DATEOFBIRTH}`}
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
                                                     onChange={handleChange}
                                                     value={
                                                       item[
                                                         directorFieldNames
-                                                          .DATEOFBIRTH
+                                                          .SHAREHOLDERDOBFULLFORMAT
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
                                               </div>
                                               <div className="col-md-3">
                                                 <div className="form-group">
-                                                  <label>Postcode</label>
+                                                  <label>POSTALCODE</label>
                                                   <input
                                                     type="text"
                                                     className="form-control"
-                                                    placeholder="Postcode"
-                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTCODE}`}
+                                                    placeholder="POSTALCODE"
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTALCODE}`}
                                                     onChange={handleChange}
                                                     value={
                                                       item[
                                                         directorFieldNames
-                                                          .POSTCODE
+                                                          .POSTALCODE
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -655,12 +728,28 @@ function BusinessInformation() {
                                               <div className="col-md-3">
                                                 <div className="form-group">
                                                   <label>Choose Address</label>
-                                                  <input
-                                                    type="text"
-                                                    name="Choose Address"
-                                                    className="form-control"
-                                                    placeholder="Choose Address"
-                                                  />
+
+                                                  <select
+                                                    class="form-select form-control"
+                                                    aria-label="Default select example"
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
+                                                    onChange={handleChange}
+                                                    value={
+                                                      item[
+                                                        directorFieldNames
+                                                          .CHOOSEADDRESS
+                                                      ]
+                                                    }
+                                                    onBlur={() => {
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
+                                                    }}
+                                                  >
+                                                    <option selected disabled>
+                                                      Choose Address
+                                                    </option>
+                                                  </select>
                                                 </div>
                                               </div>
                                             </div>
@@ -672,18 +761,18 @@ function BusinessInformation() {
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="House Number"
-                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSENUMBER}`}
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NUMBER}`}
                                                     onChange={handleChange}
                                                     value={
                                                       item[
                                                         directorFieldNames
-                                                          .HOUSENUMBER
+                                                          .HOUSE_NUMBER
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -695,18 +784,18 @@ function BusinessInformation() {
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="House Name"
-                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSENAME}`}
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NAME}`}
                                                     onChange={handleChange}
                                                     value={
                                                       item[
                                                         directorFieldNames
-                                                          .HOUSENAME
+                                                          .HOUSE_NAME
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -727,9 +816,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -750,9 +839,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -772,9 +861,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -785,6 +874,7 @@ function BusinessInformation() {
                                                     Residential Status
                                                   </label>
                                                   <Select
+                                                    // menuIsOpen={true}
                                                     closeMenuOnSelect={true}
                                                     onChange={(
                                                       selectedOption
@@ -800,6 +890,9 @@ function BusinessInformation() {
                                                     options={
                                                       residentialStatusList
                                                     }
+                                                    // menuPortalTarget={document.getElementById(
+                                                    //   `accordian${index}`
+                                                    // )}
                                                     placeholder="Select Residential Status"
                                                     styles={{
                                                       control: (
@@ -824,6 +917,10 @@ function BusinessInformation() {
                                                           borderColor,
                                                         };
                                                       },
+                                                      menuPortal: (base) => ({
+                                                        ...base,
+                                                        zIndex: 9999,
+                                                      }),
                                                     }}
                                                     components={{
                                                       IndicatorSeparator: () =>
@@ -831,10 +928,15 @@ function BusinessInformation() {
                                                     }}
                                                     value={
                                                       values[
-                                                        fieldNames
+                                                        directorFieldNames
                                                           .RESIDENTIALSTATUS
                                                       ]
                                                     }
+                                                    onBlur={() => {
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
+                                                    }}
                                                   />
                                                 </div>
                                               </div>
@@ -854,9 +956,9 @@ function BusinessInformation() {
                                                       ]
                                                     }
                                                     onBlur={() => {
-                                                      // setReviewBusinessData(
-                                                      //   values
-                                                      // );
+                                                      setMerchantDirectorData(
+                                                        values
+                                                      );
                                                     }}
                                                   />
                                                 </div>
@@ -875,6 +977,7 @@ function BusinessInformation() {
                       <button
                         className="btn btn-primary save-btn next-btn"
                         type="submit"
+                        disabled={loading}
                       >
                         Save <i className="fa fa-file-image-o"></i>
                       </button>

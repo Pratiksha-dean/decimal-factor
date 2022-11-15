@@ -77,7 +77,7 @@ function ReviewBusinessInformation() {
             <div className="form-group monthly-card-payment">
               <label>Monthly Card Takings</label>
               <span className="dollor-col">
-                <i className="fa fa-usd"></i>
+                <i className="fa fa-pound-sign"></i>
               </span>
               <input
                 type="text"
@@ -92,7 +92,7 @@ function ReviewBusinessInformation() {
             <div className="form-group Term-found">
               <label>Business Invoiced</label>
               <span className="dollor-col">
-                <i className="fa fa-usd"></i>
+                <i className="fa fa-pound-sign"></i>
               </span>
               <input
                 type="text"

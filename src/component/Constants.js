@@ -15,10 +15,14 @@ export const directorFieldNames = {
   ISPRIMARY: "is_primary",
   HOUSE_NUMBER: "house_number",
   HOUSE_NAME: "house_name",
-  COUNTRY: "county",
+  COUNTY: "county",
   TOWN: "town",
   LIVINGSINCE: "livingSince",
   STREET: "street",
+  CHOOSEADDRESS: "chooseAddress",
+  TOTALSHARECOUNT: "totalShareCount",
+  ADDRESSLINE1: "address_line_1",
+  ADDRESSLINE2: "address_line_2",
 };
 
 export const residentialStatusList = [

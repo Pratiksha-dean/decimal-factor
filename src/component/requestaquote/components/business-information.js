@@ -110,9 +110,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
   return (
     <div className="right-panel">
       <h2>Business Information</h2>
-      <h5>
-        We require some business information to determine your eligibility{" "}
-      </h5>
+      <h5>Please enter the details below</h5>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -239,34 +237,39 @@ function BusinessInformation({ setStep, showSelectedState }) {
             </div>
 
             {values[fieldNames.ISPAYMENTPROCESSED] && (
-              <div className="form-group monthly-card-payment">
+              <div className="form-group">
                 <label>Monthly Card Payments Amount</label>
-                <span className="dollor-col">
-                  <i className="fa fa-usd"></i>
-                </span>
-                <input
-                  type="number"
-                  placeholder="Monthly Card Payments Amount"
-                  name={fieldNames.CARDPAYMENTAMOUNT}
-                  className={clsx(
-                    "form-control ",
-                    {
-                      "is-invalid":
-                        touched[fieldNames.CARDPAYMENTAMOUNT] &&
-                        errors[fieldNames.CARDPAYMENTAMOUNT],
-                    },
-                    {
-                      "is-valid":
-                        touched[fieldNames.CARDPAYMENTAMOUNT] &&
-                        !errors[fieldNames.CARDPAYMENTAMOUNT],
-                    }
-                  )}
-                  onChange={handleChange}
-                  onBlur={() => {
-                    setBusinessInfo(values);
-                  }}
-                  value={values[fieldNames.CARDPAYMENTAMOUNT]}
-                />
+
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text" id="basic-addon1">
+                      <i className="fa fa-pound-sign"></i>
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    placeholder="Monthly Card Payments Amount"
+                    name={fieldNames.CARDPAYMENTAMOUNT}
+                    className={clsx(
+                      "form-control ",
+                      {
+                        "is-invalid":
+                          touched[fieldNames.CARDPAYMENTAMOUNT] &&
+                          errors[fieldNames.CARDPAYMENTAMOUNT],
+                      },
+                      {
+                        "is-valid":
+                          touched[fieldNames.CARDPAYMENTAMOUNT] &&
+                          !errors[fieldNames.CARDPAYMENTAMOUNT],
+                      }
+                    )}
+                    onChange={handleChange}
+                    onBlur={() => {
+                      setBusinessInfo(values);
+                    }}
+                    value={values[fieldNames.CARDPAYMENTAMOUNT]}
+                  />
+                </div>
               </div>
             )}
 
@@ -312,48 +315,54 @@ function BusinessInformation({ setStep, showSelectedState }) {
             </div>
 
             {values[fieldNames.ISPAYMENTPENDING] && (
-              <div className="form-group Term-found">
+              <div className="form-group">
                 <label>Approx Amount due to you from supplier</label>
-                <span className="dollor-col">
-                  <i className="fa fa-usd"></i>
-                </span>
-                <input
-                  type="number"
-                  placeholder="Approx Amount due to you from supplier"
-                  name={fieldNames.SUPPLIERDUEAMOUNT}
-                  className={clsx(
-                    "form-control ",
-                    {
-                      "is-invalid":
-                        touched[fieldNames.SUPPLIERDUEAMOUNT] &&
-                        errors[fieldNames.SUPPLIERDUEAMOUNT],
-                    },
-                    {
-                      "is-valid":
-                        touched[fieldNames.SUPPLIERDUEAMOUNT] &&
-                        !errors[fieldNames.SUPPLIERDUEAMOUNT],
-                    }
-                  )}
-                  min="0"
-                  onChange={handleChange}
-                  onBlur={() => {
-                    setBusinessInfo(values);
-                  }}
-                  value={values[fieldNames.SUPPLIERDUEAMOUNT]}
-                />
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text" id="basic-addon1">
+                      <i className="fa fa-pound-sign"></i>
+                    </span>
+                  </div>
+                  <input
+                    type="number"
+                    placeholder="Approx Amount due to you from supplier"
+                    name={fieldNames.SUPPLIERDUEAMOUNT}
+                    className={clsx(
+                      "form-control ",
+                      {
+                        "is-invalid":
+                          touched[fieldNames.SUPPLIERDUEAMOUNT] &&
+                          errors[fieldNames.SUPPLIERDUEAMOUNT],
+                      },
+                      {
+                        "is-valid":
+                          touched[fieldNames.SUPPLIERDUEAMOUNT] &&
+                          !errors[fieldNames.SUPPLIERDUEAMOUNT],
+                      }
+                    )}
+                    min="0"
+                    onChange={handleChange}
+                    onBlur={() => {
+                      setBusinessInfo(values);
+                    }}
+                    value={values[fieldNames.SUPPLIERDUEAMOUNT]}
+                  />
+                </div>
               </div>
             )}
 
-            <button
-              className="btn btn-primary back-btn"
-              onClick={() => goBack()}
-              type="button"
-            >
-              <i className="fa fa-chevron-left"></i> Back{" "}
-            </button>
-            <button className="btn btn-primary next-btn" type="submit">
-              Next <i className="fa fa-chevron-right"></i>
-            </button>
+            <div className="d-flex justify-content-between w-100">
+              <button
+                className="btn btn-primary back-btn"
+                onClick={() => goBack()}
+                type="button"
+              >
+                <i className="fa fa-chevron-left"></i> Back{" "}
+              </button>
+              <button className="btn btn-primary next-btn" type="submit">
+                Next <i className="fa fa-chevron-right"></i>
+              </button>
+            </div>
           </form>
         )}
       </Formik>

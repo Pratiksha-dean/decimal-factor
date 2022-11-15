@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { ToastMessage } from "../../ToastMessage";
+import { directorFieldNames } from "../../Constants";
 
 export const setVerificationToken = (token) => {
   localStorage.setItem("verificationToken", token);
@@ -28,6 +29,59 @@ export const removeData = () => {
   localStorage.removeItem("applicationInfo");
   localStorage.removeItem("stepNumber");
   localStorage.removeItem("companyInfo");
+};
+
+export const generateDirectorListPayload = (data) => {
+  console.log(
+    "🚀 ~ file: personal-details.js ~ line 35 ~ generateDirectorListPayload ~ data",
+    data
+  );
+
+  let data1 = data.map((item) => {
+    let day = "";
+    let month = "";
+    let year = "";
+
+    if (item["ShareHolderDOBFullFormat"]) {
+      let splitDate = item["ShareHolderDOBFullFormat"].split("-");
+      console.log(
+        "🚀 ~ file: personal-details.js ~ line 47 ~ data1 ~ splitDate",
+        splitDate
+      );
+      day = splitDate[2];
+      month = splitDate[1];
+      year = splitDate[0];
+    }
+    return {
+      kindofShareHolder: "",
+      HiddenShareHolderId: "",
+      natures_of_control: item[directorFieldNames.NATUREOFCONTROL],
+      fullName: item[directorFieldNames.FIRSTNAME],
+      lastName: item[directorFieldNames.LASTNAME],
+      DOB_day: day,
+      DOB_month: month,
+      DOB_year: year,
+      ShareHolderDOBFullFormat: item["ShareHolderDOBFullFormat"],
+      address_line_1: item["address_line_1"],
+      address_line_2: item["address_line_2"],
+      postal_code: item[directorFieldNames.POSTALCODE],
+      notified_on: "",
+      phon_number: item[directorFieldNames.PHONENUMBER],
+      email: item[directorFieldNames.EMAIL],
+      residentialStatus: item[directorFieldNames.RESIDENTIALSTATUS],
+      is_primary: "1",
+      house_number: item[directorFieldNames.HOUSE_NUMBER],
+      house_name: item[directorFieldNames.HOUSE_NAME],
+      county: item[directorFieldNames.COUNTY],
+      town: item[directorFieldNames.TOWN],
+      livingSince: item[directorFieldNames.LIVINGSINCE],
+      is_active: "1",
+      street: item[directorFieldNames.STREET],
+      companyName: "undefined",
+    };
+  });
+
+  return data1;
 };
 
 function PersonalDetails({ setStep, showSelectedState }) {
@@ -123,6 +177,12 @@ function PersonalDetails({ setStep, showSelectedState }) {
           if (!payload["isPaymentProcessed"]) {
             payload["supplierDueAmount"] = 0;
           }
+
+          // console.log("payload[directorInfo]",payload["directorInfo"])
+
+          // let directorListPayload = generateDirectorListPayload(
+          //   payload["directorInfo"]
+          // );
 
           // const payload = {
           //   amount: applicationInfo["applicationInfo"],

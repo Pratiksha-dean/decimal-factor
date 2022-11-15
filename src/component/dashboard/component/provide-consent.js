@@ -3,12 +3,18 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import { getReviewAppData } from "../dashboard";
-import { getReviewBusinessData } from "./review-business-information";
+import {
+  getDirectorData,
+  getReviewBusinessData,
+} from "./review-business-information";
 import { getReviewPersonalData } from "./review-personal-details";
 import { updateUpdateCustomerInfo } from "../../../request";
 import { getUserDetails } from "../../login/loginpage";
 import { useNavigate } from "react-router";
 import { ToastMessage } from "../../ToastMessage";
+import { generateDirectorListPayload } from "../../requestaquote/components/personal-details";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
+// import { generateDirectorListPayload } from "../../requestaquote/components/personal-details";
 
 function ProvideConsent({ setActiveStep, activeStep }) {
   const [loading, setLoading] = useState(false);
@@ -28,8 +34,20 @@ function ProvideConsent({ setActiveStep, activeStep }) {
     validationSchema: loginSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       const applicationInfo = getReviewAppData();
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 35 ~ onSubmit: ~ applicationInfo",
+        applicationInfo
+      );
       const businessData = getReviewBusinessData();
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 37 ~ onSubmit: ~ businessData",
+        businessData
+      );
       const personalData = getReviewPersonalData();
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 39 ~ onSubmit: ~ personalData",
+        personalData
+      );
       const userDetails = getUserDetails();
       setLoading(true);
 
@@ -39,14 +57,34 @@ function ProvideConsent({ setActiveStep, activeStep }) {
         ...businessData,
         ...values,
       };
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 38 ~ onSubmit: ~ payload",
+        payload
+      );
+
       payload["businessEntity"] = payload["businessEntity"].value;
       payload["businessSector"] = payload["businessSector"].value;
       payload["loanPurpose"] = payload["loanPurpose"].value;
+      let directorData = getDirectorData();
+      console.log(
+        "🚀 ~ file: provide-consent.js ~ line 68 ~ onSubmit: ~ directorData",
+        directorData,
+        directorData != undefined
+      );
+      if (directorData !== []) {
+        payload["ShareHolderArr"] = generateDirectorListPayload(directorData);
+      } else {
+        payload["ShareHolderArr"] = [];
+      }
+
+      delete payload["directorInfo"];
       payload["navigationType"] = "left";
       console.log(
         "🚀 ~ file: provide-consent.js ~ line 36 ~ onSubmit: ~ payload",
         payload
       );
+
+      return;
       updateUpdateCustomerInfo(payload, userDetails["lead_id"])
         .then((resp) => {
           setLoading(false);
@@ -116,7 +154,24 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                   )}
                   checked={formik.values.softCreditCheck}
                 />
-                <label>Consent to run a soft credit check</label>
+                <label>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="button-tooltip-2">
+                        A soft credit check will not affect your personal or
+                        business credit score.
+                      </Tooltip>
+                    }
+                  >
+                    {({ ref, ...triggerHandler }) => (
+                      <div ref={ref} {...triggerHandler}>
+                        {" "}
+                        I consent to run a soft credit check
+                      </div>
+                    )}
+                  </OverlayTrigger>
+                </label>
               </div>
             </div>
           </div>
@@ -144,7 +199,25 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                   checked={formik.values.finalInformation}
                 />
                 <label>
-                  Consent to provide financial information to lenders
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="button-tooltip-2">
+                        Only information provided in the application will be
+                        shared with lenders.
+                      </Tooltip>
+                    }
+                  >
+                    {/* <tooltip> */}
+                    {({ ref, ...triggerHandler }) => (
+                      <div ref={ref} {...triggerHandler}>
+                        {" "}
+                        I consent to provide financial information to lenders
+                      </div>
+                    )}
+
+                    {/* </tooltip> */}
+                  </OverlayTrigger>
                 </label>
               </div>
             </div>

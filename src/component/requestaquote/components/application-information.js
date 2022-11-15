@@ -177,6 +177,10 @@ export const loadOptions = async (inputValue) => {
 
 function ApplicationInformation({ setStep, showSelectedState }) {
   const storedData = getApplicationInfo();
+  console.log(
+    "🚀 ~ file: application-information.js ~ line 180 ~ ApplicationInformation ~ storedData",
+    storedData
+  );
   const initialValues = {
     [fieldNames.AMOUNT]: storedData ? storedData[fieldNames.AMOUNT] : "",
     [fieldNames.REQUIREDFUND]: storedData
@@ -229,32 +233,41 @@ function ApplicationInformation({ setStep, showSelectedState }) {
           /* and other goodies */
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="form-group amount-required">
+            <div className="form-group">
               <label>Amount Required</label>
-              <span className="dollor-col">
-                <i className="fa fa-usd"></i>
-              </span>
-              <input
-                type="number"
-                placeholder="Enter amount"
-                className={clsx(
-                  "form-control ",
-                  {
-                    "is-invalid":
-                      touched[fieldNames.AMOUNT] && errors[fieldNames.AMOUNT],
-                  },
-                  {
-                    "is-valid":
-                      touched[fieldNames.AMOUNT] && !errors[fieldNames.AMOUNT],
-                  }
-                )}
-                name={fieldNames.AMOUNT}
-                onChange={handleChange}
-                onBlur={(e) => {
-                  setApplicationInfo(values);
-                }}
-                value={values[fieldNames.AMOUNT]}
-              />
+
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="basic-addon1">
+                    <i className="fa fa-pound-sign"></i>
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  placeholder="Enter amount"
+                  className={clsx(
+                    "form-control ",
+                    {
+                      "is-invalid":
+                        touched[fieldNames.AMOUNT] && errors[fieldNames.AMOUNT],
+                    },
+                    {
+                      "is-valid":
+                        touched[fieldNames.AMOUNT] &&
+                        !errors[fieldNames.AMOUNT],
+                    }
+                  )}
+                  name={fieldNames.AMOUNT}
+                  onChange={handleChange}
+                  onBlur={(e) => {
+                    setApplicationInfo(values);
+                  }}
+                  value={values[fieldNames.AMOUNT]}
+                />
+              </div>
+              {/* <span className="dollor-col">
+                <i className="fa fa-pound-sign"></i>
+              </span> */}
             </div>
             <div className="form-group purpose-loan">
               <label>Purpose of Loan</label>
