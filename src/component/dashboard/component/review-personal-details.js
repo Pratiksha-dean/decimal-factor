@@ -8,6 +8,8 @@ import { Formik } from "formik";
 import { fieldNames } from "../../requestaquote/components/application-information";
 import { getUserDetails } from "../../login/loginpage";
 import { setDashboardStepNo } from "../dashboard";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import { Tooltip } from "react-bootstrap";
 
 export const setReviewPersonalData = (data) => {
   localStorage.setItem("reviewPersonalInfo", JSON.stringify(data));
@@ -149,14 +151,34 @@ function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
                   <div className="form-group">
                     <label>
                       Email Address{" "}
-                      <tooltip>
-                        <i
-                          className="fa fa-info-circle"
-                          data-tip="This is the email address where all communication will sent to."
-                        >
-                          <ReactTooltip className={"tooltippanel"} />
-                        </i>
-                      </tooltip>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip id="button-tooltip-2">
+                            This is the email address where all communication
+                            will sent to.
+                          </Tooltip>
+                        }
+                      >
+                        {/* <tooltip> */}
+                        {({ ref, ...triggerHandler }) => (
+                          <img
+                            ref={ref}
+                            {...triggerHandler}
+                            src={require("../../../images/info-icon.png")}
+                            alt=""
+                          />
+                        )}
+
+                        {/* </tooltip> */}
+                      </OverlayTrigger>
+                      {/* <i
+                            className="fa fa-info-circle"
+                            ref={ref}
+                            {...triggerHandler}
+                            data-tip="This is the email address where all communication will sent to."
+                          >
+                          </i> */}
                     </label>
                     <input
                       type="email"

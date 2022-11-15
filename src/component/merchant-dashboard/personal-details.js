@@ -9,15 +9,22 @@ import { fieldNames } from "../requestaquote/components/application-information"
 import PhoneInput from "react-phone-input-2";
 import { useRef } from "react";
 import { useState } from "react";
-import { getUserDetails } from "../login/loginpage";
+import { getUserDetails, setToken, setUserDetails } from "../login/loginpage";
 import { useEffect } from "react";
-import { getDashboardData } from "../../request";
+import {
+  getDashboardData,
+  getUserDetailsApi,
+  updateUpdateCustomerInfo,
+} from "../../request";
 import StickyBox from "react-sticky-box";
+import { ToastMessage } from "../ToastMessage";
 
 function PersonalDetails() {
   const storeData = {};
   const data = {};
   const [file, setFile] = useState();
+  const [loading, setLoading] = useState(false);
+
   console.log(
     "🚀 ~ file: personal-details.js ~ line 17 ~ PersonalDetails ~ file",
     file
@@ -29,27 +36,37 @@ function PersonalDetails() {
     dasboardData
   );
   const userDetails = getUserDetails();
+  console.log(
+    "🚀 ~ file: personal-details.js ~ line 39 ~ PersonalDetails ~ userDetails",
+    userDetails
+  );
 
   useEffect(() => {
+    getData();
+
+    return () => {};
+  }, []);
+
+  const getData = () => {
     if (userDetails && userDetails.lead_id) {
       getDashboardData(userDetails.lead_id).then((resp) => {
         setDashboardData(resp.records[0]);
       });
     }
-
-    return () => {};
-  }, []);
+  };
 
   const initialValues = {
-    [fieldNames.FIRSTNAME]: dasboardData
-      ? dasboardData["lf_opener_name"].split(" ")[0]
-      : "",
-    [fieldNames.LASTNAME]: dasboardData
-      ? dasboardData["lf_opener_name"].split(" ")[1]
-      : "",
-    [fieldNames.EMAIL]: dasboardData ? dasboardData["lf_business_email"] : "",
-    [fieldNames.PHONE]: dasboardData ? dasboardData["lf_telephone"] : "",
-    address: dasboardData ? dasboardData["address"] : "",
+    [fieldNames.FIRSTNAME]: userDetails
+      ? userDetails["first_name"]
+      : dasboardData["lf_opener_name"].split(" ")[0],
+    [fieldNames.LASTNAME]: userDetails
+      ? userDetails["last_name"]
+      : dasboardData["lf_opener_name"].split(" ")[1],
+    [fieldNames.EMAIL]: userDetails
+      ? userDetails["email"]
+      : dasboardData["lf_business_email"],
+    [fieldNames.PHONE]: userDetails  ?  userDetails["phone"] : dasboardData["lf_telephone"] ,
+    address: userDetails["address"] || "",
   };
   console.log(
     "🚀 ~ file: personal-details.js ~ line 39 ~ PersonalDetails ~ initialValues",
@@ -65,7 +82,7 @@ function PersonalDetails() {
       .max(50, "Maximum 50 symbols")
       .required("Email is required"),
     [fieldNames.PHONE]: Yup.string().required("required"),
-    address: Yup.string().required("required"),
+    address: Yup.string(),
   });
 
   function handleFileChange(event) {
@@ -101,13 +118,53 @@ function PersonalDetails() {
                   initialValues={initialValues}
                   validationSchema={validationSchema}
                   enableReinitialize
-                  onSubmit={(values, { setSubmitting }) => {
+                  onSubmit={(values, { setSubmitting, resetForm }) => {
                     console.log(
                       "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ values",
                       values
                     );
-                    // setActiveStep(activeStep + 1);
-                    // setDashboardStepNo(activeStep + 1);
+                    let payload = { ...values };
+                    console.log(
+                      "🚀 ~ file: personal-details.js ~ line 117 ~ PersonalDetails ~ payload",
+                      payload
+                    );
+
+                    updateUpdateCustomerInfo(payload, userDetails["lead_id"])
+                      .then((resp) => {
+                        setLoading(false);
+                        if (resp.isSuccess == 1) {
+                          ToastMessage("Data saved successfully!", "success");
+                          resetForm({});
+                          // getData();
+                          getUserDetailsApi(userDetails.lead_id)
+                            .then((response) => {
+                              console.log(
+                                "🚀 ~ file: personal-details.js ~ line 141 ~ .then ~ response",
+                                response
+                              );
+                              if (response.data.status == 1) {
+                                // ToastMessage(
+                                //   "Login successful! Verify code to proceed further.",
+                                //   "success"
+                                // );
+                                setUserDetails(response.data);
+                                setToken(response.data.token);
+                              }
+                            })
+                            .catch((err) => {
+                              console.log(
+                                "🚀 ~ file: loginpage.js ~ line 68 ~ getUserDetails ~ err",
+                                err
+                              );
+                            });
+                        } else {
+                          ToastMessage("Something went wrong!", "error");
+                        }
+                      })
+                      .catch((err) => {
+                        setLoading(false);
+                        ToastMessage("Something went wrong!", "error");
+                      });
 
                     setTimeout(() => {
                       setSubmitting(false);
@@ -317,6 +374,7 @@ function PersonalDetails() {
                         <button
                           className="btn btn-primary save-btn next-btn"
                           type="submit"
+                          disabled={loading}
                         >
                           Save <i className="fa fa-file-image-o"></i>
                         </button>

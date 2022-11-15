@@ -173,6 +173,7 @@ button.btn.btn-primary.next-btn {
   background: #006090;
   border: 0px;
   padding: 5px 20px;
+  height: 34px;
 }
 button.btn.btn-primary.next-btn:hover {
   background: #06415d;
@@ -241,6 +242,7 @@ button.btn.btn-primary.back-btn {
   float: left;
   margin-top: 30px;
   padding: 5px 20px;
+  height: 34px;
 }
 
 button.btn.btn-primary.back-btn:hover {
@@ -257,7 +259,7 @@ span.dollor-col {
   height: 43px;
   text-align: center;
   padding-top: 8px;
-  z-index: 9;
+  /* z-index: 9; */
 }
 input.form-control {
   height: 45px !important;
@@ -519,7 +521,7 @@ li.nav-item.dropdown.float-right {
 }
 
 .verify-panel {
-  margin: 20px 0px 20px 0;
+  margin: 0px 0px 20px 0;
   text-align: left;
 }
 
@@ -1656,4 +1658,12 @@ label.btn.btn-primary.upload-btn {
 
 .rdt_TableRow .rdt_TableCell:first-child {
   min-width: 270px;
+}
+
+.input-group-text {
+  background-color: #e2e2e2;
+}
+
+.fa-pound-sign {
+  color: #000000;
 }

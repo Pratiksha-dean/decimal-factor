@@ -15,6 +15,11 @@ export const UPDATE_USER_DETAILS_URL = `${API_URL}UpdateCustomerForUK/`;
 
 export const RESET_PASSWORD_URL = `${API_URL}UKChangePassword`;
 
+export const FINANCIAL_SERVICE_URL = `${API_URL}accountScore/5944/FinancialServices`;
+export const INCOME_ANALYSIS_URL = `${API_URL}accountScore/5944/IncomeAnalysis`;
+export const REGULAR_OUTGOINGS_URL = `${API_URL}accountScore/5944/RegularOutgoings`;
+export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
+
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
   return data;
@@ -59,12 +64,15 @@ export const logout = () => {
   localStorage.removeItem("userDetails");
   localStorage.removeItem("isAuthenticated");
   localStorage.removeItem("dashboardStepNumber");
+  localStorage.removeItem("personalInfo");
   localStorage.removeItem("applicationInfo");
   localStorage.removeItem("companyInfo");
   localStorage.removeItem("reviewPersonalInfo");
   localStorage.removeItem("reviewBusinessInfo");
   localStorage.removeItem("reviewAppInfo");
   localStorage.removeItem("businessInfo");
+  localStorage.removeItem("directorData");
+  localStorage.removeItem("merchantDirectorData");
   setStepNo(1);
 };
 

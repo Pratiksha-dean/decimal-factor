@@ -1,9 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom/dist";
 import { logout } from "../../request";
+import { getUserDetails } from "../login/loginpage";
 
 function Header() {
   const navigate = useNavigate();
+  const userDetails = getUserDetails();
+
   const logoutUser = () => {
     console.log("🚀 ~ file: header.js ~ line 11 ~ logoutUser ~ logoutUser");
     logout();
@@ -66,7 +69,7 @@ function Header() {
                     alt=""
                     className="user-img"
                   />
-                  Kunal
+                  {userDetails["first_name"]}
                 </a>
                 <ul className="dropdown-menu">
                   <li>

@@ -15,7 +15,7 @@ const setEmailPassword = (data) => {
   localStorage.setItem("creds", data);
 };
 
-const setUserDetails = (data) => {
+export const setUserDetails = (data) => {
   localStorage.setItem("userDetails", JSON.stringify(data));
 };
 
@@ -23,7 +23,7 @@ export const getUserDetails = () => {
   return JSON.parse(localStorage.getItem("userDetails"));
 };
 
-const setToken = (data) => {
+export const setToken = (data) => {
   localStorage.setItem("token", data);
 };
 
@@ -67,26 +67,15 @@ function Login() {
             ToastMessage("Something went wrong!", "error");
           } else {
             if (resp.data.data.status == 1) {
-              ToastMessage("Login successful! Verify code to proceed further.", "success");
+              ToastMessage(
+                "Login successful! Verify code to proceed further.",
+                "success"
+              );
               navigate("/authentication");
               setUserDetails(resp.data.data);
               setToken(resp.data.data.token);
               isAuthenticated(false);
               setLoading(false);
-
-              // getUserDetailsApi(resp.data.data.lead_id)
-              //   .then((response) => {
-              //     console.log(
-              //       "🚀 ~ file: loginpage.js ~ line 65 ~ getUserDetails ~ response",
-              //       response
-              //     );
-              //   })
-              //   .catch((err) => {
-              //     console.log(
-              //       "🚀 ~ file: loginpage.js ~ line 68 ~ getUserDetails ~ err",
-              //       err
-              //     );
-              //   });
             } else {
               setError("Please verify your email to login");
               setLoading(false);

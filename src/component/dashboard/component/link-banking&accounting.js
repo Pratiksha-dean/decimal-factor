@@ -1,6 +1,7 @@
 import React from "react";
 import { useRef } from "react";
 import { useState } from "react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ReactTooltip from "react-tooltip";
 import {
   checkLinkingStatus,
@@ -127,7 +128,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
       } else {
         setAccoutingUrl(resp.data.id);
         window.open(
-          `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+          `https://link-uat.codat.io/company/${resp.data.id}`,
           "_blank"
         );
       }
@@ -175,14 +176,48 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 Link To Banking <i className="fa fa-chevron-right"></i>
               </button>
               <div className="tooltip-panel">
-                <tooltip>
+                <OverlayTrigger
+                  placement="right"
+                  overlay={
+                    <Tooltip id="button-tooltip-link-to-banking">
+                      <div>
+                        Connect your accounting software to seamlessly view all
+                        your data on the portal and the help increase your loan
+                        acceptance rate.
+                        <div>
+                          Only the following required data will be requested:{" "}
+                        </div>
+                        <div>
+                          <ul style={{ width: "235px" }}>
+                            <li>Accounts receivable information</li>
+                            <li>Accounts payable information</li>
+                            <li>Financial summary information</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </Tooltip>
+                  }
+                >
+                  {/* <tooltip> */}
+                  {({ ref, ...triggerHandler }) => (
+                    <img
+                      ref={ref}
+                      {...triggerHandler}
+                      src={require("../../../images/info-icon.png")}
+                      alt=""
+                    />
+                  )}
+
+                  {/* </tooltip> */}
+                </OverlayTrigger>
+                {/* <tooltip>
                   <i
                     className="fa fa-info-circle"
                     data-tip="Use Open Banking to directly link your bank account information without the need of providing bank statements."
                   >
                     <ReactTooltip className={"tooltippanel"} />
                   </i>
-                </tooltip>
+                </tooltip> */}
               </div>
 
               <div className="banking-url">
@@ -223,14 +258,44 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 Link To Accounting <i className="fa fa-chevron-right"></i>
               </button>
               <div className="tooltip-panel accounting-tooltip">
-                <tooltip>
+                {/* <tooltip>
                   <i
                     className="fa fa-info-circle"
                     data-tip="Connect your Accounting software to seamlessly view all your data on the portal and help increase your loan acceptance rate."
                   >
                     <ReactTooltip className={"tooltippanel"} />
                   </i>
-                </tooltip>
+                </tooltip> */}
+
+                <OverlayTrigger
+                  placement="right"
+                  overlay={
+                    <Tooltip id="button-tooltip-link-to-banking">
+                      <div>
+                        Connect your bank account using Open Banking. Only the
+                        following required data will be requested:
+                        <div>
+                          <ul style={{ width: "235px" }}>
+                            <li>Incoming transactions for the last year</li>
+                            <li> Outgoing transactions for the last year</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </Tooltip>
+                  }
+                >
+                  {/* <tooltip> */}
+                  {({ ref, ...triggerHandler }) => (
+                    <img
+                      ref={ref}
+                      {...triggerHandler}
+                      src={require("../../../images/info-icon.png")}
+                      alt=""
+                    />
+                  )}
+
+                  {/* </tooltip> */}
+                </OverlayTrigger>
               </div>
 
               {accoutingUrl && (
@@ -294,7 +359,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                   className="upload-checkbox"
                   checked={uploadBankStatementToggle}
                 />
-                <label>Upload Bank Statement Copies Instead</label>
+                <label>Upload bank statement copies instead</label>
               </div>
 
               {uploadBankStatementToggle && (
@@ -304,6 +369,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                   </p>
                   <ul>
                     <li>6 month bank statement.</li>
+                    <li>
+                      Any relevant documentation that might help your
+                      application
+                    </li>
                   </ul>
 
                   {fileList.length > 0 && (
@@ -338,7 +407,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                       ref={hiddenFileInput}
                       onChange={handleChange}
                       className="upload-doc"
-                      accept="application/pdf"
+                      accept="image/png,image/jpeg,.pdf"
+                      hidden
                     />
                     <button
                       className="btn btn-primary upload-btn"
@@ -346,8 +416,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                     >
                       Upload
                     </button>
-                    <p>Max file size: 2MB</p>
-                    <p>Supported file types: PDF</p>
+                    <p>Max file size: 5MB</p>
+                    <p>Supported file types: PDF, PNG & JPEG</p>
                   </div>
                 </div>
               )}

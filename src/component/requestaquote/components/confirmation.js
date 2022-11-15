@@ -12,7 +12,6 @@ function Confirmation() {
     <>
       <div className="right-panel">
         <h2>Confirmation</h2>
-        <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, </h5>
 
         <div className="confirmation-screen">
           <h3>
