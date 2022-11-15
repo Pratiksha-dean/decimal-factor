@@ -17,7 +17,19 @@ import TrackingCategories from "./Codat/TrackingCategories";
 import AccountTransactions from "./Codat/AccountTransactions";
 import Transfers from "./Codat/Transfers";
 import Items from "./Codat/Items";
+import AssessProfitAndLoss from './Codat/assess_profitandloss';
+import AssessBalanceSheet from './Codat/assess_balancesheet';
+import AssessCommerce from './Codat/assess_commerce';
+import AssessMarketing from './Codat/assess_marketing';
 import { Link } from "react-router-dom";
+import CommerceCustomers from "./Codat/CommerceCustomers";
+import CommerceDisputes from "./Codat/CommerceDisputes";
+import CommerceOrders from "./Codat/CommerceOrders";
+import CommercePayments from "./Codat/CommercePayments";
+import CommerceProducts from "./Codat/CommerceProducts";
+import CommerceTransactions from "./Codat/CommerceTransactions";
+import CommerceLocation from "./Codat/CommerceLocation";
+import CommerceCompanyinfo from "./Codat/CommerceCompanyinfo";
 
 
 
@@ -73,7 +85,7 @@ export default function Codat() {
       
     const commerceApiList = [
         { label: "--Select--", value:""},
-        { label: "Company info", value: "commerce_Company_info" },
+        { label: "Company info", value: "Commerce_Company_info" },
         { label: "Customers", value: "Commerce_Customers" },
         { label: "Disputes", value: "Commerce_Disputes" },
         { label: "Orders", value: "Commerce_Orders" },
@@ -82,6 +94,7 @@ export default function Codat() {
         { label: "Transactions", value: "Commerce_Transactions" },
         { label: "Location", value: "Commerce_Location" },
       ];
+
 
       const [openexport, setOpenexport] = React.useState(false);
       const handleOpenexport = () => {
@@ -204,6 +217,7 @@ export default function Codat() {
                 </div>
                 ) : null}
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -225,7 +239,22 @@ export default function Codat() {
         {currentApi==='AccountTransactions' && <AccountTransactions title="Account Transactions" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='Transfers' && <Transfers title="Transfers" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='Items' && <Items title="Items" leadId={leadId} endUrl={endUrl}/>}  
-                                        
+      
+        {currentApi==='assess_profitandloss' && <AssessProfitAndLoss />}  
+        {currentApi==='assess_balancesheet' && <AssessBalanceSheet />}  
+        {currentApi==='assess_commerce' && <AssessCommerce />}  
+        {currentApi==='assess_marketing' && <AssessMarketing />}  
+
+        {currentApi==='Commerce_Company_info' && <CommerceCompanyinfo title="Company info" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Customers' && <CommerceCustomers title="Customers" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Disputes' && <CommerceDisputes title="Disputes" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Orders' && <CommerceOrders title="Orders" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Payments' && <CommercePayments title="Payments" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Products' && <CommerceProducts title="Products" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Transactions' && <CommerceTransactions title="Transactions" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Commerce_Location' && <CommerceLocation title="Location" leadId={leadId} endUrl={endUrl}/>}  
+        
+       
         
         </div>
         

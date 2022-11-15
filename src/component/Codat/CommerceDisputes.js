@@ -1,26 +1,22 @@
 import React from "react";
 import Datatables from "./Datatables";
-export default function Payments(props) {
+import Parser from 'html-react-parser';
+export default function CommerceDisputes(props) {
     
     const columns= [
             {
-                name : "Id",
+                name : "Dispute",
                 selector: row => row.id,
                 sortable: true
             },
             {
-                name : "Customer",
-                selector: row => row.customerRef,
+                name : "Created Date",
+                selector: row => row.createdDate,
                 sortable: true
             },
             {
-                name : "Payment Date",
-                selector: row => row.date,
-                sortable: true
-            },
-            {
-                name : "Amount",
-                selector: row => row.totalAmount,
+                name : "Due Date",
+                selector: row => row.dueDate,
                 sortable: true
             },
             {
@@ -29,20 +25,19 @@ export default function Payments(props) {
                 sortable: true
             },
             {
-                name : "Account Name",
-                selector: row => row.accountName,
+                name : "Amount",
+                selector: row => row.totalAmount,
                 sortable: true
             },
             {
-                name : "Note",
-                selector: row => row.note,
+                name : "Status",
+                selector: row => Parser(row.status),
                 sortable: true
-                
-            }
+            },
 
         ];
     
-        const finalUrl = `${props.endUrl}/CODAT/Payments/${props.leadId}`;
+        const finalUrl = `${props.endUrl}/CODAT/Commerce_Disputes/${props.leadId}`;
         
       return (
         <Datatables title={props.title} apiUrl={finalUrl} apiColumn={columns} />

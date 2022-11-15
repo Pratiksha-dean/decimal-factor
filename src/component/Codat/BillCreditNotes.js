@@ -14,6 +14,7 @@ export default function BillCreditNotes(props) {
                 name : "Number",
                 selector: row => row.billCreditNoteNumber,
                 sortable: true
+                
             },
             {
                 name : "Issue Date",
@@ -46,6 +47,6 @@ export default function BillCreditNotes(props) {
         const finalUrl = `${props.endUrl}/CODAT/Bill_Credit_Notes/${props.leadId}`;
         
       return (
-        <Datatables apiUrl={finalUrl} apiColumn={columns} title={props.title} />
+        <Datatables apiUrl={finalUrl} apiColumn={columns} title={props.title}  />
     );
 }
