@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { getDirectorList } from "../../../request";
 import { useState } from "react";
 import { directorFieldNames, residentialStatusList } from "../../Constants";
+import { ToastMessage } from "../../ToastMessage";
 
 export const setReviewBusinessData = (data) => {
   console.log(
@@ -51,15 +52,14 @@ const Accordion = ({ title, children, isPrimary, id }) => {
         style={{ justifyContent: "flex-start" }}
       >
         <div className="px-2"> {title}</div>
-        {isPrimary == "1" ||
-          (isPrimary && (
-            <button
-              className="btn btn-success btn-sm mr-2"
-              style={{ backgroundColor: "#198754" }}
-            >
-              Primary
-            </button>
-          ))}
+        {(isPrimary == "1" || isPrimary) && (
+          <button
+            className="btn btn-success btn-sm mr-2"
+            style={{ backgroundColor: "#198754" }}
+          >
+            Primary
+          </button>
+        )}
       </div>
       <div className={`accordion-item ${!isOpen ? "collapsed" : ""}`}>
         <div className="accordion-content" id={id}>
@@ -79,7 +79,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
   const [directorList, setDirectorList] = useState([]);
 
   useEffect(() => {
-    // console.log(data["ShareHolderList"], "*", data);
+    console.log(data["ShareHolderList"], "*", data);
     console.log("%%%", getDirectorData());
     if (data && data["lmc_bi_business_number"] && !data["ShareHolderList"]) {
       getDirectorList(data["lmc_bi_business_number"]).then((resp) => {
@@ -88,9 +88,16 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
           resp
         );
         setDirectorList(resp.items);
+        if (!getDirectorData()) {
+          generateDirectorArray(resp.items);
+        }
       });
-    } else {
+    } else if (data["ShareHolderList"]) {
+      console.log(`data["ShareHolderList"]`, data["ShareHolderList"]);
       setDirectorList(data["ShareHolderList"]);
+      if (!getDirectorData()) {
+        generateDirectorArray(data["ShareHolderList"]);
+      }
       console.log("directorList", directorList);
     }
   }, []);
@@ -102,160 +109,156 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
     [fieldNames.BUSINESSSECTOR]: Yup.string().required(),
     [fieldNames.BUSINESSLEGALNUMBER]: Yup.string().required(),
 
-    [fieldNames.DIRECTORINFO]: Yup.array().of(
-      Yup.object().shape({
-        [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
-        [directorFieldNames.TOTALSHARECOUNT]: Yup.string().nullable(true),
-        [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
-          Yup.string().nullable(true),
-        [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
-        [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
-        [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
-        [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
-        [directorFieldNames.STREET]: Yup.string().nullable(true),
-        [directorFieldNames.COUNTY]: Yup.string().nullable(true),
-        [directorFieldNames.TOWN]: Yup.string().nullable(true),
-        [directorFieldNames.RESIDENTIALSTATUS]: Yup.string().nullable(true),
-        [directorFieldNames.LIVINGSINCE]: Yup.string().nullable(true),
-        [directorFieldNames.FIRSTNAME]: Yup.string().nullable(true),
-        [directorFieldNames.LASTNAME]: Yup.string().nullable(true),
-        [directorFieldNames.PHONENUMBER]: Yup.string().nullable(true),
-        [directorFieldNames.EMAIL]: Yup.string().nullable(true),
-        [directorFieldNames.ISPRIMARY]: Yup.string().nullable(true),
-        [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
-        [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
-        [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
-      })
-    ),
+    [fieldNames.DIRECTORINFO]: Yup.array()
+      .of(
+        Yup.object().shape({
+          [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
+          [directorFieldNames.TOTALSHARECOUNT]: Yup.string().nullable(true),
+          [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
+            Yup.string().nullable(true),
+          [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
+          [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
+          [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
+          [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
+          [directorFieldNames.STREET]: Yup.string().nullable(true),
+          [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+          [directorFieldNames.TOWN]: Yup.string().nullable(true),
+          [directorFieldNames.RESIDENTIALSTATUS]: Yup.string().nullable(true),
+          [directorFieldNames.LIVINGSINCE]: Yup.string().nullable(true),
+          [directorFieldNames.FIRSTNAME]: Yup.string().nullable(true),
+          [directorFieldNames.LASTNAME]: Yup.string().nullable(true),
+          [directorFieldNames.PHONENUMBER]: Yup.string().nullable(true),
+          [directorFieldNames.EMAIL]: Yup.string().nullable(true),
+          [directorFieldNames.ISPRIMARY]: Yup.string().nullable(true),
+          [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
+          [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
+          [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+        })
+      )
+      .nullable(true),
   });
+
+  const generateDirectorArray = (data) => {
+    if (data) {
+      console.log(
+        "🚀 ~ file: review-business-information.js ~ line 134 ~ generateDirectorArray ~ data",
+        data
+      );
+      let list = [...data];
+      if (list.length) {
+        list.map((item) => {
+          let name = item.name && item.name.split(",");
+          console.log("[primay", item);
+          item[directorFieldNames.FIRSTNAME] = item[
+            directorFieldNames.FIRSTNAME
+          ]
+            ? item[directorFieldNames.FIRSTNAME]
+            : name[0];
+          item[directorFieldNames.LASTNAME] = item[directorFieldNames.LASTNAME]
+            ? item[directorFieldNames.LASTNAME]
+            : name[1];
+          console.log(item["address"], "**");
+          if (item["address"]) {
+            console.log("&&", item["address"]["postal_code"]);
+            item[directorFieldNames.POSTALCODE] =
+              item["address"]["postal_code"] || "";
+            item[directorFieldNames.STREET] =
+              item["address"]["address_line_1"] || "";
+            item[directorFieldNames.COUNTY] = item["address"]["locality"]
+              ? item["address"]["locality"]
+              : "";
+            item[directorFieldNames.HOUSE_NAME] =
+              item["address"]["premises"] || "";
+            item[directorFieldNames.HOUSE_NUMBER] = "";
+            item[directorFieldNames.TOWN] = item[directorFieldNames.TOWN]
+              ? item[directorFieldNames.TOWN]
+              : "";
+            item[directorFieldNames.RESIDENTIALSTATUS] = "";
+            if (item["address"][directorFieldNames.ADDRESSLINE1]) {
+              item[directorFieldNames.ADDRESSLINE1] =
+                item["address"][directorFieldNames.ADDRESSLINE1];
+            }
+            if (item["address"][directorFieldNames.ADDRESSLINE2]) {
+              item[directorFieldNames.ADDRESSLINE2] =
+                item["address"][directorFieldNames.ADDRESSLINE2];
+            }
+
+            console.log(
+              "🚀 ~ file: review-business-information.js ~ line 124 ~ values=directorList.map ~ item",
+              item["address"]
+            );
+          }
+
+          item[directorFieldNames.LIVINGSINCE] = "";
+          item[directorFieldNames.NATUREOFCONTROL] = "";
+          item[directorFieldNames.EMAIL] = item["email"] ? item["email"] : "";
+          item[directorFieldNames.PHONENUMBER] = item["phone"]
+            ? item["phone"]
+            : item[directorFieldNames.PHONENUMBER];
+          item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
+            ? item["share_count"]
+            : "";
+
+          item[directorFieldNames.CHOOSEADDRESS] = "";
+          item[directorFieldNames.ISPRIMARY] = item[
+            directorFieldNames.ISPRIMARY
+          ]
+            ? item[directorFieldNames.ISPRIMARY]
+            : false;
+
+          item[directorFieldNames.RESIDENTIALSTATUS] =
+            item[directorFieldNames.RESIDENTIALSTATUS];
+
+          if (item["date_of_birth"]) {
+            console.log(
+              "🚀 ~ file: review-business-information.js ~ line 109 ~ values=directorList.map ~ name",
+              item["date_of_birth"]
+            );
+            item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
+              item["date_of_birth"]["year"] +
+              "-" +
+              item["date_of_birth"]["month"] +
+              "-" +
+              item["date_of_birth"]["day"]
+                ? item["date_of_birth"]["day"]
+                : 1;
+          }
+          delete item["address"];
+          delete item["appointed_on"];
+          delete item["links"];
+          delete item["date_of_birth"];
+          delete item["occupation"];
+          delete item["nationality"];
+          delete item["resigned_on"];
+          delete item["officer_role"];
+          delete item["country_of_residence"];
+          delete item["identification"];
+          console.log("item12", item);
+
+          item["HiddenShareHolderId"] = "";
+          item["notified_on"] = "";
+          item["is_active"] = 1;
+
+          return item;
+        });
+        let newList = [...list];
+        newList.sort((item) => {
+          if (item["is_primary"]) {
+            return item["is_primary"] ? -1 : 1; // `false` values first
+          } else {
+            return item;
+          }
+        });
+        console.log(
+          "🚀 ~ file: review-business-information.js ~ line 139 ~ generateDirectorArray ~ list",
+          newList
+        );
+        setDirectorData(newList);
+      }
+    }
+  };
   const patchDirectorData = (data) => {
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 127 ~ patchDirectorData ~ data",
-      directorList
-    );
-
-    // getDirectorData() ||
-    let storedData = directorList;
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 138 ~ patchDirectorData ~ storedData",
-      storedData
-    );
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 125 ~ patchDirectorData ~ storedData",
-      storedData
-    );
-    // let values = storedData?.length ? storedData : directorList;
-    let values;
-    if (storedData && storedData.length) {
-      values = storedData;
-    } else {
-      values = directorList;
-    }
-
-    console.log("directorList", directorList);
-
-    if (values && values.length) {
-      values.map((item) => {
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 158 ~ values.map ~ item",
-          item
-        );
-
-        return;
-        let name = item.name && item.name.split(",");
-        item[directorFieldNames.FIRSTNAME] = item[directorFieldNames.FIRSTNAME]
-          ? item[directorFieldNames.FIRSTNAME]
-          : name[0];
-        item[directorFieldNames.LASTNAME] = item[directorFieldNames.LASTNAME]
-          ? item[directorFieldNames.LASTNAME]
-          : name[1];
-        console.log(item["address"], "**");
-        if (item["address"]) {
-          console.log("&&", item["address"]["postal_code"]);
-          item[directorFieldNames.POSTALCODE] =
-            item["address"]["postal_code"] || "";
-          item[directorFieldNames.STREET] =
-            item["address"]["address_line_1"] || "";
-          item[directorFieldNames.COUNTY] = item["address"]["locality"]
-            ? item["address"]["locality"]
-            : "";
-          item[directorFieldNames.HOUSE_NAME] =
-            item["address"]["premises"] || "";
-          item[directorFieldNames.HOUSE_NUMBER] = "";
-          item[directorFieldNames.TOWN] = item[directorFieldNames.TOWN]
-            ? item[directorFieldNames.TOWN]
-            : "";
-          item[directorFieldNames.RESIDENTIALSTATUS] = "";
-          if (item["address"][directorFieldNames.ADDRESSLINE1]) {
-            item[directorFieldNames.ADDRESSLINE1] =
-              item["address"][directorFieldNames.ADDRESSLINE1];
-          }
-          if (item["address"][directorFieldNames.ADDRESSLINE2]) {
-            item[directorFieldNames.ADDRESSLINE2] =
-              item["address"][directorFieldNames.ADDRESSLINE2];
-          }
-
-          console.log(
-            "🚀 ~ file: review-business-information.js ~ line 124 ~ values=directorList.map ~ item",
-            item["address"]
-          );
-        }
-
-        item[directorFieldNames.LIVINGSINCE] = "";
-        item[directorFieldNames.NATUREOFCONTROL] = "";
-        item[directorFieldNames.EMAIL] = item["email"] ? item["email"] : "";
-        item[directorFieldNames.PHONENUMBER] = item["phone"]
-          ? item["phone"]
-          : "";
-        item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
-          ? item["share_count"]
-          : "";
-
-        // item[directorFieldNames.ISPRIMARY] = item[directorFieldNames.ISPRIMARY];
-        item[directorFieldNames.CHOOSEADDRESS] = "";
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 109 ~ values=directorList.map ~ name",
-          name
-        );
-        if (item["date_of_birth"]) {
-          item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
-            item["date_of_birth"]["year"] +
-            "-" +
-            item["date_of_birth"]["month"] +
-            "-" +
-            item["date_of_birth"]["day"]
-              ? item["date_of_birth"]["day"]
-              : 1;
-        }
-        // delete item["address"];
-        delete item["address"];
-        delete item["appointed_on"];
-        delete item["links"];
-        delete item["date_of_birth"];
-        delete item["occupation"];
-        delete item["nationality"];
-        delete item["resigned_on"];
-        delete item["officer_role"];
-        delete item["country_of_residence"];
-        console.log("item", item);
-
-        item["HiddenShareHolderId"] = "";
-        item["notified_on"] = "";
-        item["is_active"] = 1;
-
-        return item;
-      });
-    }
-
-    console.log(
-      "🚀 ~ file: review-business-information.js ~ line 116 ~ patchDirectorData ~ values",
-      values
-    );
-    if (!storedData) {
-      setDirectorData(values ? values : []);
-    }
-
-    return values;
+    return getDirectorData();
   };
 
   useEffect(() => {
@@ -298,8 +301,31 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           console.log("****", values);
+          if (values["directorInfo"] && values["directorInfo"].length) {
+            let index = values["directorInfo"].findIndex(
+              (item) => item["is_primary"] || item["is_primary"] == 1
+            );
+            console.log(
+              "🚀 ~ file: review-business-information.js ~ line 329 ~ ReviewBusinessInformation ~ index",
+              index
+            );
+            if (index === -1) {
+              ToastMessage(
+                "It is mandatrory to mark at least one director as primary!",
+                "error"
+              );
+            } else {
+              setActiveStep(activeStep + 1);
+              setDashboardStepNo(activeStep + 1);
+            }
+          } else {
+            setActiveStep(activeStep + 1);
+            setDashboardStepNo(activeStep + 1);
+          }
+
           // setActiveStep(activeStep + 1);
           // setDashboardStepNo(activeStep + 1);
+          // }
 
           setTimeout(() => {
             setSubmitting(false);
@@ -328,10 +354,15 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                       closeMenuOnSelect={true}
                       onBlur={() => {
                         setReviewBusinessData(values);
+                        console.log("Error", errors);
                       }}
-                      onChange={(selectedOption) =>
-                        setFieldValue(fieldNames.BUSINESSSECTOR, selectedOption)
-                      }
+                      onChange={(selectedOption) => {
+                        setFieldValue(
+                          fieldNames.BUSINESSSECTOR,
+                          selectedOption
+                        );
+                        console.log("Error", errors);
+                      }}
                       name={fieldNames.BUSINESSSECTOR}
                       options={businessSectorList}
                       placeholder="Enter business sector"
@@ -531,8 +562,10 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                   <Accordion
                                     title={
                                       item[directorFieldNames.FIRSTNAME] +
-                                        " " +
-                                        item[directorFieldNames.LASTNAME] || ""
+                                      " " +
+                                      (item[directorFieldNames.LASTNAME]
+                                        ? item[directorFieldNames.LASTNAME]
+                                        : "")
                                     }
                                     key={index}
                                     isPrimary={
@@ -719,10 +752,10 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                               type="text"
                                               className="form-control"
                                               placeholder="Email Address"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAILID}`}
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAIL}`}
                                               onChange={handleChange}
                                               value={
-                                                item[directorFieldNames.EMAILID]
+                                                item[directorFieldNames.EMAIL]
                                               }
                                               onBlur={() => {
                                                 setDirectorData(
@@ -761,17 +794,17 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                                 }
                                               }
                                               onChange={(phone) => {
+                                                console.log(
+                                                  "🚀 ~ file: review-business-information.js ~ line 773 ~ ReviewBusinessInformation ~ phone",
+                                                  phone
+                                                );
                                                 setFieldValue(
-                                                  fieldNames.DIRECTORINFO[
-                                                    index
-                                                  ][
-                                                    directorFieldNames
-                                                      .PHONENUMBER
-                                                  ],
+                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
                                                   phone
                                                 );
                                               }}
                                               onBlur={() => {
+                                                console.log("values", values);
                                                 setDirectorData(
                                                   values["directorInfo"]
                                                 );
@@ -968,14 +1001,14 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                               closeMenuOnSelect={true}
                                               onChange={(selectedOption) =>
                                                 setFieldValue(
-                                                  directorFieldNames.RESIDENTIALSTATUS,
+                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`,
                                                   selectedOption
                                                 )
                                               }
-                                              name={
-                                                directorFieldNames.RESIDENTIALSTATUS
-                                              }
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`}
                                               options={residentialStatusList}
+                                              menuPortalTarget={document.body}
+                                              menuPosition={"fixed"}
                                               // menuPortalTarget={document.getElementById(
                                               //   `accordian${index}`
                                               // )}
@@ -1009,7 +1042,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                                 IndicatorSeparator: () => null,
                                               }}
                                               value={
-                                                values[
+                                                item[
                                                   directorFieldNames
                                                     .RESIDENTIALSTATUS
                                                 ]

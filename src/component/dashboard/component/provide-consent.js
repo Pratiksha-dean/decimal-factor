@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
-import { getReviewAppData } from "../dashboard";
+import { getReviewAppData, setDashboardStepNo } from "../dashboard";
 import {
   getDirectorData,
   getReviewBusinessData,
@@ -84,7 +84,8 @@ function ProvideConsent({ setActiveStep, activeStep }) {
         payload
       );
 
-      return;
+      // return;
+
       updateUpdateCustomerInfo(payload, userDetails["lead_id"])
         .then((resp) => {
           setLoading(false);
@@ -155,6 +156,7 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                   checked={formik.values.softCreditCheck}
                 />
                 <label>
+                  I consent to run a soft credit check
                   <OverlayTrigger
                     placement="top"
                     overlay={
@@ -165,10 +167,18 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                     }
                   >
                     {({ ref, ...triggerHandler }) => (
-                      <div ref={ref} {...triggerHandler}>
-                        {" "}
-                        I consent to run a soft credit check
-                      </div>
+                      <span
+                        ref={ref}
+                        {...triggerHandler}
+                        className="ml-2 cursor-pointer"
+                      >
+                        <img
+                          ref={ref}
+                          {...triggerHandler}
+                          src={require("../../../images/info-icon.png")}
+                          alt=""
+                        />
+                      </span>
                     )}
                   </OverlayTrigger>
                 </label>
@@ -199,6 +209,7 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                   checked={formik.values.finalInformation}
                 />
                 <label>
+                  I consent to provide financial information to lenders
                   <OverlayTrigger
                     placement="top"
                     overlay={
@@ -210,10 +221,18 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                   >
                     {/* <tooltip> */}
                     {({ ref, ...triggerHandler }) => (
-                      <div ref={ref} {...triggerHandler}>
-                        {" "}
-                        I consent to provide financial information to lenders
-                      </div>
+                      <span
+                        ref={ref}
+                        {...triggerHandler}
+                        className="ml-2 cursor-pointer"
+                      >
+                        <img
+                          ref={ref}
+                          {...triggerHandler}
+                          src={require("../../../images/info-icon.png")}
+                          alt=""
+                        />
+                      </span>
                     )}
 
                     {/* </tooltip> */}
@@ -228,7 +247,10 @@ function ProvideConsent({ setActiveStep, activeStep }) {
           <button
             className="btn btn-secondary"
             type="button"
-            onClick={() => setActiveStep(activeStep - 1)}
+            onClick={() => {
+              setActiveStep(activeStep - 1);
+              setDashboardStepNo(activeStep - 1);
+            }}
           >
             {" "}
             <i className="bi bi-chevron-left"></i>Back

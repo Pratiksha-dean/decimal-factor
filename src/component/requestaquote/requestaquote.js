@@ -65,11 +65,11 @@ function RequestAQuote() {
   return (
     <div className="App">
       <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-4">
+        <div className="row main-request">
+          <div className="col-md-4 left-panel-box">
             <RequestLeftPanel setStep={setStep} step={step} />
           </div>
-          <div className="col-md-8">
+          <div className="col-md-8 request-right">
             {/* <ApplicationInformation /> */}
 
             {showSelectedState(getStepNo())}

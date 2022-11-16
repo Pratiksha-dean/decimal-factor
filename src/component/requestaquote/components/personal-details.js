@@ -55,28 +55,29 @@ export const generateDirectorListPayload = (data) => {
     return {
       kindofShareHolder: "",
       HiddenShareHolderId: "",
-      natures_of_control: item[directorFieldNames.NATUREOFCONTROL],
+      natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
       fullName: item[directorFieldNames.FIRSTNAME],
       lastName: item[directorFieldNames.LASTNAME],
-      DOB_day: day,
-      DOB_month: month,
-      DOB_year: year,
+      DOB_day: day || "",
+      DOB_month: month || "",
+      DOB_year: year || "",
       ShareHolderDOBFullFormat: item["ShareHolderDOBFullFormat"],
-      address_line_1: item["address_line_1"],
-      address_line_2: item["address_line_2"],
-      postal_code: item[directorFieldNames.POSTALCODE],
+      address_line_1: item["address_line_1"] || "",
+      address_line_2: item["address_line_2"] || "",
+      postal_code: item[directorFieldNames.POSTALCODE] || "",
       notified_on: "",
-      phon_number: item[directorFieldNames.PHONENUMBER],
+      phon_number: item[directorFieldNames.PHONENUMBER] || "",
       email: item[directorFieldNames.EMAIL],
-      residentialStatus: item[directorFieldNames.RESIDENTIALSTATUS],
+      residentialStatus:
+        item[directorFieldNames.RESIDENTIALSTATUS]["value"] || "",
       is_primary: "1",
-      house_number: item[directorFieldNames.HOUSE_NUMBER],
-      house_name: item[directorFieldNames.HOUSE_NAME],
-      county: item[directorFieldNames.COUNTY],
-      town: item[directorFieldNames.TOWN],
-      livingSince: item[directorFieldNames.LIVINGSINCE],
+      house_number: item[directorFieldNames.HOUSE_NUMBER] || "",
+      house_name: item[directorFieldNames.HOUSE_NAME] || "",
+      county: item[directorFieldNames.COUNTY] || "",
+      town: item[directorFieldNames.TOWN] || "",
+      livingSince: item[directorFieldNames.LIVINGSINCE] || "",
       is_active: "1",
-      street: item[directorFieldNames.STREET],
+      street: item[directorFieldNames.STREET] || "",
       companyName: "undefined",
     };
   });
@@ -165,7 +166,8 @@ function PersonalDetails({ setStep, showSelectedState }) {
             companyInfo["address"]["locality"] +
             "," +
             companyInfo["address"]["address_line_1"];
-          payload["businessZipcode"] = companyInfo["address"]["postal_code"];
+          payload["businessZipcode"] =
+            companyInfo["address"]["postal_code"] || "";
           payload["businessName"] = companyInfo["title"];
           payload["businessEntity"] = payload["businessEntity"].value;
           payload["loanPurpose"] = payload["loanPurpose"].value;
