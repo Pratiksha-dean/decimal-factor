@@ -23,6 +23,7 @@ export const directorFieldNames = {
   TOTALSHARECOUNT: "totalShareCount",
   ADDRESSLINE1: "address_line_1",
   ADDRESSLINE2: "address_line_2",
+  HIDDENSHAREHOLDERID: "HiddenShareHolderId",
 };
 
 export const residentialStatusList = [
