@@ -145,8 +145,7 @@ function BusinessInformation() {
             item["address"][directorFieldNames.POSTCODE];
           item[directorFieldNames.STREET] = item["address"]["address_line_1"];
           item[directorFieldNames.COUNTY] = item["address"]["locality"];
-          item[directorFieldNames.HOUSENAME] = item["address"]["premises"];
-          item[directorFieldNames.HOUSENUMBER] = "";
+
           item[directorFieldNames.TOWN] = "";
         }
         item[directorFieldNames.RESIDENTIALSTATUS] =
@@ -155,6 +154,9 @@ function BusinessInformation() {
               (data) => item["residentialStatus"] == data.value
             )
           ];
+
+        item[directorFieldNames.HOUSE_NAME] = item["houseName"] || "";
+        item[directorFieldNames.HOUSE_NUMBER] = item["houseNumber"];
 
         // console.log(
         //   "************",
@@ -181,8 +183,8 @@ function BusinessInformation() {
         }
         item[directorFieldNames.NATUREOFCONTROL] = item["natures_of_control"];
         item[directorFieldNames.EMAILID] = item[directorFieldNames.EMAILID];
-        item[directorFieldNames.PHONENUMBER] = item["phone"]
-          ? item["phone"]
+        item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
+          ? item["phonenumber"]
           : "";
         item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
           ? item["share_count"]
@@ -302,7 +304,7 @@ function BusinessInformation() {
           postal_code: item[directorFieldNames.POSTALCODE] || "",
           notified_on: "",
           phon_number: item[directorFieldNames.PHONENUMBER] || "",
-          email: item[directorFieldNames.EMAIL],
+          email: item[directorFieldNames.EMAILID],
           residentialStatus: item[directorFieldNames.RESIDENTIALSTATUS]
             ? item[directorFieldNames.RESIDENTIALSTATUS]["value"]
             : "",
@@ -777,18 +779,6 @@ function BusinessInformation() {
                                               <div className="col-md-3">
                                                 <div className="form-group">
                                                   <label>Phone</label>
-                                                  {/* <input
-                                          type="text"
-                                          name="Phone"
-                                          className="form-control"
-                                          placeholder="Phone"
-                                        /> */}
-                                                  {
-                                                    item[
-                                                      directorFieldNames
-                                                        .PHONENUMBER
-                                                    ]
-                                                  }
 
                                                   <PhoneInput
                                                     name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
@@ -813,12 +803,7 @@ function BusinessInformation() {
                                                     }
                                                     onChange={(phone) => {
                                                       setFieldValue(
-                                                        fieldNames.DIRECTORINFO[
-                                                          index
-                                                        ][
-                                                          directorFieldNames
-                                                            .PHONENUMBER
-                                                        ],
+                                                        `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
                                                         phone
                                                       );
                                                     }}
