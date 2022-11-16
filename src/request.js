@@ -95,7 +95,7 @@ export async function getCompanyID(id) {
   return data;
 }
 
-export async function checkLinkingStatus(id) {
+export async function checkAccountingStatus(id) {
   const { data } = await axios.get(`${API_URL}CODAT/${id}/checkStatus`);
   return data;
 }

@@ -23,7 +23,6 @@ import { getUserDetails } from "../login/loginpage";
 import { directorFieldNames, residentialStatusList } from "../Constants";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
-import { generateDirectorListPayload } from "../requestaquote/components/personal-details";
 // import { setMerchantDirectorData } from "../dashboard/component/review-business-information";
 
 export const setMerchantDirectorData = (data) => {
@@ -34,15 +33,24 @@ export const getMerchantDirectorData = () => {
   return JSON.parse(localStorage.getItem("merchantDirectorData"));
 };
 
-const Accordion = ({ title, children }) => {
+const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
   return (
     <div className="accordion-wrapper">
       <div
-        className={`accordion-title ${isOpen ? "open" : ""}`}
+        className={`accordion-title  ${isOpen ? "open" : ""}`}
         onClick={() => setOpen(!isOpen)}
+        style={{ justifyContent: "flex-start" }}
       >
-        {title}
+        <div className="px-2"> {title}</div>
+        {isPrimary && (
+          <button
+            className="btn btn-success btn-sm mr-2"
+            style={{ backgroundColor: "#198754" }}
+          >
+            Primary
+          </button>
+        )}
       </div>
       <div className={`accordion-item ${!isOpen ? "collapsed" : ""}`}>
         <div className="accordion-content">{children}</div>
@@ -83,12 +91,12 @@ function BusinessInformation() {
         [directorFieldNames.FIRSTNAME]: Yup.string().nullable(true),
         [directorFieldNames.LASTNAME]: Yup.string().nullable(true),
         [directorFieldNames.PHONENUMBER]: Yup.string().nullable(true),
-        [directorFieldNames.EMAIL]: Yup.string().nullable(true),
+        [directorFieldNames.EMAILID]: Yup.string().nullable(true),
         [directorFieldNames.ISPRIMARY]: Yup.string().nullable(true),
         [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
         [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
         [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
-        [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.string().nullable(true),
+        [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.number().nullable(true),
       })
     ),
   });
@@ -140,11 +148,39 @@ function BusinessInformation() {
           item[directorFieldNames.HOUSENAME] = item["address"]["premises"];
           item[directorFieldNames.HOUSENUMBER] = "";
           item[directorFieldNames.TOWN] = "";
-          item[directorFieldNames.RESIDENTIALSTATUS] = "";
         }
-        item[directorFieldNames.LIVINGSINCE] = "";
-        item[directorFieldNames.NATUREOFCONTROL] = "";
-        item[directorFieldNames.EMAIL] = item["email"] ? item["email"] : "";
+        item[directorFieldNames.RESIDENTIALSTATUS] =
+          residentialStatusList[
+            residentialStatusList.findIndex(
+              (data) => item["residentialStatus"] == data.value
+            )
+          ];
+
+        // console.log(
+        //   "************",
+        //   item["residentialStatus"],
+        //   residentialStatusList.findIndex(
+        //     (item) =>{
+        //       conole
+        //     }
+        //   )
+        // );
+
+        if (item["living_since"]) {
+          console.log(
+            "......................",
+            item["living_since"].split("/")
+          );
+          let splittedDate = item["living_since"].split("/");
+          let date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+          console.log(
+            "🚀 ~ file: business-information.js ~ line 178 ~ values=directorList.map ~ date",
+            date
+          );
+          item[directorFieldNames.LIVINGSINCE] = date || "";
+        }
+        item[directorFieldNames.NATUREOFCONTROL] = item["natures_of_control"];
+        item[directorFieldNames.EMAILID] = item[directorFieldNames.EMAILID];
         item[directorFieldNames.PHONENUMBER] = item["phone"]
           ? item["phone"]
           : "";
@@ -152,9 +188,10 @@ function BusinessInformation() {
           ? item["share_count"]
           : "";
 
-        item[directorFieldNames.ISPRIMARY] = false;
+        item[directorFieldNames.ISPRIMARY] =
+          item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
         item[directorFieldNames.CHOOSEADDRESS] = "";
-        item["shareHolderID"] = item["shareHolderID"];
+        item[directorFieldNames.HIDDENSHAREHOLDERID] = item["shareHolderID"];
 
         // if (item["date_of_birth"]) {
         item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
@@ -171,6 +208,11 @@ function BusinessInformation() {
         delete item["resigned_on"];
         delete item["officer_role"];
         delete item["country_of_residence"];
+
+        console.log(
+          "🚀 ~ file: business-information.js ~ line 187 ~ values=directorList.map ~ item",
+          item
+        );
 
         return item;
       });
@@ -201,7 +243,83 @@ function BusinessInformation() {
       : "",
     [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
   };
-  console.log(initialValues);
+  console.log("initialValues", initialValues);
+
+  const updateDirectorInfo = (payload, id, resetForm) => {
+    updateUpdateCustomerInfo(payload, id)
+      .then((resp) => {
+        setLoading(false);
+        if (resp.isSuccess == 1) {
+          ToastMessage("Data saved successfully!", "success");
+          resetForm({});
+          getData();
+        } else {
+          ToastMessage("Something went wrong!", "error");
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        ToastMessage("Something went wrong!", "error");
+      });
+  };
+
+  const generateDirectorListPayload = (data) => {
+    console.log(
+      "🚀 ~ file: personal-details.js ~ line 35 ~ generateDirectorListPayload ~ data",
+      data
+    );
+
+    console.log("data", data != null);
+    if (data != null) {
+      let data1 = data.map((item) => {
+        let day = "";
+        let month = "";
+        let year = "";
+
+        if (item["ShareHolderDOBFullFormat"]) {
+          let splitDate = item["ShareHolderDOBFullFormat"].split("-");
+          console.log(
+            "🚀 ~ file: personal-details.js ~ line 47 ~ data1 ~ splitDate",
+            splitDate
+          );
+          day = splitDate[2];
+          month = splitDate[1];
+          year = splitDate[0];
+        }
+        return {
+          kindofShareHolder: "",
+          HiddenShareHolderId:
+            item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
+          natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
+          fullName: item[directorFieldNames.FIRSTNAME],
+          lastName: item[directorFieldNames.LASTNAME],
+          DOB_day: day || "",
+          DOB_month: month || "",
+          DOB_year: year || "",
+          ShareHolderDOBFullFormat: item["ShareHolderDOBFullFormat"],
+          address_line_1: item["address_line_1"] || "",
+          address_line_2: item["address_line_2"] || "",
+          postal_code: item[directorFieldNames.POSTALCODE] || "",
+          notified_on: "",
+          phon_number: item[directorFieldNames.PHONENUMBER] || "",
+          email: item[directorFieldNames.EMAIL],
+          residentialStatus: item[directorFieldNames.RESIDENTIALSTATUS]
+            ? item[directorFieldNames.RESIDENTIALSTATUS]["value"]
+            : "",
+          is_primary: item[directorFieldNames.ISPRIMARY] ? "1" : "0",
+          house_number: item[directorFieldNames.HOUSE_NUMBER] || "",
+          house_name: item[directorFieldNames.HOUSE_NAME] || "",
+          county: item[directorFieldNames.COUNTY] || "",
+          town: item[directorFieldNames.TOWN] || "",
+          livingSince: item[directorFieldNames.LIVINGSINCE] || "",
+          is_active: "1",
+          street: item[directorFieldNames.STREET] || "",
+          companyName: "undefined",
+        };
+      });
+      return data1;
+    }
+  };
 
   return (
     <div className="dashboard-panel">
@@ -232,31 +350,60 @@ function BusinessInformation() {
                     payload["ShareHolderArr"] = generateDirectorListPayload(
                       payload["directorInfo"]
                     );
-                    console.log(
-                      "🚀 ~ file: business-information.js ~ line 229 ~ BusinessInformation ~ payload",
-                      payload
-                    );
                     delete payload["directorInfo"];
-                    return;
-                    updateUpdateCustomerInfo(payload, userDetails["lead_id"])
-                      .then((resp) => {
-                        setLoading(false);
-                        if (resp.isSuccess == 1) {
-                          ToastMessage("Data saved successfully!", "success");
-                          resetForm({});
-                          getData();
-                        } else {
-                          ToastMessage("Something went wrong!", "error");
-                        }
-                      })
-                      .catch((err) => {
-                        setLoading(false);
-                        ToastMessage("Something went wrong!", "error");
-                      });
 
-                    setTimeout(() => {
-                      setSubmitting(false);
-                    }, 400);
+                    if (payload["ShareHolderArr"].length) {
+                      let index = payload["ShareHolderArr"].findIndex(
+                        (item) => item["is_primary"] == 1
+                      );
+                      console.log(
+                        "🚀 ~ file: business-information.js ~ line 255 ~ BusinessInformation ~ index",
+                        index
+                      );
+
+                      if (index === -1) {
+                        ToastMessage(
+                          "It is mandatrory to mark at least one director as primary!",
+                          "error"
+                        );
+                      } else {
+                        updateDirectorInfo(
+                          payload,
+                          userDetails["lead_id"],
+                          resetForm
+                        );
+                      }
+                    } else {
+                      updateDirectorInfo(
+                        payload,
+                        userDetails["lead_id"],
+                        resetForm
+                      );
+                      console.log(
+                        "🚀 ~ file: business-information.js ~ line 229 ~ BusinessInformation ~ payload",
+                        payload
+                      );
+                      return;
+                      // updateUpdateCustomerInfo(payload, userDetails["lead_id"])
+                      //   .then((resp) => {
+                      //     setLoading(false);
+                      //     if (resp.isSuccess == 1) {
+                      //       ToastMessage("Data saved successfully!", "success");
+                      //       resetForm({});
+                      //       getData();
+                      //     } else {
+                      //       ToastMessage("Something went wrong!", "error");
+                      //     }
+                      //   })
+                      //   .catch((err) => {
+                      //     setLoading(false);
+                      //     ToastMessage("Something went wrong!", "error");
+                      //   });
+
+                      setTimeout(() => {
+                        setSubmitting(false);
+                      }, 400);
+                    }
                   }}
                 >
                   {({
@@ -459,7 +606,7 @@ function BusinessInformation() {
                                       values.directorInfo.map((item, index) => (
                                         <Accordion
                                           title={
-                                            item["firstName"] +
+                                            item[directorFieldNames.FIRSTNAME] +
                                               " " +
                                               item[
                                                 directorFieldNames.LASTNAME
@@ -795,6 +942,24 @@ function BusinessInformation() {
                                                 setMerchantDirectorData(values);
                                               }}
                                             />
+
+                                            <input
+                                              type="text"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HIDDENSHAREHOLDERID}`}
+                                              onChange={handleChange}
+                                              hidden
+                                              value={
+                                                item[
+                                                  directorFieldNames
+                                                    .HIDDENSHAREHOLDERID
+                                                ]
+                                              }
+                                              className="form-control"
+                                              placeholder="% of Total Share Count"
+                                              onBlur={() => {
+                                                setMerchantDirectorData(values);
+                                              }}
+                                            />
                                             <div className="row">
                                               <div className="col-md-3">
                                                 <div className="form-group">
@@ -915,7 +1080,7 @@ function BusinessInformation() {
                                                   <label>
                                                     Residential Status
                                                   </label>
-                                                  <Select
+                                                  {/* <Select
                                                     closeMenuOnSelect={true}
                                                     onChange={(
                                                       selectedOption
@@ -978,6 +1143,74 @@ function BusinessInformation() {
                                                       setMerchantDirectorData(
                                                         values
                                                       );
+                                                    }}
+                                                  /> */}
+
+                                                  <Select
+                                                    // menuIsOpen={true}
+                                                    closeMenuOnSelect={true}
+                                                    onChange={(
+                                                      selectedOption
+                                                    ) =>
+                                                      setFieldValue(
+                                                        `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`,
+                                                        selectedOption
+                                                      )
+                                                    }
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`}
+                                                    options={
+                                                      residentialStatusList
+                                                    }
+                                                    menuPortalTarget={
+                                                      document.body
+                                                    }
+                                                    menuPosition={"fixed"}
+                                                    // menuPortalTarget={document.getElementById(
+                                                    //   `accordian${index}`
+                                                    // )}
+                                                    placeholder="Select Residential Status"
+                                                    styles={{
+                                                      control: (
+                                                        styles,
+                                                        state
+                                                      ) => {
+                                                        const borderColor =
+                                                          !state.hasValue &&
+                                                          touched[
+                                                            directorFieldNames
+                                                              .RESIDENTIALSTATUS
+                                                          ] &&
+                                                          errors[
+                                                            directorFieldNames
+                                                              .RESIDENTIALSTATUS
+                                                          ]
+                                                            ? "red"
+                                                            : "#ced4da";
+
+                                                        return {
+                                                          ...styles,
+                                                          borderColor,
+                                                        };
+                                                      },
+                                                      menuPortal: (base) => ({
+                                                        ...base,
+                                                        zIndex: 9999,
+                                                      }),
+                                                    }}
+                                                    components={{
+                                                      IndicatorSeparator: () =>
+                                                        null,
+                                                    }}
+                                                    value={
+                                                      item[
+                                                        directorFieldNames
+                                                          .RESIDENTIALSTATUS
+                                                      ]
+                                                    }
+                                                    onBlur={() => {
+                                                      // setDirectorData(
+                                                      //   values["directorInfo"]
+                                                      // );
                                                     }}
                                                   />
                                                 </div>

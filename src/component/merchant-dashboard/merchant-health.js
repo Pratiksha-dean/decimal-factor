@@ -8,7 +8,10 @@ import Codat from "../Codat";
 import { Link } from "react-router-dom";
 import StickyBox from "react-sticky-box";
 import {
+  checkAccountingStatus,
+  checkBankingStatus,
   checkLinkingStatus,
+  getAccountScore,
   getCompanyID,
   getDashboardData,
   getLinkToAccountingData,
@@ -35,6 +38,8 @@ function MerchantHealth() {
   const userDetails = getUserDetails();
   const [accountingStatus, setAccoutingStatus] = useState();
   const [dasboardData, setDashboardData] = useState();
+  const [bankingUrl, setBankingUrl] = useState();
+  const [bankingStatus, setBankingStatus] = useState(false);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -48,22 +53,21 @@ function MerchantHealth() {
     }
   };
 
-  const checkLinkingStatusClick = () => {
+  const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    checkLinkingStatus(userDetails["lead_id"])
+    checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
         }
-
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
-          resp
-        );
       })
       .catch((err) => {
         setAccoutingStatus(false);
+        if (!accoutingUrl) {
+          getLinkToAccouting();
+          console.log("sghds");
+        }
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
           err
@@ -84,7 +88,11 @@ function MerchantHealth() {
         resp,
         resp.success == "false" && resp.status == 500
       );
-      if (resp.success == "false" && resp.code == 500) {
+      if (
+        resp.success == "false" &&
+        resp.code == 500 &&
+        resp.message == "User Already Created"
+      ) {
         getCompanyID(payload.lm_id).then((resp) => {
           setAccoutingUrl(
             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
@@ -93,13 +101,16 @@ function MerchantHealth() {
             "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
             resp
           );
+          console.log("open");
           window.open(
             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
             "_blank"
           );
         });
       } else {
-        setAccoutingUrl(resp.data.id);
+        setAccoutingUrl(`https://link-uat.codat.io/company/${resp.data.id}`);
+        console.log("open");
+
         window.open(
           `https://link-uat.codat.io/company/${resp.data.id}`,
           "_blank"
@@ -108,10 +119,105 @@ function MerchantHealth() {
     });
   };
 
+  const checkBankingStatusClick = () => {
+    // userDetails["lead_id"];
+    checkBankingStatus(userDetails["lead_id"])
+      .then((resp) => {
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
+          resp
+        );
+
+        if (resp["response"] === "Completed") {
+          setAccoutingStatus(true);
+          // setAccoutingUrl(resp.data.redirect);
+        }
+      })
+      .catch((err) => {
+        setBankingStatus(false);
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
+          err
+        );
+      });
+  };
+
+  const getLinkToBanking = () => {
+    let payload = {
+      lm_um_id: dasboardData["lm_id"],
+      lf_customer_name: dasboardData["lf_customer_name"],
+      lf_customer_first_name: dasboardData["lf_customer_first_name"],
+      lf_customer_last_name: dasboardData["lf_customer_last_name"],
+      lf_customer_emailID: dasboardData["lf_customer_emailID"],
+      lf_customer_DOB: dasboardData["lf_customer_DOB"],
+      txtHomePostCode: dasboardData["ApptxtHomePostcodeuk"],
+    };
+
+    getAccountScore(dasboardData["lm_id"], payload).then((resp) => {
+      console.log(
+        "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
+        resp
+      );
+      if (resp.isSuccess == "1" && resp.url) {
+        console.log("resp.url", resp.url);
+        setBankingUrl(resp.url);
+        window.open(resp.url, "_blank");
+        // getCompanyID(payload.lm_id).then((resp) => {
+        //   setAccoutingUrl(
+        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+        //   );
+        //   console.log(
+        //     "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
+        //     resp
+        //   );
+        //   window.open(
+        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+        //     "_blank"
+        //   );
+        // });
+      } else {
+        // setAccoutingUrl(resp.data.id);
+        // window.open(
+        //   `https://link-uat.codat.io/company/${resp.data.id}`,
+        //   "_blank"
+        // );
+      }
+    });
+  };
+  // obv_account_score_status;
   useEffect(() => {
-    checkLinkingStatusClick();
     getData();
+    console.log("dashbaorddata", dasboardData);
   }, []);
+
+  useEffect(() => {
+    console.log("dasboardData", dasboardData);
+    if (dasboardData) {
+      if (tabIndex == 0) {
+        if (dasboardData["obv_account_score_status"] == "Start") {
+          setBankingUrl(
+            `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
+          );
+          setBankingStatus(false);
+
+          window.open(
+            `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
+            "_blank"
+          );
+        } else if (dasboardData["obv_account_score_status"] == "Completed") {
+          setBankingStatus(true);
+        }
+        console.log(
+          "🚀 ~ file: merchant-health.js ~ line 190 ~ MerchantHealth ~ dasboardData",
+          dasboardData["obv_account_score_status"]
+        );
+      } else if (tabIndex == 1) {
+        checkAccountingStatusClick();
+      } else {
+        checkBankingStatusClick();
+      }
+    }
+  }, [dasboardData, tabIndex]);
 
   return (
     <div className="dashboard-panel">
@@ -143,21 +249,41 @@ function MerchantHealth() {
 
                     <TabPanel>
                       <section>
-                        {!showPanel && (
-                          <button
-                            class="btn btn-primary banking-btn"
-                            onClick={() => togglePanel(!showPanel)}
-                          >
-                            Link To Banking{" "}
-                            <i
-                              class="fa fa-chevron-right"
-                              aria-hidden="true"
-                            ></i>
-                          </button>
+                        {!bankingUrl && (
+                          <>
+                            <button
+                              class="btn btn-primary banking-btn"
+                              onClick={() => getLinkToBanking()}
+                            >
+                              Link To Banking{" "}
+                              <i
+                                class="fa fa-chevron-right"
+                                aria-hidden="true"
+                              ></i>
+                            </button>
+                          </>
                         )}
 
-                        {showPanel && (
-                          <div className="banking-panel">
+                        <div className="banking-panel">
+                          {!bankingUrl && (
+                            <div className="banking-info-tooltip">
+                              Connect your bank account using Open Banking. Only
+                              the following required data will be requested:
+                              <div>
+                                <ul>
+                                  <li>
+                                    Incoming transactions for the last year
+                                  </li>
+                                  <li>
+                                    {" "}
+                                    Outgoing transactions for the last year
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+
+                          {bankingUrl && (
                             <div className="row">
                               <div className="col-md-9">
                                 <div class="banking-url">
@@ -168,6 +294,8 @@ function MerchantHealth() {
                                       name="url"
                                       placeholder="https://www.domain.com/dummy-url-will-be-here"
                                       class="form-control"
+                                      disabled
+                                      value={bankingUrl}
                                     />
                                     <button class="copyicon-col btn btn-primary">
                                       <i
@@ -185,10 +313,14 @@ function MerchantHealth() {
                                       name="Status"
                                       placeholder="Unlinked"
                                       class="form-control"
+                                      disabled
+                                      value={
+                                        bankingStatus ? "Linked" : "Unlinked"
+                                      }
                                     />
                                     <button
                                       class="checkstatus-btn btn btn-primary"
-                                      onClick={() => togglePanel2(!showPanel2)}
+                                      onClick={() => checkBankingStatusClick()}
                                     >
                                       Check status
                                     </button>
@@ -197,429 +329,456 @@ function MerchantHealth() {
                               </div>
                               <div className="col-md-3"></div>
                             </div>
-                            {showPanel2 && (
-                              <div className="after-check-status">
-                                <div className="download-panel">
-                                  <button
-                                    class="btn btn-primary banking-btn download-btn"
-                                    onClick={handleOpen}
-                                  >
-                                    <i
-                                      class="fa fa-download"
-                                      aria-hidden="true"
-                                    ></i>{" "}
-                                    Download{" "}
-                                    <i
-                                      class="fa fa-chevron-down"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </button>
-                                  {open ? (
-                                    <ul className="menu">
-                                      <li className="menu-item">
-                                        <Link to="#">PDF last 90 days</Link>
-                                      </li>
-                                      <li className="menu-item">
-                                        <Link to="#">PDF underwriters</Link>
-                                      </li>
-                                      <li className="menu-item">
-                                        <Link to="#">PDF raw transactions</Link>
-                                      </li>
-                                      <li className="menu-item">
-                                        <Link to="#">PDF full data range</Link>
-                                      </li>
-                                      <li className="menu-item">
-                                        <Link to="#">CSV all transactions</Link>
-                                      </li>
-                                    </ul>
-                                  ) : null}
-                                </div>
-                                <div className="row">
-                                  <div className="col-md-6">
-                                    <div className="financial-service">
-                                      <h4>
-                                        Financial Services <span>(0)</span>
-                                      </h4>
-                                      <div className="scroll-bar-2">
-                                        <div className="card-1">
-                                          <p>
-                                            <strong>Credit Cards</strong>
-                                          </p>
-                                          <p>0 credit transaction (on --)</p>
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>total in: +£0</strong>
-                                            </p>
-                                            <p>
-                                              <strong>monthly av: +£0</strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                        <div className="card-1 card-2">
-                                          <p>
-                                            <strong>Credit Cards</strong>
-                                          </p>
-                                          <p>0 credit transaction (on --)</p>
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>total in: +£0</strong>
-                                            </p>
-                                            <p>
-                                              <strong>monthly av: +£0</strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="card-bottom">
-                                        <div className="box-id-1">
-                                          <p>
-                                            <strong>total in: +£0</strong>
-                                          </p>
-                                          <p>
-                                            <strong>monthly av: +£0</strong>
-                                          </p>
-                                        </div>
-                                        <div className="box-id-2">
-                                          <p>
-                                            <strong>total out: -£208.14</strong>
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              monthly av: -£208.14
-                                            </strong>
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-md-6">
-                                    <div className=" financial-service income-panel">
-                                      <h4>Income (2)</h4>
-                                      <div className="scroll-bar-2">
-                                        <div className="card-1 white-bg">
-                                          <p>
-                                            <strong>
-                                              Miscellaneous Transfers
-                                            </strong>
-                                          </p>
-                                          <p>0 credit transaction (on --)</p>
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>total in: +£0</strong>
-                                            </p>
-                                            <p>
-                                              <strong>monthly av: +£0</strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="card-bottom bottom-2">
-                                        <div className="box-id-1">
-                                          <p>
-                                            <strong>total in: +£0</strong>
-                                          </p>
-                                          <p>
-                                            <strong>monthly av: +£0</strong>
-                                          </p>
-                                        </div>
-                                        <div className="box-id-2">
-                                          <p>
-                                            <strong>total out: -£208.14</strong>
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              monthly av: -£208.14
-                                            </strong>
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                          )}
 
-                                <div className="row">
-                                  <div className="col-md-6">
-                                    <div className="financial-service">
-                                      <h4>
-                                        Regular Outgoings <span>(0)</span>
-                                      </h4>
-                                      <div className="scroll-bar-2 scroll-height">
+                          {showPanel2 && (
+                            <div className="after-check-status">
+                              <div className="download-panel">
+                                <button
+                                  class="btn btn-primary banking-btn download-btn"
+                                  onClick={handleOpen}
+                                >
+                                  <i
+                                    class="fa fa-download"
+                                    aria-hidden="true"
+                                  ></i>{" "}
+                                  Download{" "}
+                                  <i
+                                    class="fa fa-chevron-down"
+                                    aria-hidden="true"
+                                  ></i>
+                                </button>
+                                {open ? (
+                                  <ul className="menu">
+                                    <li className="menu-item">
+                                      <Link to="#">PDF last 90 days</Link>
+                                    </li>
+                                    <li className="menu-item">
+                                      <Link to="#">PDF underwriters</Link>
+                                    </li>
+                                    <li className="menu-item">
+                                      <Link to="#">PDF raw transactions</Link>
+                                    </li>
+                                    <li className="menu-item">
+                                      <Link to="#">PDF full data range</Link>
+                                    </li>
+                                    <li className="menu-item">
+                                      <Link to="#">CSV all transactions</Link>
+                                    </li>
+                                  </ul>
+                                ) : null}
+                              </div>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <div className="financial-service">
+                                    <h4>
+                                      Financial Services <span>(0)</span>
+                                    </h4>
+                                    <div className="scroll-bar-2">
                                       <div className="card-1">
+                                        <p>
+                                          <strong>Credit Cards</strong>
+                                        </p>
+                                        <p>0 credit transaction (on --)</p>
+                                        <p>
+                                          <strong>1</strong> debit transactions
+                                          (last on{" "}
+                                          <span>2020-06-15T00:00:00)</span>
+                                        </p>
+                                        <div className="box-id-1">
                                           <p>
-                                            <strong>
-                                              Miscellaneous Transfers
-                                            </strong>
-                                            <span>Paye</span>
+                                            <strong>total in: +£0</strong>
                                           </p>
-                                          
                                           <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
+                                            <strong>monthly av: +£0</strong>
                                           </p>
-                                          <div className="calender-div float-left">
-                                          <div class="today">
-                                          <div class="today-piece  top  day">Wednesday</div>
-                                          <div class="today-piece  middle  month">November</div>
-                                          <div class="today-piece  middle  date">16th</div>
-                                          <div class="today-piece  bottom  year">2022</div>
-                                          </div>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
                                         </div>
-
-                                        <div className="card-1 card-2">
+                                        <div className="box-id-2">
+                                          <p>
+                                            <strong>total out: -£208.14</strong>
+                                          </p>
                                           <p>
                                             <strong>
-                                              Miscellaneous Transfers
+                                              monthly av: -£208.14
                                             </strong>
-                                            <span>Paye</span>
                                           </p>
-                                          
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="calender-div float-left">
-                                          <div class="today">
-                                          <div class="today-piece  top  day">Wednesday</div>
-                                          <div class="today-piece  middle  month">November</div>
-                                          <div class="today-piece  middle  date">16th</div>
-                                          <div class="today-piece  bottom  year">2022</div>
-                                          </div>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
                                         </div>
-                                        <div className="card-1">
+                                      </div>
+                                      <div className="card-1 card-2">
+                                        <p>
+                                          <strong>Credit Cards</strong>
+                                        </p>
+                                        <p>0 credit transaction (on --)</p>
+                                        <p>
+                                          <strong>1</strong> debit transactions
+                                          (last on{" "}
+                                          <span>2020-06-15T00:00:00)</span>
+                                        </p>
+                                        <div className="box-id-1">
+                                          <p>
+                                            <strong>total in: +£0</strong>
+                                          </p>
+                                          <p>
+                                            <strong>monthly av: +£0</strong>
+                                          </p>
+                                        </div>
+                                        <div className="box-id-2">
+                                          <p>
+                                            <strong>total out: -£208.14</strong>
+                                          </p>
                                           <p>
                                             <strong>
-                                              Miscellaneous Transfers
+                                              monthly av: -£208.14
                                             </strong>
-                                            <span>Paye</span>
                                           </p>
-                                          
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="calender-div float-left">
-                                          <div class="today">
-                                          <div class="today-piece  top  day">Wednesday</div>
-                                          <div class="today-piece  middle  month">November</div>
-                                          <div class="today-piece  middle  date">16th</div>
-                                          <div class="today-piece  bottom  year">2022</div>
-                                          </div>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
                                         </div>
                                       </div>
                                     </div>
+                                    <div className="card-bottom">
+                                      <div className="box-id-1">
+                                        <p>
+                                          <strong>total in: +£0</strong>
+                                        </p>
+                                        <p>
+                                          <strong>monthly av: +£0</strong>
+                                        </p>
+                                      </div>
+                                      <div className="box-id-2">
+                                        <p>
+                                          <strong>total out: -£208.14</strong>
+                                        </p>
+                                        <p>
+                                          <strong>monthly av: -£208.14</strong>
+                                        </p>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div className="col-md-6">
-                                    <div className=" financial-service income-panel">
-                                      <h4>Event Feed (4)</h4>
-                                      <div className="scroll-bar-2">
-                                        <div className="card-1 white-bg">
+                                </div>
+                                <div className="col-md-6">
+                                  <div className=" financial-service income-panel">
+                                    <h4>Income (2)</h4>
+                                    <div className="scroll-bar-2">
+                                      <div className="card-1 white-bg">
+                                        <p>
+                                          <strong>
+                                            Miscellaneous Transfers
+                                          </strong>
+                                        </p>
+                                        <p>0 credit transaction (on --)</p>
+                                        <p>
+                                          <strong>1</strong> debit transactions
+                                          (last on{" "}
+                                          <span>2020-06-15T00:00:00)</span>
+                                        </p>
+                                        <div className="box-id-1">
                                           <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
+                                            <strong>total in: +£0</strong>
                                           </p>
                                           <p>
-                                            Last credit on
-                                            2020-06-18T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-31T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Change in Income Profile (2020
-                                              May)
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-01T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-18T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-31T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Change in Income Profile (2020
-                                              May)
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-01T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
+                                            <strong>monthly av: +£0</strong>
                                           </p>
                                         </div>
+                                        <div className="box-id-2">
+                                          <p>
+                                            <strong>total out: -£208.14</strong>
+                                          </p>
+                                          <p>
+                                            <strong>
+                                              monthly av: -£208.14
+                                            </strong>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="card-bottom bottom-2">
+                                      <div className="box-id-1">
+                                        <p>
+                                          <strong>total in: +£0</strong>
+                                        </p>
+                                        <p>
+                                          <strong>monthly av: +£0</strong>
+                                        </p>
+                                      </div>
+                                      <div className="box-id-2">
+                                        <p>
+                                          <strong>total out: -£208.14</strong>
+                                        </p>
+                                        <p>
+                                          <strong>monthly av: -£208.14</strong>
+                                        </p>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            )}
-                          </div>
-                        )}
+
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <div className="financial-service">
+                                    <h4>
+                                      Regular Outgoings <span>(0)</span>
+                                    </h4>
+                                    <div className="scroll-bar-2 scroll-height">
+                                      <div className="card-1">
+                                        <p>
+                                          <strong>
+                                            Miscellaneous Transfers
+                                          </strong>
+                                          <span>Paye</span>
+                                        </p>
+
+                                        <p>
+                                          <strong>1</strong> debit transactions
+                                          (last on{" "}
+                                          <span>2020-06-15T00:00:00)</span>
+                                        </p>
+                                        <div className="calender-div float-left">
+                                          <div class="today">
+                                            <div class="today-piece  top  day">
+                                              Wednesday
+                                            </div>
+                                            <div class="today-piece  middle  month">
+                                              November
+                                            </div>
+                                            <div class="today-piece  middle  date">
+                                              16th
+                                            </div>
+                                            <div class="today-piece  bottom  year">
+                                              2022
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="box-id-2">
+                                          <p>
+                                            <strong>total out: -£208.14</strong>
+                                          </p>
+                                          <p>
+                                            <strong>
+                                              monthly av: -£208.14
+                                            </strong>
+                                          </p>
+                                        </div>
+                                      </div>
+
+                                      <div className="card-1 card-2">
+                                        <p>
+                                          <strong>
+                                            Miscellaneous Transfers
+                                          </strong>
+                                          <span>Paye</span>
+                                        </p>
+
+                                        <p>
+                                          <strong>1</strong> debit transactions
+                                          (last on{" "}
+                                          <span>2020-06-15T00:00:00)</span>
+                                        </p>
+                                        <div className="calender-div float-left">
+                                          <div class="today">
+                                            <div class="today-piece  top  day">
+                                              Wednesday
+                                            </div>
+                                            <div class="today-piece  middle  month">
+                                              November
+                                            </div>
+                                            <div class="today-piece  middle  date">
+                                              16th
+                                            </div>
+                                            <div class="today-piece  bottom  year">
+                                              2022
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="box-id-2">
+                                          <p>
+                                            <strong>total out: -£208.14</strong>
+                                          </p>
+                                          <p>
+                                            <strong>
+                                              monthly av: -£208.14
+                                            </strong>
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="card-1">
+                                        <p>
+                                          <strong>
+                                            Miscellaneous Transfers
+                                          </strong>
+                                          <span>Paye</span>
+                                        </p>
+
+                                        <p>
+                                          <strong>1</strong> debit transactions
+                                          (last on{" "}
+                                          <span>2020-06-15T00:00:00)</span>
+                                        </p>
+                                        <div className="calender-div float-left">
+                                          <div class="today">
+                                            <div class="today-piece  top  day">
+                                              Wednesday
+                                            </div>
+                                            <div class="today-piece  middle  month">
+                                              November
+                                            </div>
+                                            <div class="today-piece  middle  date">
+                                              16th
+                                            </div>
+                                            <div class="today-piece  bottom  year">
+                                              2022
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="box-id-2">
+                                          <p>
+                                            <strong>total out: -£208.14</strong>
+                                          </p>
+                                          <p>
+                                            <strong>
+                                              monthly av: -£208.14
+                                            </strong>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="col-md-6">
+                                  <div className=" financial-service income-panel">
+                                    <h4>Event Feed (4)</h4>
+                                    <div className="scroll-bar-2">
+                                      <div className="card-1 white-bg">
+                                        <p>
+                                          <strong>
+                                            Significant transaction
+                                          </strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-06-18T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>null</strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-06-05T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>
+                                            Significant transaction
+                                          </strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-05-31T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>
+                                            Change in Income Profile (2020 May)
+                                          </strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-05-01T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>null</strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-06-05T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>
+                                            Significant transaction
+                                          </strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-06-18T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>null</strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-06-05T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>
+                                            Significant transaction
+                                          </strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-05-31T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>
+                                            Change in Income Profile (2020 May)
+                                          </strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-05-01T00:00:00+01:00
+                                        </p>
+                                        <p>
+                                          <strong>null</strong>
+                                        </p>
+                                        <p>
+                                          Last credit on
+                                          2020-06-05T00:00:00+01:00
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </section>
                     </TabPanel>
                     <TabPanel>
                       <section>
-                        {!accountingStatus && (
-                          <button
-                            class="btn btn-primary accounting-btn"
-                            onClick={() => {
-                              getLinkToAccouting();
-                            }}
-                          >
-                            Link To Accounting{" "}
-                            <i
-                              class="fa fa-chevron-right"
-                              aria-hidden="true"
-                            ></i>
-                          </button>
+                        {!accoutingUrl && (
+                          <>
+                            <button
+                              class="btn btn-primary accounting-btn"
+                              onClick={() => {
+                                getLinkToAccouting();
+                              }}
+                            >
+                              Link To Accounting{" "}
+                              <i
+                                class="fa fa-chevron-right"
+                                aria-hidden="true"
+                              ></i>
+                            </button>
+                          </>
                         )}
-                        {accoutingUrl &&
-                          <div className="accounting-panel">
 
+                        <div className="merchent-accounting-panel">
+                          {!accoutingUrl && (
+                            <div className="banking-info-tooltip">
+                              Connect your accounting software to seamlessly
+                              view all your data on the portal and the help
+                              increase your loan acceptance rate.
+                              <div>
+                                Only the following required data will be
+                                requested:{" "}
+                              </div>
+                              <div>
+                                <ul style={{ width: "235px" }}>
+                                  <li>Accounts receivable information</li>
+                                  <li>Accounts payable information</li>
+                                  <li>Financial summary information</li>
+                                </ul>
+                              </div>
+                            </div>
+                          )}
+                          {accoutingUrl && (
                             <>
                               <div class="banking-url">
                                 <div class="form-group">
@@ -657,20 +816,20 @@ function MerchantHealth() {
                                   />
                                   <button
                                     class="checkstatus-btn btn btn-primary"
-                                    onClick={() => checkLinkingStatusClick()}
+                                    onClick={() => checkAccountingStatusClick()}
                                   >
                                     Check status
                                   </button>
                                 </div>
                               </div>
                             </>
-                            {accountingStatus && (
-                              <div className="data-panel">
-                                <Codat />
-                              </div>
-                            )}
-                          </div>
-                        }
+                          )}
+                          {accountingStatus && (
+                            <div className="data-panel">
+                              <Codat />
+                            </div>
+                          )}
+                        </div>
                       </section>
                     </TabPanel>
                     <TabPanel>
