@@ -158,3 +158,10 @@ export async function checkBankingStatus(id) {
   );
   return data;
 }
+
+export async function bankingInsightsDownloadFile(fileType, id) {
+  const { data } = await axios.get(
+    `${API_URL}accountScore/downloadfile/${fileType}/${id}`
+  );
+  return data;
+}
