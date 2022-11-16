@@ -27,6 +27,9 @@ function checkMe(selected) {
   }
 }
 
+const weekDayArray=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const monthArray=['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const dateSuffix={1:'st', 2:'nd', 3:'rd', 4:'th', 5:'th', 6:'th', 7:'th', 8:'th', 9:'th', 10:'th', 11: 'th', 12:'th', 13:'th', 14:'th', 15:'th', 16:'th', 17:'th', 18:'th', 19:'th', 20:'th',21:'st', 22:'nd', 23:'rd', 24:'th', 25:'th', 26:'th', 27:'th', 28:'th', 29:'th', 30:'th', 31:'st'}
 function MerchantHealth() {
   const [showPanel, togglePanel] = useState(false);
   const [showPanel2, togglePanel2] = useState(false);
@@ -117,11 +120,12 @@ function MerchantHealth() {
       })
   
       getEventFeed(lead_accountScore).then((data) => {
-        console.log('data', data)
+        console.log('event data', data)
+        let summaries=data.response.months
         setEventFeedSummary(data.response.months)
         console.log('months', eventFeedSummary)
         let evCount=0
-        eventFeedSummary.map((month)=>{
+        summaries.map((month)=>{
           month.data.events.map((ev)=>{
             evCount+=1
           })
@@ -141,7 +145,7 @@ function MerchantHealth() {
        })
     }
   }, [])
-  
+
   const getData = () => {
     if (userDetails && userDetails.lead_id) {
       getDashboardData(userDetails.lead_id).then((resp) => {
@@ -551,112 +555,90 @@ function MerchantHealth() {
                                   <div className="col-md-6">
                                     <div className="financial-service">
                                       <h4>
-                                        Regular Outgoings <span>(0)</span>
+                                        Regular Outgoings <span>({regularOutgoingsSummary.length})</span>
                                       </h4>
                                       <div className="scroll-bar-2 scroll-height">
-                                      <div className="card-1">
+                                      {regularOutgoingsSummary&&regularOutgoingsSummary.map((regOutgoing, index)=>{
+                                        let date=new Date(regOutgoing.debitSummary.lastTransaction)
+                                        return(
+                                          index%2==0?
+                                          <>
+                                            <div className="card-1">
                                           <p>
                                             <strong>
-                                              Miscellaneous Transfers
+                                              {regOutgoing.vendorDescription}{" "}
                                             </strong>
-                                            <span>Paye</span>
+                                            <span>{regOutgoing.subCategoryDescription}</span>
                                           </p>
                                           
                                           <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
+                                            <strong>{regOutgoing.debitSummary.transactionCount}</strong> debit{" "}
+                                            {regOutgoing.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{regOutgoing.debitSummary.lastTransaction.substring(0, 4)>='1997'?regOutgoing.debitSummary.lastTransaction:'--'})</span>
                                           </p>
                                           <div className="calender-div float-left">
                                           <div class="today">
-                                          <div class="today-piece  top  day">Wednesday</div>
-                                          <div class="today-piece  middle  month">November</div>
-                                          <div class="today-piece  middle  date">16th</div>
-                                          <div class="today-piece  bottom  year">2022</div>
+                                          <div class="today-piece  top  day">{weekDayArray[date.getDay()-1]}</div>
+                                          <div class="today-piece  middle  month">{monthArray[date.getMonth()]}</div>
+                                          <div class="today-piece  middle  date">{date.getDate()}{dateSuffix[date.getDate().toString()]}</div>
+                                          <div class="today-piece  bottom  year">{date.getFullYear()}</div>
                                           </div>
                                           </div>
                                           <div className="box-id-2">
                                             <p>
                                               <strong>
-                                                total out: -£208.14
+                                                total out: -£{regOutgoing.debitSummary.total}
                                               </strong>
                                             </p>
                                             <p>
                                               <strong>
-                                                monthly av: -£208.14
+                                                monthly av: -£{regOutgoing.debitSummary.monthlyAverage}
                                               </strong>
                                             </p>
                                           </div>
                                         </div>
+                                          </>
+                                          :
+                                          <>
+                                             <div className="card-1 card-2">
+                                          <p>
+                                            <strong>
+                                            {regOutgoing.vendorDescription}{" "}
+                                            </strong>
+                                            <span>{regOutgoing.subCategoryDescription}</span>
+                                          </p>
+                                          
+                                          <p>
+                                            <strong>{regOutgoing.debitSummary.transactionCount}</strong> debit{" "}
+                                            {regOutgoing.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{regOutgoing.debitSummary.lastTransaction.substring(0, 4)>='1997'?regOutgoing.debitSummary.lastTransaction:'--'})</span>
+                                          </p>
+                                          <div className="calender-div float-left">
+                                          <div class="today">
+                                          <div class="today-piece  top  day">{weekDayArray[date.getDay()-1]}</div>
+                                          <div class="today-piece  middle  month">{monthArray[date.getMonth()]}</div>
+                                          <div class="today-piece  middle  date">{date.getDate()}{dateSuffix[date.getDate().toString()]}</div>
+                                          <div class="today-piece  bottom  year">{date.getFullYear()}</div>
+                                          </div>
+                                          </div>
+                                          <div className="box-id-2">
+                                            <p>
+                                              <strong>
+                                                total out: -£{regOutgoing.debitSummary.total}
+                                              </strong>
+                                            </p>
+                                            <p>
+                                              <strong>
+                                                monthly av: -£{regOutgoing.debitSummary.monthlyAverage}
+                                              </strong>
+                                            </p>
+                                          </div>
+                                        </div>
+                                          </>
 
-                                        <div className="card-1 card-2">
-                                          <p>
-                                            <strong>
-                                              Miscellaneous Transfers
-                                            </strong>
-                                            <span>Paye</span>
-                                          </p>
-                                          
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="calender-div float-left">
-                                          <div class="today">
-                                          <div class="today-piece  top  day">Wednesday</div>
-                                          <div class="today-piece  middle  month">November</div>
-                                          <div class="today-piece  middle  date">16th</div>
-                                          <div class="today-piece  bottom  year">2022</div>
-                                          </div>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                        <div className="card-1">
-                                          <p>
-                                            <strong>
-                                              Miscellaneous Transfers
-                                            </strong>
-                                            <span>Paye</span>
-                                          </p>
-                                          
-                                          <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
-                                          </p>
-                                          <div className="calender-div float-left">
-                                          <div class="today">
-                                          <div class="today-piece  top  day">Wednesday</div>
-                                          <div class="today-piece  middle  month">November</div>
-                                          <div class="today-piece  middle  date">16th</div>
-                                          <div class="today-piece  bottom  year">2022</div>
-                                          </div>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£208.14
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£208.14
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
+                                        )
+                                      })}
+                                      
                                       </div>
                                     </div>
                                   </div>

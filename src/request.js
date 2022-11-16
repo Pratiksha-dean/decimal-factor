@@ -140,6 +140,8 @@ export async function getEventFeed(id) {
   const {
     data
   } = await axios.get(`${API_URL}accountScore/${id}/EventFeed`);
+
+  return data;
 }
 
 export async function getAccountScore(id,payload) {
