@@ -30,6 +30,11 @@ import CommerceProducts from "./Codat/CommerceProducts";
 import CommerceTransactions from "./Codat/CommerceTransactions";
 import CommerceLocation from "./Codat/CommerceLocation";
 import CommerceCompanyinfo from "./Codat/CommerceCompanyinfo";
+import BalanceSheet from "./Codat/BalanceSheet";
+import ProfitLoss from "./Codat/ProfitLoss";
+import OperatingFlow from "./Codat/OperatingFlow";
+import Debtors from "./Codat/Debtors";
+import AgedCreditors from "./Codat/AgedCreditors";
 
 
 
@@ -64,6 +69,7 @@ export default function Codat() {
         { label: "Bills", value: "Bills" },
         { label: "Bill Payment", value: "BillPayment" },
         { label: "Bill Credit Notes", value: "BillCreditNotes" },
+        { label: "Aged Creditors", value: "agedcreditors" },
         { label: "Direct costs", value: "DirectCosts" },
         { label: "Accounts", value: "Accounts" },
         { label: "Journal Entries", value: "JournalEntries" },
@@ -185,7 +191,12 @@ export default function Codat() {
                     </div>
                     <div className="col-md-3 export-area">
                     <button className="btn btn-primary exportdata-btn next-btn" onClick={handleOpenexport} ><i class="fa fa-cloud-arrow-down"></i> Export <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
-                    {openexport ? (
+                   
+                    </div>
+                   
+                    
+                </div>
+                {openexport ? (
                     <div className="export-data-div">
                     <div className="export-panel">
                     <h3>Export data</h3>
@@ -216,11 +227,8 @@ export default function Codat() {
                  <button className="btn btn-primary refresh-btn" id="export-data-refresh">Refresh</button> 
                 </div>
                 ) : null}
-                    </div>
-                    
-                </div>
             </div>
-        </div>
+        
         {currentApi==='Customers' && <Customers title="Customers" leadId={leadId} endUrl={endUrl}/>}
         {currentApi==='Invoices' && <Invoices title="Invoices" leadId={leadId} endUrl={endUrl}/>}
         {currentApi==='Payments' && <Payments title="Payments" leadId={leadId} endUrl={endUrl}/>}        
@@ -238,7 +246,13 @@ export default function Codat() {
         {currentApi==='TrackingCategories' && <TrackingCategories title="Tracking Categories" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='AccountTransactions' && <AccountTransactions title="Account Transactions" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='Transfers' && <Transfers title="Transfers" leadId={leadId} endUrl={endUrl}/>}  
-        {currentApi==='Items' && <Items title="Items" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Items' && <Items title="Items" leadId={leadId} endUrl={endUrl}/>} 
+        {currentApi==='balancesheet' && <BalanceSheet leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='operating_flow' && <OperatingFlow leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='profit_loss' && <ProfitLoss leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='Company' && <CommerceCompanyinfo title="Customers" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='AgedDebtors' && <Debtors title="Customers" leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='agedcreditors' && <AgedCreditors title="Customers" leadId={leadId} endUrl={endUrl}/>}  
       
         {currentApi==='assess_profitandloss' && <AssessProfitAndLoss />}  
         {currentApi==='assess_balancesheet' && <AssessBalanceSheet />}  
@@ -254,8 +268,9 @@ export default function Codat() {
         {currentApi==='Commerce_Transactions' && <CommerceTransactions title="Transactions" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='Commerce_Location' && <CommerceLocation title="Location" leadId={leadId} endUrl={endUrl}/>}  
         
+
        
-        
+        </div>
         </div>
         
                 )
