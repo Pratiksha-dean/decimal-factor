@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Datatables from "./Datatables";
 import Parser from 'html-react-parser';
 import ApexCharts from 'apexcharts';
@@ -82,7 +82,7 @@ setarrowclassName5 ('fa fa-chevron-right')
 }
 };    
 
-  
+
    
 
   const chartData = {
@@ -145,7 +145,10 @@ setarrowclassName5 ('fa fa-chevron-right')
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>Period Start</label>
-                <input type="date" name="" className="period-start" />
+               
+               
+               <input type="month" id="startdateapl" class="period-start accplinp" />
+               
                 </div></div>
                 <div className="col-md-3 ">
                     <div className="box-shape">
