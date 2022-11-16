@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/master.css";
 import Header from '../header/header';
 import SiderBarMenu from './component/sidebar'
@@ -7,7 +7,8 @@ import 'react-tabs/style/react-tabs.css';
 import Codat from '../Codat';
 import { Link } from "react-router-dom";
 import StickyBox from "react-sticky-box";
-
+import { getUserDetails } from '../login/loginpage'
+import { getBankingFinancialServices, getBankingIncome, getRegularOutgoings, getEventFeed} from '../../request'
 
 function checkMe(selected)
 {
@@ -34,10 +35,109 @@ function MerchantHealth() {
   const [open, setOpen] = React.useState(false);
   const [linkToBaking,setLinkToBanking]=useState(false);
 
+  const [financialServicesSummary, setFinancialServicesSummary]=useState([])
+  const [incomeAnalysisSummary, setIncomeAnalysisSummary]=useState([])
+  const [regularOutgoingsSummary, setRegularOutgoingsSummary]=useState([])
+  const [eventFeedSummary, setEventFeedSummary]=useState([])
+  const [eventCount, setEventCount]=useState(0)
+
+  //Financial Services Aggregate
+  const [ financialServicesTotalIn, setFinancialServicesTotalIn]=useState(0)
+  const [ financialServicesTotalOut, setFinancialServicesTotalOut]=useState(0)
+  const [ financialServicesMonthlyAvgIn, setFinancialServicesMonthlyAvgIn]=useState(0)
+  const [ financialServicesMonthlyAvgOut, setFinancialServicesMonthlyAvgOut]=useState(0)
+
+  //Income Analysis Aggregate
+  const [ incomeAnalysisTotalIn, setIncomeAnalysisTotalIn]=useState(0)
+  const [ incomeAnalysisTotalOut, setIncomeAnalysisTotalOut]=useState(0)
+  const [ incomeAnalysisMonthlyAvgIn, setIncomeAnalysisMonthlyAvgIn]=useState(0)
+  const [ incomeAnalysisMonthlyAvgOut, setIncomeAnalysisMonthlyAvgOut]=useState(0)
+
+
+  const lead_accountScore=6137
   const handleOpen = () => {
     setOpen(!open);
   };
 
+  const userDetails=getUserDetails()
+
+  useEffect(() => {
+    if (userDetails && userDetails.lead_id) {
+      console.log("lead id", userDetails.lead_id )
+      getBankingFinancialServices(lead_accountScore).then((data) => {
+        console.log('data', data)
+        let summaries=data.response.data.summaries
+        setFinancialServicesSummary(summaries)
+        let totalIn=0
+        let totalOut=0
+        let monthlyAvgIn=0
+        let monthlyAvgOut=0
+
+        summaries.map((summary)=>{
+          totalIn=Number(totalIn)+Number(summary.creditSummary.total)
+          totalOut=Number(totalOut)+Number(summary.debitSummary.total)
+          monthlyAvgIn=Number(monthlyAvgIn)+Number(summary.creditSummary.monthlyAverage)
+          monthlyAvgOut=Number(monthlyAvgOut)+Number(summary.debitSummary.monthlyAverage)
+        })
+
+        setFinancialServicesTotalIn(totalIn)
+        setFinancialServicesTotalOut(totalOut)
+        setFinancialServicesMonthlyAvgIn(monthlyAvgIn)
+        setFinancialServicesMonthlyAvgOut(monthlyAvgOut)
+      })
+  
+      getBankingIncome(lead_accountScore).then((data) => {
+        console.log('data', data)
+        let summaries=data.response.data.summaries
+        setIncomeAnalysisSummary(data.response.data.summaries)
+        let totalIn=0
+        let totalOut=0
+        let monthlyAvgIn=0
+        let monthlyAvgOut=0
+
+        summaries.map((summary)=>{
+          totalIn=Number(totalIn)+Number(summary.creditSummary.total)
+          totalOut=Number(totalOut)+Number(summary.debitSummary.total)
+          monthlyAvgIn=Number(monthlyAvgIn)+Number(summary.creditSummary.monthlyAverage)
+          monthlyAvgOut=Number(monthlyAvgOut)+Number(summary.debitSummary.monthlyAverage)
+        })
+
+        setIncomeAnalysisTotalIn(totalIn)
+        setIncomeAnalysisTotalOut(totalOut)
+        setIncomeAnalysisMonthlyAvgIn(monthlyAvgIn)
+        setIncomeAnalysisMonthlyAvgOut(monthlyAvgOut)
+      })
+  
+      getRegularOutgoings(lead_accountScore).then((data) => {
+        console.log('data', data)
+        setRegularOutgoingsSummary(data.response.data.summaries)
+      })
+  
+      getEventFeed(lead_accountScore).then((data) => {
+        console.log('data', data)
+        setEventFeedSummary(data.response.months)
+        console.log('months', eventFeedSummary)
+        let evCount=0
+        eventFeedSummary.map((month)=>{
+          month.data.events.map((ev)=>{
+            evCount+=1
+          })
+        })
+        setEventCount(evCount)
+      //   for(let month of eventFeedSummary){
+      //     console.log("month", month)
+      //     let events=month.data.events
+
+      //     for(let event of events){
+      //       console.log("event", event)
+      //       setEventCount(eventCount+1)
+      //     }
+      //   }
+      //   console.log("event count", eventCount)
+      //   // setEventCount(evCount)
+       })
+    }
+  }, [])
 
   return (
     <div className="dashboard-panel">
@@ -164,148 +264,205 @@ function MerchantHealth() {
                                   <div className="col-md-6">
                                     <div className="financial-service">
                                       <h4>
-                                        Financial Services <span>(0)</span>
+                                        Financial Services <span>({financialServicesSummary.length})</span>
                                       </h4>
                                       <div className="scroll-bar-2">
-                                        <div className="card-1">
+                                      {financialServicesSummary.length>0 && financialServicesSummary.map((service, index)=>{
+                                       return (index%2==0)?
+                                        <>
+                                          <div className="card-1">
                                           <p>
-                                            <strong>Credit Cards</strong>
+                                            <strong>{service.subCategoryDescription}</strong>
                                           </p>
-                                          <p>0 credit transaction (on --)</p>
+                                          <p>{service.creditSummary.transactionCount} credit{" "}{service.creditSummary.transactionCount<2?'transaction':'transactions'} (on {service.creditSummary.lastTransaction.substring(0, 4)>='1997'?service.creditSummary.lastTransaction:'--'})</p>
                                           <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
+                                            <strong>{service.debitSummary.transactionCount}</strong> debit{" "}
+                                            {service.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{service.debitSummary.lastTransaction.substring(0, 4)>='1997'?service.debitSummary.lastTransaction:'--'})</span>
                                           </p>
                                           <div className="box-id-1">
                                             <p>
-                                              <strong>total in: +£0</strong>
+                                              <strong>total in: +£{service.creditSummary.total}</strong>
                                             </p>
                                             <p>
-                                              <strong>monthly av: +£0</strong>
+                                              <strong>monthly av: +£{service.creditSummary.monthlyAverage}</strong>
                                             </p>
                                           </div>
                                           <div className="box-id-2">
                                             <p>
                                               <strong>
-                                                total out: -£208.14
+                                                total out: -£{service.debitSummary.total}
                                               </strong>
                                             </p>
                                             <p>
                                               <strong>
-                                                monthly av: -£208.14
+                                                monthly av: -£{service.debitSummary.monthlyAverage}
                                               </strong>
                                             </p>
                                           </div>
                                         </div>
-                                        <div className="card-1 card-2">
+                                        </>
+                                        :
+                                        <>
+                                             <div className="card-1 card-2">
                                           <p>
-                                            <strong>Credit Cards</strong>
+                                            <strong>{service.subCategoryDescription}</strong>
                                           </p>
-                                          <p>0 credit transaction (on --)</p>
+                                          <p>{service.creditSummary.transactionCount} credit{" "} {service.creditSummary.transactionCount<2?'transaction':'transactions'} (on {service.creditSummary.lastTransaction.substring(0, 4)>='1997'?service.creditSummary.lastTransaction:'--'})</p>
                                           <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
+                                            <strong>{service.debitSummary.transactionCount}</strong> debit{" "}
+                                            {service.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{service.debitSummary.lastTransaction.substring(0, 4)>='1997'?service.debitSummary.lastTransaction:'--'})</span>
                                           </p>
                                           <div className="box-id-1">
                                             <p>
-                                              <strong>total in: +£0</strong>
+                                              <strong>total in: +£{service.creditSummary.total}</strong>
                                             </p>
                                             <p>
-                                              <strong>monthly av: +£0</strong>
+                                              <strong>monthly av: +£{service.creditSummary.monthlyAverage}</strong>
                                             </p>
                                           </div>
                                           <div className="box-id-2">
                                             <p>
                                               <strong>
-                                                total out: -£208.14
+                                                total out: -£{service.debitSummary.total}
                                               </strong>
                                             </p>
                                             <p>
                                               <strong>
-                                                monthly av: -£208.14
+                                                monthly av: -£{service.debitSummary.monthlyAverage}
                                               </strong>
                                             </p>
                                           </div>
                                         </div>
+                                        </>
+                                      }
+                                      )}
+
                                       </div>
                                       <div className="card-bottom">
                                         <div className="box-id-1">
                                           <p>
-                                            <strong>total in: +£0</strong>
+                                            <strong>total in: +£{financialServicesTotalIn}</strong>
                                           </p>
                                           <p>
-                                            <strong>monthly av: +£0</strong>
+                                            <strong>monthly av: +£{financialServicesMonthlyAvgIn}</strong>
                                           </p>
                                         </div>
                                         <div className="box-id-2">
                                           <p>
-                                            <strong>total out: -£208.14</strong>
+                                            <strong>total out: -£{financialServicesTotalOut}</strong>
                                           </p>
                                           <p>
                                             <strong>
-                                              monthly av: -£208.14
+                                              monthly av: -£{financialServicesMonthlyAvgOut}
                                             </strong>
                                           </p>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
+
                                   <div className="col-md-6">
                                     <div className=" financial-service income-panel">
-                                      <h4>Income (2)</h4>
+                                      <h4>Income ({incomeAnalysisSummary.length})</h4>
                                       <div className="scroll-bar-2">
-                                        <div className="card-1 white-bg">
+
+                                      {incomeAnalysisSummary.length>0 && incomeAnalysisSummary.map((income, index)=>{
+                                          return(
+                                            index%2==0?
+                                            <>
+                                               <div className="card-1 white-bg">
                                           <p>
                                             <strong>
-                                              Miscellaneous Transfers
+                                              {income.vendorDescription}
                                             </strong>
                                           </p>
-                                          <p>0 credit transaction (on --)</p>
+                                          <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
                                           <p>
-                                            <strong>1</strong> debit
-                                            transactions (last on{" "}
-                                            <span>2020-06-15T00:00:00)</span>
+                                            <strong>{income.debitSummary.transactionCount}</strong> debit{" "}
+                                            {income.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{income.debitSummary.lastTransaction.substring(0, 4)>='1997'?income.debitSummary.lastTransaction:'--'})</span>
                                           </p>
                                           <div className="box-id-1">
                                             <p>
-                                              <strong>total in: +£0</strong>
+                                              <strong>total in: +£{income.creditSummary.total}</strong>
                                             </p>
                                             <p>
-                                              <strong>monthly av: +£0</strong>
+                                              <strong>monthly av: +£{income.creditSummary.monthlyAverage}</strong>
                                             </p>
                                           </div>
                                           <div className="box-id-2">
                                             <p>
                                               <strong>
-                                                total out: -£208.14
+                                                total out: -£{income.debitSummary.monthlyAverage}
                                               </strong>
                                             </p>
                                             <p>
                                               <strong>
-                                                monthly av: -£208.14
+                                                monthly av: -£{income.debitSummary.monthlyAverage}
                                               </strong>
                                             </p>
                                           </div>
                                         </div>
+                                            </>
+                                            :
+                                            <>
+
+                                          <div className="card-1 card-2 white-bg">
+                                          <p>
+                                            <strong>
+                                            {income.vendorDescription}
+                                            </strong>
+                                          </p>
+                                          <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
+                                          <p>
+                                            <strong>{income.debitSummary.transactionCount}</strong> debit{" "}
+                                            {income.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{income.debitSummary.lastTransaction.substring(0, 4)>='1997'?income.debitSummary.lastTransaction:'--'})</span>
+                                          </p>
+                                          <div className="box-id-1">
+                                            <p>
+                                              <strong>total in: +£{income.creditSummary.total}</strong>
+                                            </p>
+                                            <p>
+                                              <strong>monthly av: +£{income.creditSummary.monthlyAverage}</strong>
+                                            </p>
+                                          </div>
+                                          <div className="box-id-2">
+                                            <p>
+                                              <strong>
+                                                total out: -£{income.debitSummary.total}
+                                              </strong>
+                                            </p>
+                                            <p>
+                                              <strong>
+                                                monthly av: -£{income.debitSummary.monthlyAverage}
+                                              </strong>
+                                            </p>
+                                          </div>
+                                        </div>
+                                            </>
+                                          )
+                                      })}
+
                                       </div>
                                       <div className="card-bottom bottom-2">
                                         <div className="box-id-1">
                                           <p>
-                                            <strong>total in: +£0</strong>
+                                            <strong>total in: +£{incomeAnalysisTotalIn}</strong>
                                           </p>
                                           <p>
-                                            <strong>monthly av: +£0</strong>
+                                            <strong>monthly av: +£{incomeAnalysisMonthlyAvgIn}</strong>
                                           </p>
                                         </div>
                                         <div className="box-id-2">
                                           <p>
-                                            <strong>total out: -£208.14</strong>
+                                            <strong>total out: -£{incomeAnalysisTotalOut}</strong>
                                           </p>
                                           <p>
                                             <strong>
-                                              monthly av: -£208.14
+                                              monthly av: -£{incomeAnalysisMonthlyAvgOut}
                                             </strong>
                                           </p>
                                         </div>
@@ -325,19 +482,25 @@ function MerchantHealth() {
                                   </div>
                                   <div className="col-md-6">
                                     <div className=" financial-service income-panel">
-                                      <h4>Event Feed (4)</h4>
+                                      <h4>Event Feed ({eventCount})</h4>
                                       <div className="scroll-bar-2">
-                                        <div className="card-1 white-bg">
+                                        {
+                                          eventFeedSummary.length>0 && eventFeedSummary.map((month, index)=>{
+                                          return(
+                                            month&&month.data.events.map(ev=>{
+                                              return(
+                                                <>
+                                                <div className="card-1 white-bg">
                                           <p>
                                             <strong>
-                                              Significant transaction
+                                              {ev.additionalInformation}
                                             </strong>
                                           </p>
                                           <p>
-                                            Last credit on
-                                            2020-06-18T00:00:00+01:00
+                                            Last credit on{" "}
+                                            {ev.eventDate}
                                           </p>
-                                          <p>
+                                          {/* <p>
                                             <strong>null</strong>
                                           </p>
                                           <p>
@@ -411,8 +574,15 @@ function MerchantHealth() {
                                           <p>
                                             Last credit on
                                             2020-06-05T00:00:00+01:00
-                                          </p>
+                                          </p> */}
                                         </div>
+                                                </>
+                                              )
+                                            })
+                                          )
+                                          
+                                          })
+                                        }
                                       </div>
                                     </div>
                                   </div>

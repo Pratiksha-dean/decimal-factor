@@ -113,3 +113,32 @@ export async function updateUpdateCustomerInfo(payload, id) {
   );
   return data;
 }
+
+
+export async function getBankingFinancialServices(id) {
+  const {
+    data
+  } = await axios.get(`${API_URL}accountScore/${id}/FinancialServices`);
+  return data;
+}
+
+export async function getBankingIncome(id) {
+  const {
+    data
+  } = await axios.get(`${API_URL}accountScore/${id}/IncomeAnalysis`);
+  return data;
+}
+
+export async function getRegularOutgoings(id) {
+  const {
+    data
+  } = await axios.get(`${API_URL}accountScore/${id}/RegularOutgoings`);
+  return data;
+}
+
+export async function getEventFeed(id) {
+  const {
+    data
+  } = await axios.get(`${API_URL}accountScore/${id}/EventFeed`);
+  return data;
+}
