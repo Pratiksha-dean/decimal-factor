@@ -113,3 +113,18 @@ export async function updateUpdateCustomerInfo(payload, id) {
   );
   return data;
 }
+
+export async function getAccountScore(id,payload) {
+  const { data } = await axios.post(
+    `${API_URL}leadUK/${id}/generateConsentForAccountScore`,
+    payload
+  );
+  return data;
+}
+
+export async function checkBankingStatus(id) {
+  const { data } = await axios.get(
+    `${API_URL}leadUK/${id}/checkObvAccountScoreConsentStatus`
+  );
+  return data;
+}

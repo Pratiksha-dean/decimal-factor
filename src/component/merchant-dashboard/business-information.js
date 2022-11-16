@@ -88,6 +88,7 @@ function BusinessInformation() {
         [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
         [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
         [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+        [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.string().nullable(true),
       })
     ),
   });
@@ -153,6 +154,7 @@ function BusinessInformation() {
 
         item[directorFieldNames.ISPRIMARY] = false;
         item[directorFieldNames.CHOOSEADDRESS] = "";
+        item["shareHolderID"] = item["shareHolderID"];
 
         // if (item["date_of_birth"]) {
         item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
@@ -230,8 +232,12 @@ function BusinessInformation() {
                     payload["ShareHolderArr"] = generateDirectorListPayload(
                       payload["directorInfo"]
                     );
+                    console.log(
+                      "🚀 ~ file: business-information.js ~ line 229 ~ BusinessInformation ~ payload",
+                      payload
+                    );
                     delete payload["directorInfo"];
-                    // return;
+                    return;
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {
                         setLoading(false);
@@ -753,6 +759,42 @@ function BusinessInformation() {
                                                 </div>
                                               </div>
                                             </div>
+
+                                            <input
+                                              hidden
+                                              type="text"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE1}`}
+                                              onChange={handleChange}
+                                              value={
+                                                item[
+                                                  directorFieldNames
+                                                    .ADDRESSLINE1
+                                                ]
+                                              }
+                                              className="form-control"
+                                              placeholder="% of Total Share Count"
+                                              onBlur={() => {
+                                                setMerchantDirectorData(values);
+                                              }}
+                                            />
+
+                                            <input
+                                              type="text"
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE2}`}
+                                              onChange={handleChange}
+                                              hidden
+                                              value={
+                                                item[
+                                                  directorFieldNames
+                                                    .ADDRESSLINE2
+                                                ]
+                                              }
+                                              className="form-control"
+                                              placeholder="% of Total Share Count"
+                                              onBlur={() => {
+                                                setMerchantDirectorData(values);
+                                              }}
+                                            />
                                             <div className="row">
                                               <div className="col-md-3">
                                                 <div className="form-group">
@@ -874,7 +916,6 @@ function BusinessInformation() {
                                                     Residential Status
                                                   </label>
                                                   <Select
-                                                    // menuIsOpen={true}
                                                     closeMenuOnSelect={true}
                                                     onChange={(
                                                       selectedOption
@@ -890,9 +931,10 @@ function BusinessInformation() {
                                                     options={
                                                       residentialStatusList
                                                     }
-                                                    // menuPortalTarget={document.getElementById(
-                                                    //   `accordian${index}`
-                                                    // )}
+                                                    menuPortalTarget={
+                                                      document.body
+                                                    }
+                                                    menuPosition={"fixed"}
                                                     placeholder="Select Residential Status"
                                                     styles={{
                                                       control: (

@@ -1,43 +1,117 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/master.css";
-import Header from '../header/header';
-import SiderBarMenu from './component/sidebar'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-import Codat from '../Codat';
+import Header from "../header/header";
+import SiderBarMenu from "./component/sidebar";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import Codat from "../Codat";
 import { Link } from "react-router-dom";
 import StickyBox from "react-sticky-box";
+import {
+  checkLinkingStatus,
+  getCompanyID,
+  getDashboardData,
+  getLinkToAccountingData,
+} from "../../request";
+import { getUserDetails } from "../login/loginpage";
 
-
-function checkMe(selected)
-{
-if(selected)
-{
-document.getElementById("divcheck").style.display = "block";
+function checkMe(selected) {
+  if (selected) {
+    document.getElementById("divcheck").style.display = "block";
+  } else {
+    document.getElementById("divcheck").style.display = "none";
+  }
 }
-else
-{
-document.getElementById("divcheck").style.display = "none";
-}
-
-}
-
-
 
 function MerchantHealth() {
-
   const [showPanel, togglePanel] = useState(false);
   const [showPanel2, togglePanel2] = useState(false);
   const [showPanel3, togglePanel3] = useState(false);
   const [showPanel4, togglePanel4] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const [open, setOpen] = React.useState(false);
-  const [linkToBaking,setLinkToBanking]=useState(false);
+  const [linkToBaking, setLinkToBanking] = useState(false);
+  const [accoutingUrl, setAccoutingUrl] = useState();
+  const userDetails = getUserDetails();
+  const [accountingStatus, setAccoutingStatus] = useState();
+  const [dasboardData, setDashboardData] = useState();
 
   const handleOpen = () => {
     setOpen(!open);
   };
 
+  const getData = () => {
+    if (userDetails && userDetails.lead_id) {
+      getDashboardData(userDetails.lead_id).then((resp) => {
+        setDashboardData(resp.records[0]);
+      });
+    }
+  };
+
+  const checkLinkingStatusClick = () => {
+    // userDetails["lead_id"];
+    checkLinkingStatus(userDetails["lead_id"])
+      .then((resp) => {
+        if (resp["message"] === "Status Updated to Linked") {
+          setAccoutingStatus(true);
+          setAccoutingUrl(resp.data.redirect);
+        }
+
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
+          resp
+        );
+      })
+      .catch((err) => {
+        setAccoutingStatus(false);
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
+          err
+        );
+      });
+  };
+
+  const getLinkToAccouting = () => {
+    let payload = {
+      lm_id: userDetails["lead_id"],
+      name: dasboardData["lf_business_name"],
+      platformType: "0",
+    };
+
+    getLinkToAccountingData(payload).then((resp) => {
+      console.log(
+        "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
+        resp,
+        resp.success == "false" && resp.status == 500
+      );
+      if (resp.success == "false" && resp.code == 500) {
+        getCompanyID(payload.lm_id).then((resp) => {
+          setAccoutingUrl(
+            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+          );
+          console.log(
+            "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
+            resp
+          );
+          window.open(
+            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+            "_blank"
+          );
+        });
+      } else {
+        setAccoutingUrl(resp.data.id);
+        window.open(
+          `https://link-uat.codat.io/company/${resp.data.id}`,
+          "_blank"
+        );
+      }
+    });
+  };
+
+  useEffect(() => {
+    checkLinkingStatusClick();
+    getData();
+  }, []);
 
   return (
     <div className="dashboard-panel">
@@ -425,10 +499,12 @@ function MerchantHealth() {
                     </TabPanel>
                     <TabPanel>
                       <section>
-                        {!showPanel3 && (
+                        {!accountingStatus && (
                           <button
                             class="btn btn-primary accounting-btn"
-                            onClick={() => togglePanel3(!showPanel3)}
+                            onClick={() => {
+                              getLinkToAccouting();
+                            }}
                           >
                             Link To Accounting{" "}
                             <i
@@ -437,46 +513,60 @@ function MerchantHealth() {
                             ></i>
                           </button>
                         )}
-                        {showPanel3 && (
+                        {accoutingUrl &&
                           <div className="accounting-panel">
-                            <div class="banking-url">
-                              <div class="form-group">
-                                <label>Accounting URL</label>
-                                <input
-                                  type="text"
-                                  name="url"
-                                  placeholder="https://www.domain.com/dummy-url-will-be-here"
-                                  class="form-control"
-                                />
-                                <button class="copyicon-col btn btn-primary">
-                                  <i class="fa fa-clone" aria-hidden="true"></i>
-                                </button>
+
+                            <>
+                              <div class="banking-url">
+                                <div class="form-group">
+                                  <label>Accounting URL</label>
+
+                                  <input
+                                    type="text"
+                                    name="url"
+                                    placeholder="https://www.domain.com/dummy-url-will-be-here"
+                                    className="form-control"
+                                    value={accoutingUrl}
+                                    disabled
+                                    id="accouting-url"
+                                  />
+                                  <button class="copyicon-col btn btn-primary">
+                                    <i
+                                      class="fa fa-clone"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                            <div class="banking-url">
-                              <div class="form-group">
-                                <label>Status</label>
-                                <input
-                                  type="text"
-                                  name="Status"
-                                  placeholder="Unlinked"
-                                  class="form-control"
-                                />
-                                <button
-                                  class="checkstatus-btn btn btn-primary"
-                                  onClick={() => togglePanel4(!showPanel4)}
-                                >
-                                  Check status
-                                </button>
+                              <div class="banking-url">
+                                <div class="form-group">
+                                  <label>Status</label>
+                                  <input
+                                    type="text"
+                                    name="Status"
+                                    placeholder=""
+                                    class="form-control"
+                                    disabled
+                                    value={
+                                      accountingStatus ? "Linked" : "Unlinked"
+                                    }
+                                  />
+                                  <button
+                                    class="checkstatus-btn btn btn-primary"
+                                    onClick={() => checkLinkingStatusClick()}
+                                  >
+                                    Check status
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                            {showPanel4 && (
+                            </>
+                            {accountingStatus && (
                               <div className="data-panel">
                                 <Codat />
                               </div>
                             )}
                           </div>
-                        )}
+                        }
                       </section>
                     </TabPanel>
                     <TabPanel>
