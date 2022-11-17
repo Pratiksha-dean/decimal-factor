@@ -129,15 +129,15 @@ export default function AssessCommerce(props) {
                   <label>Source </label> <img src={require("../../images/CommerceSandbox_Square.png")} alt="" className="commerce-img" />
                   <label> Commerce Sandbox</label>
                 </div>
-                <div className="col-md-3 ">
+                <div className="col-md-3">
                 <div className="box-shape">
                 <label>Start Month</label>
-                <input type="date" name="" className="period-start" />
+                <input type="Month" name="" className="period-start" />
                 </div></div>
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>End Month</label>
-                <input type="date" name="" className="period-start" />
+                <input type="Month" name="" className="period-start" />
                 </div></div>
                
                 </div>

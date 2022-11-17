@@ -4,6 +4,7 @@ import { useState } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ReactTooltip from "react-tooltip";
 import {
+  checkAccountingStatus,
   checkBankingStatus,
   checkLinkingStatus,
   getAccountScore,
@@ -45,6 +46,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   const userDetails = getUserDetails();
   const [accoutingUrl, setAccoutingUrl] = useState();
   const [bankingUrl, setBankingUrl] = useState();
+  const [bankingStatus, setBankingStatus] = useState(false);
   const [copiedaccoutingUrl, setCopiedAccoutingUrl] = useState();
   const [accountingStatus, setAccoutingStatus] = useState(false);
   console.log(
@@ -86,7 +88,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
     fileList.forEach((item) => {
       newlist.push({
         lastModified: item["lastModified"],
-
         lastModifiedDate: item["lastModifiedDate"],
         name: item["name"],
         size: item["size"],
@@ -122,24 +123,18 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
             "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
             resp
           );
-          window.open(
-            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-            "_blank"
-          );
+
         });
       } else {
         setAccoutingUrl(resp.data.id);
-        window.open(
-          `https://link-uat.codat.io/company/${resp.data.id}`,
-          "_blank"
-        );
+
       }
     });
   };
 
-  const checkLinkingStatusClick = () => {
+  const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    checkLinkingStatus(userDetails["lead_id"])
+    checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
@@ -153,6 +148,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
       })
       .catch((err) => {
         setAccoutingStatus(false);
+        if (!accoutingUrl) {
+          getLinkToAccouting();
+        }
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
           err
@@ -169,13 +167,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
           resp
         );
 
-        // if (resp["message"] === "Status Updated to Linked") {
-        //   setAccoutingStatus(true);
-        //   setAccoutingUrl(resp.data.redirect);
-        // }
+
       })
       .catch((err) => {
-        // setAccoutingStatus(false);
+        setBankingStatus(false);
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
           err
@@ -203,25 +198,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
         console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
         window.open(resp.url, "_blank");
-        // getCompanyID(payload.lm_id).then((resp) => {
-        //   setAccoutingUrl(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-        //   );
-        //   console.log(
-        //     "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
-        //     resp
-        //   );
-        //   window.open(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-        //     "_blank"
-        //   );
-        // });
+
       } else {
-        // setAccoutingUrl(resp.data.id);
-        // window.open(
-        //   `https://link-uat.codat.io/company/${resp.data.id}`,
-        //   "_blank"
-        // );
+
       }
     });
   };
@@ -233,9 +212,31 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   };
 
   useEffect(() => {
-    checkLinkingStatusClick();
+    checkAccountingStatusClick();
+    checkBankingStatusClick();
     // getData();
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      checkAccountingStatusClick();
+
+      if (data["obv_account_score_status"] == "Start") {
+        setBankingUrl(
+          `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
+        );
+        setBankingStatus(false);
+      } else if (data["obv_account_score_status"] == "Completed") {
+        setBankingStatus(true);
+      }
+      console.log(
+        "🚀 ~ file: merchant-health.js ~ line 190 ~ MerchantHealth ~ data",
+        data["obv_account_score_status"]
+      );
+    } else {
+      checkBankingStatusClick();
+    }
+  }, [data]);
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <div className="review-application">
@@ -248,193 +249,192 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
               opacity: uploadBankStatementToggle ? 0.3 : "",
             }}
           >
-            <div className="Accounting-left-panel d-flex align-items-center justify-content-between">
-              <div>
-                <button
-                  className="btn btn-primary banking-btn"
-                  type="button"
-                  onClick={() => getLinkToBanking()}
-                >
-                  Link To Banking <i className="fa fa-chevron-right"></i>
-                </button>
-                <div className="tooltip-panel">
-                  <OverlayTrigger
-                    placement="right"
-                    overlay={
-                      <Tooltip id="button-tooltip-link-to-banking">
-                        <div>
-                          Connect your bank account using Open Banking.
-                          <br /> Only the following required data will be
-                          requested:
+            <div className="Accounting-left-panel">
+              {!bankingUrl && (
+                <>
+                  <button
+                    className="btn btn-primary banking-btn"
+                    type="button"
+                    onClick={() => getLinkToBanking()}
+                  >
+                    Link To Banking <i className="fa fa-chevron-right"></i>
+                  </button>
+                  <div className="tooltip-panel accounting-tooltip mr-2">
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={
+                        <Tooltip id="button-tooltip-link-to-banking">
                           <div>
-                            <ul style={{ width: "235px" }}>
-                              <li>Incoming transactions for the last year</li>
-                              <li> Outgoing transactions for the last year</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </Tooltip>
-                    }
-                  >
-                    {/* <tooltip> */}
-                    {({ ref, ...triggerHandler }) => (
-                      <img
-                        className="cursor-pointer"
-                        ref={ref}
-                        {...triggerHandler}
-                        src={require("../../../images/info-icon.png")}
-                        alt=""
-                      />
-                    )}
-                  </OverlayTrigger>
-
-                  {bankingUrl && (
-                    <>
-                      <div className="banking-url">
-                        <div className="form-group">
-                          <label>Banking URL</label>
-                          <input
-                            type="text"
-                            name="url"
-                            placeholder="https://www.domain.com/dummy-url-will-be-here"
-                            className="form-control"
-                            disabled
-                          />
-                          <button className="copyicon-col btn btn-primary">
-                            <i class="fa fa-clone" aria-hidden="true"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div className="banking-url">
-                        <div className="form-group">
-                          <label>Status</label>
-                          <input
-                            type="text"
-                            name="Status"
-                            placeholder="Unlinked"
-                            className="form-control"
-                          />
-                          <button
-                            className="checkstatus-btn btn btn-primary"
-                            type="button"
-                            onClick={() => checkBankingStatusClick()}
-                          >
-                            Check status
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-              <div>
-                {!accountingStatus && (
-                  <>
-                    <button
-                      className="btn btn-primary accounting-btn"
-                      onClick={() => {
-                        getLinkToAccouting();
-                      }}
-                    >
-                      Link To Accounting <i className="fa fa-chevron-right"></i>
-                    </button>
-                    <div className="tooltip-panel accounting-tooltip">
-                      {/* <tooltip>
-                  <i
-                    className="fa fa-info-circle"
-                    data-tip="Connect your Accounting software to seamlessly view all your data on the portal and help increase your loan acceptance rate."
-                  >
-                    <ReactTooltip className={"tooltippanel"} />
-                  </i>
-                </tooltip> */}
-                      <OverlayTrigger
-                        placement="right"
-                        overlay={
-                          <Tooltip id="button-tooltip-link-to-banking">
+                            Connect your bank account using Open Banking.
+                            <br /> Only the following required data will be
+                            requested:
                             <div>
-                              Connect your accounting software to seamlessly
-                              view all your data on the portal and the help
-                              increase your loan acceptance rate.
-                              <div>
-                                Only the following required data will be
-                                requested:{" "}
-                              </div>
-                              <div>
-                                <ul style={{ width: "235px" }}>
-                                  <li>Accounts receivable information</li>
-                                  <li>Accounts payable information</li>
-                                  <li>Financial summary information</li>
-                                </ul>
-                              </div>
+                              <ul style={{ width: "235px" }}>
+                                <li>Incoming transactions for the last year</li>
+                                <li>
+                                  {" "}
+                                  Outgoing transactions for the last year
+                                </li>
+                              </ul>
                             </div>
-                          </Tooltip>
-                        }
+                          </div>
+                        </Tooltip>
+                      }
+                    >
+                      {({ ref, ...triggerHandler }) => (
+                        <img
+                          className="cursor-pointer"
+                          ref={ref}
+                          {...triggerHandler}
+                          src={require("../../../images/info-icon.png")}
+                          alt=""
+                        />
+                      )}
+
+                    </OverlayTrigger>
+
+                  </div>
+                </>
+              )}
+
+              {bankingUrl && (
+                <>
+                  <div className="banking-url">
+                    <div className="form-group">
+                      <label>Banking URL</label>
+                      <input
+                        type="text"
+                        name="url"
+                        placeholder="https://www.domain.com/dummy-url-will-be-here"
+                        className="form-control"
+                        disabled
+                        value={bankingUrl}
+                      />
+                      <button className="copyicon-col btn btn-primary">
+                        <i class="fa fa-clone" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="banking-url">
+                    <div className="form-group">
+                      <label>Status</label>
+                      <input
+                        type="text"
+                        name="Status"
+                        placeholder="Unlinked"
+                        className="form-control"
+                        value={bankingStatus ? "Linked" : "Unlinked"}
+                        disabled
+                      />
+                      <button
+                        className="checkstatus-btn btn btn-primary"
+                        type="button"
+                        onClick={() => checkBankingStatusClick()}
                       >
-                        {/* <tooltip> */}
-                        {({ ref, ...triggerHandler }) => (
-                          <img
-                            className="cursor-pointer"
-                            ref={ref}
-                            {...triggerHandler}
-                            src={require("../../../images/info-icon.png")}
-                            alt=""
-                          />
-                        )}
-
-                        {/* </tooltip> */}
-                      </OverlayTrigger>
+                        Check status
+                      </button>
                     </div>
-                  </>
-                )}
+                  </div>
+                </>
+              )}
 
-                {accoutingUrl && (
-                  <>
-                    {" "}
-                    <div className="banking-url">
-                      <div className="form-group">
-                        <label>Accounting URL</label>
-                        <input
-                          type="text"
-                          name="url"
-                          placeholder="https://www.domain.com/dummy-url-will-be-here"
-                          className="form-control"
-                          value={accoutingUrl}
-                          disabled
-                          id="accouting-url"
+              {!accoutingUrl && (
+                <>
+                  <button
+                    className="btn btn-primary accounting-btn"
+                    onClick={() => {
+                      getLinkToAccouting();
+                    }}
+                  >
+                    Link To Accounting <i className="fa fa-chevron-right"></i>
+                  </button>
+                  <div className="tooltip-panel accounting-tooltip">
+
+                    <OverlayTrigger
+                      placement="right"
+                      overlay={
+                        <Tooltip id="button-tooltip-link-to-banking">
+                          <div>
+                            Connect your accounting software to seamlessly view
+                            all your data on the portal and the help increase
+                            your loan acceptance rate.
+                            <div>
+                              Only the following required data will be
+                              requested:{" "}
+                            </div>
+                            <div>
+                              <ul style={{ width: "235px" }}>
+                                <li>Accounts receivable information</li>
+                                <li>Accounts payable information</li>
+                                <li>Financial summary information</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </Tooltip>
+                      }
+                    >
+                      {({ ref, ...triggerHandler }) => (
+                        <img
+                          className="cursor-pointer"
+                          ref={ref}
+                          {...triggerHandler}
+                          src={require("../../../images/info-icon.png")}
+                          alt=""
                         />
+                      )}
 
-                        <button
-                          className="copyicon-col btn btn-primary"
-                          type="button"
-                          onClick={copyAccoutingUrl(accoutingUrl)}
-                        >
-                          <i class="fa fa-clone" aria-hidden="true"></i>
-                        </button>
-                      </div>
+                    </OverlayTrigger>
+                  </div>
+                </>
+              )}
+
+              {accoutingUrl && (
+                <>
+                  {" "}
+                  <div className="banking-url">
+                    <div className="form-group">
+                      <label>Accounting URL</label>
+                      <input
+                        type="text"
+                        name="url"
+                        placeholder="https://www.domain.com/dummy-url-will-be-here"
+                        className="form-control"
+                        value={accoutingUrl}
+                        disabled
+                        id="accouting-url"
+                      />
+
+                      <button
+                        className="copyicon-col btn btn-primary"
+                        type="button"
+                        onClick={copyAccoutingUrl(accoutingUrl)}
+                      >
+                        <i class="fa fa-clone" aria-hidden="true"></i>
+                      </button>
                     </div>
-                    <div className="banking-url">
-                      <div className="form-group">
-                        <label>Status</label>
-                        <input
-                          type="text"
-                          name="Status"
-                          placeholder="Unlinked"
-                          className="form-control"
-                          disabled
-                          value={accountingStatus ? "Linked" : "Unlinked"}
-                        />
-                        <button
-                          className="checkstatus-btn btn btn-primary"
-                          type="button"
-                          onClick={() => checkLinkingStatusClick()}
-                        >
-                          Check status
-                        </button>
-                      </div>
+                  </div>
+                  <div className="banking-url">
+                    <div className="form-group">
+                      <label>Status</label>
+                      <input
+                        type="text"
+                        name="Status"
+                        placeholder="Unlinked"
+                        className="form-control"
+                        disabled
+                        value={accountingStatus ? "Linked" : "Unlinked"}
+                      />
+                      <button
+                        className="checkstatus-btn btn btn-primary"
+                        type="button"
+                        onClick={() => checkAccountingStatusClick()}
+                      >
+                        Check status
+                      </button>
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="col-md-5">

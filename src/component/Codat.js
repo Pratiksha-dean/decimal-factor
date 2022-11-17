@@ -35,6 +35,7 @@ import ProfitLoss from "./Codat/ProfitLoss";
 import OperatingFlow from "./Codat/OperatingFlow";
 import Debtors from "./Codat/Debtors";
 import AgedCreditors from "./Codat/AgedCreditors";
+import ExportFiles from "./Codat/ExportFiles";
 
 
 
@@ -45,6 +46,7 @@ export default function Codat() {
     const [commerceApiValue, setCommerceApiValue] = useState("");
     const [currentApi, setCurrentApi] = useState("");
     const leadId= 6135;
+    const serverUrl = 'https://sales.decimalfactor.com/staging/';
     const endUrl = 'https://sales.decimalfactor.com/staging/api';
     const handleCodat = (codatView) => {
         if(codatView==="accounting"){ setCurrentApi(accountingApiValue); setAssessApiValue("");setCommerceApiValue("");}
@@ -102,10 +104,7 @@ export default function Codat() {
       ];
 
 
-      const [openexport, setOpenexport] = React.useState(false);
-      const handleOpenexport = () => {
-        setOpenexport(!openexport);
-      };
+      
 
 
     return(
@@ -189,44 +188,12 @@ export default function Codat() {
                             </button>
                         </div>
                     </div>
-                    <div className="col-md-3 export-area">
-                    <button className="btn btn-primary exportdata-btn next-btn" onClick={handleOpenexport} ><i class="fa fa-cloud-arrow-down"></i> Export <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+                    <ExportFiles leadId={leadId} endUrl={endUrl} serverUrl={serverUrl}/>
                    
-                    </div>
                    
                     
                 </div>
-                {openexport ? (
-                    <div className="export-data-div">
-                    <div className="export-panel">
-                    <h3>Export data</h3>
-                    <p>Generate a new file or download last available report</p>
-                    <button className="btn btn-primary create-new-data" id="export-codat-data">Create New Data Export</button>
-                   <button className="btn btn-primary create-new-data" id="export-assess-codat-data">Create New Audit Export</button>
-                    <p>Export accounting and banking data shared by the company</p>
-                </div>
-                <p><strong>Last export</strong></p>
-                <div className="row" id="codat-download-cointainer">
-                    <div className="col-md-8">
-                        <p><i className="fa fa-calendar"></i> 
-                            <span>All Data Export </span></p>
-                    </div>
-                    <div className="col-md-4">
-                        
-                        <Link to="#" className="export-download">Download!</Link>
-
-                    </div><div className="col-md-8">
-                        <p><i className="fa fa-calendar"></i> 
-                            <span>Audit Data Export</span></p>
-                    </div>
-                    <div className="col-md-4">
-                        
-                        <Link to="#"  className="export-download">Download!</Link>
-
-                    </div></div>
-                 <button className="btn btn-primary refresh-btn" id="export-data-refresh">Refresh</button> 
-                </div>
-                ) : null}
+               
             </div>
         
         {currentApi==='Customers' && <Customers title="Customers" leadId={leadId} endUrl={endUrl}/>}
