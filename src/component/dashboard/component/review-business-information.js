@@ -287,9 +287,8 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
     [fieldNames.SUPPLIERDUEAMOUNT]: storedData
       ? storedData[fieldNames.SUPPLIERDUEAMOUNT]
       : data["AppCurrentValueOverdueInvoices"],
-    [fieldNames.BUSINESSLEGALNUMBER]: data
-      ? data["lmc_bi_business_number"]
-      : "",
+    [fieldNames.BUSINESSLEGALNUMBER]: storedData ? storedData["businessLegalNumber"]
+      : data["lmc_bi_business_number"],
     [fieldNames.DIRECTORINFO]: patchDirectorData(data),
   };
 
