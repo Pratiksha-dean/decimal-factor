@@ -205,7 +205,6 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     name={fieldNames.ISPAYMENTPROCESSED}
                     onChange={handleChange}
                     onClick={(e) => {
-                      console.log("e", e.target.checked, values);
                       setFieldValue(
                         fieldNames.ISPAYMENTPROCESSED,
                         e.target.checked
@@ -284,12 +283,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     onChange={handleChange}
                     checked={values[fieldNames.ISPAYMENTPENDING]}
                     onClick={(e) => {
-                      // setFieldValue(
-                      //   fieldNames.ISPAYMENTPENDING,
-                      //   e.target.checked
-                      // );
                       let obj = { ...values };
-
                       obj[fieldNames.ISPAYMENTPENDING] = e.target.checked;
                       setBusinessInfo(obj);
                     }}

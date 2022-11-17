@@ -32,12 +32,6 @@ export const removeData = () => {
 };
 
 export const generateDirectorListPayload = (data) => {
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 35 ~ generateDirectorListPayload ~ data",
-    data
-  );
-
-  console.log("data", data != null);
   if (data != null) {
     let data1 = data.map((item) => {
       let day = "";
@@ -46,10 +40,6 @@ export const generateDirectorListPayload = (data) => {
 
       if (item["ShareHolderDOBFullFormat"]) {
         let splitDate = item["ShareHolderDOBFullFormat"].split("-");
-        console.log(
-          "🚀 ~ file: personal-details.js ~ line 47 ~ data1 ~ splitDate",
-          splitDate
-        );
         day = splitDate[2];
         month = splitDate[1];
         year = splitDate[0];
@@ -183,33 +173,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
             payload["supplierDueAmount"] = 0;
           }
 
-          // console.log("payload[directorInfo]",payload["directorInfo"])
-
-          // let directorListPayload = generateDirectorListPayload(
-          //   payload["directorInfo"]
-          // );
-
-          // const payload = {
-          //   amount: applicationInfo["applicationInfo"],
-          //   loanPurpose: "42001",
-          //   requiredFund: applicationInfo[""],
-          //   businessEntity: "Private Limited Company",
-          //   businessName: "ASD LIMITED [ 01370600 ]",
-          //   businessId: "01370600",
-          //   businessSector: "49008",
-          //   businessAddress: "Valley Farm Road, Stourton, Leeds, LS10 1SD",
-          //   businessZipcode: "LS10 1SD",
-          //   businessStartDate: businesssInfo["businessStartDate"],
-          //   isPaymentProcessed: "yes",
-          //   cardPaymentAmount: "3000",
-          //   isPaymentPending: 1,
-          //   supplierDueAmount: "400",
-          //   firstName: "ravi",
-          //   lastName: "prakash",
-          //   email: "pravi@deaninfotech1.com",
-          //   phone: "4335345345",
-          //   password: "admin@admin",
-          // };
           createAccount(payload)
             .then((resp) => {
               if (resp.data.status == "error") {

@@ -16,6 +16,7 @@ const setEmailPassword = (data) => {
 };
 
 export const setUserDetails = (data) => {
+  console.log("🚀 ~ file: loginpage.js ~ line 19 ~ setUserDetails ~ data", data)
   localStorage.setItem("userDetails", JSON.stringify(data));
 };
 

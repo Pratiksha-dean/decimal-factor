@@ -15,14 +15,6 @@ import { getUserDetails } from "../../login/loginpage";
 import { getCompanyInfo } from "../../requestaquote/components/business-information";
 import { getReviewAppData, setDashboardStepNo } from "../dashboard";
 
-function checkMe(selected) {
-  if (selected) {
-    document.getElementById("divcheck").style.display = "block";
-  } else {
-    document.getElementById("divcheck").style.display = "none";
-  }
-}
-
 export const setLinkingAndBankingData = (data) => {
   localStorage.setItem("reviewLinkingAndBankingData", JSON.stringify(data));
 };
@@ -31,15 +23,7 @@ export const getLinkingAndBankingData = () => {
   return JSON.parse(localStorage.getItem("reviewLinkingAndBankingData"));
 };
 
-function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 35 ~ LinkBankingAccounting ~ activeStep",
-    activeStep
-  );
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 31 ~ LinkBankingAccounting ~ data",
-    data
-  );
+function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const [file, setFile] = useState();
   const storedData = getLinkingAndBankingData();
   const appData = getReviewAppData();
@@ -51,17 +35,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   const [accoutingUrl, setAccoutingUrl] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
-  const [copiedaccoutingUrl, setCopiedAccoutingUrl] = useState();
   const [accountingStatus, setAccoutingStatus] = useState(false);
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 30 ~ LinkBankingAccounting ~ userDetails",
-    userDetails
-  );
+  const [loadingBanking, setLoadingBanking] = useState(false);
+  const [loadingAccouting, setLoadingAccouting] = useState(true);
   const companyInfo = getCompanyInfo();
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 29 ~ LinkBankingAccounting ~ companyInfo",
-    companyInfo
-  );
   const [uploadBankStatementToggle, setUploadBankStatementToggle] =
     useState(false);
 
@@ -71,10 +48,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   const accountingUrlRef = useRef(null);
 
   const copyAccoutingUrl = (url) => {
-    console.log(
-      "🚀 ~ file: link-banking&accounting.js ~ line 54 ~ copyAccoutingUrl ~ url",
-      url
-    );
     if (document.getElementById("accouting-url")) {
       document.getElementById("accouting-url").select();
       document.execCommand("copy");
@@ -113,41 +86,34 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
     };
 
     getLinkToAccountingData(payload).then((resp) => {
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
-        resp,
-        resp.success == "false" && resp.status == 500
-      );
       if (resp.success == "false" && resp.code == 500) {
         getCompanyID(payload.lm_id).then((resp) => {
+          setLoadingAccouting(false);
+
           setAccoutingUrl(
             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
           );
-          console.log(
-            "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
-            resp
-          );
         });
       } else {
-        setAccoutingUrl(resp.data.id);
+        setAccoutingUrl(resp.data.redirect);
+        setLoadingAccouting(false);
       }
     });
   };
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
+    setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
-          resp
-        );
-
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
+          setLoadingAccouting(false);
         } else if (resp["status"] == "PendingAuth") {
           setAccoutingStatus(false);
+          setLoadingAccouting(false);
+
           // setAccoutingUrl(resp.data.redirect);
         }
       })
@@ -165,19 +131,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
 
   const checkBankingStatusClick = () => {
     // userDetails["lead_id"];
+    setLoadingBanking(true);
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
-          resp
-        );
+        setLoadingBanking(false);
       })
       .catch((err) => {
         setBankingStatus(false);
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
-          err
-        );
+        setLoadingBanking(false);
       });
   };
 
@@ -193,12 +154,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
     };
 
     getAccountScore(data["lm_id"], payload).then((resp) => {
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
-        resp
-      );
       if (resp.isSuccess == "1" && resp.url) {
-        console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
         window.open(resp.url, "_blank");
       } else {
@@ -213,9 +169,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   };
 
   useEffect(() => {
+    request();
     checkAccountingStatusClick();
     checkBankingStatusClick();
-    // getData();
   }, []);
 
   useEffect(() => {
@@ -230,10 +186,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
       } else if (data["obv_account_score_status"] == "Completed") {
         setBankingStatus(true);
       }
-      console.log(
-        "🚀 ~ file: merchant-health.js ~ line 190 ~ MerchantHealth ~ data",
-        data["obv_account_score_status"]
-      );
     } else {
       checkBankingStatusClick();
     }
@@ -250,8 +202,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
               opacity: uploadBankStatementToggle ? 0.3 : "",
             }}
           >
+            {loadingBanking && <h6>Loading Banking Data...</h6>}
             <div className="Accounting-left-panel">
-              {!bankingUrl && (
+              {!bankingUrl && !loadingBanking && (
                 <>
                   <button
                     className="btn btn-primary banking-btn"
@@ -296,7 +249,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 </>
               )}
 
-              {bankingUrl && (
+              {bankingUrl && !loadingBanking && (
                 <>
                   <div className="banking-url">
                     <div className="form-group">
@@ -337,7 +290,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 </>
               )}
 
-              {!accoutingUrl && (
+              {loadingBanking && <h6>Loading Accouting Data.....</h6>}
+
+              {!accoutingUrl && !loadingAccouting && (
                 <>
                   <button
                     className="btn btn-primary accounting-btn"
@@ -385,7 +340,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 </>
               )}
 
-              {accoutingUrl && (
+              {accoutingUrl && !loadingAccouting && (
                 <>
                   {" "}
                   <div className="banking-url">

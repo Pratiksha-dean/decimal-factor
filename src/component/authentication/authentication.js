@@ -46,10 +46,6 @@ function Authentication() {
         window: 1,
       });
       if (isVerified) {
-        console.log(
-          "🚀 ~ file: authentication.js ~ line 43 ~ onSubmit: ~ isVerified",
-          isVerified
-        );
         if (userDetails["navigation_type"] == "left") {
           naviagte("/merchant-health");
           ToastMessage("Authentication successful!", "success");

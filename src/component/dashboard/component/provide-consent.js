@@ -14,19 +14,26 @@ import { useNavigate } from "react-router";
 import { ToastMessage } from "../../ToastMessage";
 import { generateDirectorListPayload } from "../../requestaquote/components/personal-details";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-// import { generateDirectorListPayload } from "../../requestaquote/components/personal-details";
 
+export const setProvideContentchecks = (value) => {
+  localStorage.setItem("provideConcentData", JSON.stringify(value));
+};
+
+export const getProvideContentchecks = () => {
+  return JSON.parse(localStorage.getItem("provideConcentData"));
+};
 function ProvideConsent({ setActiveStep, activeStep }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const storedData = getProvideContentchecks();
   const loginSchema = Yup.object().shape({
     softCreditCheck: Yup.boolean().required(),
     finalInformation: Yup.boolean().required(),
   });
 
   const initialValues = {
-    softCreditCheck: false,
-    finalInformation: false,
+    softCreditCheck: storedData ? storedData["softCreditCheck"] : false,
+    finalInformation: storedData ? storedData["finalInformation"] : false,
   };
 
   const formik = useFormik({
@@ -34,20 +41,8 @@ function ProvideConsent({ setActiveStep, activeStep }) {
     validationSchema: loginSchema,
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       const applicationInfo = getReviewAppData();
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 35 ~ onSubmit: ~ applicationInfo",
-        applicationInfo
-      );
       const businessData = getReviewBusinessData();
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 37 ~ onSubmit: ~ businessData",
-        businessData
-      );
       const personalData = getReviewPersonalData();
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 39 ~ onSubmit: ~ personalData",
-        personalData
-      );
       const userDetails = getUserDetails();
       setLoading(true);
 
@@ -57,20 +52,12 @@ function ProvideConsent({ setActiveStep, activeStep }) {
         ...businessData,
         ...values,
       };
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 38 ~ onSubmit: ~ payload",
-        payload
-      );
 
       payload["businessEntity"] = payload["businessEntity"].value;
       payload["businessSector"] = payload["businessSector"].value;
       payload["loanPurpose"] = payload["loanPurpose"].value;
       let directorData = getDirectorData();
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 68 ~ onSubmit: ~ directorData",
-        directorData,
-        directorData != undefined
-      );
+
       if (directorData !== []) {
         payload["ShareHolderArr"] = generateDirectorListPayload(directorData);
       } else {
@@ -79,13 +66,6 @@ function ProvideConsent({ setActiveStep, activeStep }) {
 
       delete payload["directorInfo"];
       payload["navigationType"] = "left";
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 36 ~ onSubmit: ~ payload",
-        payload
-      );
-
-      // return;
-
       updateUpdateCustomerInfo(payload, userDetails["lead_id"])
         .then((resp) => {
           setLoading(false);
@@ -96,11 +76,6 @@ function ProvideConsent({ setActiveStep, activeStep }) {
             localStorage.removeItem("reviewAppInfo");
             ToastMessage("Data saved successfully!", "success");
           }
-
-          console.log(
-            "🚀 ~ file: provide-consent.js ~ line 59 ~ updateUpdateCustomerInfo ~ resp",
-            resp
-          );
         })
         .catch((err) => {
           setLoading(false);
@@ -110,21 +85,6 @@ function ProvideConsent({ setActiveStep, activeStep }) {
             err
           );
         });
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 29 ~ onSubmit: ~ payload",
-        payload
-      );
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 25 ~ onSubmit: ~ applicationInfo",
-        applicationInfo,
-        businessData,
-        personalData
-      );
-
-      console.log(
-        "🚀 ~ file: provide-consent.js ~ line 21 ~ ProvideConsent ~ values",
-        values
-      );
     },
   });
 
@@ -154,6 +114,9 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                     }
                   )}
                   checked={formik.values.softCreditCheck}
+                  onBlur={() => {
+                    setProvideContentchecks(formik.values);
+                  }}
                 />
                 <label>
                   I consent to run a soft credit check
@@ -207,6 +170,9 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                     }
                   )}
                   checked={formik.values.finalInformation}
+                  onBlur={() => {
+                    setProvideContentchecks(formik.values);
+                  }}
                 />
                 <label>
                   I consent to provide financial information to lenders

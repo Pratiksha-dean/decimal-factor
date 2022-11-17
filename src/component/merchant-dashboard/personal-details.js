@@ -18,6 +18,7 @@ import {
 } from "../../request";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function PersonalDetails() {
   const storeData = {};
@@ -25,21 +26,9 @@ function PersonalDetails() {
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
 
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 17 ~ PersonalDetails ~ file",
-    file
-  );
   const hiddenFileInput = useRef(null);
   const [dasboardData, setDashboardData] = useState();
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 26 ~ PersonalDetails ~ dasboardData",
-    dasboardData
-  );
   const userDetails = getUserDetails();
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 39 ~ PersonalDetails ~ userDetails",
-    userDetails
-  );
 
   useEffect(() => {
     getData();
@@ -70,10 +59,6 @@ function PersonalDetails() {
       : dasboardData && dasboardData["lf_telephone"],
     address: userDetails["address"] || "",
   };
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 39 ~ PersonalDetails ~ initialValues",
-    initialValues
-  );
 
   const validationSchema = Yup.object().shape({
     [fieldNames.FIRSTNAME]: Yup.string().required(),
@@ -119,36 +104,18 @@ function PersonalDetails() {
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
-                  enableReinitialize
+                  enableReinitialize={userDetails}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
-                    console.log(
-                      "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ values",
-                      values
-                    );
                     let payload = { ...values };
-                    console.log(
-                      "🚀 ~ file: personal-details.js ~ line 117 ~ PersonalDetails ~ payload",
-                      payload
-                    );
-
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {
                         setLoading(false);
                         if (resp.isSuccess == 1) {
                           ToastMessage("Data saved successfully!", "success");
-                          resetForm({});
-                          // getData();
                           getUserDetailsApi(userDetails.lead_id)
                             .then((response) => {
-                              console.log(
-                                "🚀 ~ file: personal-details.js ~ line 141 ~ .then ~ response",
-                                response
-                              );
                               if (response.data.status == 1) {
-                                // ToastMessage(
-                                //   "Login successful! Verify code to proceed further.",
-                                //   "success"
-                                // );
+
                                 setUserDetails(response.data);
                                 setToken(response.data.token);
                               }
@@ -251,7 +218,31 @@ function PersonalDetails() {
                                 <div className="form-group">
                                   <label>
                                     Email Address{" "}
-                                    <tooltip>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={
+                                        <Tooltip id="button-tooltip-2">
+                                          This is the email address where all
+                                          communication will sent to.
+                                        </Tooltip>
+                                      }
+                                    >
+                                      {({ ref, ...triggerHandler }) => (
+                                        <span
+                                          ref={ref}
+                                          {...triggerHandler}
+                                          className="ml-2 cursor-pointer"
+                                        >
+                                          <img
+                                            ref={ref}
+                                            {...triggerHandler}
+                                            src={require("../../images/info-icon.png")}
+                                            alt=""
+                                          />
+                                        </span>
+                                      )}
+                                    </OverlayTrigger>
+                                    {/* <tooltip>
                                       <i
                                         className="fa fa-info-circle"
                                         data-tip="This is the email address where all communication will sent to."
@@ -260,7 +251,7 @@ function PersonalDetails() {
                                           className={"tooltippanel"}
                                         />
                                       </i>
-                                    </tooltip>
+                                    </tooltip> */}
                                   </label>
                                   <input
                                     type="email"
@@ -349,6 +340,7 @@ function PersonalDetails() {
                                 className=""
                                 onChange={handleFileChange}
                                 ref={hiddenFileInput}
+                                accept="image/*"
                               />
                               <label for="input-file">
                                 <img

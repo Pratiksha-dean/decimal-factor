@@ -50,11 +50,7 @@ function Dashboard() {
 
   const userDetails = getUserDetails();
   useEffect(() => {
-    if (userDetails && userDetails.lead_id) {
-      getDashboardData(userDetails.lead_id).then((resp) => {
-        setDashboardData(resp.records[0]);
-      });
-    }
+    getData();
 
     if (userDetails["navigation_type"] == "left") {
       naviagte("/merchant-health");
@@ -62,6 +58,14 @@ function Dashboard() {
 
     return () => {};
   }, []);
+
+  const getData = () => {
+    if (userDetails && userDetails.lead_id) {
+      getDashboardData(userDetails.lead_id).then((resp) => {
+        setDashboardData(resp.records[0]);
+      });
+    }
+  };
 
   const steps = [
     {
@@ -142,6 +146,7 @@ function Dashboard() {
             data={dasboardData}
             setActiveStep={setActiveStep}
             activeStep={activeStep}
+            request={getData}
           />
         );
         break;

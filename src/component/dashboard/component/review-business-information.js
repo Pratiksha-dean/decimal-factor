@@ -18,10 +18,6 @@ import { directorFieldNames, residentialStatusList } from "../../Constants";
 import { ToastMessage } from "../../ToastMessage";
 
 export const setReviewBusinessData = (data) => {
-  console.log(
-    "🚀 ~ file: review-business-information.js ~ line 19 ~ setReviewBusinessData ~ data",
-    data
-  );
   localStorage.setItem("reviewBusinessInfo", JSON.stringify(data));
 };
 
@@ -30,10 +26,7 @@ export const getReviewBusinessData = () => {
 };
 
 export const setDirectorData = (data) => {
-  console.log(
-    "🚀 ~ file: review-business-information.js ~ line 19 ~ setReviewBusinessData ~ data",
-    data
-  );
+  
   localStorage.setItem("directorData", JSON.stringify(data));
 };
 
@@ -55,7 +48,8 @@ const Accordion = ({ title, children, isPrimary, id }) => {
         {isPrimary && (
           <button
             className="btn btn-success btn-sm mr-2"
-            style={{ backgroundColor: "#198754" }}
+            style={{ backgroundColor: "#198754",pointerEvents:"none" }}
+            type="button"
           >
             Primary
           </button>
@@ -287,7 +281,8 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
     [fieldNames.SUPPLIERDUEAMOUNT]: storedData
       ? storedData[fieldNames.SUPPLIERDUEAMOUNT]
       : data["AppCurrentValueOverdueInvoices"],
-    [fieldNames.BUSINESSLEGALNUMBER]: storedData ? storedData["businessLegalNumber"]
+    [fieldNames.BUSINESSLEGALNUMBER]: storedData
+      ? storedData["businessLegalNumber"]
       : data["lmc_bi_business_number"],
     [fieldNames.DIRECTORINFO]: patchDirectorData(data),
   };
@@ -547,551 +542,567 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="director-panel">
-                    <h4>Directors of Business Name</h4>
-                    {values["directorInfo"] &&
-                      values["directorInfo"].length > 0 && (
-                        <FieldArray
-                          name={fieldNames.DIRECTORINFO}
-                          render={(arrayHelpers) => (
-                            <>
-                              {values.directorInfo &&
-                                values.directorInfo.length &&
-                                values.directorInfo.map((item, index) => (
-                                  <Accordion
-                                    title={
-                                      item[directorFieldNames.FIRSTNAME] +
-                                      " " +
-                                      (item[directorFieldNames.LASTNAME]
-                                        ? item[directorFieldNames.LASTNAME]
-                                        : "")
-                                    }
-                                    key={index}
-                                    isPrimary={
-                                      item[directorFieldNames.ISPRIMARY]
-                                    }
-                                    id={`accordian${index}`}
-                                  >
-                                    <div className="director-field">
-                                      <div className="row">
-                                        <div className="col-md-12">
-                                          <div className="form-group">
-                                            <input
-                                              type="checkbox"
-                                              className="primary-checkbox"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
-                                              onChange={(e) => {
-                                                values.directorInfo.forEach(
-                                                  (item, i) => {
-                                                    if (index == i) {
-                                                      setFieldValue(
-                                                        `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`,
-                                                        e.target.checked
-                                                      );
-                                                    } else {
-                                                      setFieldValue(
-                                                        `${fieldNames.DIRECTORINFO}.${i}.${directorFieldNames.ISPRIMARY}`,
-                                                        false
-                                                      );
+              {values.directorInfo && values.directorInfo.length > 0 && (
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="director-panel">
+                      <h4>Directors of Business Name</h4>
+                      {values["directorInfo"] &&
+                        values["directorInfo"].length > 0 && (
+                          <FieldArray
+                            name={fieldNames.DIRECTORINFO}
+                            render={(arrayHelpers) => (
+                              <>
+                                {values.directorInfo &&
+                                  values.directorInfo.length > 0 &&
+                                  values.directorInfo.map((item, index) => (
+                                    <Accordion
+                                      title={
+                                        item[directorFieldNames.FIRSTNAME] +
+                                        " " +
+                                        (item[directorFieldNames.LASTNAME]
+                                          ? item[directorFieldNames.LASTNAME]
+                                          : "")
+                                      }
+                                      key={index}
+                                      isPrimary={
+                                        item[directorFieldNames.ISPRIMARY]
+                                      }
+                                      id={`accordian${index}`}
+                                    >
+                                      <div className="director-field">
+                                        <div className="row">
+                                          <div className="col-md-12">
+                                            <div className="form-group">
+                                              <input
+                                                type="checkbox"
+                                                className="primary-checkbox"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
+                                                onChange={(e) => {
+                                                  values.directorInfo.forEach(
+                                                    (item, i) => {
+                                                      if (index == i) {
+                                                        setFieldValue(
+                                                          `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`,
+                                                          e.target.checked
+                                                        );
+                                                      } else {
+                                                        setFieldValue(
+                                                          `${fieldNames.DIRECTORINFO}.${i}.${directorFieldNames.ISPRIMARY}`,
+                                                          false
+                                                        );
+                                                      }
                                                     }
-                                                  }
-                                                );
-                                              }}
-                                              checked={
-                                                item[
-                                                  directorFieldNames.ISPRIMARY
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                console.log("onablur", values);
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                            <label className="set-primary">
-                                              Set as Primary
-                                            </label>
+                                                  );
+                                                }}
+                                                checked={
+                                                  item[
+                                                    directorFieldNames.ISPRIMARY
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  console.log(
+                                                    "onablur",
+                                                    values
+                                                  );
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                              <label className="set-primary">
+                                                Set as Primary
+                                              </label>
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>First Name</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="Joana"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.FIRSTNAME}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames.FIRSTNAME
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>First Name</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Joana"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.FIRSTNAME}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames.FIRSTNAME
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Last Name</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="Last Name"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LASTNAME}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames.LASTNAME
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Last Name</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Last Name"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LASTNAME}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames.LASTNAME
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Nature of Control</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="Nature of Control"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.NATUREOFCONTROL}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames
-                                                    .NATUREOFCONTROL
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Nature of Control</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Nature of Control"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.NATUREOFCONTROL}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .NATUREOFCONTROL
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>
-                                              % of Total Share Count
-                                            </label>
-                                            <input
-                                              type="text"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames
-                                                    .TOTALSHARECOUNT
-                                                ]
-                                              }
-                                              className="form-control"
-                                              placeholder="% of Total Share Count"
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>
+                                                % of Total Share Count
+                                              </label>
+                                              <input
+                                                type="text"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .TOTALSHARECOUNT
+                                                  ]
+                                                }
+                                                className="form-control"
+                                                placeholder="% of Total Share Count"
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
 
-                                        <input
-                                          hidden
-                                          type="text"
-                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE1}`}
-                                          onChange={handleChange}
-                                          value={
-                                            item[
-                                              directorFieldNames.ADDRESSLINE1
-                                            ]
-                                          }
-                                          className="form-control"
-                                          placeholder="% of Total Share Count"
-                                          onBlur={() => {
-                                            setDirectorData(
-                                              values["directorInfo"]
-                                            );
-                                          }}
-                                        />
+                                          <input
+                                            hidden
+                                            type="text"
+                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE1}`}
+                                            onChange={handleChange}
+                                            value={
+                                              item[
+                                                directorFieldNames.ADDRESSLINE1
+                                              ]
+                                            }
+                                            className="form-control"
+                                            placeholder="% of Total Share Count"
+                                            onBlur={() => {
+                                              setDirectorData(
+                                                values["directorInfo"]
+                                              );
+                                            }}
+                                          />
 
-                                        <input
-                                          type="text"
-                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE2}`}
-                                          onChange={handleChange}
-                                          hidden
-                                          value={
-                                            item[
-                                              directorFieldNames.ADDRESSLINE2
-                                            ]
-                                          }
-                                          className="form-control"
-                                          placeholder="% of Total Share Count"
-                                          onBlur={() => {
-                                            setDirectorData(
-                                              values["directorInfo"]
-                                            );
-                                          }}
-                                        />
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Email Address</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="Email Address"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAIL}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[directorFieldNames.EMAIL]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <input
+                                            type="text"
+                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE2}`}
+                                            onChange={handleChange}
+                                            hidden
+                                            value={
+                                              item[
+                                                directorFieldNames.ADDRESSLINE2
+                                              ]
+                                            }
+                                            className="form-control"
+                                            placeholder="% of Total Share Count"
+                                            onBlur={() => {
+                                              setDirectorData(
+                                                values["directorInfo"]
+                                              );
+                                            }}
+                                          />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Email Address</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Email Address"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAIL}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[directorFieldNames.EMAIL]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Phone</label>
-                                            {/* <input
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Phone</label>
+                                              {/* <input
                                           type="text"
                                           name="Phone"
                                           className="form-control"
                                           placeholder="Phone"
                                         /> */}
 
-                                            <PhoneInput
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
-                                              country={"gb"}
-                                              value={
-                                                item[
-                                                  directorFieldNames.PHONENUMBER
-                                                ]
-                                              }
-                                              inputStyle={
-                                                touched[
-                                                  directorFieldNames.PHONENUMBER
-                                                ] &&
-                                                errors[
-                                                  directorFieldNames.PHONENUMBER
-                                                ] && {
-                                                  borderColor: "red",
+                                              <PhoneInput
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
+                                                country={"gb"}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .PHONENUMBER
+                                                  ]
                                                 }
-                                              }
-                                              onChange={(phone) => {
-                                                console.log(
-                                                  "🚀 ~ file: review-business-information.js ~ line 773 ~ ReviewBusinessInformation ~ phone",
-                                                  phone
-                                                );
-                                                setFieldValue(
-                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
-                                                  phone
-                                                );
-                                              }}
-                                              onBlur={() => {
-                                                console.log("values", values);
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                              inputClass={"w-100"}
-                                              placeholder="Enter Phone Number"
-                                            />
+                                                inputStyle={
+                                                  touched[
+                                                    directorFieldNames
+                                                      .PHONENUMBER
+                                                  ] &&
+                                                  errors[
+                                                    directorFieldNames
+                                                      .PHONENUMBER
+                                                  ] && {
+                                                    borderColor: "red",
+                                                  }
+                                                }
+                                                onChange={(phone) => {
+                                                  console.log(
+                                                    "🚀 ~ file: review-business-information.js ~ line 773 ~ ReviewBusinessInformation ~ phone",
+                                                    phone
+                                                  );
+                                                  setFieldValue(
+                                                    `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
+                                                    phone
+                                                  );
+                                                }}
+                                                onBlur={() => {
+                                                  console.log("values", values);
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                                inputClass={"w-100"}
+                                                placeholder="Enter Phone Number"
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Date of Birth</label>
-                                            <input
-                                              type="date"
-                                              className="form-control"
-                                              placeholder="04/11/2022"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames
-                                                    .SHAREHOLDERDOBFULLFORMAT
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Date of Birth</label>
+                                              <input
+                                                type="date"
+                                                className="form-control"
+                                                placeholder="04/11/2022"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .SHAREHOLDERDOBFULLFORMAT
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>POSTALCODE</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="POSTALCODE"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTALCODE}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames.POSTALCODE
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>POSTALCODE</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="POSTALCODE"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTALCODE}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .POSTALCODE
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Choose Address</label>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Choose Address</label>
 
-                                            <select
-                                              class="form-select form-control"
-                                              aria-label="Default select example"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames
-                                                    .CHOOSEADDRESS
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            >
-                                              <option selected disabled>
-                                                Choose Address
-                                              </option>
-                                            </select>
+                                              <select
+                                                class="form-select form-control"
+                                                aria-label="Default select example"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .CHOOSEADDRESS
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              >
+                                                <option selected disabled>
+                                                  Choose Address
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="row">
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>House Number</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="House Number"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NUMBER}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .HOUSE_NUMBER
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>House Name</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="House Name"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NAME}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .HOUSE_NAME
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Street</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Street"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.STREET}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames.STREET
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>County</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="County"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.COUNTY}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames.COUNTY
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Town</label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Town"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOWN}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[directorFieldNames.TOWN]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Residential Status</label>
+                                              <Select
+                                                // menuIsOpen={true}
+                                                closeMenuOnSelect={true}
+                                                onChange={(selectedOption) =>
+                                                  setFieldValue(
+                                                    `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`,
+                                                    selectedOption
+                                                  )
+                                                }
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`}
+                                                options={residentialStatusList}
+                                                menuPortalTarget={document.body}
+                                                menuPosition={"fixed"}
+                                                // menuPortalTarget={document.getElementById(
+                                                //   `accordian${index}`
+                                                // )}
+                                                placeholder="Select Residential Status"
+                                                styles={{
+                                                  control: (styles, state) => {
+                                                    const borderColor =
+                                                      !state.hasValue &&
+                                                      touched[
+                                                        directorFieldNames
+                                                          .RESIDENTIALSTATUS
+                                                      ] &&
+                                                      errors[
+                                                        directorFieldNames
+                                                          .RESIDENTIALSTATUS
+                                                      ]
+                                                        ? "red"
+                                                        : "#ced4da";
+
+                                                    return {
+                                                      ...styles,
+                                                      borderColor,
+                                                    };
+                                                  },
+                                                  menuPortal: (base) => ({
+                                                    ...base,
+                                                    zIndex: 9999,
+                                                  }),
+                                                }}
+                                                components={{
+                                                  IndicatorSeparator: () =>
+                                                    null,
+                                                }}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .RESIDENTIALSTATUS
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="col-md-3">
+                                            <div className="form-group">
+                                              <label>Living Since</label>
+                                              <input
+                                                type="date"
+                                                className="form-control"
+                                                placeholder="Living Since"
+                                                name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
+                                                onChange={handleChange}
+                                                value={
+                                                  item[
+                                                    directorFieldNames
+                                                      .LIVINGSINCE
+                                                  ]
+                                                }
+                                                onBlur={() => {
+                                                  setDirectorData(
+                                                    values["directorInfo"]
+                                                  );
+                                                }}
+                                              />
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="row">
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>House Number</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="House Number"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NUMBER}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames
-                                                    .HOUSE_NUMBER
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>House Name</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="House Name"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NAME}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames.HOUSE_NAME
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Street</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="Street"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.STREET}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[directorFieldNames.STREET]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>County</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="County"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.COUNTY}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[directorFieldNames.COUNTY]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Town</label>
-                                            <input
-                                              type="text"
-                                              className="form-control"
-                                              placeholder="Town"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOWN}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[directorFieldNames.TOWN]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Residential Status</label>
-                                            <Select
-                                              // menuIsOpen={true}
-                                              closeMenuOnSelect={true}
-                                              onChange={(selectedOption) =>
-                                                setFieldValue(
-                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`,
-                                                  selectedOption
-                                                )
-                                              }
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`}
-                                              options={residentialStatusList}
-                                              menuPortalTarget={document.body}
-                                              menuPosition={"fixed"}
-                                              // menuPortalTarget={document.getElementById(
-                                              //   `accordian${index}`
-                                              // )}
-                                              placeholder="Select Residential Status"
-                                              styles={{
-                                                control: (styles, state) => {
-                                                  const borderColor =
-                                                    !state.hasValue &&
-                                                    touched[
-                                                      directorFieldNames
-                                                        .RESIDENTIALSTATUS
-                                                    ] &&
-                                                    errors[
-                                                      directorFieldNames
-                                                        .RESIDENTIALSTATUS
-                                                    ]
-                                                      ? "red"
-                                                      : "#ced4da";
+                                    </Accordion>
+                                  ))}
+                              </>
+                            )}
+                          />
+                        )}
 
-                                                  return {
-                                                    ...styles,
-                                                    borderColor,
-                                                  };
-                                                },
-                                                menuPortal: (base) => ({
-                                                  ...base,
-                                                  zIndex: 9999,
-                                                }),
-                                              }}
-                                              components={{
-                                                IndicatorSeparator: () => null,
-                                              }}
-                                              value={
-                                                item[
-                                                  directorFieldNames
-                                                    .RESIDENTIALSTATUS
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3">
-                                          <div className="form-group">
-                                            <label>Living Since</label>
-                                            <input
-                                              type="date"
-                                              className="form-control"
-                                              placeholder="Living Since"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
-                                              onChange={handleChange}
-                                              value={
-                                                item[
-                                                  directorFieldNames.LIVINGSINCE
-                                                ]
-                                              }
-                                              onBlur={() => {
-                                                setDirectorData(
-                                                  values["directorInfo"]
-                                                );
-                                              }}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </Accordion>
-                                ))}
-                            </>
-                          )}
-                        />
-                      )}
-
-                    {/* <Accordion title="Joanna Kii"></Accordion>
+                      {/* <Accordion title="Joanna Kii"></Accordion>
                     <Accordion title="Cajetan Kii"></Accordion> */}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
             <div className="d-flex justify-content-between mt-3">
               <button
