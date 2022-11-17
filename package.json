@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0",
     "react-form-stepper": "^2.0.3",
     "react-intl-tel-input": "^8.2.0",
+    "react-loading-spin": "^2.1.9",
     "react-phone-input-2": "^2.15.1",
     "react-pro-sidebar": "^1.0.0-alpha.7",
     "react-router-link": "^2.0.2",
