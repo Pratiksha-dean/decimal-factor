@@ -102,6 +102,13 @@ function MerchantHealth() {
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
 
+  const [loadingBanking, setLoadingBanking] = useState(false);
+  const [loadingAccouting, setLoadingAccouting] = useState(false);
+  console.log(
+    "🚀 ~ file: merchant-health.js ~ line 107 ~ MerchantHealth ~ loadingAccouting",
+    loadingAccouting
+  );
+
   const [financialServicesSummary, setFinancialServicesSummary] = useState([]);
   const [incomeAnalysisSummary, setIncomeAnalysisSummary] = useState([]);
   const [regularOutgoingsSummary, setRegularOutgoingsSummary] = useState([]);
@@ -305,7 +312,9 @@ function MerchantHealth() {
 
   const getData = () => {
     if (userDetails && userDetails.lead_id) {
+      setLoadingBanking(true);
       getDashboardData(userDetails.lead_id).then((resp) => {
+        setLoadingBanking(false);
         setDashboardData(resp.records[0]);
       });
     }
@@ -313,18 +322,34 @@ function MerchantHealth() {
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
+    setLoadingAccouting(true);
+
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
+        console.log(
+          "🚀 ~ file: merchant-health.js ~ line 329 ~ .then ~ resp",
+          resp
+        );
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
+          setLoadingAccouting(false);
+        } else if (resp.status == "PendingAuth") {
+          getLinkToAccouting();
         }
       })
       .catch((err) => {
         setAccoutingStatus(false);
+        console.log(
+          "🚀 ~ file: merchant-health.js ~ line 344 ~ checkAccountingStatusClick ~ accoutingUrl",
+          accoutingUrl
+        );
         if (!accoutingUrl) {
           getLinkToAccouting();
           console.log("sghds");
+          setLoadingAccouting(false);
+        } else {
+          setLoadingAccouting(false);
         }
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
@@ -334,6 +359,8 @@ function MerchantHealth() {
   };
 
   const getLinkToAccouting = () => {
+    setLoadingAccouting(true);
+
     let payload = {
       lm_id: userDetails["lead_id"],
       name: dasboardData["lf_business_name"],
@@ -346,6 +373,7 @@ function MerchantHealth() {
         resp,
         resp.success == "false" && resp.status == 500
       );
+      setLoadingAccouting(false);
       if (
         resp.success == "false" &&
         resp.code == 500 &&
@@ -364,11 +392,12 @@ function MerchantHealth() {
             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
             "_blank"
           );
+          setLoadingAccouting(false);
         });
       } else {
         setAccoutingUrl(`https://link-uat.codat.io/company/${resp.data.id}`);
         console.log("open");
-
+        setLoadingAccouting(false);
         window.open(
           `https://link-uat.codat.io/company/${resp.data.id}`,
           "_blank"
@@ -378,6 +407,7 @@ function MerchantHealth() {
   };
 
   const checkBankingStatusClick = () => {
+    // setLoadingBanking(true);
     // userDetails["lead_id"];
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
@@ -387,12 +417,15 @@ function MerchantHealth() {
         );
 
         if (resp["response"] === "Completed") {
-          setAccoutingStatus(true);
+          setBankingStatus(true);
+          setLoadingBanking(false);
           // setAccoutingUrl(resp.data.redirect);
         }
       })
       .catch((err) => {
         setBankingStatus(false);
+        setLoadingBanking(false);
+
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
           err
@@ -401,6 +434,7 @@ function MerchantHealth() {
   };
 
   const getLinkToBanking = () => {
+    setLoadingBanking(true);
     let payload = {
       lm_um_id: dasboardData["lm_id"],
       lf_customer_name: dasboardData["lf_customer_name"],
@@ -417,28 +451,13 @@ function MerchantHealth() {
         resp
       );
       if (resp.isSuccess == "1" && resp.url) {
+        setLoadingBanking(false);
+
         console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
         window.open(resp.url, "_blank");
-        // getCompanyID(payload.lm_id).then((resp) => {
-        //   setAccoutingUrl(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-        //   );
-        //   console.log(
-        //     "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
-        //     resp
-        //   );
-        //   window.open(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-        //     "_blank"
-        //   );
-        // });
       } else {
-        // setAccoutingUrl(resp.data.id);
-        // window.open(
-        //   `https://link-uat.codat.io/company/${resp.data.id}`,
-        //   "_blank"
-        // );
+        setLoadingBanking(false);
       }
     });
   };
@@ -456,14 +475,18 @@ function MerchantHealth() {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
-          setBankingStatus(false);
+          // setBankingStatus(false);
 
-          window.open(
-            `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
-            "_blank"
-          );
+          // window.open(
+          //   `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
+          //   "_blank"
+          // );
         } else if (dasboardData["obv_account_score_status"] == "Completed") {
+          // setBankingStatus(false);
           setBankingStatus(true);
+        } else {
+          checkBankingStatusClick();
+          console.log("check");
         }
         console.log(
           "🚀 ~ file: merchant-health.js ~ line 190 ~ MerchantHealth ~ dasboardData",
@@ -471,8 +494,8 @@ function MerchantHealth() {
         );
       } else if (tabIndex == 1) {
         checkAccountingStatusClick();
+        console.log("checkl");
       } else {
-        checkBankingStatusClick();
       }
     }
   }, [dasboardData, tabIndex]);
@@ -507,7 +530,8 @@ function MerchantHealth() {
 
                     <TabPanel>
                       <section>
-                        {!bankingUrl && (
+                        {loadingBanking && !bankingUrl && <h3>Loading</h3>}
+                        {!bankingUrl && !loadingBanking && (
                           <>
                             <button
                               class="btn btn-primary banking-btn"
@@ -523,7 +547,7 @@ function MerchantHealth() {
                         )}
 
                         <div className="banking-panel">
-                          {!bankingUrl && (
+                          {!bankingUrl && !loadingBanking && (
                             <div className="banking-info-tooltip">
                               Connect your bank account using Open Banking. Only
                               the following required data will be requested:
@@ -541,7 +565,7 @@ function MerchantHealth() {
                             </div>
                           )}
 
-                          {bankingUrl && (
+                          {bankingUrl && !loadingBanking && (
                             <div className="row">
                               <div className="col-md-9">
                                 <div class="banking-url">
@@ -1463,7 +1487,8 @@ function MerchantHealth() {
                     </TabPanel>
                     <TabPanel>
                       <section>
-                        {!accoutingUrl && (
+                        {loadingAccouting && !accoutingUrl && <h3>Loading</h3>}
+                        {!accoutingUrl && !loadingAccouting && (
                           <>
                             <button
                               class="btn btn-primary accounting-btn"
@@ -1481,7 +1506,7 @@ function MerchantHealth() {
                         )}
 
                         <div className="merchent-accounting-panel">
-                          {!accoutingUrl && (
+                          {!accoutingUrl && !loadingAccouting && (
                             <div className="banking-info-tooltip">
                               Connect your accounting software to seamlessly
                               view all your data on the portal and the help
@@ -1499,7 +1524,7 @@ function MerchantHealth() {
                               </div>
                             </div>
                           )}
-                          {accoutingUrl && (
+                          {accoutingUrl && !loadingAccouting && (
                             <>
                               <div class="banking-url">
                                 <div class="form-group">

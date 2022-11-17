@@ -88,7 +88,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
     fileList.forEach((item) => {
       newlist.push({
         lastModified: item["lastModified"],
-
         lastModifiedDate: item["lastModifiedDate"],
         name: item["name"],
         size: item["size"],
@@ -124,17 +123,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
             "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
             resp
           );
-          // window.open(
-          //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-          //   "_blank"
-          // );
+
         });
       } else {
         setAccoutingUrl(resp.data.id);
-        // window.open(
-        //   `https://link-uat.codat.io/company/${resp.data.id}`,
-        //   "_blank"
-        // );
+
       }
     });
   };
@@ -174,10 +167,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
           resp
         );
 
-        // if (resp["message"] === "Status Updated to Linked") {
-        //   setAccoutingStatus(true);
-        //   setAccoutingUrl(resp.data.redirect);
-        // }
+
       })
       .catch((err) => {
         setBankingStatus(false);
@@ -208,25 +198,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
         console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
         window.open(resp.url, "_blank");
-        // getCompanyID(payload.lm_id).then((resp) => {
-        //   setAccoutingUrl(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-        //   );
-        //   console.log(
-        //     "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
-        //     resp
-        //   );
-        //   window.open(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-        //     "_blank"
-        //   );
-        // });
+
       } else {
-        // setAccoutingUrl(resp.data.id);
-        // window.open(
-        //   `https://link-uat.codat.io/company/${resp.data.id}`,
-        //   "_blank"
-        // );
+
       }
     });
   };
@@ -307,7 +281,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                         </Tooltip>
                       }
                     >
-                      {/* <tooltip> */}
                       {({ ref, ...triggerHandler }) => (
                         <img
                           className="cursor-pointer"
@@ -318,16 +291,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                         />
                       )}
 
-                      {/* </tooltip> */}
                     </OverlayTrigger>
-                    {/* <tooltip>
-                  <i
-                    className="fa fa-info-circle"
-                    data-tip="Use Open Banking to directly link your bank account information without the need of providing bank statements."
-                  >
-                    <ReactTooltip className={"tooltippanel"} />
-                  </i>
-                </tooltip> */}
+
                   </div>
                 </>
               )}
@@ -384,14 +349,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                     Link To Accounting <i className="fa fa-chevron-right"></i>
                   </button>
                   <div className="tooltip-panel accounting-tooltip">
-                    {/* <tooltip>
-                  <i
-                    className="fa fa-info-circle"
-                    data-tip="Connect your Accounting software to seamlessly view all your data on the portal and help increase your loan acceptance rate."
-                  >
-                    <ReactTooltip className={"tooltippanel"} />
-                  </i>
-                </tooltip> */}
+
                     <OverlayTrigger
                       placement="right"
                       overlay={
@@ -415,7 +373,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                         </Tooltip>
                       }
                     >
-                      {/* <tooltip> */}
                       {({ ref, ...triggerHandler }) => (
                         <img
                           className="cursor-pointer"
@@ -426,7 +383,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                         />
                       )}
 
-                      {/* </tooltip> */}
                     </OverlayTrigger>
                   </div>
                 </>
