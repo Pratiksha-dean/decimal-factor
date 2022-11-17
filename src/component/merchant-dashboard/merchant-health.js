@@ -549,6 +549,10 @@ function MerchantHealth() {
     }
   }, [dasboardData, tabIndex]);
 
+  const copyLinkToClipboard=(bankingUrlToCopy)=>{
+    navigator.clipboard.writeText(bankingUrlToCopy)
+  }
+
   return (
     <div className="dashboard-panel">
       <Header />
@@ -630,7 +634,7 @@ function MerchantHealth() {
                                       disabled
                                       value={bankingUrl}
                                     />
-                                    <button class="copyicon-col btn btn-primary">
+                                    <button class="copyicon-col btn btn-primary" onClick={()=>{copyLinkToClipboard(bankingUrl)}}>
                                       <i
                                         class="fa fa-clone"
                                         aria-hidden="true"
@@ -1792,7 +1796,7 @@ function MerchantHealth() {
                                     disabled
                                     id="accouting-url"
                                   />
-                                  <button class="copyicon-col btn btn-primary">
+                                  <button class="copyicon-col btn btn-primary" onClick={()=>{copyLinkToClipboard(accoutingUrl)}}>
                                     <i
                                       class="fa fa-clone"
                                       aria-hidden="true"
@@ -1929,5 +1933,6 @@ function MerchantHealth() {
     </div>
   );
 }
+
 
 export default MerchantHealth;
