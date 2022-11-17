@@ -33,6 +33,10 @@ export const getLinkingAndBankingData = () => {
 
 function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   console.log(
+    "🚀 ~ file: link-banking&accounting.js ~ line 35 ~ LinkBankingAccounting ~ activeStep",
+    activeStep
+  );
+  console.log(
     "🚀 ~ file: link-banking&accounting.js ~ line 31 ~ LinkBankingAccounting ~ data",
     data
   );
@@ -123,11 +127,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
             "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
             resp
           );
-
         });
       } else {
         setAccoutingUrl(resp.data.id);
-
       }
     });
   };
@@ -144,6 +146,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
+        } else if (resp["status"] == "PendingAuth") {
+          setAccoutingStatus(false);
+          // setAccoutingUrl(resp.data.redirect);
         }
       })
       .catch((err) => {
@@ -166,8 +171,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
           "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
           resp
         );
-
-
       })
       .catch((err) => {
         setBankingStatus(false);
@@ -198,9 +201,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
         console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
         window.open(resp.url, "_blank");
-
       } else {
-
       }
     });
   };
@@ -290,9 +291,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                           alt=""
                         />
                       )}
-
                     </OverlayTrigger>
-
                   </div>
                 </>
               )}
@@ -349,7 +348,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                     Link To Accounting <i className="fa fa-chevron-right"></i>
                   </button>
                   <div className="tooltip-panel accounting-tooltip">
-
                     <OverlayTrigger
                       placement="right"
                       overlay={
@@ -382,7 +380,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                           alt=""
                         />
                       )}
-
                     </OverlayTrigger>
                   </div>
                 </>
