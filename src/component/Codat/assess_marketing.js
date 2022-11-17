@@ -1,7 +1,6 @@
 import React from "react";
 import Datatables from "./Datatables";
 import Parser from 'html-react-parser';
-import ApexCharts from 'apexcharts';
 import ReactApexChart from "react-apexcharts";
 
 
@@ -99,19 +98,27 @@ setarrowclassName5 ('fa fa-chevron-right')
                 <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
                 </div></div>
-                <div className="col-md-3 source-sandbox">
-                  <label>Source </label> <img src={require("../../images/CommerceSandbox_Square.png")} alt="" className="commerce-img" />
-                  <label> Commerce Sandbox</label>
-                </div>
+                
                 <div className="col-md-3 ">
                 <div className="box-shape">
-                <label>Start Month</label>
-                <input type="date" name="" className="period-start" />
+                <label>Period Start</label>
+                <input type="month" name="" className="period-start" />
                 </div></div>
                 <div className="col-md-3 ">
-                <div className="box-shape">
-                <label>End Month</label>
-                <input type="date" name="" className="period-start" />
+                    <div className="box-shape">
+                <label>Period Length</label>
+                <select>
+                <option>1 Month</option>
+                    <option>2 Months</option>
+                    <option>3 Months</option>
+                    <option>4 Months</option>
+                    <option>5 Months</option>
+                </select>
+                </div></div>
+                <div className="col-md-3 ">
+                    <div class="box-shape">
+                <label>Period to Compare</label>
+                <input type="number" name="" className="period-compare" />
                 </div></div>
                
                 </div>

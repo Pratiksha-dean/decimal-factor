@@ -7,7 +7,7 @@ export default function Loaderspinner() {
    
      <div className="no-data-panel">
        
-     <div className="no-data">
+     <div className="no-data"> 
         <LoadingSpin
             duration="2s"
             width="5px"

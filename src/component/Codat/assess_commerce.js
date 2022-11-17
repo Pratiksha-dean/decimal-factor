@@ -142,10 +142,20 @@ export default function AssessCommerce(props) {
                
                 </div>
                 <div className="chart-div">
+                  <h3>Sales</h3>
+                  <div className="chart-second">
+                <div className="row">
+                  <div className="col-md-12">
+              <div className="value-box">
+              <label>Av. order value</label>
+              <h2 id="refundval">£51.4</h2>
+            </div>
+            </div></div></div>
               <ReactApexChart options={chartData} series={chartData.series} style={{'width':'100%'}} />
               <div className="chart-second">
                 <div className="row">
                   <div className="col-md-12">
+                    <h3>Merchant Health</h3>
               <div className="value-box">
               <label>Refund rate</label>
               <h2 id="refundval">0.19%</h2>
