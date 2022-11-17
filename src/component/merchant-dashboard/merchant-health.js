@@ -147,82 +147,91 @@ function MerchantHealth() {
     }
   }, [])
 
-  const downloadFile=async (fileType)=>{
+  const downloadFile = async (fileType) => {
     let response
-    switch(fileType){
-      case 'PDF_90':{
-        response=await bankingInsightsDownloadFile('90days', lead_accountScore ).then(data=>{
+    switch (fileType) {
+      case 'PDF_90': {
+        response = await bankingInsightsDownloadFile('90days', lead_accountScore).then(data => {
           console.log("pdf", data)
-          let url=JSON.parse(data.response).Url
-          if(url){
+          let url = JSON.parse(data.response).Url
+          if (url) {
             console.log("link", url)
-          window.open(url, "_blank")
-          }
-          else{
+            window.open(url, "_blank")
+          } else {
             alert("There is no data")
           }
-          
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
         })
         break;
       }
-      case 'PDF_UW':{
-        let baseUrl='https://sales.decimalfactor.com/staging'
-        response= await bankingInsightsDownloadFile( 'underwriters',lead_accountScore).then(data=>{
+      case 'PDF_UW': {
+        let baseUrl = 'https://sales.decimalfactor.com/staging/'
+        response = await bankingInsightsDownloadFile('underwriters', lead_accountScore).then(data => {
           console.log("pdf", data)
-          let url=JSON.parse(data.response).Url
-          if(url){
+          let url = JSON.parse(data.response).Url
+          if (url) {
             console.log("link", url)
-          window.open(url, "_blank")
-          }
-          else{
+            window.open(`${baseUrl}${url}`, "_blank")
+          } else {
             alert("There is no data")
           }
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
         })
         break
       }
-      case 'PDF_RAW':{
-        let baseUrl='https://sales.decimalfactor.com/staging'
-        response= await bankingInsightsDownloadFile( 'rawdata',lead_accountScore).then(data=>{
+      case 'PDF_RAW': {
+        let baseUrl = 'https://sales.decimalfactor.com/staging/'
+        response = await bankingInsightsDownloadFile('rawdata', lead_accountScore).then(data => {
           console.log("pdf", data)
-          let url=JSON.parse(data.response).Url
-          if(url){
+          let url = JSON.parse(data.response).Url
+          if (url) {
             console.log("link", url)
-          window.open(url, "_blank")
-          }
-          else{
+            window.open(`${baseUrl}${url}`, "_blank")
+          } else {
             alert("There is no data")
           }
-        })
-        break
-      }
-
-      case 'PDF_FULL':{
-        response=await bankingInsightsDownloadFile( 'fulldata',lead_accountScore).then(data=>{
-          console.log("pdf", data)
-          let url=JSON.parse(data.response).Url
-          if(url){
-            console.log("link", url)
-          window.open(url, "_blank")
-          }
-          else{
-            alert("There is no data")
-          }
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
         })
         break
       }
 
-      case 'CSV_ALL':{
-        let baseUrl='https://sales.decimalfactor.com/staging'
-        response = await bankingInsightsDownloadFile('csvdata', lead_accountScore).then(data=>{
+      case 'PDF_FULL': {
+        response = await bankingInsightsDownloadFile('fulldata', lead_accountScore).then(data => {
           console.log("pdf", data)
-          let url=JSON.parse(data.response).Url
-          if(url){
+          let url = JSON.parse(data.response).Url
+          if (url) {
             console.log("link", url)
-          window.open(url, "_blank")
-          }
-          else{
+            window.open(url, "_blank")
+          } else {
             alert("There is no data")
           }
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
+        })
+        break
+      }
+
+      case 'CSV_ALL': {
+        let baseUrl = 'https://sales.decimalfactor.com/staging/'
+        response = await bankingInsightsDownloadFile('csvdata', lead_accountScore).then(data => {
+          console.log("pdf", data)
+          let url = JSON.parse(data.response).Url
+          if (url) {
+            console.log("link", url)
+            window.open(`${baseUrl}${url}`, "_blank")
+          } else {
+            alert("There is no data")
+          }
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
         })
         break
       }
@@ -539,7 +548,7 @@ function MerchantHealth() {
                                                <div className="card-1 white-bg">
                                           <p>
                                             <strong>
-                                              {income.vendorDescription}{" "}<div className="income-sub-category">{income.subCategoryDescription}</div>
+                                              {income.vendorDescription}{" "}<div className="">{income.subCategoryDescription}</div>
                                             </strong>
                                           </p>
                                           <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
@@ -573,10 +582,10 @@ function MerchantHealth() {
                                             :
                                             <>
 
-                                          <div className="card-1 card-2 white-bg">
+                                          <div className="card-1 card-2">
                                           <p>
                                             <strong>
-                                            {income.vendorDescription}{" "}<div className="income-sub-category">{income.subCategoryDescription}</div>
+                                            {income.vendorDescription}{" "}<div className="">{income.subCategoryDescription}</div>
                                             </strong>
                                           </p>
                                           <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
