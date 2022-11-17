@@ -65,7 +65,9 @@ function PersonalDetails() {
     [fieldNames.EMAIL]: userDetails
       ? userDetails["email"]
       : dasboardData["lf_business_email"],
-    [fieldNames.PHONE]: userDetails  ?  userDetails["phone"] : dasboardData["lf_telephone"] ,
+    [fieldNames.PHONE]: userDetails["phone"]
+      ? userDetails["phone"]
+      : dasboardData && dasboardData["lf_telephone"],
     address: userDetails["address"] || "",
   };
   console.log(

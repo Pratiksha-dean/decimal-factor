@@ -102,8 +102,14 @@ function MerchantHealth() {
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
 
+  const [isClickedLinkedToBanking, setIsClickedLinkedToBanking] =
+    useState(false);
+
+  const [isClickedLinkedToAccouting, setIsClickedLinkedToAccouting] =
+    useState(false);
+
   const [loadingBanking, setLoadingBanking] = useState(false);
-  const [loadingAccouting, setLoadingAccouting] = useState(false);
+  const [loadingAccouting, setLoadingAccouting] = useState(true);
   console.log(
     "🚀 ~ file: merchant-health.js ~ line 107 ~ MerchantHealth ~ loadingAccouting",
     loadingAccouting
@@ -220,92 +226,92 @@ function MerchantHealth() {
   }, []);
 
   const downloadFile = async (fileType) => {
-    let response;
+    let response
     switch (fileType) {
-      case "PDF_90": {
-        response = await bankingInsightsDownloadFile(
-          "90days",
-          lead_accountScore
-        ).then((data) => {
-          console.log("pdf", data);
-          let url = JSON.parse(data.response).Url;
+      case 'PDF_90': {
+        response = await bankingInsightsDownloadFile('90days', lead_accountScore).then(data => {
+          console.log("pdf", data)
+          let url = JSON.parse(data.response).Url
           if (url) {
-            console.log("link", url);
-            window.open(url, "_blank");
+            console.log("link", url)
+            window.open(url, "_blank")
           } else {
-            alert("There is no data");
+            alert("There is no data")
           }
-        });
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
+        })
         break;
       }
-      case "PDF_UW": {
-        let baseUrl = "https://sales.decimalfactor.com/staging";
-        response = await bankingInsightsDownloadFile(
-          "underwriters",
-          lead_accountScore
-        ).then((data) => {
-          console.log("pdf", data);
-          let url = JSON.parse(data.response).Url;
+      case 'PDF_UW': {
+        let baseUrl = 'https://sales.decimalfactor.com/staging/'
+        response = await bankingInsightsDownloadFile('underwriters', lead_accountScore).then(data => {
+          console.log("pdf", data)
+          let url = JSON.parse(data.response).Url
           if (url) {
-            console.log("link", url);
-            window.open(url, "_blank");
+            console.log("link", url)
+            window.open(`${baseUrl}${url}`, "_blank")
           } else {
-            alert("There is no data");
+            alert("There is no data")
           }
-        });
-        break;
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
+        })
+        break
       }
-      case "PDF_RAW": {
-        let baseUrl = "https://sales.decimalfactor.com/staging";
-        response = await bankingInsightsDownloadFile(
-          "rawdata",
-          lead_accountScore
-        ).then((data) => {
-          console.log("pdf", data);
-          let url = JSON.parse(data.response).Url;
+      case 'PDF_RAW': {
+        let baseUrl = 'https://sales.decimalfactor.com/staging/'
+        response = await bankingInsightsDownloadFile('rawdata', lead_accountScore).then(data => {
+          console.log("pdf", data)
+          let url = JSON.parse(data.response).Url
           if (url) {
-            console.log("link", url);
-            window.open(url, "_blank");
+            console.log("link", url)
+            window.open(`${baseUrl}${url}`, "_blank")
           } else {
-            alert("There is no data");
+            alert("There is no data")
           }
-        });
-        break;
-      }
-
-      case "PDF_FULL": {
-        response = await bankingInsightsDownloadFile(
-          "fulldata",
-          lead_accountScore
-        ).then((data) => {
-          console.log("pdf", data);
-          let url = JSON.parse(data.response).Url;
-          if (url) {
-            console.log("link", url);
-            window.open(url, "_blank");
-          } else {
-            alert("There is no data");
-          }
-        });
-        break;
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
+        })
+        break
       }
 
-      case "CSV_ALL": {
-        let baseUrl = "https://sales.decimalfactor.com/staging";
-        response = await bankingInsightsDownloadFile(
-          "csvdata",
-          lead_accountScore
-        ).then((data) => {
-          console.log("pdf", data);
-          let url = JSON.parse(data.response).Url;
+      case 'PDF_FULL': {
+        response = await bankingInsightsDownloadFile('fulldata', lead_accountScore).then(data => {
+          console.log("pdf", data)
+          let url = JSON.parse(data.response).Url
           if (url) {
-            console.log("link", url);
-            window.open(url, "_blank");
+            console.log("link", url)
+            window.open(url, "_blank")
           } else {
-            alert("There is no data");
+            alert("There is no data")
           }
-        });
-        break;
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
+        })
+        break
+      }
+
+      case 'CSV_ALL': {
+        let baseUrl = 'https://sales.decimalfactor.com/staging/'
+        response = await bankingInsightsDownloadFile('csvdata', lead_accountScore).then(data => {
+          console.log("pdf", data)
+          let url = JSON.parse(data.response).Url
+          if (url) {
+            console.log("link", url)
+            window.open(`${baseUrl}${url}`, "_blank")
+          } else {
+            alert("There is no data")
+          }
+        }).catch(err=>{
+          console.log(`Error occured: ${err}`)
+          alert(err)
+        })
+        break
       }
     }
   };
@@ -322,7 +328,7 @@ function MerchantHealth() {
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    setLoadingAccouting(true);
+    // setLoadingAccouting(true);
 
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
@@ -333,13 +339,19 @@ function MerchantHealth() {
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
-          setLoadingAccouting(false);
+          setLoadingAccouting(true);
+
+          // setLoadingAccouting(false);
         } else if (resp.status == "PendingAuth") {
-          getLinkToAccouting();
+          // getLinkToAccouting();
+          setAccoutingStatus(false);
+          setLoadingAccouting(false);
         }
       })
       .catch((err) => {
         setAccoutingStatus(false);
+        setLoadingAccouting(true);
+
         console.log(
           "🚀 ~ file: merchant-health.js ~ line 344 ~ checkAccountingStatusClick ~ accoutingUrl",
           accoutingUrl
@@ -347,9 +359,9 @@ function MerchantHealth() {
         if (!accoutingUrl) {
           getLinkToAccouting();
           console.log("sghds");
-          setLoadingAccouting(false);
+          // setLoadingAccouting(false);
         } else {
-          setLoadingAccouting(false);
+          // setLoadingAccouting(false);
         }
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
@@ -359,7 +371,7 @@ function MerchantHealth() {
   };
 
   const getLinkToAccouting = () => {
-    setLoadingAccouting(true);
+    // setLoadingAccouting(true);
 
     let payload = {
       lm_id: userDetails["lead_id"],
@@ -373,7 +385,7 @@ function MerchantHealth() {
         resp,
         resp.success == "false" && resp.status == 500
       );
-      setLoadingAccouting(false);
+      // setLoadingAccouting(false);
       if (
         resp.success == "false" &&
         resp.code == 500 &&
@@ -387,21 +399,29 @@ function MerchantHealth() {
             "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
             resp
           );
+          setLoadingAccouting(true);
+
           console.log("open");
-          window.open(
-            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-            "_blank"
-          );
-          setLoadingAccouting(false);
+          if (isClickedLinkedToAccouting) {
+            window.open(
+              `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+              "_blank"
+            );
+          }
+          // setLoadingAccouting(false);
         });
       } else {
         setAccoutingUrl(`https://link-uat.codat.io/company/${resp.data.id}`);
         console.log("open");
-        setLoadingAccouting(false);
-        window.open(
-          `https://link-uat.codat.io/company/${resp.data.id}`,
-          "_blank"
-        );
+        setLoadingAccouting(true);
+        if (isClickedLinkedToAccouting) {
+          window.open(
+            `https://link-uat.codat.io/company/${resp.data.id}`,
+            "_blank"
+          );
+        }
+
+        // setLoadingAccouting(false);
       }
     });
   };
@@ -455,7 +475,9 @@ function MerchantHealth() {
 
         console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
-        window.open(resp.url, "_blank");
+        if (isClickedLinkedToBanking) {
+          window.open(resp.url, "_blank");
+        }
       } else {
         setLoadingBanking(false);
       }
@@ -477,10 +499,12 @@ function MerchantHealth() {
           );
           // setBankingStatus(false);
 
-          // window.open(
-          //   `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
-          //   "_blank"
-          // );
+          if (isClickedLinkedToBanking) {
+            window.open(
+              `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
+              "_blank"
+            );
+          }
         } else if (dasboardData["obv_account_score_status"] == "Completed") {
           // setBankingStatus(false);
           setBankingStatus(true);
@@ -535,7 +559,10 @@ function MerchantHealth() {
                           <>
                             <button
                               class="btn btn-primary banking-btn"
-                              onClick={() => getLinkToBanking()}
+                              onClick={() => {
+                                getLinkToBanking();
+                                setIsClickedLinkedToBanking(true);
+                              }}
                             >
                               Link To Banking{" "}
                               <i
@@ -883,20 +910,91 @@ function MerchantHealth() {
                                           }
                                         )}
                                     </div>
-                                    <div className="card-bottom">
-                                      <div className="box-id-1">
-                                        <p>
-                                          <strong>
-                                            total in: +£
-                                            {financialServicesTotalIn}
-                                          </strong>
-                                        </p>
-                                        <p>
-                                          <strong>
-                                            monthly av: +£
-                                            {financialServicesMonthlyAvgIn}
-                                          </strong>
-                                        </p>
+                                  </div>
+
+                                  <div className="col-md-6">
+                                    <div className=" financial-service income-panel">
+                                      <h4>Income ({incomeAnalysisSummary.length})</h4>
+                                      <div className="scroll-bar-2">
+
+                                      {incomeAnalysisSummary.length>0 && incomeAnalysisSummary.map((income, index)=>{
+                                          return(
+                                            index%2==0?
+                                            <>
+                                               <div className="card-1 white-bg">
+                                          <p>
+                                            <strong>
+                                              {income.vendorDescription}{" "}<div className="">{income.subCategoryDescription}</div>
+                                            </strong>
+                                          </p>
+                                          <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
+                                          <p>
+                                            <strong>{income.debitSummary.transactionCount}</strong> debit{" "}
+                                            {income.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{income.debitSummary.lastTransaction.substring(0, 4)>='1997'?income.debitSummary.lastTransaction:'--'})</span>
+                                          </p>
+                                          <div className="box-id-1">
+                                            <p>
+                                              <strong>total in: +£{income.creditSummary.total}</strong>
+                                            </p>
+                                            <p>
+                                              <strong>monthly av: +£{income.creditSummary.monthlyAverage}</strong>
+                                            </p>
+                                          </div>
+                                          <div className="box-id-2">
+                                            <p>
+                                              <strong>
+                                                total out: -£{income.debitSummary.monthlyAverage}
+                                              </strong>
+                                            </p>
+                                            <p>
+                                              <strong>
+                                                monthly av: -£{income.debitSummary.monthlyAverage}
+                                              </strong>
+                                            </p>
+                                          </div>
+                                        </div>
+                                            </>
+                                            :
+                                            <>
+
+                                          <div className="card-1 card-2">
+                                          <p>
+                                            <strong>
+                                            {income.vendorDescription}{" "}<div className="">{income.subCategoryDescription}</div>
+                                            </strong>
+                                          </p>
+                                          <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
+                                          <p>
+                                            <strong>{income.debitSummary.transactionCount}</strong> debit{" "}
+                                            {income.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
+                                            <span>{income.debitSummary.lastTransaction.substring(0, 4)>='1997'?income.debitSummary.lastTransaction:'--'})</span>
+                                          </p>
+                                          <div className="box-id-1">
+                                            <p>
+                                              <strong>total in: +£{income.creditSummary.total}</strong>
+                                            </p>
+                                            <p>
+                                              <strong>monthly av: +£{income.creditSummary.monthlyAverage}</strong>
+                                            </p>
+                                          </div>
+                                          <div className="box-id-2">
+                                            <p>
+                                              <strong>
+                                                total out: -£{income.debitSummary.total}
+                                              </strong>
+                                            </p>
+                                            <p>
+                                              <strong>
+                                                monthly av: -£{income.debitSummary.monthlyAverage}
+                                              </strong>
+                                            </p>
+                                          </div>
+                                        </div>
+                                            </>
+                                          )
+                                      })}
+
                                       </div>
                                       <div className="box-id-2">
                                         <p>
@@ -1493,6 +1591,7 @@ function MerchantHealth() {
                             <button
                               class="btn btn-primary accounting-btn"
                               onClick={() => {
+                                setIsClickedLinkedToAccouting();
                                 getLinkToAccouting();
                               }}
                             >
@@ -1524,7 +1623,7 @@ function MerchantHealth() {
                               </div>
                             </div>
                           )}
-                          {accoutingUrl && !loadingAccouting && (
+                          {accoutingUrl && loadingAccouting && (
                             <>
                               <div class="banking-url">
                                 <div class="form-group">
