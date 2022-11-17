@@ -18,6 +18,7 @@ import {
 } from "../../request";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function PersonalDetails() {
   const storeData = {};
@@ -54,6 +55,8 @@ function PersonalDetails() {
       });
     }
   };
+
+  console.log("userDetails]", userDetails["phone"]);
 
   const initialValues = {
     [fieldNames.FIRSTNAME]: userDetails
@@ -119,7 +122,7 @@ function PersonalDetails() {
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
-                  enableReinitialize
+                  enableReinitialize={userDetails}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
                     console.log(
                       "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ values",
@@ -136,13 +139,13 @@ function PersonalDetails() {
                         setLoading(false);
                         if (resp.isSuccess == 1) {
                           ToastMessage("Data saved successfully!", "success");
-                          resetForm({});
                           // getData();
                           getUserDetailsApi(userDetails.lead_id)
                             .then((response) => {
                               console.log(
                                 "🚀 ~ file: personal-details.js ~ line 141 ~ .then ~ response",
-                                response
+                                response,
+                                response.data.status == 1
                               );
                               if (response.data.status == 1) {
                                 // ToastMessage(
@@ -251,7 +254,31 @@ function PersonalDetails() {
                                 <div className="form-group">
                                   <label>
                                     Email Address{" "}
-                                    <tooltip>
+                                    <OverlayTrigger
+                                      placement="top"
+                                      overlay={
+                                        <Tooltip id="button-tooltip-2">
+                                          This is the email address where all
+                                          communication will sent to.
+                                        </Tooltip>
+                                      }
+                                    >
+                                      {({ ref, ...triggerHandler }) => (
+                                        <span
+                                          ref={ref}
+                                          {...triggerHandler}
+                                          className="ml-2 cursor-pointer"
+                                        >
+                                          <img
+                                            ref={ref}
+                                            {...triggerHandler}
+                                            src={require("../../images/info-icon.png")}
+                                            alt=""
+                                          />
+                                        </span>
+                                      )}
+                                    </OverlayTrigger>
+                                    {/* <tooltip>
                                       <i
                                         className="fa fa-info-circle"
                                         data-tip="This is the email address where all communication will sent to."
@@ -260,7 +287,7 @@ function PersonalDetails() {
                                           className={"tooltippanel"}
                                         />
                                       </i>
-                                    </tooltip>
+                                    </tooltip> */}
                                   </label>
                                   <input
                                     type="email"

@@ -102,12 +102,6 @@ function MerchantHealth() {
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
 
-  const [isClickedLinkedToBanking, setIsClickedLinkedToBanking] =
-    useState(false);
-
-  const [isClickedLinkedToAccouting, setIsClickedLinkedToAccouting] =
-    useState(false);
-
   const [loadingBanking, setLoadingBanking] = useState(false);
   const [loadingAccouting, setLoadingAccouting] = useState(true);
   console.log(
@@ -226,92 +220,117 @@ function MerchantHealth() {
   }, []);
 
   const downloadFile = async (fileType) => {
-    let response
+    let response;
     switch (fileType) {
-      case 'PDF_90': {
-        response = await bankingInsightsDownloadFile('90days', lead_accountScore).then(data => {
-          console.log("pdf", data)
-          let url = JSON.parse(data.response).Url
-          if (url) {
-            console.log("link", url)
-            window.open(url, "_blank")
-          } else {
-            alert("There is no data")
-          }
-        }).catch(err=>{
-          console.log(`Error occured: ${err}`)
-          alert(err)
-        })
+      case "PDF_90": {
+        response = await bankingInsightsDownloadFile(
+          "90days",
+          lead_accountScore
+        )
+          .then((data) => {
+            console.log("pdf", data);
+            let url = JSON.parse(data.response).Url;
+            if (url) {
+              console.log("link", url);
+              window.open(url, "_blank");
+            } else {
+              alert("There is no data");
+            }
+          })
+          .catch((err) => {
+            console.log(`Error occured: ${err}`);
+            alert(err);
+          });
         break;
       }
-      case 'PDF_UW': {
-        let baseUrl = 'https://sales.decimalfactor.com/staging/'
-        response = await bankingInsightsDownloadFile('underwriters', lead_accountScore).then(data => {
-          console.log("pdf", data)
-          let url = JSON.parse(data.response).Url
-          if (url) {
-            console.log("link", url)
-            window.open(`${baseUrl}${url}`, "_blank")
-          } else {
-            alert("There is no data")
-          }
-        }).catch(err=>{
-          console.log(`Error occured: ${err}`)
-          alert(err)
-        })
-        break
+      case "PDF_UW": {
+        let baseUrl = "https://sales.decimalfactor.com/staging/";
+        response = await bankingInsightsDownloadFile(
+          "underwriters",
+          lead_accountScore
+        )
+          .then((data) => {
+            console.log("pdf", data);
+            let url = JSON.parse(data.response).Url;
+            if (url) {
+              console.log("link", url);
+              window.open(`${baseUrl}${url}`, "_blank");
+            } else {
+              alert("There is no data");
+            }
+          })
+          .catch((err) => {
+            console.log(`Error occured: ${err}`);
+            alert(err);
+          });
+        break;
       }
-      case 'PDF_RAW': {
-        let baseUrl = 'https://sales.decimalfactor.com/staging/'
-        response = await bankingInsightsDownloadFile('rawdata', lead_accountScore).then(data => {
-          console.log("pdf", data)
-          let url = JSON.parse(data.response).Url
-          if (url) {
-            console.log("link", url)
-            window.open(`${baseUrl}${url}`, "_blank")
-          } else {
-            alert("There is no data")
-          }
-        }).catch(err=>{
-          console.log(`Error occured: ${err}`)
-          alert(err)
-        })
-        break
-      }
-
-      case 'PDF_FULL': {
-        response = await bankingInsightsDownloadFile('fulldata', lead_accountScore).then(data => {
-          console.log("pdf", data)
-          let url = JSON.parse(data.response).Url
-          if (url) {
-            console.log("link", url)
-            window.open(url, "_blank")
-          } else {
-            alert("There is no data")
-          }
-        }).catch(err=>{
-          console.log(`Error occured: ${err}`)
-          alert(err)
-        })
-        break
+      case "PDF_RAW": {
+        let baseUrl = "https://sales.decimalfactor.com/staging/";
+        response = await bankingInsightsDownloadFile(
+          "rawdata",
+          lead_accountScore
+        )
+          .then((data) => {
+            console.log("pdf", data);
+            let url = JSON.parse(data.response).Url;
+            if (url) {
+              console.log("link", url);
+              window.open(`${baseUrl}${url}`, "_blank");
+            } else {
+              alert("There is no data");
+            }
+          })
+          .catch((err) => {
+            console.log(`Error occured: ${err}`);
+            alert(err);
+          });
+        break;
       }
 
-      case 'CSV_ALL': {
-        let baseUrl = 'https://sales.decimalfactor.com/staging/'
-        response = await bankingInsightsDownloadFile('csvdata', lead_accountScore).then(data => {
-          console.log("pdf", data)
-          let url = JSON.parse(data.response).Url
-          if (url) {
-            console.log("link", url)
-            window.open(`${baseUrl}${url}`, "_blank")
-          } else {
-            alert("There is no data")
-          }
-        }).catch(err=>{
-          console.log(`Error occured: ${err}`)
-          alert(err)
-        })
-        break
+      case "PDF_FULL": {
+        response = await bankingInsightsDownloadFile(
+          "fulldata",
+          lead_accountScore
+        )
+          .then((data) => {
+            console.log("pdf", data);
+            let url = JSON.parse(data.response).Url;
+            if (url) {
+              console.log("link", url);
+              window.open(url, "_blank");
+            } else {
+              alert("There is no data");
+            }
+          })
+          .catch((err) => {
+            console.log(`Error occured: ${err}`);
+            alert(err);
+          });
+        break;
+      }
+
+      case "CSV_ALL": {
+        let baseUrl = "https://sales.decimalfactor.com/staging/";
+        response = await bankingInsightsDownloadFile(
+          "csvdata",
+          lead_accountScore
+        )
+          .then((data) => {
+            console.log("pdf", data);
+            let url = JSON.parse(data.response).Url;
+            if (url) {
+              console.log("link", url);
+              window.open(`${baseUrl}${url}`, "_blank");
+            } else {
+              alert("There is no data");
+            }
+          })
+          .catch((err) => {
+            console.log(`Error occured: ${err}`);
+            alert(err);
+          });
+        break;
       }
     }
   };
@@ -370,7 +389,7 @@ function MerchantHealth() {
       });
   };
 
-  const getLinkToAccouting = () => {
+  const getLinkToAccouting = (isClicked) => {
     // setLoadingAccouting(true);
 
     let payload = {
@@ -402,7 +421,8 @@ function MerchantHealth() {
           setLoadingAccouting(true);
 
           console.log("open");
-          if (isClickedLinkedToAccouting) {
+
+          if (isClicked) {
             window.open(
               `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
               "_blank"
@@ -414,7 +434,7 @@ function MerchantHealth() {
         setAccoutingUrl(`https://link-uat.codat.io/company/${resp.data.id}`);
         console.log("open");
         setLoadingAccouting(true);
-        if (isClickedLinkedToAccouting) {
+        if (isClicked) {
           window.open(
             `https://link-uat.codat.io/company/${resp.data.id}`,
             "_blank"
@@ -453,8 +473,13 @@ function MerchantHealth() {
       });
   };
 
-  const getLinkToBanking = () => {
+  const getLinkToBanking = (isClicked) => {
+    console.log(
+      "🚀 ~ file: merchant-health.js ~ line 486 ~ getLinkToBanking ~ isClicked",
+      isClicked
+    );
     setLoadingBanking(true);
+
     let payload = {
       lm_um_id: dasboardData["lm_id"],
       lf_customer_name: dasboardData["lf_customer_name"],
@@ -475,7 +500,7 @@ function MerchantHealth() {
 
         console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
-        if (isClickedLinkedToBanking) {
+        if (isClicked) {
           window.open(resp.url, "_blank");
         }
       } else {
@@ -499,12 +524,12 @@ function MerchantHealth() {
           );
           // setBankingStatus(false);
 
-          if (isClickedLinkedToBanking) {
-            window.open(
-              `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
-              "_blank"
-            );
-          }
+          // if (isClickedLinkedToBanking) {
+          //   window.open(
+          //     `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
+          //     "_blank"
+          //   );
+          // }
         } else if (dasboardData["obv_account_score_status"] == "Completed") {
           // setBankingStatus(false);
           setBankingStatus(true);
@@ -560,8 +585,7 @@ function MerchantHealth() {
                             <button
                               class="btn btn-primary banking-btn"
                               onClick={() => {
-                                getLinkToBanking();
-                                setIsClickedLinkedToBanking(true);
+                                getLinkToBanking(true);
                               }}
                             >
                               Link To Banking{" "}
@@ -914,87 +938,218 @@ function MerchantHealth() {
 
                                   <div className="col-md-6">
                                     <div className=" financial-service income-panel">
-                                      <h4>Income ({incomeAnalysisSummary.length})</h4>
+                                      <h4>
+                                        Income ({incomeAnalysisSummary.length})
+                                      </h4>
                                       <div className="scroll-bar-2">
-
-                                      {incomeAnalysisSummary.length>0 && incomeAnalysisSummary.map((income, index)=>{
-                                          return(
-                                            index%2==0?
-                                            <>
-                                               <div className="card-1 white-bg">
-                                          <p>
-                                            <strong>
-                                              {income.vendorDescription}{" "}<div className="">{income.subCategoryDescription}</div>
-                                            </strong>
-                                          </p>
-                                          <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
-                                          <p>
-                                            <strong>{income.debitSummary.transactionCount}</strong> debit{" "}
-                                            {income.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
-                                            <span>{income.debitSummary.lastTransaction.substring(0, 4)>='1997'?income.debitSummary.lastTransaction:'--'})</span>
-                                          </p>
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>total in: +£{income.creditSummary.total}</strong>
-                                            </p>
-                                            <p>
-                                              <strong>monthly av: +£{income.creditSummary.monthlyAverage}</strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£{income.debitSummary.monthlyAverage}
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£{income.debitSummary.monthlyAverage}
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                            </>
-                                            :
-                                            <>
-
-                                          <div className="card-1 card-2">
-                                          <p>
-                                            <strong>
-                                            {income.vendorDescription}{" "}<div className="">{income.subCategoryDescription}</div>
-                                            </strong>
-                                          </p>
-                                          <p>{income.creditSummary.transactionCount} credit{" "} {income.creditSummary.transactionCount<2?'transaction':'transactions'} (on {income.creditSummary.lastTransaction.substring(0, 4)>='1997'?income.creditSummary.lastTransaction:'--'})</p>
-                                          <p>
-                                            <strong>{income.debitSummary.transactionCount}</strong> debit{" "}
-                                            {income.debitSummary.transactionCount<2?'transaction':'transactions'} (last on{" "}
-                                            <span>{income.debitSummary.lastTransaction.substring(0, 4)>='1997'?income.debitSummary.lastTransaction:'--'})</span>
-                                          </p>
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>total in: +£{income.creditSummary.total}</strong>
-                                            </p>
-                                            <p>
-                                              <strong>monthly av: +£{income.creditSummary.monthlyAverage}</strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£{income.debitSummary.total}
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£{income.debitSummary.monthlyAverage}
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                            </>
-                                          )
-                                      })}
-
+                                        {incomeAnalysisSummary.length > 0 &&
+                                          incomeAnalysisSummary.map(
+                                            (income, index) => {
+                                              return index % 2 == 0 ? (
+                                                <>
+                                                  <div className="card-1 white-bg">
+                                                    <p>
+                                                      <strong>
+                                                        {
+                                                          income.vendorDescription
+                                                        }{" "}
+                                                        <div className="">
+                                                          {
+                                                            income.subCategoryDescription
+                                                          }
+                                                        </div>
+                                                      </strong>
+                                                    </p>
+                                                    <p>
+                                                      {
+                                                        income.creditSummary
+                                                          .transactionCount
+                                                      }{" "}
+                                                      credit{" "}
+                                                      {income.creditSummary
+                                                        .transactionCount < 2
+                                                        ? "transaction"
+                                                        : "transactions"}{" "}
+                                                      (on{" "}
+                                                      {income.creditSummary.lastTransaction.substring(
+                                                        0,
+                                                        4
+                                                      ) >= "1997"
+                                                        ? income.creditSummary
+                                                            .lastTransaction
+                                                        : "--"}
+                                                      )
+                                                    </p>
+                                                    <p>
+                                                      <strong>
+                                                        {
+                                                          income.debitSummary
+                                                            .transactionCount
+                                                        }
+                                                      </strong>{" "}
+                                                      debit{" "}
+                                                      {income.debitSummary
+                                                        .transactionCount < 2
+                                                        ? "transaction"
+                                                        : "transactions"}{" "}
+                                                      (last on{" "}
+                                                      <span>
+                                                        {income.debitSummary.lastTransaction.substring(
+                                                          0,
+                                                          4
+                                                        ) >= "1997"
+                                                          ? income.debitSummary
+                                                              .lastTransaction
+                                                          : "--"}
+                                                        )
+                                                      </span>
+                                                    </p>
+                                                    <div className="box-id-1">
+                                                      <p>
+                                                        <strong>
+                                                          total in: +£
+                                                          {
+                                                            income.creditSummary
+                                                              .total
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                      <p>
+                                                        <strong>
+                                                          monthly av: +£
+                                                          {
+                                                            income.creditSummary
+                                                              .monthlyAverage
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                    </div>
+                                                    <div className="box-id-2">
+                                                      <p>
+                                                        <strong>
+                                                          total out: -£
+                                                          {
+                                                            income.debitSummary
+                                                              .monthlyAverage
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                      <p>
+                                                        <strong>
+                                                          monthly av: -£
+                                                          {
+                                                            income.debitSummary
+                                                              .monthlyAverage
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                    </div>
+                                                  </div>
+                                                </>
+                                              ) : (
+                                                <>
+                                                  <div className="card-1 card-2">
+                                                    <p>
+                                                      <strong>
+                                                        {
+                                                          income.vendorDescription
+                                                        }{" "}
+                                                        <div className="">
+                                                          {
+                                                            income.subCategoryDescription
+                                                          }
+                                                        </div>
+                                                      </strong>
+                                                    </p>
+                                                    <p>
+                                                      {
+                                                        income.creditSummary
+                                                          .transactionCount
+                                                      }{" "}
+                                                      credit{" "}
+                                                      {income.creditSummary
+                                                        .transactionCount < 2
+                                                        ? "transaction"
+                                                        : "transactions"}{" "}
+                                                      (on{" "}
+                                                      {income.creditSummary.lastTransaction.substring(
+                                                        0,
+                                                        4
+                                                      ) >= "1997"
+                                                        ? income.creditSummary
+                                                            .lastTransaction
+                                                        : "--"}
+                                                      )
+                                                    </p>
+                                                    <p>
+                                                      <strong>
+                                                        {
+                                                          income.debitSummary
+                                                            .transactionCount
+                                                        }
+                                                      </strong>{" "}
+                                                      debit{" "}
+                                                      {income.debitSummary
+                                                        .transactionCount < 2
+                                                        ? "transaction"
+                                                        : "transactions"}{" "}
+                                                      (last on{" "}
+                                                      <span>
+                                                        {income.debitSummary.lastTransaction.substring(
+                                                          0,
+                                                          4
+                                                        ) >= "1997"
+                                                          ? income.debitSummary
+                                                              .lastTransaction
+                                                          : "--"}
+                                                        )
+                                                      </span>
+                                                    </p>
+                                                    <div className="box-id-1">
+                                                      <p>
+                                                        <strong>
+                                                          total in: +£
+                                                          {
+                                                            income.creditSummary
+                                                              .total
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                      <p>
+                                                        <strong>
+                                                          monthly av: +£
+                                                          {
+                                                            income.creditSummary
+                                                              .monthlyAverage
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                    </div>
+                                                    <div className="box-id-2">
+                                                      <p>
+                                                        <strong>
+                                                          total out: -£
+                                                          {
+                                                            income.debitSummary
+                                                              .total
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                      <p>
+                                                        <strong>
+                                                          monthly av: -£
+                                                          {
+                                                            income.debitSummary
+                                                              .monthlyAverage
+                                                          }
+                                                        </strong>
+                                                      </p>
+                                                    </div>
+                                                  </div>
+                                                </>
+                                              );
+                                            }
+                                          )}
                                       </div>
                                       <div className="box-id-2">
                                         <p>
@@ -1591,8 +1746,7 @@ function MerchantHealth() {
                             <button
                               class="btn btn-primary accounting-btn"
                               onClick={() => {
-                                setIsClickedLinkedToAccouting();
-                                getLinkToAccouting();
+                                getLinkToAccouting(true);
                               }}
                             >
                               Link To Accounting{" "}

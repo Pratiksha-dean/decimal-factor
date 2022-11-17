@@ -31,7 +31,7 @@ export const getLinkingAndBankingData = () => {
   return JSON.parse(localStorage.getItem("reviewLinkingAndBankingData"));
 };
 
-function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
+function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   console.log(
     "🚀 ~ file: link-banking&accounting.js ~ line 35 ~ LinkBankingAccounting ~ activeStep",
     activeStep
@@ -53,6 +53,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   const [bankingStatus, setBankingStatus] = useState(false);
   const [copiedaccoutingUrl, setCopiedAccoutingUrl] = useState();
   const [accountingStatus, setAccoutingStatus] = useState(false);
+  const [loadingBanking, setLoadingBanking] = useState(false);
+  const [loadingAccouting, setLoadingAccouting] = useState(true);
   console.log(
     "🚀 ~ file: link-banking&accounting.js ~ line 30 ~ LinkBankingAccounting ~ userDetails",
     userDetails
@@ -120,6 +122,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
       );
       if (resp.success == "false" && resp.code == 500) {
         getCompanyID(payload.lm_id).then((resp) => {
+          setLoadingAccouting(false);
+
           setAccoutingUrl(
             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
           );
@@ -129,13 +133,15 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
           );
         });
       } else {
-        setAccoutingUrl(resp.data.id);
+        setAccoutingUrl(resp.data.redirect);
+        setLoadingAccouting(false);
       }
     });
   };
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
+    setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
         console.log(
@@ -146,8 +152,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
+          setLoadingAccouting(false);
         } else if (resp["status"] == "PendingAuth") {
           setAccoutingStatus(false);
+          setLoadingAccouting(false);
+
           // setAccoutingUrl(resp.data.redirect);
         }
       })
@@ -165,8 +174,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
 
   const checkBankingStatusClick = () => {
     // userDetails["lead_id"];
+    setLoadingBanking(true);
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
+        setLoadingBanking(false);
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
           resp
@@ -174,6 +185,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
       })
       .catch((err) => {
         setBankingStatus(false);
+        setLoadingBanking(false);
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
           err
@@ -213,9 +225,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
   };
 
   useEffect(() => {
+    request();
     checkAccountingStatusClick();
     checkBankingStatusClick();
-    // getData();
   }, []);
 
   useEffect(() => {
@@ -250,8 +262,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
               opacity: uploadBankStatementToggle ? 0.3 : "",
             }}
           >
+            {loadingBanking && <h6>Loading Banking Data...</h6>}
             <div className="Accounting-left-panel">
-              {!bankingUrl && (
+              {!bankingUrl && !loadingBanking && (
                 <>
                   <button
                     className="btn btn-primary banking-btn"
@@ -296,7 +309,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 </>
               )}
 
-              {bankingUrl && (
+              {bankingUrl && !loadingBanking && (
                 <>
                   <div className="banking-url">
                     <div className="form-group">
@@ -337,7 +350,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 </>
               )}
 
-              {!accoutingUrl && (
+              {loadingBanking && <h6>Loading Accouting Data.....</h6>}
+
+              {!accoutingUrl && !loadingAccouting && (
                 <>
                   <button
                     className="btn btn-primary accounting-btn"
@@ -385,7 +400,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep }) {
                 </>
               )}
 
-              {accoutingUrl && (
+              {accoutingUrl && !loadingAccouting && (
                 <>
                   {" "}
                   <div className="banking-url">
