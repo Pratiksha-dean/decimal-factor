@@ -26,21 +26,9 @@ function PersonalDetails() {
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
 
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 17 ~ PersonalDetails ~ file",
-    file
-  );
   const hiddenFileInput = useRef(null);
   const [dasboardData, setDashboardData] = useState();
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 26 ~ PersonalDetails ~ dasboardData",
-    dasboardData
-  );
   const userDetails = getUserDetails();
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 39 ~ PersonalDetails ~ userDetails",
-    userDetails
-  );
 
   useEffect(() => {
     getData();
@@ -55,8 +43,6 @@ function PersonalDetails() {
       });
     }
   };
-
-  console.log("userDetails]", userDetails["phone"]);
 
   const initialValues = {
     [fieldNames.FIRSTNAME]: userDetails
@@ -73,10 +59,6 @@ function PersonalDetails() {
       : dasboardData && dasboardData["lf_telephone"],
     address: userDetails["address"] || "",
   };
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 39 ~ PersonalDetails ~ initialValues",
-    initialValues
-  );
 
   const validationSchema = Yup.object().shape({
     [fieldNames.FIRSTNAME]: Yup.string().required(),
@@ -124,34 +106,16 @@ function PersonalDetails() {
                   validationSchema={validationSchema}
                   enableReinitialize={userDetails}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
-                    console.log(
-                      "🚀 ~ file: personal-details.js ~ line 80 ~ PersonalDetails ~ values",
-                      values
-                    );
                     let payload = { ...values };
-                    console.log(
-                      "🚀 ~ file: personal-details.js ~ line 117 ~ PersonalDetails ~ payload",
-                      payload
-                    );
-
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {
                         setLoading(false);
                         if (resp.isSuccess == 1) {
                           ToastMessage("Data saved successfully!", "success");
-                          // getData();
                           getUserDetailsApi(userDetails.lead_id)
                             .then((response) => {
-                              console.log(
-                                "🚀 ~ file: personal-details.js ~ line 141 ~ .then ~ response",
-                                response,
-                                response.data.status == 1
-                              );
                               if (response.data.status == 1) {
-                                // ToastMessage(
-                                //   "Login successful! Verify code to proceed further.",
-                                //   "success"
-                                // );
+
                                 setUserDetails(response.data);
                                 setToken(response.data.token);
                               }
@@ -376,6 +340,7 @@ function PersonalDetails() {
                                 className=""
                                 onChange={handleFileChange}
                                 ref={hiddenFileInput}
+                                accept="image/*"
                               />
                               <label for="input-file">
                                 <img

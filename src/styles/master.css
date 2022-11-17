@@ -1515,7 +1515,10 @@ button.btn.btn-primary.draft-btn {
   left: 50%;
 }
 
-.nofound-img{width: 30px; margin-bottom: 10px;}
+.nofound-img {
+  width: 30px;
+  margin-bottom: 10px;
+}
 
 .after-check-status ul.menu {
   position: relative;
@@ -2126,12 +2129,11 @@ label.group-report {
   border-radius: 0;
 }
 
-.scroll-height{max-height: 300px !important;}
+.scroll-height {
+  max-height: 300px !important;
+}
 
-
-@media (max-width:980px) {
-
-
+@media (max-width: 980px) {
   .login-box {
     width: 92%;
     margin: 12px auto;
@@ -2156,162 +2158,156 @@ label.group-report {
     bottom: 0px;
   }
 
+  .right-panel {
+    width: 96%;
+    padding: 0px 20px;
+    position: relative;
+    left: 0;
+    top: 0;
+    float: left;
+    transform: translate(0%);
+  }
 
+  .export-data-div {
+    width: 100%;
+    float: right;
+    background: #fff;
+    position: absolute;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 0px 0 0 0;
+    z-index: 9999;
+    right: 0;
+  }
 
-.right-panel {
-  width: 96%;
-  padding: 0px 20px;
-  position: relative;
-  left: 0;
-  top: 0;
-  float: left;
-  transform: translate(0%);
+  button#export-codat-data {
+    margin: 10px auto;
+    display: block;
+  }
+  button#export-assess-codat-data {
+    display: block;
+    float: none;
+    margin: 0 auto;
+  }
+  div#codat-download-cointainer .col-md-8 {
+    width: calc(100% - 80px) !important;
+    float: left;
+    padding-right: 0px !important;
+  }
+  div#codat-download-cointainer .col-md-4 {
+    width: 80px !important;
+    float: right;
+    padding: 0px !important;
+  }
+  div#codat-download-cointainer .col-md-8 p {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .right-panel-main h3 {
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .react-tabs__tab {
+    width: 100%;
+    text-align: center;
+  }
+  .download-panel {
+    position: relative;
+    z-index: 9;
+    width: 100%;
+    right: 0px;
+    top: 0;
+    display: block;
+    margin-top: 0;
+    float: left;
+  }
+  .download-btn {
+    position: relative;
+    right: 0px;
+    top: 0;
+  }
+  select.form-control {
+    height: 42px !important;
+    margin-bottom: 12px;
+  }
+  input.form-control {
+    height: 45px !important;
+    margin-bottom: 12px;
+  }
+  button.btn.btn-primary.exportdata-btn.next-btn {
+    margin: 12px 00px 0px 0px !important;
+    height: 42px;
+    float: left;
+  }
+  button.copyicon-col.btn.btn-primary {
+    background: #006090;
+    border: 0px;
+    padding: 10.5px 20px;
+    position: absolute;
+    right: 0px;
+    margin-top: -57px;
+    border-radius: 0px 5px 5px 0px;
+  }
+  button.checkstatus-btn.btn.btn-primary {
+    background: #006090;
+    border: 0px;
+    padding: 10.5px 20px;
+    position: absolute;
+    right: 0px;
+    margin-top: -57px;
+    border-radius: 0px 5px 5px 0px;
+  }
+  .financial-service {
+    border: 1px #5e99b7 solid;
+    border-radius: 5px;
+    margin: 10px 0px;
+    height: 402px;
+    position: relative;
+  }
+
+  .navbar-dark .navbar-toggler {
+    display: none;
+  }
+
+  div#navbarScroll {
+    display: block;
+  }
+  div#navbarScroll {
+    display: block;
+    width: auto;
+    max-width: 100px;
+  }
+  .dashboard-panel .navbar-dark .navbar-brand {
+    width: auto;
+  }
+  .navbar-dark .navbar-brand strong {
+    padding-left: 40px;
+  }
+  .dashboard-panel .navbar-dark .navbar-brand {
+    width: auto;
+    font-size: 15px;
+  }
+  li.nav-item.business-btn.cursor-pointer {
+    display: none;
+  }
+
+  .col-md-8.request-right {
+    position: relative !important;
+    right: auto !important;
+  }
+  .col-md-4.left-panel-box {
+    position: relative !important;
+  }
+  .left-panel {
+    height: 650px;
+  }
 }
 
-
-
-.export-data-div {
-  width: 100%;
-  float: right;
-  background: #fff;
+.spinning-loader {
   position: absolute;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 10px;
-  margin: 0px 0 0 0;
-  z-index: 9999;
-  right: 0;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
 }
-
-button#export-codat-data {
-  margin: 10px auto;
-  display: block;
-}
-button#export-assess-codat-data {
-  display: block;
-  float: none;
-  margin: 0 auto;
-}
-div#codat-download-cointainer .col-md-8 {
-  width: calc(100% - 80px) !important;
-  float: left;
-  padding-right: 0px !important;
-}
-div#codat-download-cointainer .col-md-4 {
-  width: 80px !important;
-  float: right;
-  padding: 0px !important;
-}
-div#codat-download-cointainer .col-md-8 p {
-  font-size: 12px;
-  margin-bottom: 20px;
-}
-.right-panel-main h3 {
-  text-align: left;
-  font-size: 16px;
-  font-weight: bold;
-}
-.react-tabs__tab {
-
-  width: 100%;
-  text-align: center;
-}
-.download-panel {
-  position: relative;
-  z-index: 9;
-  width: 100%;
-  right: 0px;
-  top: 0;
-  display: block;
-  margin-top: 0;
-  float: left;
-}
-.download-btn {
-  position: relative;
-  right: 0px;
-  top: 0;
-}
-select.form-control {
-  height: 42px !important;
-  margin-bottom: 12px;
-}
-input.form-control {
-  height: 45px !important;
-  margin-bottom: 12px;
-}
-button.btn.btn-primary.exportdata-btn.next-btn {
-  margin: 12px 00px 0px 0px !important;
-  height: 42px;
-  float: left;
-}
-button.copyicon-col.btn.btn-primary {
-  background: #006090;
-  border: 0px;
-  padding: 10.5px 20px;
-  position: absolute;
-  right: 0px;
-  margin-top: -57px;
-  border-radius: 0px 5px 5px 0px;
-}
-button.checkstatus-btn.btn.btn-primary {
-  background: #006090;
-  border: 0px;
-  padding: 10.5px 20px;
-  position: absolute;
-  right: 0px;
-  margin-top: -57px;
-  border-radius: 0px 5px 5px 0px;
-}
-.financial-service {
-  border: 1px #5e99b7 solid;
-  border-radius: 5px;
-  margin: 10px 0px;
-  height: 402px;
-  position: relative;
-}
-
-.navbar-dark .navbar-toggler {
-  display: none;
-}
-
-
-div#navbarScroll {
-  display: block;
-}
-div#navbarScroll {
-  display: block;
-  width: auto;
-  max-width: 100px;
-}
-.dashboard-panel .navbar-dark .navbar-brand {
-  width: auto;
-}
-.navbar-dark .navbar-brand strong {
-  padding-left: 40px;
-}
-.dashboard-panel .navbar-dark .navbar-brand {
-  width: auto;
-  font-size: 15px;
-}
-li.nav-item.business-btn.cursor-pointer {
-  display: none;
-}
-
-.col-md-8.request-right {
-  position: relative !important;
-  right: auto !important;
-}
-.col-md-4.left-panel-box {
-  position: relative !important;
-}
-.left-panel {
- 
-  height:650px;
-}
-
-
-}
-
-
-
-

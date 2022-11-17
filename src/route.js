@@ -19,10 +19,7 @@ const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
-    console.log(
-      "🚀 ~ file: route.js ~ line 23 ~ PrivateRoute ~ userDetails",
-      userDetails
-    );
+
 
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (
@@ -45,10 +42,6 @@ const RoutePage = () => {
   const ProtectedRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
-    console.log(
-      "🚀 ~ file: route.js ~ line 42 ~ ProtectedRoute ~ userDetails",
-      userDetails
-    );
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (token && isAuthenticated) {
       return <Navigate to="/dashboard" />;
@@ -93,7 +86,7 @@ const RoutePage = () => {
           <Route path="/personal-details" element={<PersonalDetails />} />
           <Route path="/change-password" element={<ChangePassword /> } />
           <Route path="/inner-change-password" element={<InnerChangePassword /> } />
-        
+
           <Route path="/*" element={<RequestAQuote />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

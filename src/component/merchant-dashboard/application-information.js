@@ -18,6 +18,7 @@ import { getDashboardData, updateUpdateCustomerInfo } from "../../request";
 import { useEffect } from "react";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
+import Loaderspinner from "../loader";
 
 function ApplicationInformation() {
   const [dasboardData, setDashboardData] = useState();
@@ -52,7 +53,7 @@ function ApplicationInformation() {
     [fieldNames.BUSINESSENTITY]: dasboardData
       ? businessEntityList[
           businessEntityList.findIndex(
-            (item) => dasboardData["lf_business_entity"] == item.value
+            (item) => dasboardData["lf_business_activity"] == item.value
           )
         ]
       : "",
@@ -79,266 +80,252 @@ function ApplicationInformation() {
                 Information{" "}
               </h3>
               <div className="dashboard-box position-relative card dashboard-card">
-                <Formik
-                  initialValues={initialValues}
-                  validationSchema={validationSchema}
-                  enableReinitialize
-                  onSubmit={(values, { setSubmitting, resetForm }) => {
-                    let payload = { ...values };
+                {!dasboardData ? (
+                  <Loaderspinner size="45px" />
+                ) : (
+                  <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    enableReinitialize
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
+                      let payload = { ...values };
 
-                    payload["businessEntity"] = payload["businessEntity"].value;
-                    payload["loanPurpose"] = payload["loanPurpose"].value;
+                      payload["businessEntity"] =
+                        payload["businessEntity"].value;
+                      payload["loanPurpose"] = payload["loanPurpose"].value;
 
-                    updateUpdateCustomerInfo(payload, userDetails["lead_id"])
-                      .then((resp) => {
-                        setLoading(false);
-                        if (resp.isSuccess == 1) {
-                          ToastMessage("Data saved successfully!", "success");
-                          resetForm({});
-                          getData();
-                        } else {
+                      updateUpdateCustomerInfo(payload, userDetails["lead_id"])
+                        .then((resp) => {
+                          setLoading(false);
+                          if (resp.isSuccess == 1) {
+                            ToastMessage("Data saved successfully!", "success");
+                            resetForm({});
+                            getData();
+                          } else {
+                            ToastMessage("Something went wrong!", "error");
+                          }
+                        })
+                        .catch((err) => {
+                          setLoading(false);
                           ToastMessage("Something went wrong!", "error");
-                        }
-                      })
-                      .catch((err) => {
-                        setLoading(false);
-                        ToastMessage("Something went wrong!", "error");
-                      });
+                        });
 
-                    setTimeout(() => {
-                      setSubmitting(false);
-                    }, 400);
-                  }}
-                >
-                  {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting,
-                    setFieldValue,
-                    isValid,
+                      setTimeout(() => {
+                        setSubmitting(false);
+                      }, 400);
+                    }}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting,
+                      setFieldValue,
+                      isValid,
 
-                    /* and other goodies */
-                  }) => (
-                    <form onSubmit={handleSubmit}>
-                      <div className="review-application">
-                        <div className="row">
-                          <div className="col-md-4">
-                            <div className="form-group">
-                              <label>Amount Required</label>
-                              <div className="input-group mb-3">
-                                <div className="input-group-prepend">
-                                  <span
-                                    className="input-group-text"
-                                    id="basic-addon1"
-                                  >
-                                    <i className="fa fa-pound-sign"></i>
-                                  </span>
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        <div className="review-application">
+                          <div className="row">
+                            <div className="col-md-4">
+                              <div className="form-group">
+                                <label>Amount Required</label>
+                                <div className="input-group mb-3">
+                                  <div className="input-group-prepend">
+                                    <span
+                                      className="input-group-text"
+                                      id="basic-addon1"
+                                    >
+                                      <i className="fa fa-pound-sign"></i>
+                                    </span>
+                                  </div>
+                                  <input
+                                    type="number"
+                                    placeholder="90,000"
+                                    className={clsx(
+                                      "form-control ",
+                                      {
+                                        "is-invalid":
+                                          touched[fieldNames.AMOUNT] &&
+                                          errors[fieldNames.AMOUNT],
+                                      },
+                                      {
+                                        "is-valid":
+                                          touched[fieldNames.AMOUNT] &&
+                                          !errors[fieldNames.AMOUNT],
+                                      }
+                                    )}
+                                    name={fieldNames.AMOUNT}
+                                    onChange={handleChange}
+                                    value={values[fieldNames.AMOUNT]}
+                                  />
                                 </div>
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="form-group">
+                                <label>Purpose of Loan</label>
+                                <Select
+                                  closeMenuOnSelect={true}
+                                  onChange={(selectedOption) => {
+                                    setFieldValue(
+                                      fieldNames.LOANPURPOSE,
+                                      selectedOption
+                                    );
+                                  }}
+                                  options={loadPurposeList}
+                                  name={fieldNames.LOANPURPOSE}
+                                  placeholder="Enter purpose of loan"
+                                  styles={{
+                                    control: (styles, state) => {
+                                      const borderColor =
+                                        !state.hasValue &&
+                                        touched[fieldNames.LOANPURPOSE] &&
+                                        errors[fieldNames.LOANPURPOSE]
+                                          ? "red"
+                                          : "#ced4da";
+
+                                      return { ...styles, borderColor };
+                                    },
+                                  }}
+                                  components={{
+                                    IndicatorSeparator: () => null,
+                                  }}
+                                  value={values[fieldNames.LOANPURPOSE]}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col-md-4">
+                              <div className="form-group">
+                                <label>Term of Funds Required (Months)</label>
                                 <input
                                   type="number"
-                                  placeholder="90,000"
+                                  placeholder="12"
+                                  name={fieldNames.REQUIREDFUND}
+                                  onChange={handleChange}
+                                  value={values[fieldNames.REQUIREDFUND]}
                                   className={clsx(
                                     "form-control ",
                                     {
                                       "is-invalid":
-                                        touched[fieldNames.AMOUNT] &&
-                                        errors[fieldNames.AMOUNT],
+                                        touched[fieldNames.REQUIREDFUND] &&
+                                        errors[fieldNames.REQUIREDFUND],
                                     },
                                     {
                                       "is-valid":
-                                        touched[fieldNames.AMOUNT] &&
-                                        !errors[fieldNames.AMOUNT],
+                                        touched[fieldNames.REQUIREDFUND] &&
+                                        !errors[fieldNames.REQUIREDFUND],
                                     }
                                   )}
-                                  name={fieldNames.AMOUNT}
-                                  onChange={handleChange}
-                                  onBlur={(e) => {
-                                    console.log(e.target.value);
-                                    // setReviewAppData(values);
+                                />
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="form-group business-entity">
+                                <label>Business Entity</label>
+                                <Select
+                                  classNamePrefix={clsx(
+                                    "",
+                                    {
+                                      "is-invalid":
+                                        touched[fieldNames.BUSINESSENTITY] &&
+                                        errors[fieldNames.BUSINESSENTITY],
+                                    },
+                                    {
+                                      "is-valid":
+                                        touched[fieldNames.BUSINESSENTITY] &&
+                                        !errors[fieldNames.BUSINESSENTITY],
+                                    }
+                                  )}
+                                  closeMenuOnSelect={true}
+                                  onChange={(selectedOption) => {
+                                    setFieldValue(
+                                      fieldNames.BUSINESSENTITY,
+                                      selectedOption
+                                    );
                                   }}
-                                  value={values[fieldNames.AMOUNT]}
+                                  options={businessEntityList}
+                                  name={fieldNames.BUSINESSENTITY}
+                                  placeholder="Select Business Entity"
+                                  styles={{
+                                    control: (styles, state) => {
+                                      const borderColor =
+                                        !state.hasValue &&
+                                        touched[fieldNames.BUSINESSENTITY] &&
+                                        errors[fieldNames.BUSINESSENTITY]
+                                          ? "red"
+                                          : "#ced4da";
+
+                                      return { ...styles, borderColor };
+                                    },
+                                  }}
+                                  components={{
+                                    IndicatorSeparator: () => null,
+                                  }}
+                                  value={values[fieldNames.BUSINESSENTITY]}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="form-group business-entity">
+                                <label>Business Name</label>
+                                <AsyncSelect
+                                  closeMenuOnSelect={true}
+                                  value={{
+                                    label: values[fieldNames.BUSINESSNAME],
+                                  }}
+                                  name={fieldNames.BUSINESSNAME}
+                                  loadOptions={loadOptions}
+                                  onChange={(selectedOption) => {
+                                    setFieldValue(
+                                      fieldNames.BUSINESSNAME,
+                                      selectedOption.value
+                                    );
+                                  }}
+                                  components={{
+                                    IndicatorSeparator: () => null,
+                                    DropdownIndicator: () => null,
+                                  }}
+
+                                  placeholder="Select Business Name"
+                                  styles={{
+                                    control: (styles, state) => {
+                                      console.log(
+                                        state,
+                                        touched[fieldNames.BUSINESSNAME] &&
+                                          errors[fieldNames.BUSINESSNAME]
+                                      );
+                                      const borderColor =
+                                        !state.hasValue &&
+                                        touched[fieldNames.BUSINESSNAME] &&
+                                        errors[fieldNames.BUSINESSNAME]
+                                          ? "red"
+                                          : "#ced4da";
+
+                                      return { ...styles, borderColor };
+                                    },
+                                  }}
                                 />
                               </div>
                             </div>
                           </div>
-                          <div className="col-md-4">
-                            <div className="form-group">
-                              <label>Purpose of Loan</label>
-                              <Select
-                                closeMenuOnSelect={true}
-                                onChange={(selectedOption) => {
-                                  setFieldValue(
-                                    fieldNames.LOANPURPOSE,
-                                    selectedOption
-                                  );
-                                }}
-                                onBlur={(selectedOption) => {
-                                  // setReviewAppData(values);
-                                }}
-                                options={loadPurposeList}
-                                name={fieldNames.LOANPURPOSE}
-                                placeholder="Enter purpose of loan"
-                                styles={{
-                                  control: (styles, state) => {
-                                    const borderColor =
-                                      !state.hasValue &&
-                                      touched[fieldNames.LOANPURPOSE] &&
-                                      errors[fieldNames.LOANPURPOSE]
-                                        ? "red"
-                                        : "#ced4da";
 
-                                    return { ...styles, borderColor };
-                                  },
-                                }}
-                                components={{
-                                  IndicatorSeparator: () => null,
-                                }}
-                                value={values[fieldNames.LOANPURPOSE]}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-4">
-                            <div className="form-group">
-                              <label>Term of Funds Required (Months)</label>
-                              <input
-                                type="number"
-                                placeholder="12"
-                                name={fieldNames.REQUIREDFUND}
-                                onChange={handleChange}
-                                onBlur={(e) => {
-                                  // setReviewAppData(values);
-                                }}
-                                value={values[fieldNames.REQUIREDFUND]}
-                                className={clsx(
-                                  "form-control ",
-                                  {
-                                    "is-invalid":
-                                      touched[fieldNames.REQUIREDFUND] &&
-                                      errors[fieldNames.REQUIREDFUND],
-                                  },
-                                  {
-                                    "is-valid":
-                                      touched[fieldNames.REQUIREDFUND] &&
-                                      !errors[fieldNames.REQUIREDFUND],
-                                  }
-                                )}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4">
-                            <div className="form-group business-entity">
-                              <label>Business Entity</label>
-                              <Select
-                                classNamePrefix={clsx(
-                                  "",
-                                  {
-                                    "is-invalid":
-                                      touched[fieldNames.BUSINESSENTITY] &&
-                                      errors[fieldNames.BUSINESSENTITY],
-                                  },
-                                  {
-                                    "is-valid":
-                                      touched[fieldNames.BUSINESSENTITY] &&
-                                      !errors[fieldNames.BUSINESSENTITY],
-                                  }
-                                )}
-                                closeMenuOnSelect={true}
-                                onChange={(selectedOption) => {
-                                  setFieldValue(
-                                    fieldNames.BUSINESSENTITY,
-                                    selectedOption
-                                  );
-                                }}
-                                onBlur={(selectedOption) => {
-                                  // setReviewAppData(values);
-                                }}
-                                options={businessEntityList}
-                                name={fieldNames.BUSINESSENTITY}
-                                placeholder="Select Business Entity"
-                                styles={{
-                                  control: (styles, state) => {
-                                    const borderColor =
-                                      !state.hasValue &&
-                                      touched[fieldNames.BUSINESSENTITY] &&
-                                      errors[fieldNames.BUSINESSENTITY]
-                                        ? "red"
-                                        : "#ced4da";
-
-                                    return { ...styles, borderColor };
-                                  },
-                                }}
-                                components={{
-                                  IndicatorSeparator: () => null,
-                                }}
-                                value={values[fieldNames.BUSINESSENTITY]}
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-4">
-                            <div className="form-group business-entity">
-                              <label>Business Name</label>
-                              <AsyncSelect
-                                closeMenuOnSelect={true}
-                                value={{
-                                  label: values[fieldNames.BUSINESSNAME],
-                                }}
-                                name={fieldNames.BUSINESSNAME}
-                                loadOptions={loadOptions}
-                                onChange={(selectedOption) => {
-                                  setFieldValue(
-                                    fieldNames.BUSINESSNAME,
-                                    selectedOption.value
-                                  );
-                                  // setBusinessInfo(selectedOption);
-                                  // setReviewAppData(values);
-                                }}
-                                components={{
-                                  IndicatorSeparator: () => null,
-                                  DropdownIndicator: () => null,
-                                }}
-                                // onInputChange={handleInputChange}
-                                onBlur={(selectedOption) => {
-                                  // setReviewAppData(values);
-                                }}
-                                placeholder="Select Business Name"
-                                styles={{
-                                  control: (styles, state) => {
-                                    console.log(
-                                      state,
-                                      touched[fieldNames.BUSINESSNAME] &&
-                                        errors[fieldNames.BUSINESSNAME]
-                                    );
-                                    const borderColor =
-                                      !state.hasValue &&
-                                      touched[fieldNames.BUSINESSNAME] &&
-                                      errors[fieldNames.BUSINESSNAME]
-                                        ? "red"
-                                        : "#ced4da";
-
-                                    return { ...styles, borderColor };
-                                  },
-                                }}
-                              />
-                            </div>
-                          </div>
+                          <button
+                            className="btn btn-primary save-btn next-btn"
+                            type="submit"
+                            disabled={loading}
+                          >
+                            Save <i className="fa fa-file-image-o"></i>
+                          </button>
                         </div>
-
-                        <button
-                          className="btn btn-primary save-btn next-btn"
-                          type="submit"
-                          disabled={loading}
-                        >
-                          Save <i className="fa fa-file-image-o"></i>
-                        </button>
-                      </div>
-                    </form>
-                  )}
-                </Formik>
+                      </form>
+                    )}
+                  </Formik>
+                )}
               </div>
             </div>
           </div>

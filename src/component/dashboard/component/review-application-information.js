@@ -19,18 +19,9 @@ import {
   setDashboardStepNo,
   setReviewAppData,
 } from "../dashboard";
-import { getCompanyInfo } from "../../requestaquote/components/business-information";
 
 function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
-  console.log(
-    "🚀 ~ file: review-application-information.js ~ line 25 ~ ReviewApplicationInformation ~ data",
-    data
-  );
   const storedData = getReviewAppData();
-  console.log(
-    "🚀 ~ file: review-application-information.js ~ line 26 ~ ReviewApplicationInformation ~ storedData",
-    storedData
-  );
 
   const initialValues = {
     [fieldNames.AMOUNT]: storedData
@@ -50,9 +41,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
       ? storedData["businessEntity"]
       : businessEntityList[
           businessEntityList.findIndex(
-            (item) =>
-              data["lf_business_entity"] == item.value ||
-              data["lf_business_activity"] == item.value
+            (item) => data["lf_business_activity"] == item.value
           )
         ],
     [fieldNames.BUSINESSNAME]: storedData
@@ -62,7 +51,6 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
 
   useEffect(() => {
     if (!storedData) {
-      console.log("no stored dara", initialValues);
       setReviewAppData(initialValues);
     }
   }, []);
@@ -75,10 +63,6 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(
-              "🚀 ~ file: review-application-information.js ~ line 61 ~ ReviewApplicationInformation ~ values",
-              values
-            );
             setActiveStep(activeStep + 1);
             setDashboardStepNo(activeStep + 1);
 
@@ -130,7 +114,6 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                         name={fieldNames.AMOUNT}
                         onChange={handleChange}
                         onBlur={(e) => {
-                          console.log(e.target.value);
                           setReviewAppData(values);
                         }}
                         value={values[fieldNames.AMOUNT]}

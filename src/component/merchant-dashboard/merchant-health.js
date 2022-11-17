@@ -22,6 +22,23 @@ import {
   bankingInsightsDownloadFile,
 } from "../../request";
 import { getUserDetails } from "../login/loginpage";
+import { ToastMessage } from "../ToastMessage";
+import Loaderspinner from "../loader";
+
+export const setCurrentTabIndex = (index) => {
+  console.log(
+    "🚀 ~ file: merchant-health.js ~ line 29 ~ setCurrentTabIndex ~ index",
+    index
+  );
+  localStorage.setItem("activeTabIndex", index);
+};
+
+export const getCurrentTabIndex = () => {
+  if (!localStorage.getItem("activeTabIndex")) {
+    localStorage.setItem("activeTabIndex", 0);
+  }
+  return Number(localStorage.getItem("activeTabIndex"));
+};
 
 function checkMe(selected) {
   if (selected) {
@@ -92,7 +109,8 @@ function MerchantHealth() {
   const [showPanel2, togglePanel2] = useState(false);
   const [showPanel3, togglePanel3] = useState(false);
   const [showPanel4, togglePanel4] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
+  const currentTabIndex = getCurrentTabIndex();
+  const [tabIndex, setTabIndex] = useState(currentTabIndex);
   const [open, setOpen] = React.useState(false);
   const [linkToBaking, setLinkToBanking] = useState(false);
   const [accoutingUrl, setAccoutingUrl] = useState();
@@ -101,6 +119,10 @@ function MerchantHealth() {
   const [dasboardData, setDashboardData] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
+  console.log(
+    "🚀 ~ file: merchant-health.js ~ line 116 ~ MerchantHealth ~ currentTabIndex",
+    currentTabIndex
+  );
 
   const [loadingBanking, setLoadingBanking] = useState(false);
   const [loadingAccouting, setLoadingAccouting] = useState(true);
@@ -549,9 +571,10 @@ function MerchantHealth() {
     }
   }, [dasboardData, tabIndex]);
 
-  const copyLinkToClipboard=(bankingUrlToCopy)=>{
-    navigator.clipboard.writeText(bankingUrlToCopy)
-  }
+  const copyLinkToClipboard = (bankingUrlToCopy) => {
+    navigator.clipboard.writeText(bankingUrlToCopy);
+    ToastMessage("Url copied to clipboard!", "success");
+  };
 
   return (
     <div className="dashboard-panel">
@@ -573,7 +596,10 @@ function MerchantHealth() {
                 <div className="review-application">
                   <Tabs
                     selectedIndex={tabIndex}
-                    onSelect={(index) => setTabIndex(index)}
+                    onSelect={(index) => {
+                      setTabIndex(index);
+                      setCurrentTabIndex(index);
+                    }}
                   >
                     <TabList>
                       <Tab>Banking Insights</Tab>
@@ -583,7 +609,9 @@ function MerchantHealth() {
 
                     <TabPanel>
                       <section>
-                        {loadingBanking && !bankingUrl && <h3>Loading</h3>}
+                        {loadingBanking && !bankingUrl && (
+                          <Loaderspinner size="45px" />
+                        )}
                         {!bankingUrl && !loadingBanking && (
                           <>
                             <button
@@ -602,7 +630,7 @@ function MerchantHealth() {
                         )}
 
                         <div className="banking-panel">
-                          {!bankingUrl && !loadingBanking && (
+                          {!bankingUrl && !loadingBanking && !bankingStatus && (
                             <div className="banking-info-tooltip">
                               Connect your bank account using Open Banking. Only
                               the following required data will be requested:
@@ -620,7 +648,7 @@ function MerchantHealth() {
                             </div>
                           )}
 
-                          {bankingUrl && !loadingBanking && (
+                          {bankingUrl && !loadingBanking && !bankingStatus && (
                             <div className="row">
                               <div className="col-md-9">
                                 <div class="banking-url">
@@ -634,7 +662,12 @@ function MerchantHealth() {
                                       disabled
                                       value={bankingUrl}
                                     />
-                                    <button class="copyicon-col btn btn-primary" onClick={()=>{copyLinkToClipboard(bankingUrl)}}>
+                                    <button
+                                      class="copyicon-col btn btn-primary"
+                                      onClick={() => {
+                                        copyLinkToClipboard(bankingUrl);
+                                      }}
+                                    >
                                       <i
                                         class="fa fa-clone"
                                         aria-hidden="true"
@@ -1744,7 +1777,9 @@ function MerchantHealth() {
                     </TabPanel>
                     <TabPanel>
                       <section>
-                        {loadingAccouting && !accoutingUrl && <h3>Loading</h3>}
+                        {loadingAccouting && !accoutingUrl && (
+                          <Loaderspinner size="45px" />
+                        )}
                         {!accoutingUrl && !loadingAccouting && (
                           <>
                             <button
@@ -1796,7 +1831,12 @@ function MerchantHealth() {
                                     disabled
                                     id="accouting-url"
                                   />
-                                  <button class="copyicon-col btn btn-primary" onClick={()=>{copyLinkToClipboard(accoutingUrl)}}>
+                                  <button
+                                    class="copyicon-col btn btn-primary"
+                                    onClick={() => {
+                                      copyLinkToClipboard(accoutingUrl);
+                                    }}
+                                  >
                                     <i
                                       class="fa fa-clone"
                                       aria-hidden="true"
@@ -1933,6 +1973,5 @@ function MerchantHealth() {
     </div>
   );
 }
-
 
 export default MerchantHealth;

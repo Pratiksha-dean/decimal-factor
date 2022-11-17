@@ -73,6 +73,8 @@ export const logout = () => {
   localStorage.removeItem("businessInfo");
   localStorage.removeItem("directorData");
   localStorage.removeItem("merchantDirectorData");
+  localStorage.removeItem("provideConcentData");
+  localStorage.removeItem("activeTabIndex");
   setStepNo(1);
 };
 
@@ -83,10 +85,6 @@ export async function getDirectorList(id) {
 
 export async function getLinkToAccountingData(payload) {
   const { data } = await axios.post(`${LINK_ACCOUTING_URL}`, payload);
-  console.log(
-    "🚀 ~ file: request.js ~ line 58 ~ getLinkToAccountingData ~ data",
-    data
-  );
   return data;
 }
 
@@ -107,10 +105,6 @@ export async function getUserDetailsApi(id) {
 
 export async function updateUpdateCustomerInfo(payload, id) {
   const { data } = await axios.post(`${UPDATE_USER_DETAILS_URL}${id}`, payload);
-  console.log(
-    "🚀 ~ file: request.js ~ line 58 ~ getLinkToAccountingData ~ data",
-    data
-  );
   return data;
 }
 
