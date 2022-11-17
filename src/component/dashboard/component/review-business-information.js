@@ -52,7 +52,7 @@ const Accordion = ({ title, children, isPrimary, id }) => {
         style={{ justifyContent: "flex-start" }}
       >
         <div className="px-2"> {title}</div>
-        {(isPrimary == "1" || isPrimary) && (
+        {isPrimary && (
           <button
             className="btn btn-success btn-sm mr-2"
             style={{ backgroundColor: "#198754" }}
@@ -153,10 +153,12 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
             directorFieldNames.FIRSTNAME
           ]
             ? item[directorFieldNames.FIRSTNAME]
-            : name[0];
+            : name.length
+            ? name[0]
+            : "";
           item[directorFieldNames.LASTNAME] = item[directorFieldNames.LASTNAME]
             ? item[directorFieldNames.LASTNAME]
-            : name[1];
+            : "";
           console.log(item["address"], "**");
           if (item["address"]) {
             console.log("&&", item["address"]["postal_code"]);
@@ -200,11 +202,11 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
             : "";
 
           item[directorFieldNames.CHOOSEADDRESS] = "";
-          item[directorFieldNames.ISPRIMARY] = item[
-            directorFieldNames.ISPRIMARY
-          ]
-            ? item[directorFieldNames.ISPRIMARY]
-            : false;
+          if (item[directorFieldNames.ISPRIMARY] == 1) {
+            item[directorFieldNames.ISPRIMARY] = true;
+          } else {
+            item[directorFieldNames.ISPRIMARY] = false;
+          }
 
           item[directorFieldNames.RESIDENTIALSTATUS] =
             item[directorFieldNames.RESIDENTIALSTATUS];
@@ -242,6 +244,10 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
           return item;
         });
         let newList = [...list];
+        console.log(
+          "🚀 ~ file: review-business-information.js ~ line 139 ~ generateDirectorArray ~ list",
+          newList
+        );
         newList.sort((item) => {
           if (item["is_primary"]) {
             return item["is_primary"] ? -1 : 1; // `false` values first
@@ -249,10 +255,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
             return item;
           }
         });
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 139 ~ generateDirectorArray ~ list",
-          newList
-        );
         setDirectorData(newList);
       }
     }

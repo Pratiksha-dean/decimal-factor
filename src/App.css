@@ -82,3 +82,8 @@
 .tooltip.show {
   opacity: 1;
 }
+
+.banking-info-tooltip {
+  margin-top: 20px;
+  color: gray;
+}

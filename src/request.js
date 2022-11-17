@@ -95,7 +95,7 @@ export async function getCompanyID(id) {
   return data;
 }
 
-export async function checkLinkingStatus(id) {
+export async function checkAccountingStatus(id) {
   const { data } = await axios.get(`${API_URL}CODAT/${id}/checkStatus`);
   return data;
 }
@@ -114,37 +114,34 @@ export async function updateUpdateCustomerInfo(payload, id) {
   return data;
 }
 
-
 export async function getBankingFinancialServices(id) {
-  const {
-    data
-  } = await axios.get(`${API_URL}accountScore/${id}/FinancialServices`);
+  const { data } = await axios.get(
+    `${API_URL}accountScore/${id}/FinancialServices`
+  );
   return data;
 }
 
 export async function getBankingIncome(id) {
-  const {
-    data
-  } = await axios.get(`${API_URL}accountScore/${id}/IncomeAnalysis`);
+  const { data } = await axios.get(
+    `${API_URL}accountScore/${id}/IncomeAnalysis`
+  );
   return data;
 }
 
 export async function getRegularOutgoings(id) {
-  const {
-    data
-  } = await axios.get(`${API_URL}accountScore/${id}/RegularOutgoings`);
+  const { data } = await axios.get(
+    `${API_URL}accountScore/${id}/RegularOutgoings`
+  );
   return data;
 }
 
 export async function getEventFeed(id) {
-  const {
-    data
-  } = await axios.get(`${API_URL}accountScore/${id}/EventFeed`);
+  const { data } = await axios.get(`${API_URL}accountScore/${id}/EventFeed`);
 
   return data;
 }
 
-export async function getAccountScore(id,payload) {
+export async function getAccountScore(id, payload) {
   const { data } = await axios.post(
     `${API_URL}leadUK/${id}/generateConsentForAccountScore`,
     payload

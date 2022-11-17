@@ -144,7 +144,7 @@ setarrowclassName5 ('fa fa-chevron-right')
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>Period Start</label>
-                <input type="date" name="" className="period-start" />
+                <input type="month" name="" className="period-start" />
                 </div></div>
                 <div className="col-md-3 ">
                     <div className="box-shape">

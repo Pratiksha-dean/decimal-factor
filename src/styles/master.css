@@ -14,9 +14,10 @@ body {
 
 .col-md-4.left-panel-box {
   position: fixed;
-  
 }
-.main-request{position: relative;}
+.main-request {
+  position: relative;
+}
 .logo-request {
   width: 100px;
 }
@@ -152,7 +153,6 @@ ul#progressbar {
   padding: 20px 20px;
   position: relative;
   float: left;
-  
 }
 .col-md-8.request-right {
   position: absolute;
@@ -608,7 +608,7 @@ button.btn.btn-primary.banking-btn {
   border: 0px;
   padding: 10px 30px;
   margin-right: 20px;
-  /* margin: 0px 20px 20px 0px; */
+  margin: 20px 20px 20px 0px;
   float: left;
   font-size: 15px;
 }
@@ -1084,7 +1084,8 @@ input#input-file {
   margin-top: 0px;
 }
 
-.banking-panel {
+.banking-panel,
+.merchent-accounting-panel {
   width: 100%;
   float: left;
 }
@@ -1554,7 +1555,7 @@ button.btn.btn-primary.banking-btn.download-btn {
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
   padding: 20px;
   border-radius: 10px;
-  margin: 0px 0 0 0;
+  margin: 80px 0 0 0;
   z-index: 9999;
   right: 20px;
 }
@@ -1702,6 +1703,7 @@ input.period-start {
   background: 0px;
   float: right;
   width: 100px;
+  font-size: 12px;
 }
 input.period-start:focus,
 .box-shape input.period-compare:focus {
@@ -1986,8 +1988,9 @@ button.btn.btn-primary.generate-btn {
   height: 44px;
   padding: 10px 20px;
 }
-button.btn.btn-primary.generate-btn:hover{ background: #07547a;}
-
+button.btn.btn-primary.generate-btn:hover {
+  background: #07547a;
+}
 
 .scroll-bar {
   overflow-y: auto;
@@ -2068,7 +2071,6 @@ label.group-report {
   border-radius: 5px;
 }
 
-
 .calender-div.float-left {
   width: 50%;
 }
@@ -2079,28 +2081,27 @@ label.group-report {
   -webkit-box-shadow: 0px 15px 30px -16px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 15px 30px -16px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 15px 30px -16px rgba(0, 0, 0, 0.3);
- 
 }
- .financial-service .year {
+.financial-service .year {
   font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    color: white;
-    background: #5e99b7;
-    text-align: center;
-    border-radius: 0px 0px 10px 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: white;
+  background: #5e99b7;
+  text-align: center;
+  border-radius: 0px 0px 10px 10px;
 }
 
 .financial-service .day {
   font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    color: white;
-    background: #5e99b7;
-    text-align: center;
-    border-radius: 10px 10px 0 0;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: white;
+  background: #5e99b7;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
 }
 .financial-service .month {
   padding-top: 0;
@@ -2123,11 +2124,33 @@ label.group-report {
 
 .scroll-height{max-height: 300px !important;}
 
-@media (max-width:640px) {
 
+@media (max-width:980px) {
+
+@media (max-width: 640px) {
   .login-box {
     width: 92%;
     margin: 12px auto;
+  }
+
+  .right-panel {
+    width: 96%;
+    padding: 0px 20px;
+    position: relative;
+    left: 0;
+    top: 0;
+    float: left;
+    transform: translate(0%);
+  }
+
+  .copyright {
+    width: 100%;
+    float: left;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    bottom: 40px;
+  }
 }
 
 
@@ -2150,6 +2173,136 @@ label.group-report {
   bottom: 40px;
 }
 
+.export-data-div {
+  width: 100%;
+  float: right;
+  background: #fff;
+  position: absolute;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 0px 0 0 0;
+  z-index: 9999;
+  right: 0;
 }
+
+button#export-codat-data {
+  margin: 10px auto;
+  display: block;
+}
+button#export-assess-codat-data {
+  display: block;
+  float: none;
+  margin: 0 auto;
+}
+div#codat-download-cointainer .col-md-8 {
+  width: calc(100% - 80px) !important;
+  float: left;
+  padding-right: 0px !important;
+}
+div#codat-download-cointainer .col-md-4 {
+  width: 80px !important;
+  float: right;
+  padding: 0px !important;
+}
+div#codat-download-cointainer .col-md-8 p {
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+.right-panel-main h3 {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+}
+.react-tabs__tab {
+
+  width: 100%;
+  text-align: center;
+}
+.download-panel {
+  position: relative;
+  z-index: 9;
+  width: 100%;
+  right: 0px;
+  top: 0;
+  display: block;
+  margin-top: 0;
+  float: left;
+}
+.download-btn {
+  position: relative;
+  right: 0px;
+  top: 0;
+}
+select.form-control {
+  height: 42px !important;
+  margin-bottom: 12px;
+}
+input.form-control {
+  height: 45px !important;
+  margin-bottom: 12px;
+}
+button.btn.btn-primary.exportdata-btn.next-btn {
+  margin: 12px 00px 0px 0px !important;
+  height: 42px;
+  float: left;
+}
+button.copyicon-col.btn.btn-primary {
+  background: #006090;
+  border: 0px;
+  padding: 10.5px 20px;
+  position: absolute;
+  right: 0px;
+  margin-top: -57px;
+  border-radius: 0px 5px 5px 0px;
+}
+button.checkstatus-btn.btn.btn-primary {
+  background: #006090;
+  border: 0px;
+  padding: 10.5px 20px;
+  position: absolute;
+  right: 0px;
+  margin-top: -57px;
+  border-radius: 0px 5px 5px 0px;
+}
+.financial-service {
+  border: 1px #5e99b7 solid;
+  border-radius: 5px;
+  margin: 10px 0px;
+  height: 402px;
+  position: relative;
+}
+
+.navbar-dark .navbar-toggler {
+  display: none;
+}
+
+
+div#navbarScroll {
+  display: block;
+}
+div#navbarScroll {
+  display: block;
+  width: auto;
+  max-width: 100px;
+}
+.dashboard-panel .navbar-dark .navbar-brand {
+  width: auto;
+}
+.navbar-dark .navbar-brand strong {
+  padding-left: 40px;
+}
+.dashboard-panel .navbar-dark .navbar-brand {
+  width: auto;
+  font-size: 15px;
+}
+li.nav-item.business-btn.cursor-pointer {
+  display: none;
+}
+
+
+}
+
+
 
 
