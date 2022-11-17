@@ -938,10 +938,7 @@ function MerchantHealth() {
                                   </div>
                                 </div>
 
-
-
-
-                                {/* income analysis start */}
+                                {/* income analysis */}
                                   <div className="col-md-6">
                                     <div className=" financial-service income-panel">
                                       <h4>Income ({incomeAnalysisSummary.length})</h4>
@@ -1060,6 +1057,8 @@ function MerchantHealth() {
                                       </span>
                                     </h4>
                                     <div className="scroll-bar-2 scroll-height">
+                                      
+                                      {/* regular outgoings */}
                                       {regularOutgoingsSummary &&
                                         regularOutgoingsSummary.map(
                                           (regOutgoing, index) => {
@@ -1266,6 +1265,8 @@ function MerchantHealth() {
                                   <div className=" financial-service income-panel">
                                     <h4>Event Feed ({eventCount})</h4>
                                     <div className="scroll-bar-2">
+                                    {/* event feed */}
+
                                       {eventFeedSummary.length > 0 &&
                                         eventFeedSummary.map((month, index) => {
                                           return (
