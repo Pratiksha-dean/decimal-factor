@@ -80,6 +80,7 @@ export default function BusinessCreditScore() {
                       id="upload-file"
                       name="file"
                       className="upload-doc"
+                      accept="image/png,image/jpeg,.pdf"
                     />
 
                     <img

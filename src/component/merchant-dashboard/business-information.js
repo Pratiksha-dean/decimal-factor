@@ -299,7 +299,7 @@ function BusinessInformation() {
                       );
                       delete payload["directorInfo"];
 
-                      if (payload["ShareHolderArr"].length) {
+                      if (payload["ShareHolderArr"] && payload["ShareHolderArr"].length) {
                         let index = payload["ShareHolderArr"].findIndex(
                           (item) => item["is_primary"] == 1
                         );
