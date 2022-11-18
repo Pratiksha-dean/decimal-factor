@@ -115,7 +115,6 @@ function PersonalDetails() {
                           getUserDetailsApi(userDetails.lead_id)
                             .then((response) => {
                               if (response.data.status == 1) {
-
                                 setUserDetails(response.data);
                                 setToken(response.data.token);
                               }
@@ -343,17 +342,28 @@ function PersonalDetails() {
                                 accept="image/*"
                               />
                               <label for="input-file">
-                                <img
-                                  height="120px"
-                                  width="120px"
-                                  src={
-                                    file && file.preview
-                                      ? file.preview
-                                      : require("../../images/upload-img.png")
-                                  }
-                                  alt=""
-                                  className="upload-img"
-                                />
+                                {file && file.preview ? (
+                                  <img
+                                    height="120px"
+                                    width="120px"
+                                    src={file.preview}
+                                    alt=""
+                                    className="upload-img profile-pic"
+                                  />
+                                ) : (
+                                  <div className="initials-profile-pic">
+                                    <div className="initials-profile-pic-text">
+                                      {userDetails &&
+                                        userDetails[
+                                          "first_name"
+                                        ][0].toUpperCase()}
+                                      {userDetails &&
+                                        userDetails[
+                                          "last_name"
+                                        ][0].toUpperCase()}
+                                    </div>
+                                  </div>
+                                )}
                               </label>
                               <button
                                 className="btn btn-primary upload-image"

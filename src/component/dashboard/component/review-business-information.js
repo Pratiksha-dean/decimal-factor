@@ -26,7 +26,6 @@ export const getReviewBusinessData = () => {
 };
 
 export const setDirectorData = (data) => {
-  
   localStorage.setItem("directorData", JSON.stringify(data));
 };
 
@@ -48,7 +47,7 @@ const Accordion = ({ title, children, isPrimary, id }) => {
         {isPrimary && (
           <button
             className="btn btn-success btn-sm mr-2"
-            style={{ backgroundColor: "#198754",pointerEvents:"none" }}
+            style={{ backgroundColor: "#198754", pointerEvents: "none" }}
             type="button"
           >
             Primary
@@ -139,105 +138,132 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
         data
       );
       let list = [...data];
+
       if (list.length) {
-        list.map((item) => {
-          let name = item.name && item.name.split(",");
-          console.log("[primay", item);
-          item[directorFieldNames.FIRSTNAME] = item[
-            directorFieldNames.FIRSTNAME
-          ]
-            ? item[directorFieldNames.FIRSTNAME]
-            : name.length
-            ? name[0]
-            : "";
-          item[directorFieldNames.LASTNAME] = item[directorFieldNames.LASTNAME]
-            ? item[directorFieldNames.LASTNAME]
-            : "";
-          console.log(item["address"], "**");
-          if (item["address"]) {
-            console.log("&&", item["address"]["postal_code"]);
-            item[directorFieldNames.POSTALCODE] =
-              item["address"]["postal_code"] || "";
-            item[directorFieldNames.STREET] =
-              item["address"]["address_line_1"] || "";
-            item[directorFieldNames.COUNTY] = item["address"]["locality"]
-              ? item["address"]["locality"]
-              : "";
-            item[directorFieldNames.HOUSE_NAME] =
-              item["address"]["premises"] || "";
-            item[directorFieldNames.HOUSE_NUMBER] = "";
-            item[directorFieldNames.TOWN] = item[directorFieldNames.TOWN]
-              ? item[directorFieldNames.TOWN]
-              : "";
-            item[directorFieldNames.RESIDENTIALSTATUS] = "";
-            if (item["address"][directorFieldNames.ADDRESSLINE1]) {
-              item[directorFieldNames.ADDRESSLINE1] =
-                item["address"][directorFieldNames.ADDRESSLINE1];
-            }
-            if (item["address"][directorFieldNames.ADDRESSLINE2]) {
-              item[directorFieldNames.ADDRESSLINE2] =
-                item["address"][directorFieldNames.ADDRESSLINE2];
-            }
-
-            console.log(
-              "🚀 ~ file: review-business-information.js ~ line 124 ~ values=directorList.map ~ item",
-              item["address"]
-            );
-          }
-
-          item[directorFieldNames.LIVINGSINCE] = "";
-          item[directorFieldNames.NATUREOFCONTROL] = "";
-          item[directorFieldNames.EMAIL] = item["email"] ? item["email"] : "";
-          item[directorFieldNames.PHONENUMBER] = item["phone"]
-            ? item["phone"]
-            : item[directorFieldNames.PHONENUMBER];
-          item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
-            ? item["share_count"]
-            : "";
-
-          item[directorFieldNames.CHOOSEADDRESS] = "";
-          if (item[directorFieldNames.ISPRIMARY] == 1) {
-            item[directorFieldNames.ISPRIMARY] = true;
+        let updatedList = [];
+        list.forEach((item) => {
+          if (
+            item["resigned_on"] &&
+            new Date(item["resigned_on"]) < new Date()
+          ) {
+            return;
           } else {
-            item[directorFieldNames.ISPRIMARY] = false;
+            updatedList.push(item);
           }
-
-          item[directorFieldNames.RESIDENTIALSTATUS] =
-            item[directorFieldNames.RESIDENTIALSTATUS];
-
-          if (item["date_of_birth"]) {
-            console.log(
-              "🚀 ~ file: review-business-information.js ~ line 109 ~ values=directorList.map ~ name",
-              item["date_of_birth"]
-            );
-            item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
-              item["date_of_birth"]["year"] +
-              "-" +
-              item["date_of_birth"]["month"] +
-              "-" +
-              item["date_of_birth"]["day"]
-                ? item["date_of_birth"]["day"]
-                : 1;
-          }
-          delete item["address"];
-          delete item["appointed_on"];
-          delete item["links"];
-          delete item["date_of_birth"];
-          delete item["occupation"];
-          delete item["nationality"];
-          delete item["resigned_on"];
-          delete item["officer_role"];
-          delete item["country_of_residence"];
-          delete item["identification"];
-          console.log("item12", item);
-
-          item["HiddenShareHolderId"] = "";
-          item["notified_on"] = "";
-          item["is_active"] = 1;
-
-          return item;
+          console.log(
+            "🚀 ~ file: review-business-information.js ~ line 143 ~ list.forEach ~ item",
+            item["resigned_on"]
+          );
         });
-        let newList = [...list];
+
+        console.log(
+          "🚀 ~ file: review-business-information.js ~ line 142 ~ generateDirectorArray ~ updatedList",
+          updatedList
+        );
+
+        updatedList.length > 0 &&
+          updatedList.map((item) => {
+            console.log("resigned_on", item["resigned_on"]);
+            let name = item.name && item.name.split(",");
+            console.log("[primay", item);
+            item[directorFieldNames.FIRSTNAME] = item[
+              directorFieldNames.FIRSTNAME
+            ]
+              ? item[directorFieldNames.FIRSTNAME]
+              : name.length
+              ? name[0]
+              : "";
+            item[directorFieldNames.LASTNAME] = item[
+              directorFieldNames.LASTNAME
+            ]
+              ? item[directorFieldNames.LASTNAME]
+              : "";
+            console.log(item["address"], "**");
+            if (item["address"]) {
+              console.log("&&", item["address"]["postal_code"]);
+              item[directorFieldNames.POSTALCODE] =
+                item["address"]["postal_code"] || "";
+              item[directorFieldNames.STREET] =
+                item["address"]["address_line_1"] || "";
+              item[directorFieldNames.COUNTY] = item["address"]["locality"]
+                ? item["address"]["locality"]
+                : "";
+              item[directorFieldNames.HOUSE_NAME] =
+                item["address"]["premises"] || "";
+              item[directorFieldNames.HOUSE_NUMBER] = "";
+              item[directorFieldNames.TOWN] = item[directorFieldNames.TOWN]
+                ? item[directorFieldNames.TOWN]
+                : "";
+              item[directorFieldNames.RESIDENTIALSTATUS] = "";
+              if (item["address"][directorFieldNames.ADDRESSLINE1]) {
+                item[directorFieldNames.ADDRESSLINE1] =
+                  item["address"][directorFieldNames.ADDRESSLINE1];
+              }
+              if (item["address"][directorFieldNames.ADDRESSLINE2]) {
+                item[directorFieldNames.ADDRESSLINE2] =
+                  item["address"][directorFieldNames.ADDRESSLINE2];
+              }
+
+              console.log(
+                "🚀 ~ file: review-business-information.js ~ line 124 ~ values=directorList.map ~ item",
+                item["address"]
+              );
+            }
+
+            item[directorFieldNames.LIVINGSINCE] = "";
+            item[directorFieldNames.NATUREOFCONTROL] = "";
+            item[directorFieldNames.EMAIL] = item["email"] ? item["email"] : "";
+            item[directorFieldNames.PHONENUMBER] = item["phone"]
+              ? item["phone"]
+              : item[directorFieldNames.PHONENUMBER];
+            item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
+              ? item["share_count"]
+              : "";
+
+            item[directorFieldNames.CHOOSEADDRESS] = "";
+            if (item[directorFieldNames.ISPRIMARY] == 1) {
+              item[directorFieldNames.ISPRIMARY] = true;
+            } else {
+              item[directorFieldNames.ISPRIMARY] = false;
+            }
+
+            item[directorFieldNames.RESIDENTIALSTATUS] =
+              item[directorFieldNames.RESIDENTIALSTATUS];
+
+            if (item["date_of_birth"]) {
+              console.log(
+                "🚀 ~ file: review-business-information.js ~ line 109 ~ values=directorList.map ~ name",
+                item["date_of_birth"]
+              );
+              item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
+                item["date_of_birth"]["year"] +
+                "-" +
+                item["date_of_birth"]["month"] +
+                "-" +
+                item["date_of_birth"]["day"]
+                  ? item["date_of_birth"]["day"]
+                  : 1;
+            }
+            delete item["address"];
+            delete item["appointed_on"];
+            delete item["links"];
+            delete item["date_of_birth"];
+            delete item["occupation"];
+            delete item["nationality"];
+            delete item["resigned_on"];
+            delete item["officer_role"];
+            delete item["country_of_residence"];
+            delete item["identification"];
+            console.log("item12", item);
+
+            item["HiddenShareHolderId"] = "";
+            item["notified_on"] = "";
+            item["is_active"] = 1;
+
+            return item;
+          });
+
+        let newList = [...updatedList];
         console.log(
           "🚀 ~ file: review-business-information.js ~ line 139 ~ generateDirectorArray ~ list",
           newList
@@ -863,7 +889,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                               />
                                             </div>
                                           </div>
-                                          <div className="col-md-3">
+                                          <div className="col-md-3" hidden>
                                             <div className="form-group">
                                               <label>Choose Address</label>
 

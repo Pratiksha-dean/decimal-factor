@@ -416,6 +416,7 @@ h5#confirmationModalCenterTitle {
 .App.login-page {
   background: #f6f2ea;
   width: 100%;
+  min-height: 100vh;
 }
 
 .login-screen {
@@ -678,6 +679,10 @@ button.checkstatus-btn.btn.btn-primary {
   height: 350px;
   top: 0;
   left: 0;
+}
+
+.upload-doc-panel-merchant::before {
+  background: unset;
 }
 
 .dashboard-card h3 {
@@ -1753,6 +1758,7 @@ img.commerce-img {
   padding: 10px;
   float: right;
   margin-left: 12px;
+  margin-bottom: 20px;
 }
 
 .value-box h2 {
@@ -2132,6 +2138,57 @@ label.group-report {
 .scroll-height {
   max-height: 300px !important;
 }
+.scroll-height {
+  max-height: 300px !important;
+}
+
+.upload-image label img.upload-img {
+  border-radius: 100%;
+}
+.select-graph select:focus{outline: none;}
+
+.hide {
+  display: none!important;
+}
+
+input.chkprofitloss {
+  margin-right: 5px !important;
+}
+.table-data-div i.fa.fa-chevron-down, .table-data-div i.fa.fa-chevron-right {
+  margin-right: 5px;
+  vertical-align: top;
+  margin-top: 2px;
+}
+
+.table-data-div td.padding-left-4 {
+  padding-left: 70px !important;
+}
+input.chkbalance {
+  margin-right: 5px !important;
+}
+
+
+
+.hide {
+  display: none !important;
+}
+
+input.chkprofitloss {
+  margin-right: 5px !important;
+}
+.table-data-div i.fa.fa-chevron-down,
+.table-data-div i.fa.fa-chevron-right {
+  margin-right: 5px;
+  vertical-align: top;
+  margin-top: 2px;
+}
+
+.table-data-div td.padding-left-4 {
+  padding-left: 70px !important;
+}
+input.chkbalance {
+  margin-right: 5px !important;
+}
 
 @media (max-width: 980px) {
   .login-box {
@@ -2310,4 +2367,210 @@ label.group-report {
   transform: translate(-50%, -50%);
   left: 50%;
   top: 50%;
+}
+
+.initial-avatar {
+  /* Center the content */
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+
+  /* Colors */
+  background-color: #198754;
+
+  /* Rounded border */
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+}
+.initial-avatar-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Montserrat";
+}
+
+.initials-profile-pic {
+  position: relative;
+
+  /* Colors */
+  background-color: #198754;
+  color: #fff;
+  border-color: white;
+
+  /* Rounded border */
+  border-radius: 50%;
+  height: 120px;
+  width: 120px;
+}
+
+.initials-profile-pic-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Montserrat";
+  font-size: 40px;
+  line-height: 49px;
+}
+
+.header-dropdown {
+  align-items: center;
+  display: flex;
+  width: 180px;
+  justify-content: flex-end;
+}
+
+.profile-pic {
+  border-radius: 50%;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.col-md-4.left-panel-box {
+  position: relative !important;
+}
+.left-panel {
+  height: 650px;
+}
+
+button.btn.btn-primary.next-btn {
+  float: none;
+  margin: 30px auto;
+  position: relative;
+  background: #006090;
+  border: 0px;
+  padding: 5px 20px;
+  height: 34px;
+  display: block;
+}
+/*
+.StepperContainer-0-2-1 {
+  width: 100px;
+  float: left;
+  display: block !important;
+  margin-right: 10px;
+  text-align: center;
+  margin-left: -12px;
+  padding: 0px !important;
+}
+
+div#RFS-StepMain {
+  display: block !important;
+  text-align: center;
+  margin: 0 auto;
+  float: none;
+  width: 100px;
+}
+button#RFS-StepButton {
+  margin: 0 auto;
+}
+
+.verify-panel .dashboard-box.position-relative.card.dashboard-card {
+  width: auto !important;
+  max-width: calc(100% - 100px);
+  float: right;
+  margin-top: 80px;
+  margin-right: 0px !important;
+}
+
+div#RFS-ConnectorContainer {
+  display: none;
+}
+div#RFS-StepContainer {
+  padding: 0px !important;
+}
+#RFS-Label {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+.verify-panel {
+  margin: 0px 0px 20px 0;
+  text-align: left;
+  width: 100%;
+  float: left;
+}
+
+.StepperContainer-0-2-1 {
+  padding-top: 80px !important;
+} */
+
+
+.border-divider {
+  border-left: 0px #ccc solid;
+  width: 0;
+  height: 30px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+div#RFS-StepperContainer {
+  overflow: scroll;
+  padding: 100px 0px 20px 0px !important;
+}
+div#RFS-StepMain {
+  display: block !important;
+  text-align: center;
+  margin: 0 auto;
+  float: none;
+  width: 100px;
+}
+button#RFS-StepButton {
+  margin: 0 auto;
+}
+
+.verify-panel .dashboard-box.position-relative.card.dashboard-card {
+  width: auto !important;
+  max-width: calc(100% - 100px);
+  float: right;
+  margin-top: 80px;
+  margin-right: 0px !important;
+}
+
+div#RFS-ConnectorContainer {
+  display: none;
+}
+div#RFS-StepContainer {
+  padding: 0px !important;
+}
+#RFS-Label {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+.verify-panel {
+  margin: 0px 0px 20px 0;
+  text-align: left;
+  width: 100%;
+  float: left;
+}
+
+.StepperContainer-0-2-1 {
+  padding-top: 80px !important;
+} */
+
+.border-divider {
+  border-left: 0px #ccc solid;
+  width: 0;
+  height: 30px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+div#RFS-StepperContainer {
+  overflow: scroll;
+  padding: 100px 0px 20px 0px !important;
 }

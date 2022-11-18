@@ -299,7 +299,7 @@ function BusinessInformation() {
                       );
                       delete payload["directorInfo"];
 
-                      if (payload["ShareHolderArr"].length) {
+                      if (payload["ShareHolderArr"] && payload["ShareHolderArr"].length) {
                         let index = payload["ShareHolderArr"].findIndex(
                           (item) => item["is_primary"] == 1
                         );
@@ -778,7 +778,10 @@ function BusinessInformation() {
                                                           />
                                                         </div>
                                                       </div>
-                                                      <div className="col-md-3">
+                                                      <div
+                                                        className="col-md-3"
+                                                        hidden
+                                                      >
                                                         <div className="form-group">
                                                           <label>
                                                             Choose Address
