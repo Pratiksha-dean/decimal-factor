@@ -107,6 +107,8 @@ function PersonalDetails() {
                   enableReinitialize={userDetails}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
                     let payload = { ...values };
+                    payload["uploadimage"] =file
+
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {
                         setLoading(false);

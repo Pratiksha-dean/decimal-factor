@@ -12,14 +12,17 @@ import BusinessInformation from "./component/merchant-dashboard/business-informa
 import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
 import ChangePassword from "./component/change-password/change-password";
-import NotFound from './component/NotFound';
+import NotFound from "./component/NotFound";
 import ChangePasswordWrapper from "./component/change-password/change-password-wrapper";
 
 const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
-
+    console.log(
+      "🚀 ~ file: route.js ~ line 22 ~ PrivateRoute ~ userDetails",
+      userDetails
+    );
 
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (
@@ -42,6 +45,10 @@ const RoutePage = () => {
   const ProtectedRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
+    console.log(
+      "🚀 ~ file: route.js ~ line 48 ~ ProtectedRoute ~ userDetails",
+      userDetails
+    );
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (token && isAuthenticated) {
       return <Navigate to="/dashboard" />;
@@ -60,6 +67,10 @@ const RoutePage = () => {
   const PublicRoute = ({ children }) => {
     let token = localStorage.getItem("token");
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
+    console.log(
+      "🚀 ~ file: route.js ~ line 70 ~ PublicRoute ~ isAuthenticated",
+      isAuthenticated
+    );
 
     if (token !== "" && token !== null && isAuthenticated) {
       return <Navigate to="/dashboard" />;
@@ -95,7 +106,7 @@ const RoutePage = () => {
       )}
       <Route path="/authentication" element={<Authentication />} /> */}
 
-       <Route path="/notfound" element={<NotFound />} />
+      <Route path="/notfound" element={<NotFound />} />
       <Route
         path="/*"
         exact

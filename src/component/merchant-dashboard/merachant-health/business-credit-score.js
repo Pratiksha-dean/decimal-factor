@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { ToastMessage } from "../../ToastMessage";
 
 export default function BusinessCreditScore() {
+  const [checkBusinessCredit, setCheckBusinessCreditScore] = useState(false);
+  const [fileList, setFileList] = useState([]);
+
+  const hiddenFileInput = useRef(null);
   function checkMe(selected) {
     if (selected) {
       document.getElementById("divcheck").style.display = "block";
@@ -9,7 +14,48 @@ export default function BusinessCreditScore() {
     }
   }
 
+  const deleteFile = (i) => {
+    let list = [...fileList];
+    list.splice(i, 1);
+    setFileList(list);
+  };
+
   const totalSizeMB = 1990 / Math.pow(1024, 2);
+  function handleChange(event) {
+    let list = [...fileList];
+    let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
+    console.log(
+      "🚀 ~ file: business-credit-score.js ~ line 33 ~ handleChange ~ totalSizeMB",
+      totalSizeMB,
+      totalSizeMB < 5
+    );
+    if (totalSizeMB < 5) {
+      list.push(event.target.files[0]);
+      setFileList(list);
+
+      // setFile(event.target.files[0]);
+      localStorage.setItem("fileList", JSON.stringify(list));
+      let newlist = [];
+      fileList.forEach((item) => {
+        newlist.push({
+          lastModified: item["lastModified"],
+          lastModifiedDate: item["lastModifiedDate"],
+          name: item["name"],
+          size: item["size"],
+          type: item["type"],
+          webkitRelativePath: item["webkitRelativePath"],
+        });
+      });
+    } else {
+      ToastMessage("File size needs to be less than 5 MB", "error");
+    }
+  }
+
+  const submitDocuments = () => {
+    if (!checkBusinessCredit) {
+      ToastMessage("Please select the checkbox", "error");
+    }
+  };
 
   return (
     <section>
@@ -19,7 +65,7 @@ export default function BusinessCreditScore() {
             <div className="form-group">
               <input
                 type="checkbox"
-                onClick={(e) => checkMe(e.target.checked)}
+                onClick={(e) => setCheckBusinessCreditScore(e.target.checked)}
                 name="Upload Bank Statement Copies Instead"
                 className="upload-checkbox"
               />
@@ -33,7 +79,6 @@ export default function BusinessCreditScore() {
             <div
               className="upload-doc-panel upload-doc-panel-merchant"
               id="divcheck"
-              style={{ display: "none" }}
             >
               <div className="row">
                 <div className="col-md-5">
@@ -61,15 +106,35 @@ export default function BusinessCreditScore() {
                         </ul>
                       </li>
                     </ul>
-                    <div className="uploaded-file">
-                      <p>
-                        <strong>File Uploaded:</strong>
-                      </p>
-                      <p>
+
+                    {fileList.length > 0 && (
+                      <div className="uploaded-file">
+                        <p>
+                          <strong>File Uploaded:</strong>
+                        </p>
+                        {fileList.map((item, i) => {
+                          return (
+                            <div
+                              className="d-flex justify-content-between my-2"
+                              key={i}
+                            >
+                              <div>{item.name}</div>{" "}
+                              <div className="cursor-pointer">
+                                {" "}
+                                <i
+                                  className="fa fa-trash cursor-pointer"
+                                  onClick={() => deleteFile(i)}
+                                ></i>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        {/* <p>
                         <span>MY-ID-PROOF.JPG</span>{" "}
                         <i className="fa fa-trash"></i>
-                      </p>
-                    </div>
+                      </p> */}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="col-md-1"></div>
@@ -81,6 +146,8 @@ export default function BusinessCreditScore() {
                       name="file"
                       className="upload-doc"
                       accept="image/png,image/jpeg,.pdf"
+                      ref={hiddenFileInput}
+                      onChange={handleChange}
                     />
 
                     <img
@@ -101,7 +168,13 @@ export default function BusinessCreditScore() {
                   </div>
                 </div>
               </div>
-              <button className="btn btn-primary save-btn next-btn">
+              <button
+                className="btn btn-primary save-btn next-btn"
+                type="submit"
+                onClick={() => {
+                  submitDocuments();
+                }}
+              >
                 Save <i className="fa fa-file-image-o"></i>
               </button>
             </div>

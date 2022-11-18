@@ -247,6 +247,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
                   </div>
                   <input
                     type="number"
+                    min={0}
                     placeholder="Monthly Card Payments Amount"
                     name={fieldNames.CARDPAYMENTAMOUNT}
                     className={clsx(
@@ -319,6 +320,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
                   </div>
                   <input
                     type="number"
+                    min={0}
                     placeholder="Approx Amount due to you from supplier"
                     name={fieldNames.SUPPLIERDUEAMOUNT}
                     className={clsx(

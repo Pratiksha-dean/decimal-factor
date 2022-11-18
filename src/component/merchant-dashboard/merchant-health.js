@@ -1680,12 +1680,11 @@ function MerchantHealth() {
                               </div>
                             </>
                           )}
-                        {accountingStatus ||
-                            (true && (
-                              <div className="data-panel">
-                                <Codat />
-                              </div>
-                            ))}
+                          {accountingStatus && (
+                            <div className="data-panel">
+                              <Codat />
+                            </div>
+                          )}
                         </div>
                       </section>
                     </TabPanel>
