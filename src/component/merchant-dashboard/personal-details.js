@@ -337,9 +337,13 @@ function PersonalDetails() {
                               <input
                                 type="file"
                                 id="input-file"
-                                name="upload image"
+                                name="uploadimage"
                                 className=""
-                                onChange={handleFileChange}
+                                onChange={(e)=>{
+                                  console.log(e.target.files);
+                                  handleFileChange(e)
+                                  setFieldValue("uploadimage", e.target.files[0]);
+                                }}
                                 ref={hiddenFileInput}
                                 accept="image/*"
                               />
