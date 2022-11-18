@@ -96,10 +96,13 @@ export default function AssessMarketing(props) {
                 <div className="table-data-div">
                     <div className="col s12"  id="">
                         <div className="">
-                           
+                        <h3 className="groupbydebtor">Marketing</h3>
+                        <div className=" scroll-bar scroll-bar-2">
+                       
                             <table id="assess-profitloss-table" class="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
                                {marketingData}
                             </table>
+                            </div>
                         </div>
                     </div>
                     </div>

@@ -2145,9 +2145,29 @@ label.group-report {
 .upload-image label img.upload-img {
   border-radius: 100%;
 }
-.select-graph select:focus {
-  outline: none;
+.select-graph select:focus{outline: none;}
+
+.hide {
+  display: none!important;
 }
+
+input.chkprofitloss {
+  margin-right: 5px !important;
+}
+.table-data-div i.fa.fa-chevron-down, .table-data-div i.fa.fa-chevron-right {
+  margin-right: 5px;
+  vertical-align: top;
+  margin-top: 2px;
+}
+
+.table-data-div td.padding-left-4 {
+  padding-left: 70px !important;
+}
+input.chkbalance {
+  margin-right: 5px !important;
+}
+
+
 
 .hide {
   display: none !important;
@@ -2445,6 +2465,61 @@ button.btn.btn-primary.next-btn {
   padding: 0px !important;
 }
 
+div#RFS-StepMain {
+  display: block !important;
+  text-align: center;
+  margin: 0 auto;
+  float: none;
+  width: 100px;
+}
+button#RFS-StepButton {
+  margin: 0 auto;
+}
+
+.verify-panel .dashboard-box.position-relative.card.dashboard-card {
+  width: auto !important;
+  max-width: calc(100% - 100px);
+  float: right;
+  margin-top: 80px;
+  margin-right: 0px !important;
+}
+
+div#RFS-ConnectorContainer {
+  display: none;
+}
+div#RFS-StepContainer {
+  padding: 0px !important;
+}
+#RFS-Label {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+.verify-panel {
+  margin: 0px 0px 20px 0;
+  text-align: left;
+  width: 100%;
+  float: left;
+}
+
+.StepperContainer-0-2-1 {
+  padding-top: 80px !important;
+} */
+
+
+.border-divider {
+  border-left: 0px #ccc solid;
+  width: 0;
+  height: 30px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+div#RFS-StepperContainer {
+  overflow: scroll;
+  padding: 100px 0px 20px 0px !important;
+}
 div#RFS-StepMain {
   display: block !important;
   text-align: center;
