@@ -83,11 +83,9 @@ function Login() {
               updateLoginTimes(obj).then((res) => {
                 console.log("re", res);
               });
-              if (resp.data.data.login_count > 0) {
-                navigate("/dashbaord");
-              } else {
-                navigate("/authentication");
-              }
+
+              navigate("/authentication");
+
               setUserDetails(resp.data.data);
               setToken(resp.data.data.token);
               isAuthenticated(false);

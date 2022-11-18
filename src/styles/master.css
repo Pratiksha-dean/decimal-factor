@@ -2533,8 +2533,8 @@ button#RFS-StepButton {
 
 .verify-panel .dashboard-box.position-relative.card.dashboard-card {
   width: auto !important;
-  max-width: calc(100% - 100px);
-  float: right;
+  /* max-width: calc(100% - 100px); */
+  /* float: right; */
   margin-top: 80px;
   margin-right: 0px !important;
 }

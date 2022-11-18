@@ -93,14 +93,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
             setAccoutingUrl(
               `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
             );
-             window.open(
-               `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-               "_blank"
-             );
+            window.open(
+              `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+              "_blank"
+            );
           });
         } else {
           setAccoutingUrl(resp.data.redirect);
-              window.open(resp.data.redirect, "_blank");
+          window.open(resp.data.redirect, "_blank");
           setLoadingAccouting(false);
         }
       })

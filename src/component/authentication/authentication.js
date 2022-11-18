@@ -141,8 +141,11 @@ function Authentication() {
               </h5> */}
               <form onSubmit={formik.handleSubmit}>
                 <div className="form-group">
-                  <img src={`${image}`} className="qr-code-img" />
+                  {!userDetails["login_count"] && (
+                    <img src={`${image}`} className="qr-code-img" />
+                  )}
                 </div>
+
                 <div className="form-group">
                   <label>
                     Please enter the Authentication Code found on your Google

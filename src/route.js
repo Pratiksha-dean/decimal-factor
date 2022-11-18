@@ -19,10 +19,6 @@ const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
-    console.log(
-      "🚀 ~ file: route.js ~ line 22 ~ PrivateRoute ~ userDetails",
-      userDetails
-    );
 
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (
@@ -45,10 +41,6 @@ const RoutePage = () => {
   const ProtectedRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
-    console.log(
-      "🚀 ~ file: route.js ~ line 48 ~ ProtectedRoute ~ userDetails",
-      userDetails
-    );
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (token && isAuthenticated) {
       return <Navigate to="/dashboard" />;
@@ -67,10 +59,6 @@ const RoutePage = () => {
   const PublicRoute = ({ children }) => {
     let token = localStorage.getItem("token");
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
-    console.log(
-      "🚀 ~ file: route.js ~ line 70 ~ PublicRoute ~ isAuthenticated",
-      isAuthenticated
-    );
 
     if (token !== "" && token !== null && isAuthenticated) {
       return <Navigate to="/dashboard" />;
