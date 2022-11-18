@@ -221,10 +221,11 @@ export default function Codat() {
         {currentApi==='AgedDebtors' && <Debtors title="Customers" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='agedcreditors' && <AgedCreditors title="Customers" leadId={leadId} endUrl={endUrl}/>}  
       
-        {currentApi==='assess_profitandloss' && <AssessProfitAndLoss />}  
-        {currentApi==='assess_balancesheet' && <AssessBalanceSheet />}  
-        {currentApi==='assess_commerce' && <AssessCommerce />}  
-        {currentApi==='assess_marketing' && <AssessMarketing />}  
+        {currentApi==='assess_profitandloss' && <AssessProfitAndLoss leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='assess_balancesheet' && <AssessBalanceSheet leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='assess_commerce' && <AssessCommerce leadId={leadId} endUrl={endUrl}/>}  
+        {currentApi==='assess_marketing' && <AssessMarketing leadId={leadId} endUrl={endUrl}/>}  
+
 
         {currentApi==='Commerce_Company_info' && <CommerceCompanyinfo title="Company info" leadId={leadId} endUrl={endUrl}/>}  
         {currentApi==='Commerce_Customers' && <CommerceCustomers title="Customers" leadId={leadId} endUrl={endUrl}/>}  

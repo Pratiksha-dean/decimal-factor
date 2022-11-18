@@ -1,7 +1,7 @@
-import React from "react";
-import Datatables from "./Datatables";
+import React,{useState} from "react";
+import axios from "axios";
 import Parser from 'html-react-parser';
-import ReactApexChart from "react-apexcharts";
+import Chart from "./Chart";
 
 
 
@@ -9,82 +9,50 @@ import ReactApexChart from "react-apexcharts";
 export default function AssessMarketing(props) {
   
  
-    const [openLabel4, setOpenLabel4] = React.useState(false);
-    const [openLabel5, setOpenLabel5] = React.useState(false);
-    const [arrowclassName4, setarrowclassName4] = React.useState('fa fa-chevron-right');
-    const [arrowclassName5, setarrowclassName5] = React.useState('fa fa-chevron-right');
+    const [arrowclassName4, setarrowclassName4] = useState('fa fa-chevron-right');
+    const [arrowclassName5, setarrowclassName5] = useState('fa fa-chevron-right');
+
+    const[periodStart,setPeriodStart] = useState('');
+    const[periodLength,setPeriodLength] = useState(1);
+    const[periodCompare,setPeriodCompare] = useState(3);
+    const[marketingData,setMarketingData] = useState('');
+    const [dataCategoreis, setDataCategoreis] = useState([]);
+    const [dataSeries, setDataSeries] = useState([]);
   
  
-
-const handleOpenLabel4 = () => {
-    setOpenLabel4(!openLabel4);
-    let className = 'fa fa-chevron-right';
-    if (!openLabel4) {
-    className += 'fa fa-chevron-down';
-    setarrowclassName4('fa fa-chevron-down')
-    }
-    else {
-    setarrowclassName4 ('fa fa-chevron-right')
-    }
-                
-    };
-const handleOpenLabel5 = () => {
-setOpenLabel5(!openLabel5);
-let className = 'fa fa-chevron-right';
-if (!openLabel5) {
-className += 'fa fa-chevron-down ';
-setarrowclassName5('fa fa-chevron-down')
-}
-else {
-setarrowclassName5 ('fa fa-chevron-right')
-}
-};    
-
-    
-    
-
-  const chartData = {
-    chart: {
-      type: "Line",
-      id: "apexchart-example",
-      foreColor: '#000'
-    },
-    xaxis: {
-      categories: ['Dec 2021', 'Jan 2022', 'Feb 2022', 'March 2022']
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shade: "light",
-        type: "horizontal",
-        shadeIntensity: 0.5,
-        gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-        inverseColors: true,
-        opacityFrom: 1,
-        opacityTo: 1,
-        stops: [0, 50, 100]
-        // colorStops: []
+    const handleClassClick = () => {
+      const profitstatement = document.querySelectorAll("tr[class^='marketing-label-']");    
+      for (let i of profitstatement) {
+          i.addEventListener("click", (e) => {
+                  let clname = e.currentTarget.className.replace(" padding-left-1", "");
+                  Array.from(document.getElementsByClassName(clname+'-sub')).forEach(function(element) {
+                      element.classList.toggle("hide");
+                  });
+          })
       }
-    },
-    legend: {
-      
-      height:50
-      
-    },
-    series: [
-        {
-          name: "Marketing to Revenue",
-          data: [190, 220, 20, 260],
-        },
-       
-        {
-          name: "Marketing to Expense", 
-          data: [103, 605, 98, 83],
-        },
-      
-      ]
-  };
-  
+    }
+    const getApiData = async (start, leng, compa) => {
+      if(start!=='' && leng!=='' && compa!=''){
+        await axios.get(`${props.endUrl}/CODAT/assess_marketing/${props.leadId}/${leng}/${compa}/${start}`)
+        .then(res => {
+          setMarketingData(Parser(res.data.data.split("class=").join("className=")));
+          setDataCategoreis(res.data.date);
+          setDataSeries([{
+            'name': 'Marketing to Revenue',
+            'data': res.data.m_t_r
+          },
+          {
+            'name': 'Marketing to Expense',
+            'data': res.data.m_t_e
+          }
+          ]);
+        });
+
+        const myTimeout = setTimeout(handleClassClick, 1000);
+      }
+    }
+
+
 
       return (
           <div className="chart-panel">
@@ -102,110 +70,35 @@ setarrowclassName5 ('fa fa-chevron-right')
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>Period Start</label>
-                <input type="month" name="" className="period-start" />
+                <input type="month" name="" className="period-start" value={periodStart} onChange={(e)=>{setPeriodStart(e.target.value); getApiData(e.target.value, periodLength, periodCompare) }} />
                 </div></div>
                 <div className="col-md-3 ">
                     <div className="box-shape">
                 <label>Period Length</label>
-                <select>
-                <option>1 Month</option>
-                    <option>2 Months</option>
-                    <option>3 Months</option>
-                    <option>4 Months</option>
-                    <option>5 Months</option>
+                <select value={periodLength} onChange={(e)=>{setPeriodLength(e.target.value); getApiData(periodStart, e.target.value, periodCompare) }}>
+                    <option value="1">1 Month</option>
+                    <option value="2">2 Months</option>
+                    <option value="3">3 Months</option>
+                    <option value="4">4 Months</option>
+                    <option value="5">5 Months</option>
                 </select>
                 </div></div>
                 <div className="col-md-3 ">
                     <div class="box-shape">
                 <label>Period to Compare</label>
-                <input type="number" name="" className="period-compare" />
+                <input type="number" name="" className="period-compare" value={periodCompare} onChange={(e)=>{setPeriodCompare(e.target.value); getApiData(periodStart, periodLength, e.target.value) }}/>
                 </div></div>
                
                 </div>
                 <div className="chart-div">
-              <ReactApexChart options={chartData} series={chartData.series} style={{'width':'100%'}} />
+                {marketingData!=='' && <Chart categories={dataCategoreis} series={dataSeries} />}
               
                 <div className="table-data-div">
                     <div className="col s12"  id="">
                         <div className="">
                            
                             <table id="assess-profitloss-table" class="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
-                                <thead>
-                                    <tr>
-                                    <th><strong></strong></th>
-                                    <th><strong>Jan 2021 - Feb 2022</strong></th>
-                                    <th><strong>Jan 2021 - Feb 2022</strong></th>
-                                    <th><strong>Jan 2021 - Feb 2022</strong></th>
-                                    <th><strong>Jan 2021 - Feb 2022</strong></th>
-                                    <th><strong>Jan 2021 - Feb 2022</strong></th>
-                                    
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className="profitratios-label-1">
-                                        <td>
-                                        <i className={arrowclassName4}  onClick={handleOpenLabel4}></i>
-                                        <strong>Marketing to revenue</strong></td>
-                                        <td>117,568.27</td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                    
-                                    </tr>
-                                    {openLabel4 ? (<tr className="profitratios-label-2">
-                                        <td><strong className="padding-left-1">Operating income</strong></td>
-                                        <td>117,568.27</td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                    
-                                    </tr>
-                                    ) : null }
-                                    {openLabel4 ? ( <tr className="profitratios-label-3">
-                                        <td><strong className="padding-left-1">Marketing expense</strong></td>
-                                        <td>117,568.27</td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                    
-                                    </tr>) : null }
-
-                                    <tr className="profitratios-label-4">
-                                        <td>
-                                        <i className={arrowclassName5}  onClick={handleOpenLabel5}></i>
-                                        <strong>Marketing to expense</strong></td>
-                                        <td>117,568.27</td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                    
-                                    </tr>
-                                    {openLabel5 ? (<tr className="profitratios-label-5">
-                                        <td ><strong  className="padding-left-1">Operating expense</strong></td>
-                                        <td>117,568.27</td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                    
-                                    </tr>) : null }
-                                    {openLabel5 ? (<tr className="profitratios-label-6">
-                                        <td><strong className="padding-left-1">Marketing expense</strong></td>
-                                        <td>117,568.27</td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                        <td>117,568.27 </td>
-                                    
-                                    </tr>) : null }
-                                    
-                                    
-                                </tbody>
-
+                               {marketingData}
                             </table>
                         </div>
                     </div>

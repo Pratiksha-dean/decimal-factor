@@ -2133,6 +2133,28 @@ label.group-report {
 .upload-image label img.upload-img {
   border-radius: 100%;
 }
+.select-graph select:focus{outline: none;}
+
+.hide {
+  display: none!important;
+} 
+
+input.chkprofitloss {
+  margin-right: 5px !important;
+}
+.table-data-div i.fa.fa-chevron-down, .table-data-div i.fa.fa-chevron-right {
+  margin-right: 5px;
+  vertical-align: top;
+  margin-top: 2px;
+}
+
+.table-data-div td.padding-left-4 {
+  padding-left: 70px !important;
+}
+input.chkbalance {
+  margin-right: 5px !important;
+}
+
 
 
 @media (max-width:980px) {
