@@ -148,241 +148,327 @@ export default function Codat() {
               </div>
             </div>
 
-        {currentApi==='Customers' && <Customers title="Customers" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Invoices' && <Invoices title="Invoices" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Payments' && <Payments title="Payments" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='CreditNotes' && <CreditNotes title="Credit Notes" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='DirectIncome' && <DirectIncome title="Direct Incomes" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Suppliers' && <Suppliers title="Suppliers" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='PurchaseOrder' && <PurchaseOrders title="Purchase Orders" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Bills' && <Bills title="Bills" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='BillPayment' && <BillPayments title="Bill Payments" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='BillCreditNotes' && <BillCreditNotes title="Bill Credit Notes" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='DirectCosts' && <DirectCost title="Direct Costs" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Accounts' && <Accounts title="Accounts" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='JournalEntries' && <JournalEntries title="Journal Entries" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='TaxRates' && <TaxRates title="Tax Rates" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='TrackingCategories' && <TrackingCategories title="Tracking Categories" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='AccountTransactions' && <AccountTransactions title="Account Transactions" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Transfers' && <Transfers title="Transfers" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Items' && <Items title="Items" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='balancesheet' && <BalanceSheet leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='operating_flow' && <OperatingFlow leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='profit_loss' && <ProfitLoss leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='Company' && <CommerceCompanyinfo title="Customers" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='AgedDebtors' && <Debtors title="Customers" leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='agedcreditors' && <AgedCreditors title="Customers" leadId={leadId} endUrl={endUrl}/>}
+            {currentApi === "Customers" && (
+              <Customers title="Customers" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "Invoices" && (
+              <Invoices title="Invoices" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "Payments" && (
+              <Payments title="Payments" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "CreditNotes" && (
+              <CreditNotes
+                title="Credit Notes"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "DirectIncome" && (
+              <DirectIncome
+                title="Direct Incomes"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "Suppliers" && (
+              <Suppliers title="Suppliers" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "PurchaseOrder" && (
+              <PurchaseOrders
+                title="Purchase Orders"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "Bills" && (
+              <Bills title="Bills" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "BillPayment" && (
+              <BillPayments
+                title="Bill Payments"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "BillCreditNotes" && (
+              <BillCreditNotes
+                title="Bill Credit Notes"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "DirectCosts" && (
+              <DirectCost
+                title="Direct Costs"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "Accounts" && (
+              <Accounts title="Accounts" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "JournalEntries" && (
+              <JournalEntries
+                title="Journal Entries"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "TaxRates" && (
+              <TaxRates title="Tax Rates" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "TrackingCategories" && (
+              <TrackingCategories
+                title="Tracking Categories"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "AccountTransactions" && (
+              <AccountTransactions
+                title="Account Transactions"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "Transfers" && (
+              <Transfers title="Transfers" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "Items" && (
+              <Items title="Items" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "balancesheet" && (
+              <BalanceSheet leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "operating_flow" && (
+              <OperatingFlow leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "profit_loss" && (
+              <ProfitLoss leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "Company" && (
+              <CommerceCompanyinfo
+                title="Customers"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
+            {currentApi === "AgedDebtors" && (
+              <Debtors title="Customers" leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "agedcreditors" && (
+              <AgedCreditors
+                title="Customers"
+                leadId={leadId}
+                endUrl={endUrl}
+              />
+            )}
 
-        {currentApi==='assess_profitandloss' && <AssessProfitAndLoss leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='assess_balancesheet' && <AssessBalanceSheet leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='assess_commerce' && <AssessCommerce leadId={leadId} endUrl={endUrl}/>}
-        {currentApi==='assess_marketing' && <AssessMarketing leadId={leadId} endUrl={endUrl}/>}
+            {currentApi === "assess_profitandloss" && (
+              <AssessProfitAndLoss leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "assess_balancesheet" && (
+              <AssessBalanceSheet leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "assess_commerce" && (
+              <AssessCommerce leadId={leadId} endUrl={endUrl} />
+            )}
+            {currentApi === "assess_marketing" && (
+              <AssessMarketing leadId={leadId} endUrl={endUrl} />
+            )}
 
-
-              <div className="d-flex">
-                <select
-                  className="form-select  form-control"
-                  aria-label="Assess"
-                  style={{ marginRight: "10px" }}
-                  onChange={(e) => setAssessApiValue(e.target.value)}
-                  value={assessApiValue}
-                >
-                  {assessApiList.map((item, i) => {
-                    return (
-                      <option key={item.value} value={item.value}>
-                        {item.label}
-                      </option>
-                    );
-                  })}
-                </select>
-                <button
-                  className="btn btn-primary go-btn"
-                  onClick={() => handleCodat("assess")}
-                >
-                  Go
-                </button>
-              </div>
+            <div className="d-flex">
+              <select
+                className="form-select  form-control"
+                aria-label="Assess"
+                style={{ marginRight: "10px" }}
+                onChange={(e) => setAssessApiValue(e.target.value)}
+                value={assessApiValue}
+              >
+                {assessApiList.map((item, i) => {
+                  return (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  );
+                })}
+              </select>
+              <button
+                className="btn btn-primary go-btn"
+                onClick={() => handleCodat("assess")}
+              >
+                Go
+              </button>
             </div>
-            <div className="col-md-3">
-              <label for="basic-url" className="form-label mb-0">
-                Commerce
-              </label>
-
-              <div className="d-flex">
-                <select
-                  className="form-select form-control"
-                  aria-label="Default select example"
-                  style={{ marginRight: "10px" }}
-                  onChange={(e) => setCommerceApiValue(e.target.value)}
-                  value={commerceApiValue}
-                >
-                  {commerceApiList.map((item, i) => {
-                    return (
-                      <option key={item.value} value={item.value}>
-                        {item.label}
-                      </option>
-                    );
-                  })}
-                </select>
-                <button
-                  className="btn btn-primary go-btn"
-                  onClick={() => handleCodat("commerce")}
-                >
-                  Go
-                </button>
-              </div>
-            </div>
-            <ExportFiles
-              leadId={leadId}
-              endUrl={endUrl}
-              serverUrl={serverUrl}
-            />
           </div>
+          <div className="col-md-3">
+            <label for="basic-url" className="form-label mb-0">
+              Commerce
+            </label>
+
+            <div className="d-flex">
+              <select
+                className="form-select form-control"
+                aria-label="Default select example"
+                style={{ marginRight: "10px" }}
+                onChange={(e) => setCommerceApiValue(e.target.value)}
+                value={commerceApiValue}
+              >
+                {commerceApiList.map((item, i) => {
+                  return (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  );
+                })}
+              </select>
+              <button
+                className="btn btn-primary go-btn"
+                onClick={() => handleCodat("commerce")}
+              >
+                Go
+              </button>
+            </div>
+          </div>
+          <ExportFiles leadId={leadId} endUrl={endUrl} serverUrl={serverUrl} />
         </div>
-
-        {currentApi === "Customers" && (
-          <Customers title="Customers" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Invoices" && (
-          <Invoices title="Invoices" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Payments" && (
-          <Payments title="Payments" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "CreditNotes" && (
-          <CreditNotes title="Credit Notes" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "DirectIncome" && (
-          <DirectIncome
-            title="Direct Incomes"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "Suppliers" && (
-          <Suppliers title="Suppliers" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "PurchaseOrder" && (
-          <PurchaseOrders
-            title="Purchase Orders"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "Bills" && (
-          <Bills title="Bills" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "BillPayment" && (
-          <BillPayments title="Bill Payments" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "BillCreditNotes" && (
-          <BillCreditNotes
-            title="Bill Credit Notes"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "DirectCosts" && (
-          <DirectCost title="Direct Costs" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Accounts" && (
-          <Accounts title="Accounts" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "JournalEntries" && (
-          <JournalEntries
-            title="Journal Entries"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "TaxRates" && (
-          <TaxRates title="Tax Rates" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "TrackingCategories" && (
-          <TrackingCategories
-            title="Tracking Categories"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "AccountTransactions" && (
-          <AccountTransactions
-            title="Account Transactions"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "Transfers" && (
-          <Transfers title="Transfers" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Items" && (
-          <Items title="Items" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "balancesheet" && (
-          <BalanceSheet leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "operating_flow" && (
-          <OperatingFlow leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "profit_loss" && (
-          <ProfitLoss leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Company" && (
-          <CommerceCompanyinfo
-            title="Customers"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "AgedDebtors" && (
-          <Debtors title="Customers" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "agedcreditors" && (
-          <AgedCreditors title="Customers" leadId={leadId} endUrl={endUrl} />
-        )}
-
-        {currentApi === "assess_profitandloss" && <AssessProfitAndLoss />}
-        {currentApi === "assess_balancesheet" && <AssessBalanceSheet />}
-        {currentApi === "assess_commerce" && <AssessCommerce />}
-        {currentApi === "assess_marketing" && <AssessMarketing />}
-
-        {currentApi === "Commerce_Company_info" && (
-          <CommerceCompanyinfo
-            title="Company info"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "Commerce_Customers" && (
-          <CommerceCustomers
-            title="Customers"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "Commerce_Disputes" && (
-          <CommerceDisputes title="Disputes" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Commerce_Orders" && (
-          <CommerceOrders title="Orders" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Commerce_Payments" && (
-          <CommercePayments title="Payments" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Commerce_Products" && (
-          <CommerceProducts title="Products" leadId={leadId} endUrl={endUrl} />
-        )}
-        {currentApi === "Commerce_Transactions" && (
-          <CommerceTransactions
-            title="Transactions"
-            leadId={leadId}
-            endUrl={endUrl}
-          />
-        )}
-        {currentApi === "Commerce_Location" && (
-          <CommerceLocation title="Location" leadId={leadId} endUrl={endUrl} />
-        )}
       </div>
+
+      {currentApi === "Customers" && (
+        <Customers title="Customers" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Invoices" && (
+        <Invoices title="Invoices" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Payments" && (
+        <Payments title="Payments" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "CreditNotes" && (
+        <CreditNotes title="Credit Notes" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "DirectIncome" && (
+        <DirectIncome title="Direct Incomes" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Suppliers" && (
+        <Suppliers title="Suppliers" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "PurchaseOrder" && (
+        <PurchaseOrders
+          title="Purchase Orders"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "Bills" && (
+        <Bills title="Bills" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "BillPayment" && (
+        <BillPayments title="Bill Payments" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "BillCreditNotes" && (
+        <BillCreditNotes
+          title="Bill Credit Notes"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "DirectCosts" && (
+        <DirectCost title="Direct Costs" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Accounts" && (
+        <Accounts title="Accounts" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "JournalEntries" && (
+        <JournalEntries
+          title="Journal Entries"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "TaxRates" && (
+        <TaxRates title="Tax Rates" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "TrackingCategories" && (
+        <TrackingCategories
+          title="Tracking Categories"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "AccountTransactions" && (
+        <AccountTransactions
+          title="Account Transactions"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "Transfers" && (
+        <Transfers title="Transfers" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Items" && (
+        <Items title="Items" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "balancesheet" && (
+        <BalanceSheet leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "operating_flow" && (
+        <OperatingFlow leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "profit_loss" && (
+        <ProfitLoss leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Company" && (
+        <CommerceCompanyinfo
+          title="Customers"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "AgedDebtors" && (
+        <Debtors title="Customers" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "agedcreditors" && (
+        <AgedCreditors title="Customers" leadId={leadId} endUrl={endUrl} />
+      )}
+
+      {currentApi === "assess_profitandloss" && <AssessProfitAndLoss />}
+      {currentApi === "assess_balancesheet" && <AssessBalanceSheet />}
+      {currentApi === "assess_commerce" && <AssessCommerce />}
+      {currentApi === "assess_marketing" && <AssessMarketing />}
+
+      {currentApi === "Commerce_Company_info" && (
+        <CommerceCompanyinfo
+          title="Company info"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "Commerce_Customers" && (
+        <CommerceCustomers title="Customers" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Commerce_Disputes" && (
+        <CommerceDisputes title="Disputes" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Commerce_Orders" && (
+        <CommerceOrders title="Orders" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Commerce_Payments" && (
+        <CommercePayments title="Payments" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Commerce_Products" && (
+        <CommerceProducts title="Products" leadId={leadId} endUrl={endUrl} />
+      )}
+      {currentApi === "Commerce_Transactions" && (
+        <CommerceTransactions
+          title="Transactions"
+          leadId={leadId}
+          endUrl={endUrl}
+        />
+      )}
+      {currentApi === "Commerce_Location" && (
+        <CommerceLocation title="Location" leadId={leadId} endUrl={endUrl} />
+      )}
     </div>
   );
 }
