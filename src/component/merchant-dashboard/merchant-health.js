@@ -608,12 +608,13 @@ function MerchantHealth() {
                       setCurrentTabIndex(index);
                     }}
                   >
-                    <TabList>
-                      <Tab>Banking Insights</Tab>
-                      <Tab>Accounting Insights</Tab>
-                      <Tab>Business Credit Score Insights</Tab>
-                    </TabList>
-
+                    <div className="bankinglist">
+                      <TabList>
+                        <Tab>Banking Insights</Tab>
+                        <Tab>Accounting Insights</Tab>
+                        <Tab>Business Credit Score Insights</Tab>
+                      </TabList>
+                    </div>
                     <TabPanel>
                       <section>
                         {loadingBanking && !bankingUrl && (
@@ -1474,7 +1475,7 @@ function MerchantHealth() {
                                 <div className="col-md-6">
                                   <div className=" financial-service income-panel">
                                     <h4>Event Feed ({eventCount})</h4>
-                                    <div className="scroll-bar-2">
+                                    <div className="scroll-bar-2 events-panel">
                                       {(eventFeedSummary.length > 0 &&
                                         eventFeedSummary.map((month, index) => {
                                           return (

@@ -4,6 +4,10 @@ import { ToastMessage } from "../../ToastMessage";
 export default function BusinessCreditScore() {
   const [checkBusinessCredit, setCheckBusinessCreditScore] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [identityProofList, setIdentityProofList] = useState([]);
+  const [addressProofList, setAddressProofList] = useState([]);
+  const [isIdentityProof, setIsIdentityProof] = useState(false);
+  const [isAddressProof, setIsAddressProof] = useState(false);
 
   const hiddenFileInput = useRef(null);
   function checkMe(selected) {
@@ -139,33 +143,98 @@ export default function BusinessCreditScore() {
                 </div>
                 <div className="col-md-1"></div>
                 <div className="col-md-6">
-                  <div className="upload-box">
-                    <input
-                      type="file"
-                      id="upload-file"
-                      name="file"
-                      className="upload-doc"
-                      accept="image/png,image/jpeg,.pdf"
-                      ref={hiddenFileInput}
-                      onChange={handleChange}
-                    />
-
-                    <img
-                      src={require("../../../images/file-pdf.png")}
-                      alt=""
-                      className="upload-icon"
-                    />
-                    <label
-                      for="upload-file"
-                      className="btn btn-primary upload-btn"
+                  <p>
+                    <strong>Select Document Category</strong>
+                  </p>
+                  <div className="d-flex justify-space-evenly my-3">
+                    <button
+                      className="btn btn-primary proof-btns mr-2"
+                      type="button"
+                      onClick={() => {
+                        setIsIdentityProof(true);
+                      }}
                     >
-                      {" "}
-                      Upload
-                    </label>
-
-                    <p>Max file size: 5MB each</p>
-                    <p>Supported file types: PDF, JPG, PNG Bitmap etc.</p>
+                      Proof of Identity
+                    </button>
+                    <button
+                      className="btn btn-primary proof-btns"
+                      type="button"
+                      onClick={() => {
+                        setIsIdentityProof(true);
+                      }}
+                    >
+                      Proof of Address
+                    </button>
                   </div>
+
+                  {isIdentityProof && (
+                    <>
+                      <label className="form-label">
+                        Upload Identity Proof
+                      </label>
+                      <div className="upload-box">
+                        <input
+                          type="file"
+                          id="upload-file"
+                          name="file"
+                          className="upload-doc"
+                          accept="image/png,image/jpeg,.pdf"
+                          ref={hiddenFileInput}
+                          onChange={handleChange}
+                        />
+
+                        <img
+                          src={require("../../../images/file-pdf.png")}
+                          alt=""
+                          className="upload-icon"
+                        />
+                        <label
+                          for="upload-file"
+                          className="btn btn-primary upload-btn"
+                        >
+                          {" "}
+                          Upload
+                        </label>
+
+                        <p>Max file size: 5MB each</p>
+                        <p>Supported file types: PDF, JPG, PNG Bitmap etc.</p>
+                      </div>
+                    </>
+                  )}
+
+                  {isIdentityProof && (
+                    <>
+                      {" "}
+                      <label className="form-label">Upload Address Proof</label>
+                      <div className="upload-box">
+                        <input
+                          type="file"
+                          id="upload-file"
+                          name="file"
+                          className="upload-doc"
+                          accept="image/png,image/jpeg,.pdf"
+                          ref={hiddenFileInput}
+                          onChange={handleChange}
+                        />
+
+                        <img
+                          src={require("../../../images/file-pdf.png")}
+                          alt=""
+                          className="upload-icon"
+                        />
+                        <label
+                          for="upload-file"
+                          className="btn btn-primary upload-btn"
+                        >
+                          {" "}
+                          Upload
+                        </label>
+
+                        <p>Max file size: 5MB each</p>
+                        <p>Supported file types: PDF, JPG, PNG Bitmap etc.</p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <button

@@ -77,7 +77,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     hiddenFileInput.current.click();
   };
 
-  const getLinkToAccouting = () => {
+  const getLinkToAccouting = (isClicked) => {
     let payload = {
       lm_id: userDetails["lead_id"],
       name: data["lf_business_name"],
@@ -93,14 +93,18 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
             setAccoutingUrl(
               `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
             );
-            window.open(
-              `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-              "_blank"
-            );
+            if (isClicked) {
+              window.open(
+                `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+                "_blank"
+              );
+            }
           });
         } else {
           setAccoutingUrl(resp.data.redirect);
-          window.open(resp.data.redirect, "_blank");
+          if (isClicked) {
+            window.open(resp.data.redirect, "_blank");
+          }
           setLoadingAccouting(false);
         }
       })
@@ -167,7 +171,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       });
   };
 
-  const getLinkToBanking = () => {
+  const getLinkToBanking = (isClicked) => {
     let payload = {
       lm_um_id: data["lm_id"],
       lf_customer_name: data["lf_customer_name"],
@@ -181,7 +185,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     getAccountScore(data["lm_id"], payload).then((resp) => {
       if (resp.isSuccess == "1" && resp.url) {
         setBankingUrl(resp.url);
-        window.open(resp.url, "_blank");
+        if (isClicked) {
+          window.open(resp.url, "_blank");
+        }
       } else {
       }
     });
@@ -193,11 +199,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     setFileList(list);
   };
 
-  useEffect(() => {
-    request();
-    checkAccountingStatusClick();
-    checkBankingStatusClick();
-  }, []);
+  // useEffect(() => {
+  //   request();
+  //   checkAccountingStatusClick();
+  //   checkBankingStatusClick();
+  // }, []);
 
   useEffect(() => {
     if (data) {
@@ -234,7 +240,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                   <button
                     className="btn btn-primary banking-btn"
                     type="button"
-                    onClick={() => getLinkToBanking()}
+                    onClick={() => getLinkToBanking(true)}
                   >
                     Link To Banking <i className="fa fa-chevron-right"></i>
                   </button>
@@ -326,7 +332,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                   <button
                     className="btn btn-primary accounting-btn"
                     onClick={() => {
-                      getLinkToAccouting();
+                      getLinkToAccouting(true);
                     }}
                   >
                     Link To Accounting <i className="fa fa-chevron-right"></i>
@@ -408,7 +414,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                       <button
                         className="checkstatus-btn btn btn-primary"
                         type="button"
-                        onClick={() => checkAccountingStatusClick()}
+                        onClick={() => checkAccountingStatusClick(true)}
                       >
                         Check status
                       </button>

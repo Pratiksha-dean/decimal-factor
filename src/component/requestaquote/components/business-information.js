@@ -336,7 +336,6 @@ function BusinessInformation({ setStep, showSelectedState }) {
                           !errors[fieldNames.SUPPLIERDUEAMOUNT],
                       }
                     )}
-                    min="0"
                     onChange={handleChange}
                     onBlur={() => {
                       setBusinessInfo(values);
