@@ -6,8 +6,8 @@ import Loaderspinner from "../loader";
 function DatatableLoader(){
   return(
     <>
-      <div style={{padding:'40px'}}>
-        <Loaderspinner size="35px"/>
+      <div style={{padding:"40px"}}>
+        <Loaderspinner size="45px"/>
       </div>
     </>
   )

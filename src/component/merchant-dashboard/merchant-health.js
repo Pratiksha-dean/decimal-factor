@@ -184,7 +184,7 @@ function MerchantHealth() {
       });
 
       getBankingIncome(lead_accountScore).then((data) => {
-        console.log("data", data);
+        console.log("banking income data", data);
         let summaries = data.response.data.summaries;
         setIncomeAnalysisSummary(data.response.data.summaries);
         let totalIn = 0;
@@ -617,7 +617,7 @@ function MerchantHealth() {
 
                     <TabPanel>
                       <section>
-                        {loadingBanking && !bankingUrl && (
+                        {loadingBanking && !bankingUrl || true && (
                           <Loaderspinner size="45px"/>
                         )}
                         {!bankingUrl && !loadingBanking && !bankingStatus && (
