@@ -147,10 +147,37 @@ export default function Codat() {
                 </button>
               </div>
             </div>
-            <div className="col-md-3">
-              <label for="basic-url" className="form-label mb-0">
-                Assess
-              </label>
+
+        {currentApi==='Customers' && <Customers title="Customers" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Invoices' && <Invoices title="Invoices" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Payments' && <Payments title="Payments" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='CreditNotes' && <CreditNotes title="Credit Notes" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='DirectIncome' && <DirectIncome title="Direct Incomes" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Suppliers' && <Suppliers title="Suppliers" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='PurchaseOrder' && <PurchaseOrders title="Purchase Orders" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Bills' && <Bills title="Bills" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='BillPayment' && <BillPayments title="Bill Payments" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='BillCreditNotes' && <BillCreditNotes title="Bill Credit Notes" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='DirectCosts' && <DirectCost title="Direct Costs" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Accounts' && <Accounts title="Accounts" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='JournalEntries' && <JournalEntries title="Journal Entries" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='TaxRates' && <TaxRates title="Tax Rates" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='TrackingCategories' && <TrackingCategories title="Tracking Categories" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='AccountTransactions' && <AccountTransactions title="Account Transactions" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Transfers' && <Transfers title="Transfers" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Items' && <Items title="Items" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='balancesheet' && <BalanceSheet leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='operating_flow' && <OperatingFlow leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='profit_loss' && <ProfitLoss leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='Company' && <CommerceCompanyinfo title="Customers" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='AgedDebtors' && <Debtors title="Customers" leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='agedcreditors' && <AgedCreditors title="Customers" leadId={leadId} endUrl={endUrl}/>}
+
+        {currentApi==='assess_profitandloss' && <AssessProfitAndLoss leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='assess_balancesheet' && <AssessBalanceSheet leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='assess_commerce' && <AssessCommerce leadId={leadId} endUrl={endUrl}/>}
+        {currentApi==='assess_marketing' && <AssessMarketing leadId={leadId} endUrl={endUrl}/>}
+
 
               <div className="d-flex">
                 <select
