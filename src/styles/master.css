@@ -1503,21 +1503,19 @@ button.btn.btn-primary.draft-btn {
 }
 
 .no-data-panel {
-  width: 100%;
-  float: left;
-  position: relative;
-  background: #f6f2ea;
-  height: 100vh;
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 .no-data {
   width: 100%;
-  float: left;
   position: relative;
-  display: block;
   text-align: center;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  white-space: normal;
+  vertical-align: top;
 }
 
 .nofound-img {
@@ -2572,4 +2570,9 @@ div#RFS-StepContainer {
 div#RFS-StepperContainer {
   overflow: scroll;
   padding: 100px 0px 20px 0px !important;
+}
+
+.no-data-panel h3 {
+  text-align: center;
+  margin: 0 0px 10px 0px;
 }

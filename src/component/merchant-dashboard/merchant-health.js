@@ -25,6 +25,7 @@ import { getUserDetails } from "../login/loginpage";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import BusinessCreditScore from "./merachant-health/business-credit-score";
+import NotFound from "../NotFound";
 
 export const setCurrentTabIndex = (index) => {
   console.log(
@@ -617,7 +618,7 @@ function MerchantHealth() {
                     <TabPanel>
                       <section>
                         {loadingBanking && !bankingUrl && (
-                          <Loaderspinner size="45px" />
+                          <Loaderspinner size="45px"/>
                         )}
                         {!bankingUrl && !loadingBanking && !bankingStatus && (
                           <>
@@ -727,44 +728,44 @@ function MerchantHealth() {
                                 {open ? (
                                   <ul className="menu">
                                     <li className="menu-item">
-                                      <Link
-                                        to="#"
+                                      <a 
+                                        href={void(0)}
                                         onClick={() => downloadFile("PDF_90")}
                                       >
                                         PDF last 90 days
-                                      </Link>
+                                      </a>
                                     </li>
                                     <li className="menu-item">
-                                      <Link
-                                        to="#"
+                                      <a 
+                                        href={void(0)}
                                         onClick={() => downloadFile("PDF_UW")}
                                       >
                                         PDF underwriters
-                                      </Link>
+                                      </a>
                                     </li>
                                     <li className="menu-item">
-                                      <Link
-                                        to="#"
+                                      <a 
+                                        href={void(0)}
                                         onClick={() => downloadFile("PDF_RAW")}
                                       >
                                         PDF raw transactions
-                                      </Link>
+                                      </a>
                                     </li>
                                     <li className="menu-item">
-                                      <Link
-                                        to="#"
+                                      <a 
+                                        href={void(0)}
                                         onClick={() => downloadFile("PDF_FULL")}
                                       >
                                         PDF full data range
-                                      </Link>
+                                      </a>
                                     </li>
                                     <li className="menu-item">
-                                      <Link
-                                        to="#"
+                                      <a
+                                        href={void(0)}
                                         onClick={() => downloadFile("CSV_ALL")}
                                       >
                                         CSV all transactions
-                                      </Link>
+                                      </a>
                                     </li>
                                   </ul>
                                 ) : null}
@@ -780,7 +781,8 @@ function MerchantHealth() {
                                         ({financialServicesSummary.length})
                                       </span>
                                     </h4>
-                                    <div className="scroll-bar-2">
+                                    {
+                                      (financialServicesSummary.length > 0) && ( <div> <div className="scroll-bar-2">
                                       {(financialServicesSummary.length > 0 &&
                                         financialServicesSummary.map(
                                           (service, index) => {
@@ -978,10 +980,8 @@ function MerchantHealth() {
                                               </>
                                             );
                                           }
-                                        )) || <div>No Data is Available</div>}
-                                    </div>
-                                    {/* </div> */}
-                                    <div className="card-bottom">
+                                        )) }
+                                    </div> <div className="card-bottom">
                                       <div className="box-id-1">
                                         <p>
                                           <strong>
@@ -1011,6 +1011,12 @@ function MerchantHealth() {
                                         </p>
                                       </div>
                                     </div>
+                                    </div>
+                                    ) || <div><NotFound/></div>
+                                    }
+
+                                    {/* </div> */}
+                                   
                                   </div>
                                 </div>
 
@@ -1020,8 +1026,10 @@ function MerchantHealth() {
                                     <h4>
                                       Income ({incomeAnalysisSummary.length})
                                     </h4>
-                                    <div className="scroll-bar-2">
-                                      {(incomeAnalysisSummary.length > 0 &&
+                                    
+                                      {
+                                        (incomeAnalysisSummary.length>0) && (<div><div className="scroll-bar-2">
+                                           {(incomeAnalysisSummary.length > 0 &&
                                         incomeAnalysisSummary.map(
                                           (income, index) => {
                                             return index % 2 == 0 ? (
@@ -1224,8 +1232,9 @@ function MerchantHealth() {
                                               </>
                                             );
                                           }
-                                        )) || <div>No Data is Available</div>}
-                                    </div>
+                                        ))}
+                                        </div>
+                                           
                                     <div className="card-bottom bottom-2">
                                       <div className="box-id-1">
                                         <p>
@@ -1255,6 +1264,9 @@ function MerchantHealth() {
                                         </p>
                                       </div>
                                     </div>
+                                    </div>
+                                      )||<div><NotFound/></div>
+                                      }
                                   </div>
                                 </div>
                               </div>
@@ -1268,8 +1280,11 @@ function MerchantHealth() {
                                         ({regularOutgoingsSummary.length})
                                       </span>
                                     </h4>
-                                    <div className="scroll-bar-2 scroll-height">
-                                      {(regularOutgoingsSummary &&
+                                   
+                                      {regularOutgoingsSummary.length>0 && (
+                                        <div>
+                                           <div className="scroll-bar-2 scroll-height">
+                                           {(regularOutgoingsSummary &&
                                         regularOutgoingsSummary.map(
                                           (regOutgoing, index) => {
                                             let date = new Date(
@@ -1467,14 +1482,20 @@ function MerchantHealth() {
                                               </>
                                             );
                                           }
-                                        )) || <div>No Data is Available</div>}
-                                    </div>
+                                        ))}
+                                           </div>
+                                        </div>
+                                      )||<div><NotFound/></div>} 
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className=" financial-service income-panel">
                                     <h4>Event Feed ({eventCount})</h4>
                                     <div className="scroll-bar-2">
+                                          {
+                                            eventFeedSummary.length > 0 && (
+                                              <div>
+                                                
                                       {(eventFeedSummary.length > 0 &&
                                         eventFeedSummary.map((month, index) => {
                                           return (
@@ -1574,7 +1595,10 @@ function MerchantHealth() {
                                               );
                                             })
                                           );
-                                        })) || <div>No Data is Available</div>}
+                                        }))}
+                                              </div>
+                                          )||<div><NotFound/></div>}
+
                                     </div>
                                   </div>
                                 </div>
@@ -1680,12 +1704,12 @@ function MerchantHealth() {
                               </div>
                             </>
                           )}
-                        {accountingStatus ||
-                            (true && (
+                        {accountingStatus &&
+                             (
                               <div className="data-panel">
                                 <Codat />
                               </div>
-                            ))}
+                            )}
                         </div>
                       </section>
                     </TabPanel>
