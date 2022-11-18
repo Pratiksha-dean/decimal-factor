@@ -6,27 +6,27 @@ export default function Suppliers(props) {
     
     const columns= [
             {
-                name : "supplierName",
+                name : "Supplier name",
                 selector: row => Parser(row.supplierName),
                 sortable: true
             },
             {
-                name : "contactName",
+                name : "Contact name",
                 selector: row => row.contactName,
                 sortable: true
             },
             {
-                name : "emailAddress",
+                name : "Email address",
                 selector: row => row.emailAddress,
                 sortable: true
             },
             {
-                name : "phone",
+                name : "Phone",
                 selector: row => row.phone,
                 sortable: true
             },
             {
-                name : "taxNumber",
+                name : "Tax number",
                 selector: row => Parser(row.taxNumber),
                 sortable: true
             }

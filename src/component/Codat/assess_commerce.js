@@ -134,6 +134,7 @@ export default function AssessCommerce(props) {
           <div className="chart-second">
             <div className="row">
               <div className="col-md-12">
+                <h3>Merchant Health</h3>
                 <div className="value-box">
                   <label>Refund rate</label>
                   <h2 id="refundval">{refundValue}%</h2>

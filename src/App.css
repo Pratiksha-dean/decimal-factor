@@ -86,3 +86,15 @@
   margin-top: 20px;
   color: gray;
 }
+
+
+.proof-btns{
+   float: right;
+  margin: 30px 0;
+  position: relative;
+  background: #006090;
+  border: 0px;
+  padding: 5px 20px;
+  height: 34px;
+
+}

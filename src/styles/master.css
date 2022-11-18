@@ -2417,95 +2417,95 @@ input.chkbalance {
   .react-tabs__tab--selected {
     padding: 10px !important;
   }
-}
-.no-data-panel h3 {
-  text-align: center;
-  margin: 0 0px 10px 0px;
-}
 
-.spinning-loader {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-}
+  .no-data-panel h3 {
+    text-align: center;
+    margin: 0 0px 10px 0px;
+  }
 
-.initial-avatar {
-  /* Center the content */
-  display: inline-block;
-  margin-right: 10px;
-  position: relative;
+  .spinning-loader {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+  }
 
-  /* Colors */
-  background-color: #198754;
+  .initial-avatar {
+    /* Center the content */
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
 
-  /* Rounded border */
-  border-radius: 50%;
-  height: 35px;
-  width: 35px;
-}
-.initial-avatar-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: "Montserrat";
-}
+    /* Colors */
+    background-color: #198754;
 
-.initials-profile-pic {
-  position: relative;
+    /* Rounded border */
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+  }
+  .initial-avatar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Montserrat";
+  }
 
-  /* Colors */
-  background-color: #198754;
-  color: #fff;
-  border-color: white;
+  .initials-profile-pic {
+    position: relative;
 
-  /* Rounded border */
-  border-radius: 50%;
-  height: 120px;
-  width: 120px;
-}
+    /* Colors */
+    background-color: #198754;
+    color: #fff;
+    border-color: white;
 
-.initials-profile-pic-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: "Montserrat";
-  font-size: 40px;
-  line-height: 49px;
-}
+    /* Rounded border */
+    border-radius: 50%;
+    height: 120px;
+    width: 120px;
+  }
 
-.header-dropdown {
-  align-items: center;
-  display: flex;
-  width: 180px;
-  justify-content: flex-end;
-}
+  .initials-profile-pic-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Montserrat";
+    font-size: 40px;
+    line-height: 49px;
+  }
 
-.profile-pic {
-  border-radius: 50%;
-}
+  .header-dropdown {
+    align-items: center;
+    display: flex;
+    width: 180px;
+    justify-content: flex-end;
+  }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.col-md-4.left-panel-box {
-  position: relative !important;
-}
-.left-panel {
-  height: 650px;
-}
+  .profile-pic {
+    border-radius: 50%;
+  }
 
-/* button.btn.btn-primary.next-btn {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .col-md-4.left-panel-box {
+    position: relative !important;
+  }
+  .left-panel {
+    height: 650px;
+  }
+
+  /* button.btn.btn-primary.next-btn {
   float: none;
   margin: 30px auto;
   position: relative;
@@ -2515,7 +2515,7 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 34px;
   display: block;
 } */
-/*
+  /*
 .StepperContainer-0-2-1 {
   width: 100px;
   float: left;
@@ -2569,74 +2569,75 @@ div#RFS-StepContainer {
   padding-top: 80px !important;
 } */
 
-.border-divider {
-  border-left: 0px #ccc solid;
-  width: 0;
-  height: 30px;
-  margin-top: 7px;
-  margin-left: 10px;
-}
-div#RFS-StepperContainer {
-  overflow: scroll;
-  padding: 100px 0px 20px 0px !important;
-}
-div#RFS-StepMain {
-  display: block !important;
-  text-align: center;
-  margin: 0 auto;
-  float: none;
-  width: 100px;
-}
-button#RFS-StepButton {
-  margin: 0 auto;
-}
+  .border-divider {
+    border-left: 0px #ccc solid;
+    width: 0;
+    height: 30px;
+    margin-top: 7px;
+    margin-left: 10px;
+  }
+  div#RFS-StepperContainer {
+    overflow: scroll;
+    padding: 100px 0px 20px 0px !important;
+  }
+  div#RFS-StepMain {
+    display: block !important;
+    text-align: center;
+    margin: 0 auto;
+    float: none;
+    width: 100px;
+  }
+  button#RFS-StepButton {
+    margin: 0 auto;
+  }
 
-.verify-panel .dashboard-box.position-relative.card.dashboard-card {
-  width: auto !important;
-  /* max-width: calc(100% - 100px); */
-  /* float: right; */
-  margin-top: 80px;
-  margin-right: 0px !important;
-}
+  .verify-panel .dashboard-box.position-relative.card.dashboard-card {
+    width: auto !important;
+    /* max-width: calc(100% - 100px); */
+    /* float: right; */
+    margin-top: 80px;
+    margin-right: 0px !important;
+  }
 
-div#RFS-ConnectorContainer {
-  display: none;
-}
-div#RFS-StepContainer {
-  padding: 0px !important;
-}
-#RFS-Label {
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 12px !important;
-  margin-top: 4px;
-  margin-bottom: 10px;
-}
+  div#RFS-ConnectorContainer {
+    display: none;
+  }
+  div#RFS-StepContainer {
+    padding: 0px !important;
+  }
+  #RFS-Label {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 12px !important;
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
 
-.verify-panel {
-  margin: 0px 0px 20px 0;
-  text-align: left;
-  width: 100%;
-  float: left;
-}
+  .verify-panel {
+    margin: 0px 0px 20px 0;
+    text-align: left;
+    width: 100%;
+    float: left;
+  }
 
-.StepperContainer-0-2-1 {
-  padding-top: 80px !important;
-}
-*/ .border-divider {
-  border-left: 0px #ccc solid;
-  width: 0;
-  height: 30px;
-  margin-top: 7px;
-  margin-left: 10px;
-}
-div#RFS-StepperContainer {
-  overflow: scroll;
-  padding: 100px 0px 20px 0px !important;
-}
+  .StepperContainer-0-2-1 {
+    padding-top: 80px !important;
+  }
+  */ .border-divider {
+    border-left: 0px #ccc solid;
+    width: 0;
+    height: 30px;
+    margin-top: 7px;
+    margin-left: 10px;
+  }
+  div#RFS-StepperContainer {
+    overflow: scroll;
+    padding: 100px 0px 20px 0px !important;
+  }
 
-.proof-btns {
-  background: #006090;
-  border: 0px;
-  cursor: pointer;
-  /* padding: 0px 10px; */
+  .proof-btns {
+    background: #006090;
+    border: 0px;
+    cursor: pointer;
+    /* padding: 0px 10px; */
+  }
 }
