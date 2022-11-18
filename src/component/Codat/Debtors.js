@@ -41,7 +41,7 @@ export default function Debtors(props) {
                 <input type="Number"  className="form-control" value={noOfPriod} onChange={(e) => setNoOfPriod(e.target.value)} />
             </div>  
             <div className="col-md-3  debtors">
-                <button className="btn btn-primary generate-btn" onClick={generateData}>Load aged creditors</button>
+                <button className="btn btn-primary generate-btn" onClick={generateData}>Load aged Debtors</button>
             </div>   
             </div>
             <div className="com-md-12 ">
@@ -49,7 +49,7 @@ export default function Debtors(props) {
                     <div className="col-md-8"></div>
                     <div className="col-md-2 debtors"><label className="group-report">Group report by</label></div>
                     <div className="col-md-2 debtors">
-                    <select className="group" onChange={(e)=>setreportBy(e.target.value)}>
+                    <select className="group" onChange={(e)=>{setreportBy(e.target.value); setTimeout(generateData,1000);}}>
                             <option value="">Currency</option>
                             <option value="_group">Debtor</option>
                         </select>
