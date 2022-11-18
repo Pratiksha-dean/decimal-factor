@@ -147,6 +147,8 @@ function MerchantHealth() {
   const [incomeAnalysisMonthlyAvgOut, setIncomeAnalysisMonthlyAvgOut] =
     useState(0);
 
+  const [downloadInProgress, setDownloadProgress]= useState(false)
+
   const lead_accountScore = userDetails["lead_id"];
   console.log(
     "🚀 ~ file: merchant-health.js ~ line 157 ~ MerchantHealth ~ lead_accountScore",
@@ -230,6 +232,7 @@ function MerchantHealth() {
 
   const downloadFile = async (fileType) => {
     let response;
+    setDownloadProgress(true)
     switch (fileType) {
       case "PDF_90": {
         response = await bankingInsightsDownloadFile(
@@ -342,6 +345,7 @@ function MerchantHealth() {
         break;
       }
     }
+    setDownloadProgress(false)
   };
 
   const getData = () => {
@@ -617,7 +621,7 @@ function MerchantHealth() {
 
                     <TabPanel>
                       <section>
-                        {loadingBanking && !bankingUrl || true && (
+                        {loadingBanking && !bankingUrl && (
                           <Loaderspinner size="45px"/>
                         )}
                         {!bankingUrl && !loadingBanking && !bankingStatus && (
@@ -770,6 +774,10 @@ function MerchantHealth() {
                                   </ul>
                                 ) : null}
                               </div>
+                              
+                              {bankingStatus && downloadInProgress && 
+                              (<Loaderspinner size="45px"/>)
+                              }
 
                               {/* financial services start */}
                               <div className="row">
