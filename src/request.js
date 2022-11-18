@@ -105,7 +105,12 @@ export async function getUserDetailsApi(id) {
 }
 
 export async function updateUpdateCustomerInfo(payload, id) {
-  const { data } = await axios.post(`${UPDATE_USER_DETAILS_URL}${id}`, payload);
+  console.log(payload);
+  const { data } = await axios.post(`${UPDATE_USER_DETAILS_URL}${id}`, payload,{
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data;
 }
 
