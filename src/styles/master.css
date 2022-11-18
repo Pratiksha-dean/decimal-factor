@@ -1135,9 +1135,9 @@ input#input-file {
 }
 
 .box-id-1 {
-  width: 30%;
+  width: auto;
   float: left;
-  margin-left: 35%;
+  margin-left: 0;
   margin-top: 5px;
 }
 
@@ -1154,15 +1154,14 @@ input#input-file {
 
 .card-bottom {
   background: #cfe1ea;
-  width: 98%;
+  width: 100%;
   float: none;
   display: block;
   border-radius: 5px;
   margin: 0 auto;
-  margin-left: 1%;
   padding: 5px 10px 10px 10px;
   position: absolute;
-  bottom: 2px;
+  bottom: 0;
 }
 
 .income-panel {
@@ -2191,6 +2190,12 @@ input.chkbalance {
   margin-right: 5px !important;
 }
 
+.scroll-bar-2.events-panel {
+  max-height: 300px;
+}
+
+
+
 @media (max-width: 980px) {
   .login-box {
     width: 92%;
@@ -2268,9 +2273,10 @@ input.chkbalance {
     font-weight: bold;
   }
   .react-tabs__tab {
-    width: 100%;
+    width: auto;
     text-align: center;
-  }
+    padding: 10px !important;
+}
   .download-panel {
     position: relative;
     z-index: 9;
@@ -2320,10 +2326,10 @@ input.chkbalance {
   .financial-service {
     border: 1px #5e99b7 solid;
     border-radius: 5px;
-    margin: 10px 0px;
-    height: 402px;
+    margin: 10px 0px 0px 0px;
     position: relative;
-  }
+    float: left;
+}
 
   .navbar-dark .navbar-toggler {
     display: none;
@@ -2361,6 +2367,55 @@ input.chkbalance {
   .left-panel {
     height: 650px;
   }
+
+  .box-id-2 {
+    width: 45%;
+    float: right;
+    margin-left: 0;
+    margin-top: 5px;
+}
+
+.box-id-1 {
+  width: 50%;
+  float: left;
+  margin-left: 0;
+  margin-top: 5px;
+}
+.financial-service .scroll-bar-2 {
+
+  max-height: 197px;
+}
+.scroll-bar-2.events-panel {
+  max-height: 300px !important;
+}
+.after-check-status ul.menu {
+  position: relative;
+  margin-right: 20px;
+  padding: 10px 10px 10px 26px;
+  background: #fff;
+  box-shadow: 0px 1px 1px rgb(0 0 1);
+  border-radius: 0px 0px 5px 5px;
+  margin-top: 45px;
+  max-width: 200px;
+}
+.bottom-2 {
+  background: #e2e2e2;
+  min-height: 92px;
+}
+.card-bottom{ min-height: 92px;}
+.react-tabs__tab:hover, .react-tabs__tab--selected {
+  padding: 10px !important;
+}
+.business-panel label {
+  vertical-align: top;
+  line-height: 30px;
+  padding-left: 6px;
+  font-size: 14px;
+  font-weight: normal;
+  float: right;
+  width: 85%;
+}
+
 }
 
 .spinning-loader {
