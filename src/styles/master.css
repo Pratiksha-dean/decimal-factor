@@ -2641,3 +2641,8 @@ div#RFS-StepContainer {
     /* padding: 0px 10px; */
   }
 }
+
+.no-data-panel h3 {
+  text-align: center;
+  margin: 0 0px 10px 0px;
+}

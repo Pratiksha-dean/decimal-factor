@@ -1,6 +1,17 @@
 import React, {useState, useEffect, useMemo} from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
+import Loaderspinner from "../loader";
+
+function DatatableLoader(){
+  return(
+    <>
+      <div style={{padding:'40px'}}>
+        <Loaderspinner size="35px"/>
+      </div>
+    </>
+  )
+}
 
 export default function Datatables(props) {
     const [data, setData] = useState([]);
@@ -117,6 +128,7 @@ export default function Datatables(props) {
         columns={columns}
         data={data}
         progressPending={loading}
+        progressComponent={<DatatableLoader/>}
         pagination
         paginationServer
         paginationTotalRows={totalRows}
