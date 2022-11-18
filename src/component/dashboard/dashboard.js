@@ -52,9 +52,9 @@ function Dashboard() {
   useEffect(() => {
     getData();
 
-    // if (userDetails["navigation_type"] == "left") {
-    //   naviagte("/merchant-health");
-    // }
+    if (userDetails["navigation_type"] == "left") {
+      naviagte("/merchant-health");
+    }
 
     return () => {};
   }, []);
