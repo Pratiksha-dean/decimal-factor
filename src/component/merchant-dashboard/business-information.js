@@ -778,7 +778,10 @@ function BusinessInformation() {
                                                           />
                                                         </div>
                                                       </div>
-                                                      <div className="col-md-3">
+                                                      <div
+                                                        className="col-md-3"
+                                                        hidden
+                                                      >
                                                         <div className="form-group">
                                                           <label>
                                                             Choose Address

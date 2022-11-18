@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Toast, Tooltip } from "react-bootstrap";
 import ReactTooltip from "react-tooltip";
 import {
   checkAccountingStatus,
@@ -13,6 +13,7 @@ import {
 } from "../../../request";
 import { getUserDetails } from "../../login/loginpage";
 import { getCompanyInfo } from "../../requestaquote/components/business-information";
+import { ToastMessage } from "../../ToastMessage";
 import { getReviewAppData, setDashboardStepNo } from "../dashboard";
 
 export const setLinkingAndBankingData = (data) => {
@@ -47,11 +48,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const hiddenFileInput = useRef(null);
   const accountingUrlRef = useRef(null);
 
-  const copyAccoutingUrl = (url) => {
-    if (document.getElementById("accouting-url")) {
-      document.getElementById("accouting-url").select();
-      document.execCommand("copy");
-    }
+  const copyLinkToClipboard = (bankingUrlToCopy) => {
+    navigator.clipboard.writeText(bankingUrlToCopy);
+    ToastMessage("Url copied to clipboard!", "success");
   };
 
   function handleChange(event) {
@@ -85,20 +84,30 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       platformType: "0",
     };
 
-    getLinkToAccountingData(payload).then((resp) => {
-      if (resp.success == "false" && resp.code == 500) {
-        getCompanyID(payload.lm_id).then((resp) => {
-          setLoadingAccouting(false);
+    getLinkToAccountingData(payload)
+      .then((resp) => {
+        if (resp.success == "false" && resp.code == 500) {
+          getCompanyID(payload.lm_id).then((resp) => {
+            setLoadingAccouting(false);
 
-          setAccoutingUrl(
-            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-          );
-        });
-      } else {
-        setAccoutingUrl(resp.data.redirect);
+            setAccoutingUrl(
+              `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+            );
+             window.open(
+               `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+               "_blank"
+             );
+          });
+        } else {
+          setAccoutingUrl(resp.data.redirect);
+              window.open(resp.data.redirect, "_blank");
+          setLoadingAccouting(false);
+        }
+      })
+      .catch((err) => {
+        ToastMessage("Something went wrong!", "error");
         setLoadingAccouting(false);
-      }
-    });
+      });
   };
 
   const checkAccountingStatusClick = () => {
@@ -106,6 +115,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 113 ~ .then ~ resp",
+          resp
+        );
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
@@ -134,6 +147,18 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     setLoadingBanking(true);
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 145 ~ .then ~ resp",
+          resp
+        );
+
+        if (resp["response"] == "Completed") {
+          setBankingUrl(
+            `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
+          );
+          setBankingStatus(true);
+          console.log(data, "**");
+        }
         setLoadingBanking(false);
       })
       .catch((err) => {
@@ -262,7 +287,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                         disabled
                         value={bankingUrl}
                       />
-                      <button className="copyicon-col btn btn-primary">
+                      <button
+                        className="copyicon-col btn btn-primary"
+                        type="button"
+                        onClick={() => copyLinkToClipboard(bankingUrl)}
+                      >
                         <i class="fa fa-clone" aria-hidden="true"></i>
                       </button>
                     </div>
@@ -290,7 +319,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                 </>
               )}
 
-              {loadingBanking && <h6>Loading Accouting Data.....</h6>}
+              {loadingAccouting && <h6>Loading Accouting Data.....</h6>}
 
               {!accoutingUrl && !loadingAccouting && (
                 <>
@@ -359,7 +388,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                       <button
                         className="copyicon-col btn btn-primary"
                         type="button"
-                        onClick={copyAccoutingUrl(accoutingUrl)}
+                        onClick={() => copyLinkToClipboard(accoutingUrl)}
                       >
                         <i class="fa fa-clone" aria-hidden="true"></i>
                       </button>

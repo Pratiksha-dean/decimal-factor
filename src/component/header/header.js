@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom/dist";
 import { logout } from "../../request";
 import { getUserDetails } from "../login/loginpage";
@@ -6,12 +6,26 @@ import { getUserDetails } from "../login/loginpage";
 function Header() {
   const navigate = useNavigate();
   const userDetails = getUserDetails();
+  console.log(
+    "🚀 ~ file: header.js ~ line 9 ~ Header ~ userDetails",
+    userDetails
+  );
 
   const logoutUser = () => {
     console.log("🚀 ~ file: header.js ~ line 11 ~ logoutUser ~ logoutUser");
     logout();
     navigate("/login");
   };
+
+  useEffect(() => {
+    window.addEventListener("storage", (e) => {
+      // this.setState({ auth: true });
+      console.log(
+        "🚀 ~ file: header.js ~ line 22 ~ window.addEventListener ~ e",
+        e
+      );
+    });
+  }, [userDetails]);
   return (
     <header>
       <div className="container-fluid">
@@ -58,17 +72,25 @@ function Header() {
 
               <li className="nav-item dropdown float-right">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle header-dropdown"
                   href="#"
                   role="button"
                   data-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <img
+                  {/* <img
                     src={require("../../images/user.png")}
                     alt=""
                     className="user-img"
-                  />
+                  /> */}
+                  <div className="initial-avatar">
+                    <div className="initial-avatar-text">
+                      {userDetails &&
+                        userDetails["first_name"][0].toUpperCase()}
+                      {userDetails && userDetails["last_name"][0].toUpperCase()}
+                    </div>
+                  </div>
+
                   {userDetails["first_name"]}
                 </a>
                 <ul className="dropdown-menu">

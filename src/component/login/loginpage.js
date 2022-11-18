@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import clsx from "clsx";
 import { NavLink, useNavigate } from "react-router-dom";
-import { getUserDetailsApi, login } from "../../request";
+import { getUserDetailsApi, login, updateLoginTimes } from "../../request";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { isAuthenticated } from "../authentication/authentication";
@@ -16,7 +16,10 @@ const setEmailPassword = (data) => {
 };
 
 export const setUserDetails = (data) => {
-  console.log("🚀 ~ file: loginpage.js ~ line 19 ~ setUserDetails ~ data", data)
+  console.log(
+    "🚀 ~ file: loginpage.js ~ line 19 ~ setUserDetails ~ data",
+    data
+  );
   localStorage.setItem("userDetails", JSON.stringify(data));
 };
 
@@ -72,7 +75,19 @@ function Login() {
                 "Login successful! Verify code to proceed further.",
                 "success"
               );
-              navigate("/authentication");
+              let obj = {
+                email: resp.data.data.email,
+                lead_id: resp.data.data.lead_id,
+              };
+
+              updateLoginTimes(obj).then((res) => {
+                console.log("re", res);
+              });
+              if (resp.data.data.login_count > 0) {
+                navigate("/dashbaord");
+              } else {
+                navigate("/authentication");
+              }
               setUserDetails(resp.data.data);
               setToken(resp.data.data.token);
               isAuthenticated(false);

@@ -19,6 +19,7 @@ export const FINANCIAL_SERVICE_URL = `${API_URL}accountScore/5944/FinancialServi
 export const INCOME_ANALYSIS_URL = `${API_URL}accountScore/5944/IncomeAnalysis`;
 export const REGULAR_OUTGOINGS_URL = `${API_URL}accountScore/5944/RegularOutgoings`;
 export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
+export const UPDATE_LOGIN_TIMES_URL = `${API_URL}UpdateCustomerLoginTimes`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -154,5 +155,10 @@ export async function bankingInsightsDownloadFile(fileType, id) {
   const { data } = await axios.get(
     `${API_URL}accountScore/downloadfile/${fileType}/${id}`
   );
+  return data;
+}
+
+export async function updateLoginTimes(payload) {
+  const { data } = await axios.post(UPDATE_LOGIN_TIMES_URL, payload);
   return data;
 }
