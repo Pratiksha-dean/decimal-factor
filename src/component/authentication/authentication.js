@@ -109,33 +109,43 @@ function Authentication() {
               className="login-logo"
             />
             <div className="login-box">
-              <h3>Set up 2-Step Verification for your account</h3>
-              <div>
-                <p className="mb-0">
-                  <span style={{ fontWeight: "500" }}>Step 1: </span>Please
-                  Download and Install “
-                  <a
-                    target="_blank"
-                    href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_GB&gl=US&pli=1"
-                  >
-                    Google Authenticator
-                  </a>
-                  ” app on your mobile phone.
-                </p>
-                <p>
-                  <span style={{ fontWeight: "500" }}>Step 2:</span> After
-                  installation, please scan the below QR code to configure your
-                  device.
-                </p>
-              </div>
+              <h3>
+                {!userDetails["login_count"]
+                  ? "Set up 2-Step Verification for your account"
+                  : "Account Authentication"}
+              </h3>
+              {!userDetails["login_count"] && (
+                <div>
+                  <p className="mb-0">
+                    <span style={{ fontWeight: "500" }}>Step 1: </span>Please
+                    Download and Install “
+                    <a
+                      target="_blank"
+                      href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_GB&gl=US&pli=1"
+                    >
+                      Google Authenticator
+                    </a>
+                    ” app on your mobile phone.
+                  </p>
+                  <p>
+                    <span style={{ fontWeight: "500" }}>Step 2:</span> After
+                    installation, please scan the below QR code to configure
+                    your device.
+                  </p>
+                </div>
+              )}
+
               {/* <h5>
                 Please Download and install Google authenticate app on your
                 phone, and scan followin QR code to configure your device.
               </h5> */}
               <form onSubmit={formik.handleSubmit}>
                 <div className="form-group">
-                  <img src={`${image}`} className="qr-code-img" />
+                  {!userDetails["login_count"] && (
+                    <img src={`${image}`} className="qr-code-img" />
+                  )}
                 </div>
+
                 <div className="form-group">
                   <label>
                     Please enter the Authentication Code found on your Google

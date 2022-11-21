@@ -221,10 +221,14 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
               : "";
 
             item[directorFieldNames.CHOOSEADDRESS] = "";
-            if (item[directorFieldNames.ISPRIMARY] == 1) {
-              item[directorFieldNames.ISPRIMARY] = true;
+            if (updatedList.length > 1) {
+              if (item[directorFieldNames.ISPRIMARY] == 1) {
+                item[directorFieldNames.ISPRIMARY] = true;
+              } else {
+                item[directorFieldNames.ISPRIMARY] = false;
+              }
             } else {
-              item[directorFieldNames.ISPRIMARY] = false;
+              item[directorFieldNames.ISPRIMARY] = true;
             }
 
             item[directorFieldNames.RESIDENTIALSTATUS] =

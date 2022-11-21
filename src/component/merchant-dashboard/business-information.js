@@ -151,8 +151,13 @@ function BusinessInformation() {
           ? item["share_count"]
           : "";
 
-        item[directorFieldNames.ISPRIMARY] =
-          item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
+        if (values.length > 1) {
+          item[directorFieldNames.ISPRIMARY] =
+            item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
+        } else {
+          item[directorFieldNames.ISPRIMARY] = true;
+        }
+
         item[directorFieldNames.CHOOSEADDRESS] = "";
         item[directorFieldNames.HIDDENSHAREHOLDERID] = item["shareHolderID"];
 
@@ -299,7 +304,10 @@ function BusinessInformation() {
                       );
                       delete payload["directorInfo"];
 
-                      if (payload["ShareHolderArr"] && payload["ShareHolderArr"].length) {
+                      if (
+                        payload["ShareHolderArr"] &&
+                        payload["ShareHolderArr"].length
+                      ) {
                         let index = payload["ShareHolderArr"].findIndex(
                           (item) => item["is_primary"] == 1
                         );

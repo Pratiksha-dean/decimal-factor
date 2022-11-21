@@ -1135,9 +1135,9 @@ input#input-file {
 }
 
 .box-id-1 {
-  width: 30%;
+  width: auto;
   float: left;
-  margin-left: 35%;
+  margin-left: 0;
   margin-top: 5px;
 }
 
@@ -1154,15 +1154,14 @@ input#input-file {
 
 .card-bottom {
   background: #cfe1ea;
-  width: 98%;
+  width: 100%;
   float: none;
   display: block;
   border-radius: 5px;
   margin: 0 auto;
-  margin-left: 1%;
   padding: 5px 10px 10px 10px;
   position: absolute;
-  bottom: 2px;
+  bottom: 0;
 }
 
 .income-panel {
@@ -1503,21 +1502,19 @@ button.btn.btn-primary.draft-btn {
 }
 
 .no-data-panel {
-  width: 100%;
-  float: left;
-  position: relative;
-  background: #f6f2ea;
-  height: 100vh;
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .no-data {
   width: 100%;
-  float: left;
   position: relative;
-  display: block;
   text-align: center;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  white-space: normal;
+  vertical-align: top;
 }
 
 .nofound-img {
@@ -2191,6 +2188,23 @@ input.chkbalance {
   margin-right: 5px !important;
 }
 
+.scroll-bar-2.events-panel {
+  max-height: 300px;
+}
+
+.card.card-debtor {
+  box-shadow: 0 1px 2px rgb(111 116 154 / 8%), 0 2px 2px rgb(111 116 154 / 8%),
+    0 1px 4px rgb(111 116 154 / 8%);
+  padding: 10px 20px 20px 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  margin-right: 20px;
+}
+.col-md-2.debtors label.group-report {
+  margin-right: -15px !important;
+  float: right;
+}
+
 @media (max-width: 980px) {
   .login-box {
     width: 92%;
@@ -2268,8 +2282,9 @@ input.chkbalance {
     font-weight: bold;
   }
   .react-tabs__tab {
-    width: 100%;
+    width: auto;
     text-align: center;
+    padding: 10px !important;
   }
   .download-panel {
     position: relative;
@@ -2320,9 +2335,9 @@ input.chkbalance {
   .financial-service {
     border: 1px #5e99b7 solid;
     border-radius: 5px;
-    margin: 10px 0px;
-    height: 402px;
+    margin: 10px 0px 0px 0px;
     position: relative;
+    float: left;
   }
 
   .navbar-dark .navbar-toggler {
@@ -2361,91 +2376,136 @@ input.chkbalance {
   .left-panel {
     height: 650px;
   }
-}
 
-.spinning-loader {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 50%;
-}
+  .box-id-2 {
+    width: 45%;
+    float: right;
+    margin-left: 0;
+    margin-top: 5px;
+  }
 
-.initial-avatar {
-  /* Center the content */
-  display: inline-block;
-  margin-right: 10px;
-  position: relative;
+  .box-id-1 {
+    width: 50%;
+    float: left;
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  .financial-service .scroll-bar-2 {
+    max-height: 197px;
+  }
+  .scroll-bar-2.events-panel {
+    max-height: 300px !important;
+  }
+  .after-check-status ul.menu {
+    position: relative;
+    margin-right: 20px;
+    padding: 10px 10px 10px 26px;
+    background: #fff;
+    box-shadow: 0px 1px 1px rgb(0 0 1);
+    border-radius: 0px 0px 5px 5px;
+    margin-top: 45px;
+    max-width: 200px;
+  }
+  .bottom-2 {
+    background: #e2e2e2;
+    min-height: 92px;
+  }
+  .card-bottom {
+    min-height: 92px;
+  }
+  .react-tabs__tab:hover,
+  .react-tabs__tab--selected {
+    padding: 10px !important;
+  }
 
-  /* Colors */
-  background-color: #198754;
+  .no-data-panel h3 {
+    text-align: center;
+    margin: 0 0px 10px 0px;
+  }
 
-  /* Rounded border */
-  border-radius: 50%;
-  height: 35px;
-  width: 35px;
-}
-.initial-avatar-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: "Montserrat";
-}
+  .spinning-loader {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+  }
 
-.initials-profile-pic {
-  position: relative;
+  .initial-avatar {
+    /* Center the content */
+    display: inline-block;
+    margin-right: 10px;
+    position: relative;
 
-  /* Colors */
-  background-color: #198754;
-  color: #fff;
-  border-color: white;
+    /* Colors */
+    background-color: #198754;
 
-  /* Rounded border */
-  border-radius: 50%;
-  height: 120px;
-  width: 120px;
-}
+    /* Rounded border */
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+  }
+  .initial-avatar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Montserrat";
+  }
 
-.initials-profile-pic-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 600;
-  font-family: "Montserrat";
-  font-size: 40px;
-  line-height: 49px;
-}
+  .initials-profile-pic {
+    position: relative;
 
-.header-dropdown {
-  align-items: center;
-  display: flex;
-  width: 180px;
-  justify-content: flex-end;
-}
+    /* Colors */
+    background-color: #198754;
+    color: #fff;
+    border-color: white;
 
-.profile-pic {
-  border-radius: 50%;
-}
+    /* Rounded border */
+    border-radius: 50%;
+    height: 120px;
+    width: 120px;
+  }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.col-md-4.left-panel-box {
-  position: relative !important;
-}
-.left-panel {
-  height: 650px;
-}
+  .initials-profile-pic-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: "Montserrat";
+    font-size: 40px;
+    line-height: 49px;
+  }
 
-/* button.btn.btn-primary.next-btn {
+  .header-dropdown {
+    align-items: center;
+    display: flex;
+    width: 180px;
+    justify-content: flex-end;
+  }
+
+  .profile-pic {
+    border-radius: 50%;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .col-md-4.left-panel-box {
+    position: relative !important;
+  }
+  .left-panel {
+    height: 650px;
+  }
+
+  /* button.btn.btn-primary.next-btn {
   float: none;
   margin: 30px auto;
   position: relative;
@@ -2455,7 +2515,7 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 34px;
   display: block;
 } */
-/*
+  /*
 .StepperContainer-0-2-1 {
   width: 100px;
   float: left;
@@ -2509,19 +2569,80 @@ div#RFS-StepContainer {
   padding-top: 80px !important;
 } */
 
-.border-divider {
-  border-left: 0px #ccc solid;
-  width: 0;
-  height: 30px;
-  margin-top: 7px;
-  margin-left: 10px;
+  .border-divider {
+    border-left: 0px #ccc solid;
+    width: 0;
+    height: 30px;
+    margin-top: 7px;
+    margin-left: 10px;
+  }
+  div#RFS-StepperContainer {
+    overflow: scroll;
+    padding: 100px 0px 20px 0px !important;
+  }
+  div#RFS-StepMain {
+    display: block !important;
+    text-align: center;
+    margin: 0 auto;
+    float: none;
+    width: 100px;
+  }
+  button#RFS-StepButton {
+    margin: 0 auto;
+  }
+
+  .verify-panel .dashboard-box.position-relative.card.dashboard-card {
+    width: auto !important;
+    /* max-width: calc(100% - 100px); */
+    /* float: right; */
+    margin-top: 80px;
+    margin-right: 0px !important;
+  }
+
+  div#RFS-ConnectorContainer {
+    display: none;
+  }
+  div#RFS-StepContainer {
+    padding: 0px !important;
+  }
+  #RFS-Label {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 12px !important;
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
+
+  .verify-panel {
+    margin: 0px 0px 20px 0;
+    text-align: left;
+    width: 100%;
+    float: left;
+  }
+
+  .StepperContainer-0-2-1 {
+    padding-top: 80px !important;
+  }
+  */ .border-divider {
+    border-left: 0px #ccc solid;
+    width: 0;
+    height: 30px;
+    margin-top: 7px;
+    margin-left: 10px;
+  }
+  div#RFS-StepperContainer {
+    overflow: scroll;
+    padding: 100px 0px 20px 0px !important;
+  }
+
+  .proof-btns {
+    background: #006090;
+    border: 0px;
+    cursor: pointer;
+    /* padding: 0px 10px; */
+  }
 }
-div#RFS-StepperContainer {
-  overflow: scroll;
-  padding: 100px 0px 20px 0px !important;
-}
-div#RFS-StepMain {
-  display: block !important;
+
+.no-data-panel h3 {
   text-align: center;
   margin: 0 auto;
   float: none;
@@ -2529,14 +2650,6 @@ div#RFS-StepMain {
 }
 button#RFS-StepButton {
   margin: 0 auto;
-}
-
-.verify-panel .dashboard-box.position-relative.card.dashboard-card {
-  width: auto !important;
-  max-width: calc(100% - 100px);
-  float: right;
-  margin-top: 80px;
-  margin-right: 0px !important;
 }
 
 div#RFS-ConnectorContainer {
@@ -2572,4 +2685,9 @@ div#RFS-StepContainer {
 div#RFS-StepperContainer {
   overflow: scroll;
   padding: 100px 0px 20px 0px !important;
+}
+
+.no-data-panel h3 {
+  text-align: center;
+  margin: 0 0px 10px 0px;
 }

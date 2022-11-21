@@ -12,6 +12,7 @@ import { useState } from "react";
 import { getUserDetails, setToken, setUserDetails } from "../login/loginpage";
 import { useEffect } from "react";
 import {
+  API_URL,
   getDashboardData,
   getUserDetailsApi,
   updateUpdateCustomerInfo,
@@ -23,12 +24,22 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 function PersonalDetails() {
   const storeData = {};
   const data = {};
-  const [file, setFile] = useState();
+
   const [loading, setLoading] = useState(false);
 
   const hiddenFileInput = useRef(null);
   const [dasboardData, setDashboardData] = useState();
   const userDetails = getUserDetails();
+  const [file, setFile] = useState({
+    file: "",
+    preview: userDetails["profile_pic"]
+      ? `https://sales.decimalfactor.com/staging/${userDetails["profile_pic"]}`
+      : "",
+  });
+  console.log(
+    "🚀 ~ file: personal-details.js ~ line 36 ~ PersonalDetails ~ file",
+    file
+  );
 
   useEffect(() => {
     getData();
@@ -107,6 +118,12 @@ function PersonalDetails() {
                   enableReinitialize={userDetails}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
                     let payload = { ...values };
+                    payload["uploadimage"] = file.file;
+                    console.log(
+                      "🚀 ~ file: personal-details.js ~ line 122 ~ PersonalDetails ~ file",
+                      file
+                    );
+
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {
                         setLoading(false);
@@ -331,22 +348,25 @@ function PersonalDetails() {
                             </div>
                           </div>
                           <div className="col-md-4">
+                            <input
+                              type="file"
+                              id="input-file"
+                              name="uploadimage"
+                              className=""
+                              onChange={(e) => {
+                                console.log(e.target.files);
+                                handleFileChange(e);
+                                setFieldValue("uploadimage", e.target.files[0]);
+                              }}
+                              ref={hiddenFileInput}
+                              accept="image/*"
+                            />
                             <div className="upload-image">
-                              <input
-                                type="file"
-                                id="input-file"
-                                name="uploadimage"
-                                className=""
-                                onChange={(e)=>{
-                                  console.log(e.target.files);
-                                  handleFileChange(e)
-                                  setFieldValue("uploadimage", e.target.files[0]);
-                                }}
-                                ref={hiddenFileInput}
-                                accept="image/*"
-                              />
-                              <label for="input-file">
-                                {file && file.preview ? (
+                              <label
+                                for="input-file"
+                                style={{ pointerEvents: "none" }}
+                              >
+                                {file.preview ? (
                                   <img
                                     height="120px"
                                     width="120px"
