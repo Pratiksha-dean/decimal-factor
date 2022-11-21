@@ -13,6 +13,10 @@ import { ToastMessage } from "../../ToastMessage";
 export default function BusinessCreditScore() {
   const [checkBusinessCredit, setCheckBusinessCreditScore] = useState(false);
   const [fileList, setFileList] = useState([]);
+  console.log(
+    "🚀 ~ file: business-credit-score.js ~ line 16 ~ BusinessCreditScore ~ fileList",
+    fileList
+  );
   const [identityProofList, setIdentityProofList] = useState([]);
   const [addressProofList, setAddressProofList] = useState([]);
   const [isIdentityProof, setIsIdentityProof] = useState(false);
@@ -29,16 +33,23 @@ export default function BusinessCreditScore() {
   }, []);
 
   const getFiles = () => {
-    if ((userDetails, userDetails)["lead_id"]) {
-      getDocuments(6137).then((resp) => {
-        if (resp.records.length > 0) {
+    if (userDetails && userDetails["lead_id"]) {
+      getDocuments(userDetails["lead_id"]).then((resp) => {
+        if (resp.records.length > 0 && resp["record_count"] !== 0) {
           let list = [];
           resp.records.forEach((item) => {
+            console.log("****", item);
+
             list.push({
               file: { name: item["la_file_description"] },
               type: item["la_doc_type"],
               id: item["la_id"],
             });
+
+            console.log(
+              "🚀 ~ file: business-credit-score.js ~ line 41 ~ resp.records.forEach ~ item",
+              item
+            );
             console.log(
               "🚀 ~ file: business-credit-score.js ~ line 29 ~ list.map ~ item",
               item
@@ -62,11 +73,22 @@ export default function BusinessCreditScore() {
   const hiddenFileAddressProofInput = useRef(null);
   const hiddenFileIndentityProofInput = useRef(null);
 
-
   const deleteFile = (item, i) => {
+    console.log(
+      "🚀 ~ file: business-credit-score.js ~ line 66 ~ deleteFile ~ item",
+      item
+    );
     if (item["id"]) {
       deleteDocuments(item["id"]).then((resp) => {
-        getDocuments();
+        console.log(
+          "🚀 ~ file: business-credit-score.js ~ line 72 ~ deleteDocuments ~ resp",
+          resp,
+          resp.status == "success"
+        );
+        if (resp.status == "success") {
+          ToastMessage(resp.records, "success");
+          getFiles();
+        }
         console.log(
           "🚀 ~ file: business-credit-score.js ~ line 75 ~ deleteFile ~ resp",
           resp
@@ -167,9 +189,19 @@ export default function BusinessCreditScore() {
           identity_proof: identityProofDocs.length ? identityProofDocs : [],
         },
         userDetails["lead_id"]
-      ).catch((err) => {
-        ToastMessage("Something went wrong!", "error");
-      });
+      )
+        .then((resp) => {
+          if (resp.isSuccess == 1) {
+            ToastMessage("Attachments uploaded successfully!", "success");
+          }
+          console.log(
+            "🚀 ~ file: business-credit-score.js ~ line 193 ~ ).then ~ resp",
+            resp
+          );
+        })
+        .catch((err) => {
+          ToastMessage("Something went wrong!", "error");
+        });
       console.log(
         "🚀 ~ file: business-credit-score.js ~ line 151 ~ submitDocuments ~ addressProofDocs",
         addressProofDocs
@@ -236,33 +268,35 @@ export default function BusinessCreditScore() {
                         <p>
                           <strong>File Uploaded:</strong>
                         </p>
-                        <table class="table table-bordered">
-                          <thead>
-                            <tr>
-                              <th scope="col">File Name</th>
-                              <th scope="col">Document Category</th>
-                              <th scope="col">Delete</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {fileList.map((item, i) => {
-                              return (
-                                <tr key={i}>
-                                  <td>{item.file ? item.file.name : ""}</td>
-                                  <td className="text-center">{item.type}</td>
-                                  <td className="text-center">
-                                    {" "}
-                                    <i
-                                      className="fa fa-trash cursor-pointer"
-                                      style={{ float: "unset" }}
-                                      onClick={() => deleteFile(item, i)}
-                                    ></i>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th scope="col">File Name</th>
+                                <th scope="col">Document Category</th>
+                                <th scope="col">Delete</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {fileList.map((item, i) => {
+                                return (
+                                  <tr key={i}>
+                                    <td>{item.file ? item.file.name : ""}</td>
+                                    <td className="text-center">{item.type}</td>
+                                    <td className="text-center">
+                                      {" "}
+                                      <i
+                                        className="fa fa-trash cursor-pointer"
+                                        style={{ float: "unset" }}
+                                        onClick={() => deleteFile(item, i)}
+                                      ></i>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
                         {/* {fileList.map((item, i) => {
                           return (
                             <div

@@ -1,11 +1,18 @@
 import React, { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom/dist";
-import { logout } from "../../request";
+import { getDashboardData, logout } from "../../request";
 import { getUserDetails } from "../login/loginpage";
 
 function Header() {
   const navigate = useNavigate();
   const userDetails = getUserDetails();
+  const [dasboardData, setDashboardData] = useState();
+  console.log(
+    "🚀 ~ file: header.js ~ line 10 ~ Header ~ dasboardData",
+    dasboardData
+  );
+
   console.log(
     "🚀 ~ file: header.js ~ line 9 ~ Header ~ userDetails",
     userDetails
@@ -16,6 +23,20 @@ function Header() {
     logout();
     navigate("/login");
   };
+
+  const getData = () => {
+    if (userDetails && userDetails.lead_id) {
+      getDashboardData(userDetails.lead_id).then((resp) => {
+        setDashboardData(resp.records[0]);
+      });
+    }
+  };
+
+  useEffect(() => {
+    getData();
+
+    return () => {};
+  }, []);
 
   useEffect(() => {
     window.addEventListener("storage", (e) => {
@@ -30,7 +51,7 @@ function Header() {
     <header>
       <div className="container-fluid">
         <nav className="navbar navbar-expand-lg navbar-dark">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand text-light">
             {" "}
             <span className="logo-icon">
               {" "}
@@ -40,7 +61,13 @@ function Header() {
                 className="logo-dashboard"
               />
             </span>
-            <strong>Business Name</strong>{" "}
+            <strong
+              className="cursor-pointer"
+              onClick={() => navigate("/merchant-health")}
+              p
+            >
+              {dasboardData && dasboardData["lf_business_name"]}
+            </strong>{" "}
           </a>
           <button
             className="navbar-toggler"
