@@ -171,7 +171,7 @@ function Dashboard() {
         <Header />
         <div className="dashboard-body">
           <div className="container">
-            <div className="verify-panel">
+            <div className="verify-panel dashboard-panel-div">
               {dasboardData && (
                 <>
                   {activeStep == 0 && <VerifyAlert />}
