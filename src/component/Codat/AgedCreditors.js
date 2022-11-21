@@ -41,7 +41,7 @@ export default function AgedCreditors(props) {
                 <input type="Number"  className="form-control" value={noOfPriod} onChange={(e) => setNoOfPriod(e.target.value)} />
             </div>  
             <div className="col-md-3  debtors">
-                <button className="btn btn-primary generate-btn" onClick={generateData}>Load aged creditors</button>
+                <button className="btn btn-primary generate-btn" onClick={generateData}>Load aged Creditors</button>
             </div>  
             </div> 
             <div className="com-md-12">

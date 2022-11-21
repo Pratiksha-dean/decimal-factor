@@ -196,6 +196,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
               }
             })
             .catch((err) => {
+              setLoading(false);
               console.log(
                 "🚀 ~ file: personal-details.js ~ line 74 ~ createAccount ~ err",
                 err

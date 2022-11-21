@@ -245,6 +245,7 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 <input
                   type="number"
                   placeholder="Enter amount"
+                  min={0}
                   className={clsx(
                     "form-control ",
                     {
@@ -305,6 +306,7 @@ function ApplicationInformation({ setStep, showSelectedState }) {
               <input
                 type="number"
                 placeholder="12"
+                min={0}
                 name={fieldNames.REQUIREDFUND}
                 onChange={handleChange}
                 onBlur={(e) => {

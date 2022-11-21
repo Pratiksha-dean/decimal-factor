@@ -71,7 +71,7 @@ export default function ProfitLoss(props) {
                     </select>
                 </div>   
                 <div className="col-md-2">
-                    <input type="Number" id="bsperiodsToComparebs" className="form-control checkvalidation" value={searchMonth} onChange={(e) => setSearchMonth(e.target.value)} />
+                    <input type="Number" placeholder="Number of months" id="bsperiodsToComparebs" className="form-control checkvalidation" value={searchMonth} onChange={(e) => setSearchMonth(e.target.value)} />
                 </div>  
                 <div className="col-md-2">
                     <button onClick={generateData}  className="btn btn-primary generate-btn">Generate</button>

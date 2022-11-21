@@ -125,7 +125,6 @@ function ApplicationInformation() {
                       isSubmitting,
                       setFieldValue,
                       isValid,
-
                     }) => (
                       <form onSubmit={handleSubmit}>
                         <div className="review-application">
@@ -145,6 +144,7 @@ function ApplicationInformation() {
                                   <input
                                     type="number"
                                     placeholder="90,000"
+                                    min={0}
                                     className={clsx(
                                       "form-control ",
                                       {
@@ -204,6 +204,7 @@ function ApplicationInformation() {
                                 <label>Term of Funds Required (Months)</label>
                                 <input
                                   type="number"
+                                  min={0}
                                   placeholder="12"
                                   name={fieldNames.REQUIREDFUND}
                                   onChange={handleChange}
@@ -290,7 +291,6 @@ function ApplicationInformation() {
                                     IndicatorSeparator: () => null,
                                     DropdownIndicator: () => null,
                                   }}
-
                                   placeholder="Select Business Name"
                                   styles={{
                                     control: (styles, state) => {

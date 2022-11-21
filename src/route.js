@@ -12,14 +12,13 @@ import BusinessInformation from "./component/merchant-dashboard/business-informa
 import PersonalDetails from "./component/merchant-dashboard/personal-details";
 import EmailVerification from "./component/email-verification/email-verification";
 import ChangePassword from "./component/change-password/change-password";
-import NotFound from './component/NotFound';
+import NotFound from "./component/NotFound";
 import ChangePasswordWrapper from "./component/change-password/change-password-wrapper";
 
 const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
-
 
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
     if (
@@ -95,7 +94,7 @@ const RoutePage = () => {
       )}
       <Route path="/authentication" element={<Authentication />} /> */}
 
-       <Route path="/notfound" element={<NotFound />} />
+      <Route path="/notfound" element={<NotFound />} />
       <Route
         path="/*"
         exact
