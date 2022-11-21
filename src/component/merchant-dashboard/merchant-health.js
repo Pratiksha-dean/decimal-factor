@@ -360,7 +360,7 @@ function MerchantHealth() {
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    // setLoadingAccouting(true);
+    setLoadingAccouting(true);
 
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
@@ -368,10 +368,10 @@ function MerchantHealth() {
           "🚀 ~ file: merchant-health.js ~ line 329 ~ .then ~ resp",
           resp
         );
-        if (resp["message"] === "Status Updated to Linked") {
+        if (resp["status"] === "Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
-          setLoadingAccouting(true);
+          setLoadingAccouting(false);
 
           // setLoadingAccouting(false);
         } else if (resp.status == "PendingAuth") {
@@ -411,6 +411,78 @@ function MerchantHealth() {
       platformType: "0",
     };
 
+    getCompanyID(payload.lm_id).then((resp) => {
+      console.log(
+        "🚀 ~ file: merchant-health.js ~ line 415 ~ getCompanyID ~ resp",
+        resp
+      );
+
+      if (resp["data"] && resp["data"]["codat_client_id"]) {
+        setLoadingAccouting(false);
+        setAccoutingUrl(
+          `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+        );
+
+        if (isClicked) {
+          window.open(
+            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+            "_blank"
+          );
+        }
+      }
+
+      if (!resp.data) {
+        console.log("&&");
+        setLoadingAccouting(false);
+        if (isClicked) {
+          getLinkToAccountingData(payload)
+            .then((resp) => {
+              console.log(
+                "🚀 ~ file: link-banking&accounting.js ~ line 152 ~ .then ~ resp",
+                resp
+              );
+              if (resp.success == "false" && resp.code == 500) {
+                //  getCompanyID(payload.lm_id).then((resp) => {
+                //    setLoadingAccouting(false);
+                //    setAccoutingUrl(
+                //      `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+                //    );
+                //    if (isClicked) {
+                //      window.open(
+                //        `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+                //        "_blank"
+                //      );
+                //    }
+                //  });
+              } else {
+                setAccoutingUrl(resp.data.redirect);
+                if (isClicked) {
+                  window.open(resp.data.redirect, "_blank");
+                }
+                setLoadingAccouting(false);
+              }
+            })
+            .catch((err) => {
+              ToastMessage("Something went wrong!", "error");
+              setLoadingAccouting(false);
+            });
+        }
+      }
+      // setAccoutingUrl(
+      //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+      // );
+      // console.log(
+      //   "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
+      //   resp
+      // );
+      // setLoadingAccouting(true);
+
+      console.log("open");
+
+      // setLoadingAccouting(false);
+    });
+
+    return;
     getLinkToAccountingData(payload)
       .then((resp) => {
         console.log(
@@ -1713,7 +1785,7 @@ function MerchantHealth() {
                                 </div>
                               </div>
                             )}
-                          {accoutingUrl && loadingAccouting && (
+                          {accoutingUrl && !loadingAccouting && (
                             <>
                               <div class="banking-url">
                                 <div class="form-group">

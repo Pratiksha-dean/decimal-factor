@@ -21,7 +21,8 @@ export const REGULAR_OUTGOINGS_URL = `${API_URL}accountScore/5944/RegularOutgoin
 export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
 export const UPDATE_LOGIN_TIMES_URL = `${API_URL}UpdateCustomerLoginTimes/`;
 export const UPLOAD_DOCUMENTS = `${API_URL}UKLeadattachments/`;
-export const GET_DOCUMENTS = `${API_URL}GetLeadMasterAttachments/`;
+export const GET_DOCUMENTS = `${API_URL}getLeadMasterAttachmentsUK/`;
+export const GET_DOCUMENTS_BANK_STMT = `${API_URL}getLeadMasterAttachments/`;
 export const DELETE_DOCUMENTS = `${API_URL}DeleteLeadMasterAttachment/`;
 
 export async function getRequest() {
@@ -79,6 +80,7 @@ export const logout = () => {
   localStorage.removeItem("merchantDirectorData");
   localStorage.removeItem("provideConcentData");
   localStorage.removeItem("activeTabIndex");
+  localStorage.removeItem("uploadBankStatement");
   setStepNo(1);
 };
 
@@ -193,6 +195,14 @@ export async function getDocuments(id) {
   const { data } = await axios.get(`${GET_DOCUMENTS}${id}`);
   return data;
 }
+
+
+
+export async function getDocumentBankStatements(id) {
+  const { data } = await axios.get(`${GET_DOCUMENTS_BANK_STMT}${id}`);
+  return data;
+}
+
 
 export async function deleteDocuments(id) {
   const { data } = await axios.post(`${DELETE_DOCUMENTS}${id}`);

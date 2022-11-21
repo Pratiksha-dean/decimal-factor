@@ -1,4 +1,5 @@
 import { type } from "@testing-library/user-event/dist/type";
+import clsx from "clsx";
 import { Formik } from "formik";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
@@ -22,6 +23,7 @@ export default function BusinessCreditScore() {
   const [isIdentityProof, setIsIdentityProof] = useState(false);
   const [isAddressProof, setIsAddressProof] = useState(false);
   const [selectedFileType, setSelectedFileType] = useState("");
+  const [error, setError] = useState(false);
   console.log(
     "🚀 ~ file: business-credit-score.js ~ line 18 ~ BusinessCreditScore ~ selectedFileType",
     selectedFileType
@@ -157,6 +159,7 @@ export default function BusinessCreditScore() {
   const submitDocuments = () => {
     if (!checkBusinessCredit) {
       ToastMessage("Please select the checkbox", "error");
+      setError(true);
     } else {
       console.log(
         "🚀 ~ file: business-credit-score.js ~ line 76 ~ submitDocuments ~ file",
@@ -166,11 +169,11 @@ export default function BusinessCreditScore() {
       let identityProofDocs = fileList
         .filter((file) => file.type == "Identity Proof")
         .map((item) => {
-          return item.file;
-          console.log(
-            "🚀 ~ file: business-credit-score.js ~ line 114 ~ ).map ~ item",
-            item
-          );
+          if (!item.id) {
+            return item.file;
+          } else {
+            return;
+          }
         });
       let addressProofDocs = fileList
         .filter((file) => {
@@ -179,7 +182,11 @@ export default function BusinessCreditScore() {
           }
         })
         .map((item) => {
-          return item.file;
+          if (!item.id) {
+            return item.file;
+          } else {
+            return;
+          }
         });
 
       uploadDocuments(
@@ -202,14 +209,6 @@ export default function BusinessCreditScore() {
         .catch((err) => {
           ToastMessage("Something went wrong!", "error");
         });
-      console.log(
-        "🚀 ~ file: business-credit-score.js ~ line 151 ~ submitDocuments ~ addressProofDocs",
-        addressProofDocs
-      );
-      console.log(
-        "🚀 ~ file: business-credit-score.js ~ line 80 ~ submitDocuments ~ identityProofDocs",
-        identityProofDocs
-      );
     }
   };
 
@@ -223,12 +222,19 @@ export default function BusinessCreditScore() {
                 type="checkbox"
                 onClick={(e) => setCheckBusinessCreditScore(e.target.checked)}
                 name="Upload Bank Statement Copies Instead"
-                className="upload-checkbox"
+                className={clsx("upload-checkbox ", {
+                  "is-invalid": error && !checkBusinessCredit,
+                })}
               />
               <label>
                 I confirm that I am an authorised personal (Director or UBO) and
                 consent to a soft business credit check.
               </label>
+              {error && !checkBusinessCredit && (
+                <div className="text-danger ml-2">
+                  Please select the checkbox!
+                </div>
+              )}
             </div>
           </div>
           <div className="col-md-12">

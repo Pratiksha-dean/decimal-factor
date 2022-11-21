@@ -6,15 +6,22 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./redux/store";
+import { Provider } from "react-redux";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-  <Router>
-    <ProSidebarProvider>
-      <App />
-    </ProSidebarProvider>
-  </Router>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router>
+        <ProSidebarProvider>
+          <App />
+        </ProSidebarProvider>
+      </Router>
+    </PersistGate>
+  </Provider>
   // </React.StrictMode>
 );
 
