@@ -119,6 +119,10 @@ function PersonalDetails() {
                   onSubmit={(values, { setSubmitting, resetForm }) => {
                     let payload = { ...values };
                     payload["uploadimage"] = file.file;
+                    console.log(
+                      "🚀 ~ file: personal-details.js ~ line 122 ~ PersonalDetails ~ file",
+                      file
+                    );
 
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {

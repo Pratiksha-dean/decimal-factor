@@ -24,6 +24,17 @@ export const getLinkingAndBankingData = () => {
   return JSON.parse(localStorage.getItem("reviewLinkingAndBankingData"));
 };
 
+export const setUploadBankStatement = (data) => {
+  localStorage.setItem("uploadBankStatement", JSON.stringify(data));
+};
+
+export const getUploadBankStatement = () => {
+  return JSON.parse(localStorage.getItem("uploadBankStatement"));
+};
+
+
+
+
 function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const [file, setFile] = useState();
   const storedData = getLinkingAndBankingData();

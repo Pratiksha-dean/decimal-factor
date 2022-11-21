@@ -1,4 +1,13 @@
+import { type } from "@testing-library/user-event/dist/type";
+import { Formik } from "formik";
 import React, { useRef, useState } from "react";
+import { useEffect } from "react";
+import {
+  deleteDocuments,
+  getDocuments,
+  uploadDocuments,
+} from "../../../request";
+import { getUserDetails } from "../../login/loginpage";
 import { ToastMessage } from "../../ToastMessage";
 
 export default function BusinessCreditScore() {
@@ -8,48 +17,116 @@ export default function BusinessCreditScore() {
   const [addressProofList, setAddressProofList] = useState([]);
   const [isIdentityProof, setIsIdentityProof] = useState(false);
   const [isAddressProof, setIsAddressProof] = useState(false);
+  const [selectedFileType, setSelectedFileType] = useState("");
+  console.log(
+    "🚀 ~ file: business-credit-score.js ~ line 18 ~ BusinessCreditScore ~ selectedFileType",
+    selectedFileType
+  );
+  const userDetails = getUserDetails();
 
-  const hiddenFileInput = useRef(null);
-  function checkMe(selected) {
-    if (selected) {
-      document.getElementById("divcheck").style.display = "block";
-    } else {
-      document.getElementById("divcheck").style.display = "none";
+  useEffect(() => {
+    getFiles();
+  }, []);
+
+  const getFiles = () => {
+    if ((userDetails, userDetails)["lead_id"]) {
+      getDocuments(6137).then((resp) => {
+        if (resp.records.length > 0) {
+          let list = [];
+          resp.records.forEach((item) => {
+            list.push({
+              file: { name: item["la_file_description"] },
+              type: item["la_doc_type"],
+              id: item["la_id"],
+            });
+            console.log(
+              "🚀 ~ file: business-credit-score.js ~ line 29 ~ list.map ~ item",
+              item
+            );
+          });
+          console.log(
+            "🚀 ~ file: business-credit-score.js ~ line 28 ~ getDocuments ~ list",
+            list
+          );
+          setFileList(list);
+        }
+        // setFileList(resp.records);
+        console.log(
+          "🚀 ~ file: business-credit-score.js ~ line 28 ~ getDocuments ~ resp",
+          resp
+        );
+      });
     }
-  }
+  };
 
-  const deleteFile = (i) => {
-    let list = [...fileList];
-    list.splice(i, 1);
-    setFileList(list);
+  const hiddenFileAddressProofInput = useRef(null);
+  const hiddenFileIndentityProofInput = useRef(null);
+
+
+  const deleteFile = (item, i) => {
+    if (item["id"]) {
+      deleteDocuments(item["id"]).then((resp) => {
+        getDocuments();
+        console.log(
+          "🚀 ~ file: business-credit-score.js ~ line 75 ~ deleteFile ~ resp",
+          resp
+        );
+      });
+    } else {
+      let list = [...fileList];
+      list.splice(i, 1);
+      setFileList(list);
+    }
   };
 
   const totalSizeMB = 1990 / Math.pow(1024, 2);
-  function handleChange(event) {
+  function handleChange(event, type) {
+    console.log(
+      "🚀 ~ file: business-credit-score.js ~ line 30 ~ handleChange ~ type",
+      type
+    );
     let list = [...fileList];
     let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
+
     console.log(
       "🚀 ~ file: business-credit-score.js ~ line 33 ~ handleChange ~ totalSizeMB",
       totalSizeMB,
       totalSizeMB < 5
     );
     if (totalSizeMB < 5) {
-      list.push(event.target.files[0]);
+      list.push({ file: event.target.files[0], type: type });
       setFileList(list);
+    } else {
+      ToastMessage("File size needs to be less than 5 MB", "error");
+    }
+  }
 
-      // setFile(event.target.files[0]);
-      localStorage.setItem("fileList", JSON.stringify(list));
-      let newlist = [];
-      fileList.forEach((item) => {
-        newlist.push({
-          lastModified: item["lastModified"],
-          lastModifiedDate: item["lastModifiedDate"],
-          name: item["name"],
-          size: item["size"],
-          type: item["type"],
-          webkitRelativePath: item["webkitRelativePath"],
-        });
-      });
+  function handleAddressFileChange(event, type) {
+    console.log(
+      "🚀 ~ file: business-credit-score.js ~ line 73 ~ handleAddressFileChange ~ event",
+      event
+    );
+    console.log(
+      "🚀 ~ file: business-credit-score.js ~ line 96 ~ handleAddressFileChange ~ type",
+      type
+    );
+
+    let list = [...fileList];
+    let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
+    // const binaryData = generateBinaryData(event.target.files[0]);
+    // console.log(
+    //   "🚀 ~ file: business-credit-score.js ~ line 59 ~ handleAddressFileChange ~ binaryData",
+    //   binaryData
+    // );
+
+    console.log(
+      "🚀 ~ file: business-credit-score.js ~ line 33 ~ handleChange ~ totalSizeMB",
+      totalSizeMB,
+      totalSizeMB < 5
+    );
+    if (totalSizeMB < 5) {
+      list.push({ file: event.target.files[0], type: type });
+      setFileList(list);
     } else {
       ToastMessage("File size needs to be less than 5 MB", "error");
     }
@@ -58,6 +135,49 @@ export default function BusinessCreditScore() {
   const submitDocuments = () => {
     if (!checkBusinessCredit) {
       ToastMessage("Please select the checkbox", "error");
+    } else {
+      console.log(
+        "🚀 ~ file: business-credit-score.js ~ line 76 ~ submitDocuments ~ file",
+        fileList
+      );
+
+      let identityProofDocs = fileList
+        .filter((file) => file.type == "Identity Proof")
+        .map((item) => {
+          return item.file;
+          console.log(
+            "🚀 ~ file: business-credit-score.js ~ line 114 ~ ).map ~ item",
+            item
+          );
+        });
+      let addressProofDocs = fileList
+        .filter((file) => {
+          if (file.type == "Address Proof") {
+            return file.file;
+          }
+        })
+        .map((item) => {
+          return item.file;
+        });
+
+      uploadDocuments(
+        {
+          fullname: `${userDetails["first_name"]} ${userDetails["last_name"]}`,
+          address_proof: addressProofDocs.length ? addressProofDocs : [],
+          identity_proof: identityProofDocs.length ? identityProofDocs : [],
+        },
+        userDetails["lead_id"]
+      ).catch((err) => {
+        ToastMessage("Something went wrong!", "error");
+      });
+      console.log(
+        "🚀 ~ file: business-credit-score.js ~ line 151 ~ submitDocuments ~ addressProofDocs",
+        addressProofDocs
+      );
+      console.log(
+        "🚀 ~ file: business-credit-score.js ~ line 80 ~ submitDocuments ~ identityProofDocs",
+        identityProofDocs
+      );
     }
   };
 
@@ -116,7 +236,34 @@ export default function BusinessCreditScore() {
                         <p>
                           <strong>File Uploaded:</strong>
                         </p>
-                        {fileList.map((item, i) => {
+                        <table class="table table-bordered">
+                          <thead>
+                            <tr>
+                              <th scope="col">File Name</th>
+                              <th scope="col">Document Category</th>
+                              <th scope="col">Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {fileList.map((item, i) => {
+                              return (
+                                <tr key={i}>
+                                  <td>{item.file ? item.file.name : ""}</td>
+                                  <td className="text-center">{item.type}</td>
+                                  <td className="text-center">
+                                    {" "}
+                                    <i
+                                      className="fa fa-trash cursor-pointer"
+                                      style={{ float: "unset" }}
+                                      onClick={() => deleteFile(item, i)}
+                                    ></i>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                        {/* {fileList.map((item, i) => {
                           return (
                             <div
                               className="d-flex justify-content-between my-2"
@@ -132,7 +279,7 @@ export default function BusinessCreditScore() {
                               </div>
                             </div>
                           );
-                        })}
+                        })} */}
                         {/* <p>
                         <span>MY-ID-PROOF.JPG</span>{" "}
                         <i className="fa fa-trash"></i>
@@ -148,7 +295,7 @@ export default function BusinessCreditScore() {
                   </p>
                   <div className="d-flex justify-space-evenly my-3">
                     <button
-                      className="btn btn-primary proof-btns mr-2"
+                      className="btn btn-primary proof-doc-btns mr-2"
                       type="button"
                       onClick={() => {
                         setIsIdentityProof(true);
@@ -157,10 +304,10 @@ export default function BusinessCreditScore() {
                       Proof of Identity
                     </button>
                     <button
-                      className="btn btn-primary proof-btns"
+                      className="btn btn-primary proof-doc-btns"
                       type="button"
                       onClick={() => {
-                        setIsIdentityProof(true);
+                        setIsAddressProof(true);
                       }}
                     >
                       Proof of Address
@@ -175,12 +322,16 @@ export default function BusinessCreditScore() {
                       <div className="upload-box">
                         <input
                           type="file"
-                          id="upload-file"
+                          id="Identity-Proof"
                           name="file"
                           className="upload-doc"
                           accept="image/png,image/jpeg,.pdf"
-                          ref={hiddenFileInput}
-                          onChange={handleChange}
+                          ref={hiddenFileIndentityProofInput}
+                          hidden
+                          onChange={(e) => {
+                            setSelectedFileType("Identity Proof");
+                            handleChange(e, "Identity Proof");
+                          }}
                         />
 
                         <img
@@ -191,6 +342,9 @@ export default function BusinessCreditScore() {
                         <label
                           for="upload-file"
                           className="btn btn-primary upload-btn"
+                          onClick={() =>
+                            hiddenFileIndentityProofInput.current.click()
+                          }
                         >
                           {" "}
                           Upload
@@ -202,19 +356,23 @@ export default function BusinessCreditScore() {
                     </>
                   )}
 
-                  {isIdentityProof && (
+                  {isAddressProof && (
                     <>
                       {" "}
                       <label className="form-label">Upload Address Proof</label>
                       <div className="upload-box">
                         <input
                           type="file"
-                          id="upload-file"
+                          id="Address-Proof"
                           name="file"
                           className="upload-doc"
                           accept="image/png,image/jpeg,.pdf"
-                          ref={hiddenFileInput}
-                          onChange={handleChange}
+                          hidden
+                          ref={hiddenFileAddressProofInput}
+                          onChange={(e) => {
+                            setSelectedFileType("Address Proof");
+                            handleAddressFileChange(e, "Address Proof");
+                          }}
                         />
 
                         <img
@@ -225,6 +383,9 @@ export default function BusinessCreditScore() {
                         <label
                           for="upload-file"
                           className="btn btn-primary upload-btn"
+                          onClick={() =>
+                            hiddenFileAddressProofInput.current.click()
+                          }
                         >
                           {" "}
                           Upload

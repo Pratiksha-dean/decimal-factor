@@ -20,6 +20,9 @@ export const INCOME_ANALYSIS_URL = `${API_URL}accountScore/5944/IncomeAnalysis`;
 export const REGULAR_OUTGOINGS_URL = `${API_URL}accountScore/5944/RegularOutgoings`;
 export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
 export const UPDATE_LOGIN_TIMES_URL = `${API_URL}UpdateCustomerLoginTimes/`;
+export const UPLOAD_DOCUMENTS = `${API_URL}UKLeadattachments/`;
+export const GET_DOCUMENTS = `${API_URL}GetLeadMasterAttachments/`;
+export const DELETE_DOCUMENTS = `${API_URL}DeleteLeadMasterAttachment/`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -169,5 +172,29 @@ export async function bankingInsightsDownloadFile(fileType, id) {
 
 export async function updateLoginTimes(payload) {
   const { data } = await axios.post(UPDATE_LOGIN_TIMES_URL, payload);
+  return data;
+}
+
+export async function uploadDocuments(payload, id) {
+  console.log(
+    "🚀 ~ file: request.js ~ line 179 ~ uploadDocuments ~ payload",
+    payload
+  );
+  const { data } = await axios.post(`${UPLOAD_DOCUMENTS}${id}`, payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return data;
+}
+
+export async function getDocuments(id) {
+  const { data } = await axios.get(`${GET_DOCUMENTS}${id}`);
+  return data;
+}
+
+export async function deleteDocuments(id) {
+  const { data } = await axios.post(`${DELETE_DOCUMENTS}${id}`);
   return data;
 }
