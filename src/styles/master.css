@@ -2644,5 +2644,50 @@ div#RFS-StepContainer {
 
 .no-data-panel h3 {
   text-align: center;
+  margin: 0 auto;
+  float: none;
+  width: 100px;
+}
+button#RFS-StepButton {
+  margin: 0 auto;
+}
+
+div#RFS-ConnectorContainer {
+  display: none;
+}
+div#RFS-StepContainer {
+  padding: 0px !important;
+}
+#RFS-Label {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+.verify-panel {
+  margin: 0px 0px 20px 0;
+  text-align: left;
+  width: 100%;
+  float: left;
+}
+
+.StepperContainer-0-2-1 {
+  padding-top: 80px !important;
+}
+*/ .border-divider {
+  border-left: 0px #ccc solid;
+  width: 0;
+  height: 30px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+div#RFS-StepperContainer {
+  overflow: scroll;
+  padding: 100px 0px 20px 0px !important;
+}
+
+.no-data-panel h3 {
+  text-align: center;
   margin: 0 0px 10px 0px;
 }
