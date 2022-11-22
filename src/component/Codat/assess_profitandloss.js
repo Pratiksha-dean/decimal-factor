@@ -3,9 +3,7 @@ import Datatables from "./Datatables";
 import Parser from 'html-react-parser';
 import axios from "axios";
 import Chart from "./Chart";
-
-
-
+import Loaderspinner from "../loader";
 
 export default function AssessProfitAndLoss(props) {
     const [arrowclassName5, setarrowclassName5] = useState('fa fa-chevron-right');
@@ -13,10 +11,12 @@ export default function AssessProfitAndLoss(props) {
     const [periodLength, setPeriodLength] = useState(1);
     const [periodCompare, setPeriodCompare] = useState(3);
     const [ratioData,setRatioData] = useState('');
-    const[statementData,setStatementData] = useState('');
+    const [statementData,setStatementData] = useState('');
     const [dataCategoreis, setDataCategoreis] = useState([]);
     const [dataSeries, setDataSeries] = useState([]);
-  
+    const [showStatementRatios, setShowStatementRatios]= useState(false)
+    const [statementRatiosLoading, setStatementRatiosLoading] = useState(false)
+
 
 const handleClassClick = () => {
     const profitstatement = document.querySelectorAll("tr[class^='profitstatement-label-']");    
@@ -97,30 +97,45 @@ const handleClassClick = () => {
 }
   
    const getProfitLossData = async(plength,pCompare,pStart) => {
-        await axios.get(`${props.endUrl}/CODAT/access_profit_loss/${props.leadId}/${plength}/${pCompare}/${pStart}`)
-        .then( res => {
-             
-                setStatementData(Parser(res.data.data.split("class=").join("className=")));
-                setRatioData(Parser(res.data.ratio.split("class=").join("className=")));
-                setDataCategoreis(res.data.date);
-                setDataSeries([{
-                    'name': 'Income',
-                    'data': res.data.income
-                },
-                {
-                    'name': 'Expense',
-                    'data': res.data.expense
-                },
-                {
-                    'name': 'Gross Profit',
-                    'data': res.data.gross_profit
-                }
-                ]);
-                const myTimeout = setTimeout(handleClassClick, 1000);
-                
+        
+        if(plength && pCompare && pStart){
+            console.log('test true', pStart)
+            setShowStatementRatios(false)
+            setStatementRatiosLoading(true)
+            await axios.get(`${props.endUrl}/CODAT/access_profit_loss/${props.leadId}/${plength}/${pCompare}/${pStart}`)
+            .then( res => {
+                 
+                    setStatementData(Parser(res.data.data.split("class=").join("className=")));
+                    setRatioData(Parser(res.data.ratio.split("class=").join("className=")));
+                    setDataCategoreis(res.data.date);
+                    setDataSeries([{
+                        'name': 'Income',
+                        'data': res.data.income
+                    },
+                    {
+                        'name': 'Expense',
+                        'data': res.data.expense
+                    },
+                    {
+                        'name': 'Gross Profit',
+                        'data': res.data.gross_profit
+                    }
+                    ]);
+                    const myTimeout = setTimeout(handleClassClick, 1000);
+              
+                setStatementRatiosLoading(false)
+                setShowStatementRatios(true)                      
         }).catch(err => {
             console.log(err);
+            setStatementRatiosLoading(false)
+            setShowStatementRatios(false)  
         });
+        }
+        else{
+            console.log('test false', pStart)
+            setShowStatementRatios(false)
+        }
+       
    }
 
   
@@ -137,6 +152,13 @@ const handleClassClick = () => {
                 <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
                 </div></div>
+                {
+                    statementRatiosLoading && (
+                        <div className="position-relative">
+                            <Loaderspinner size="45px" />
+                        </div>
+                    )
+                }
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>Period Start</label>
@@ -166,11 +188,14 @@ const handleClassClick = () => {
                     setPeriodCompare(e.target.value); getProfitLossData(periodLength,e.target.value,periodStart); }} name="" className="period-compare" />
                 </div></div>
                 </div>
-                <div className="chart-div">
+                
+
+                    {
+                        showStatementRatios && (
+                            <>
+                            <div className="chart-div">
                 {statementData !== '' && <Chart categories={dataCategoreis} series={dataSeries} />}
-
-
-              <div className="table-data-div">
+                                 <div className="table-data-div">
                 <div className="col s12"  id="">
                     <div className="">
                         <h3 className="groupbydebtor">Statement</h3>
@@ -194,7 +219,13 @@ const handleClassClick = () => {
                         </div></div>
                     </div>
                     </div>
-              </div>
+                    </div>
+                            </>
+                        )
+                    }
+
+             
+             
         </div>
         </div>
 

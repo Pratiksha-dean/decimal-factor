@@ -2,23 +2,24 @@ import React,{useState} from "react";
 import axios from "axios";
 import Parser from 'html-react-parser';
 import Chart from "./Chart";
+import Loaderspinner from "../loader";
 
 
 
 
-export default function AssessMarketing(props) {
-  
- 
+export default function AssessMarketing(props) { 
     const [arrowclassName4, setarrowclassName4] = useState('fa fa-chevron-right');
     const [arrowclassName5, setarrowclassName5] = useState('fa fa-chevron-right');
 
-    const[periodStart,setPeriodStart] = useState('');
-    const[periodLength,setPeriodLength] = useState(1);
-    const[periodCompare,setPeriodCompare] = useState(3);
-    const[marketingData,setMarketingData] = useState('');
+    const [periodStart,setPeriodStart] = useState('');
+    const [periodLength,setPeriodLength] = useState(1);
+    const [periodCompare,setPeriodCompare] = useState(3);
+    const [marketingData,setMarketingData] = useState('');
     const [dataCategoreis, setDataCategoreis] = useState([]);
     const [dataSeries, setDataSeries] = useState([]);
-  
+    const [showMarketing, setShowMarketing]= useState(false)
+    const [marketingLoading, setMarketingLoading] = useState(false)
+
  
     const handleClassClick = () => {
       const profitstatement = document.querySelectorAll("tr[class^='marketing-label-']");    
@@ -32,7 +33,10 @@ export default function AssessMarketing(props) {
       }
     }
     const getApiData = async (start, leng, compa) => {
+      
       if(start!=='' && leng!=='' && compa!=''){
+        setShowMarketing(false)
+        setMarketingLoading(true)
         await axios.get(`${props.endUrl}/CODAT/assess_marketing/${props.leadId}/${leng}/${compa}/${start}`)
         .then(res => {
           setMarketingData(Parser(res.data.data.split("class=").join("className=")));
@@ -46,13 +50,24 @@ export default function AssessMarketing(props) {
             'data': res.data.m_t_e
           }
           ]);
-        });
-
-        const myTimeout = setTimeout(handleClassClick, 1000);
+          setMarketingLoading(false)
+          setShowMarketing(true)
+          const myTimeout = setTimeout(handleClassClick, 1000);
+        }).catch(err => {
+          console.log(err);
+          setMarketingLoading(false)
+          setShowMarketing(false)
+          const myTimeout = setTimeout(handleClassClick, 1000);
+        })
+        
       }
+      else{
+        console.log("p compare start", start)
+        console.log('test false length', leng)
+        console.log('test false compa', compa)
+        setShowMarketing(false)
     }
-
-
+    }
 
       return (
           <div className="chart-panel">
@@ -66,7 +81,13 @@ export default function AssessMarketing(props) {
                 <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
                 </div></div>
-                
+                {
+                    marketingLoading && (
+                        <div className="position-relative">
+                            <Loaderspinner size="45px" />
+                        </div>
+                    )
+                }
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>Period Start</label>
@@ -90,7 +111,10 @@ export default function AssessMarketing(props) {
                 </div></div>
                
                 </div>
-                <div className="chart-div">
+                {
+                  showMarketing && (
+                    <>
+                        <div className="chart-div">
                 {marketingData!=='' && <Chart categories={dataCategoreis} series={dataSeries} />}
               
                 <div className="table-data-div">
@@ -107,6 +131,12 @@ export default function AssessMarketing(props) {
                     </div>
                     </div>
               </div>
+                    
+                    </>
+
+                  )
+                }
+                
         </div>
         </div>
 

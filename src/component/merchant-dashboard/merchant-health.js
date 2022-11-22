@@ -27,6 +27,29 @@ import Loaderspinner from "../loader";
 import BusinessCreditScore from "./merachant-health/business-credit-score";
 import NotFound from "../NotFound";
 
+//
+import styled, { css } from "styled-components";
+
+const DarkBackground = styled.div`
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 999; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+  ${props =>
+    props.disappear &&
+    css`
+      display: block; /* show */
+    `}
+`;
+//
+
 export const setCurrentTabIndex = (index) => {
   console.log(
     "🚀 ~ file: merchant-health.js ~ line 29 ~ setCurrentTabIndex ~ index",
@@ -113,6 +136,7 @@ function MerchantHealth() {
   const [dasboardData, setDashboardData] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
+  const [loadingServices, setLoadingServices] = useState(false)
   console.log(
     "🚀 ~ file: merchant-health.js ~ line 116 ~ MerchantHealth ~ currentTabIndex",
     currentTabIndex
@@ -159,9 +183,10 @@ function MerchantHealth() {
   };
 
   useEffect(() => {
+    setLoadingServices(true)
     if (userDetails && userDetails.lead_id && bankingStatus) {
       console.log("lead id", userDetails.lead_id);
-      getBankingFinancialServices(lead_accountScore).then((data) => {
+      let promise1=getBankingFinancialServices(lead_accountScore).then((data) => {
         console.log("data", data);
         let summaries = data.response.data.summaries;
         setFinancialServicesSummary(summaries);
@@ -183,9 +208,14 @@ function MerchantHealth() {
         setFinancialServicesTotalOut(totalOut);
         setFinancialServicesMonthlyAvgIn(monthlyAvgIn);
         setFinancialServicesMonthlyAvgOut(monthlyAvgOut);
+        return Promise.resolve()
+      }).catch(err=>{
+        console.log(`Error occurred: ${err}`)
+        // alert(`Error occurred: ${err}`)
+        return Promise.resolve();
       });
 
-      getBankingIncome(lead_accountScore).then((data) => {
+      let promise2=getBankingIncome(lead_accountScore).then((data) => {
         console.log("banking income data", data);
         let summaries = data.response.data.summaries;
         setIncomeAnalysisSummary(data.response.data.summaries);
@@ -207,14 +237,24 @@ function MerchantHealth() {
         setIncomeAnalysisTotalOut(totalOut);
         setIncomeAnalysisMonthlyAvgIn(monthlyAvgIn);
         setIncomeAnalysisMonthlyAvgOut(monthlyAvgOut);
+        return Promise.resolve()
+      }).catch(err=>{
+        console.log(`Error occurred: ${err}`)
+        // alert(`Error occurred: ${err}`)
+        return Promise.resolve();
       });
 
-      getRegularOutgoings(lead_accountScore).then((data) => {
+      let promise3=getRegularOutgoings(lead_accountScore).then((data) => {
         console.log("data", data);
         setRegularOutgoingsSummary(data.response.data.summaries);
+        return Promise.resolve()
+      }).catch(err=>{
+        console.log(`Error occurred: ${err}`)
+        // alert(`Error occurred: ${err}`)
+        return Promise.resolve();
       });
 
-      getEventFeed(lead_accountScore).then((data) => {
+      let promise4= getEventFeed(lead_accountScore).then((data) => {
         console.log("event data", data);
         let summaries = data.response.months;
         setEventFeedSummary(data.response.months);
@@ -226,7 +266,16 @@ function MerchantHealth() {
           });
         });
         setEventCount(evCount);
+        return Promise.resolve()
+      }).catch(err=>{
+        console.log(`Error occurred: ${err}`)
+        // alert(`Error occurred: ${err}`)
+        return Promise.resolve();
       });
+      let combinedPromise=Promise.all([promise1, promise2, promise3, promise4])
+      combinedPromise.then((res)=>{
+        setLoadingServices(false)
+      })
     }
   }, [bankingStatus]);
 
@@ -248,9 +297,11 @@ function MerchantHealth() {
             } else {
               alert("There is no data");
             }
+            setDownloadProgress(false);
           })
           .catch((err) => {
             console.log(`Error occured: ${err}`);
+            setDownloadProgress(false);
             alert(err);
           });
         break;
@@ -270,9 +321,11 @@ function MerchantHealth() {
             } else {
               alert("There is no data");
             }
+            setDownloadProgress(false);
           })
           .catch((err) => {
             console.log(`Error occured: ${err}`);
+            setDownloadProgress(false);
             alert(err);
           });
         break;
@@ -292,9 +345,11 @@ function MerchantHealth() {
             } else {
               alert("There is no data");
             }
+            setDownloadProgress(false);
           })
           .catch((err) => {
             console.log(`Error occured: ${err}`);
+            setDownloadProgress(false);
             alert(err);
           });
         break;
@@ -314,9 +369,11 @@ function MerchantHealth() {
             } else {
               alert("There is no data");
             }
+            setDownloadProgress(false);
           })
           .catch((err) => {
             console.log(`Error occured: ${err}`);
+            setDownloadProgress(false);
             alert(err);
           });
         break;
@@ -337,15 +394,16 @@ function MerchantHealth() {
             } else {
               alert("There is no data");
             }
+            setDownloadProgress(false);
           })
           .catch((err) => {
             console.log(`Error occured: ${err}`);
+            setDownloadProgress(false);
             alert(err);
           });
         break;
       }
     }
-    setDownloadProgress(false);
   };
 
   const getData = () => {
@@ -622,8 +680,15 @@ function MerchantHealth() {
                     </div>
                     <TabPanel>
                       <section>
-                        {loadingBanking && !bankingUrl && (
-                          <Loaderspinner size="45px" />
+                        {loadingBanking && !bankingUrl && (// 
+                          <>
+                           {/* <DarkBackground disappear={true}> */}
+                            {/* <div className="position-relative"> */}
+                              <Loaderspinner size="45px" toDisappear={false} />
+                            {/* </div> */}
+                            {/* </DarkBackground> */}
+                          </>
+                         
                         )}
                         {!bankingUrl && !loadingBanking && !bankingStatus && (
                           <>
@@ -777,11 +842,26 @@ function MerchantHealth() {
                               </div>
 
                               {bankingStatus && downloadInProgress && (
-                                <Loaderspinner size="45px" />
+                                <>
+                                  {/* <DarkBackground disappear={true}> */}
+                                    <Loaderspinner size="45px" />
+                                  {/* </DarkBackground> */}
+                                </>
+                                
                               )}
-
-                              {/* financial services start */}
-                              <div className="row">
+                              {
+                                 bankingStatus && loadingServices &&
+                                 (
+                                  <Loaderspinner size="45px" />
+                                 )
+                              }
+                              
+                              {
+                                bankingStatus && !loadingServices &&
+                                  (
+                                    <div>
+                                  {/* financial services start */}
+                                  <div className="row">
                                 <div className="col-md-6">
                                   <div className="financial-service">
                                     <h4>
@@ -1313,9 +1393,9 @@ function MerchantHealth() {
                                     )}
                                   </div>
                                 </div>
-                              </div>
+                                  </div>
 
-                              <div className="row">
+                                  <div className="row">
                                 <div className="col-md-6">
                                   <div className="financial-service">
                                     <h4>
@@ -1662,7 +1742,11 @@ function MerchantHealth() {
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+                                  </div>
+                                </div>
+                                  )
+                              }
+                                
                             </div>
                           )}
                         </div>
