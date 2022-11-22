@@ -3,9 +3,7 @@ import React,{useState} from "react";
 import Parser from 'html-react-parser';
 import axios from "axios";
 import Chart from "./Chart";
-
-
-
+import Loaderspinner from "../loader";
 
 export default function AssessBalanceSheet(props) {
 
@@ -17,7 +15,8 @@ export default function AssessBalanceSheet(props) {
     const[statementData,setStatementData] = useState('');
     const [dataCategoreis, setDataCategoreis] = useState([]);
     const [dataSeries, setDataSeries] = useState([]);
-  
+    const [showStatementRatios, setShowStatementRatios]= useState(false)
+    const [statementRatiosLoading, setStatementRatiosLoading] = useState(false)
 
 const handleClassClick = () => {
     const profitstatement = document.querySelectorAll("tr[class^='balancestatement-label-']");    
@@ -35,16 +34,12 @@ const handleClassClick = () => {
                 
                 Array.from(document.getElementsByClassName('sub-sub-sub-' + clname)).forEach(function(element) {
                     element.classList.add("hide");
-                });
-              
-                
+                });    
             }
         })
     }
 
-
     const subprofitstatement = document.querySelectorAll("tr[class^='sub-balancestatement-label-']");    
-    
     for (let i of subprofitstatement) {
         i.addEventListener("click", (e) => {
             if(e.target.type !='checkbox'){
@@ -84,7 +79,6 @@ const handleClassClick = () => {
         })
     }
 
-
     const profitratios = document.querySelectorAll("tr[class^='balanceratios-label-']");    
       for (let i of profitratios) {
           i.addEventListener("click", (e) => {
@@ -96,11 +90,15 @@ const handleClassClick = () => {
       }
 
 }
-  
    const getBalanceSheetData = async(plength,pCompare,pStart) => {
+        
+    if(plength && pCompare && pStart){
+        console.log("p compare", pCompare)
+        setShowStatementRatios(false)
+        setStatementRatiosLoading(true)
+
         await axios.get(`${props.endUrl}/CODAT/assess_balance_sheet/${props.leadId}/${plength}/${pCompare}/${pStart}`)
         .then( res => {
-             
                 setStatementData(Parser(res.data.data.split("class=").join("className=")));
                 setRatioData(Parser(res.data.ratio.split("class=").join("className=")));
                 setDataCategoreis(res.data.date);
@@ -117,14 +115,26 @@ const handleClassClick = () => {
                     'data': res.data.equity
                 }
                 ]);
-                const myTimeout = setTimeout(handleClassClick, 1000);
-                
+                const myTimeout = setTimeout(handleClassClick, 1000); 
+                setStatementRatiosLoading(false)
+                setShowStatementRatios(true)              
         }).catch(err => {
             console.log(err);
+            setStatementRatiosLoading(false)
+            setShowStatementRatios(false)
         });
+    }
+    else{
+        console.log("p compare", pCompare)
+        console.log('test false', pStart)
+        setShowStatementRatios(false)
+    }
+    
+    
+
+
    }
 
-    
 
   const chartData = {
     chart: {
@@ -176,6 +186,7 @@ const handleClassClick = () => {
               <div className="col-md-12">
               <h3>Balance Sheet</h3>
               <div className="row">
+              
               <div className="col-md-3">
                 <div className=" col-for-logo">
                 <img src={require("../../images/gbp.png")} alt="" className="logo-dashboard" />
@@ -183,6 +194,13 @@ const handleClassClick = () => {
                 <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
                 </div></div>
+                {
+                    statementRatiosLoading && (
+                        <div className="position-relative">
+                            <Loaderspinner size="45px" />
+                        </div>
+                    )
+                }
                 <div className="col-md-3 ">
                 <div className="box-shape">
                 <label>Period Start</label>
@@ -209,27 +227,30 @@ const handleClassClick = () => {
                     <div class="box-shape">
                     <label>Period to Compare</label>
                     <input type="number" className="period-compare" value={periodCompare} onChange={(e)=>{ 
-                    setPeriodCompare(e.target.value); getBalanceSheetData(periodLength,e.target.value,periodStart); }} name="" className="period-compare" />
+                    setPeriodCompare(e.target.value); getBalanceSheetData(periodLength,e.target.value,periodStart); }} name="" />
               
                 </div></div>
                 </div>
+                {
+                    showStatementRatios && (
                 <div className="chart-div">
                 {statementData !== '' && <Chart categories={dataCategoreis} series={dataSeries} />}
 
-              <div className="table-data-div">
-                <div className="col s12"  id="">
-                    <div className="">
-                        <h3 className="groupbydebtor">Statement</h3>
-                        <div className=" scroll-bar scroll-bar-2">
-                        <table id="assess-profitloss-table" className="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
-                        {statementData} 
+                        <>
+                            <div className="table-data-div">
+                                <div className="col s12"  id="">
+                                    <div className="">
+                                        <h3 className="groupbydebtor">Statement</h3>
+                                        <div className=" scroll-bar scroll-bar-2">
+                                        <table id="assess-profitloss-table" className="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
+                                        {statementData} 
 
-                        </table>
-                    </div></div>
-                </div>
-                </div>
-                <div className="table-data-div">
-                    <div className="col s12"  id="">
+                                        </table>
+                                    </div></div>
+                                </div>
+                            </div>
+                            <div className="table-data-div">
+                                <div className="col s12"  id="">
                         <div className="">
                             <h3 className="groupbydebtor">Ratios</h3>
                             <div className=" scroll-bar scroll-bar-2">
@@ -238,9 +259,13 @@ const handleClassClick = () => {
 
                             </table>
                         </div></div>
-                    </div>
-                    </div>
+                                </div>
+                            </div>
+                        </>
+                
               </div>
+                    )
+            } 
         </div>
         </div>
 

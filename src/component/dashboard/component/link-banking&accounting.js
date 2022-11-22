@@ -7,9 +7,13 @@ import {
   checkAccountingStatus,
   checkBankingStatus,
   checkLinkingStatus,
+  deleteDocuments,
   getAccountScore,
   getCompanyID,
+  getDocumentBankStatements,
+  getDocuments,
   getLinkToAccountingData,
+  uploadDocuments,
 } from "../../../request";
 import { getUserDetails } from "../../login/loginpage";
 import { getCompanyInfo } from "../../requestaquote/components/business-information";
@@ -32,29 +36,47 @@ export const getUploadBankStatement = () => {
   return JSON.parse(localStorage.getItem("uploadBankStatement"));
 };
 
-
-
-
 function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const [file, setFile] = useState();
-  const storedData = getLinkingAndBankingData();
+  const storedData = getUploadBankStatement();
   const appData = getReviewAppData();
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 34 ~ LinkBankingAccounting ~ appData",
-    appData
-  );
   const userDetails = getUserDetails();
   const [accoutingUrl, setAccoutingUrl] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
   const [accountingStatus, setAccoutingStatus] = useState(false);
   const [loadingBanking, setLoadingBanking] = useState(false);
-  const [loadingAccouting, setLoadingAccouting] = useState(true);
+  const [loadingAccouting, setLoadingAccouting] = useState(false);
+
   const companyInfo = getCompanyInfo();
   const [uploadBankStatementToggle, setUploadBankStatementToggle] =
-    useState(false);
+    useState(storedData);
 
   const [fileList, setFileList] = useState([]);
+
+  useEffect(() => {
+    getFiles();
+  }, []);
+
+  const getFiles = () => {
+    if (userDetails && userDetails["lead_id"] && storedData) {
+      getDocumentBankStatements(userDetails["lead_id"]).then((resp) => {
+        if (resp.records.length > 0 && resp["record_count"] !== 0) {
+          let list = [];
+          resp.records.forEach((item) => {
+            list.push({
+              file: { name: item["la_file_description"] },
+              type: item["la_doc_type"],
+              id: item["la_id"],
+            });
+          });
+
+          setFileList(list);
+        }
+        // setFileList(resp.records);
+      });
+    }
+  };
 
   const hiddenFileInput = useRef(null);
   const accountingUrlRef = useRef(null);
@@ -66,22 +88,13 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   function handleChange(event) {
     let list = [...fileList];
-    list.push(event.target.files[0]);
-    setFileList(list);
-
-    // setFile(event.target.files[0]);
-    localStorage.setItem("fileList", JSON.stringify(list));
-    let newlist = [];
-    fileList.forEach((item) => {
-      newlist.push({
-        lastModified: item["lastModified"],
-        lastModifiedDate: item["lastModifiedDate"],
-        name: item["name"],
-        size: item["size"],
-        type: item["type"],
-        webkitRelativePath: item["webkitRelativePath"],
-      });
-    });
+    let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
+    if (totalSizeMB < 5) {
+      list.push({ file: event.target.files[0] });
+      setFileList(list);
+    } else {
+      ToastMessage("File size needs to be less than 5 MB", "error");
+    }
   }
 
   const handleClick = (event) => {
@@ -95,6 +108,59 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       platformType: "0",
     };
 
+    getCompanyID(payload.lm_id).then((resp) => {
+      if (resp["data"] && resp["data"]["codat_client_id"]) {
+        setLoadingAccouting(false);
+        setAccoutingUrl(
+          `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+        );
+      }
+
+      setLoadingAccouting(false);
+
+      if (!resp.data) {
+        if (isClicked) {
+          getLinkToAccountingData(payload)
+            .then((resp) => {
+              if (resp.success == "false" && resp.code == 500) {
+                //  getCompanyID(payload.lm_id).then((resp) => {
+                //    setLoadingAccouting(false);
+                //    setAccoutingUrl(
+                //      `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+                //    );
+                //    if (isClicked) {
+                //      window.open(
+                //        `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+                //        "_blank"
+                //      );
+                //    }
+                //  });
+              } else {
+                setAccoutingUrl(resp.data.redirect);
+                if (isClicked) {
+                  window.open(resp.data.redirect, "_blank");
+                }
+                setLoadingAccouting(false);
+              }
+            })
+            .catch((err) => {
+              ToastMessage("Something went wrong!", "error");
+              setLoadingAccouting(false);
+            });
+        }
+      }
+
+      // setAccoutingUrl(
+      //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+      // );
+      // if (isClicked) {
+      //   window.open(
+      //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+      //     "_blank"
+      //   );
+      // }
+    });
+    return;
     getLinkToAccountingData(payload)
       .then((resp) => {
         if (resp.success == "false" && resp.code == 500) {
@@ -127,13 +193,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    setLoadingAccouting(true);
+    // setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 113 ~ .then ~ resp",
-          resp
-        );
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
@@ -159,20 +221,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   const checkBankingStatusClick = () => {
     // userDetails["lead_id"];
-    setLoadingBanking(true);
+    // setLoadingBanking(true);
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 145 ~ .then ~ resp",
-          resp
-        );
-
         if (resp["response"] == "Completed") {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
           );
           setBankingStatus(true);
-          console.log(data, "**");
         }
         setLoadingBanking(false);
       })
@@ -204,20 +260,35 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     });
   };
 
-  const deleteFile = (i) => {
+  const deleteFile = (item, i) => {
     let list = [...fileList];
-    list.splice(i, 1);
-    setFileList(list);
+
+    if (item["id"]) {
+      deleteDocuments(item["id"]).then((resp) => {
+        if (resp.status == "success") {
+          ToastMessage(resp.records, "success");
+          // getFiles();
+          list.splice(i, 1);
+          setFileList(list);
+        }
+      });
+    } else {
+      list.splice(i, 1);
+      setFileList(list);
+      ToastMessage("Lead Attachments Deleted Successfully.", "success");
+    }
   };
 
-  // useEffect(() => {
-  //   request();
-  //   checkAccountingStatusClick();
-  //   checkBankingStatusClick();
-  // }, []);
+  useEffect(() => {
+    request();
+    checkAccountingStatusClick();
+    checkBankingStatusClick();
+  }, []);
 
   useEffect(() => {
     if (data) {
+      setLoadingAccouting(true);
+
       checkAccountingStatusClick();
 
       if (data["obv_account_score_status"] == "Start") {
@@ -229,9 +300,42 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         setBankingStatus(true);
       }
     } else {
+      setLoadingBanking(true);
       checkBankingStatusClick();
     }
   }, [data]);
+
+  const onSubmit = () => {
+    if (uploadBankStatementToggle) {
+      let identityProofDocs = fileList.map((item) => {
+        if (!item.id) {
+          return item.file;
+        } else {
+          return;
+        }
+      });
+      uploadDocuments(
+        {
+          fullname: `${userDetails["first_name"]} ${userDetails["last_name"]}`,
+          bank_statements: identityProofDocs,
+        },
+        userDetails["lead_id"]
+      )
+        .then((resp) => {
+          if (resp.isSuccess == 1) {
+            ToastMessage("Attachments uploaded successfully!", "success");
+            setActiveStep(activeStep + 1);
+            setDashboardStepNo(activeStep + 1);
+          }
+        })
+        .catch((err) => {
+          ToastMessage("Something went wrong!", "error");
+        });
+    } else {
+      setActiveStep(activeStep + 1);
+      setDashboardStepNo(activeStep + 1);
+    }
+  };
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <div className="review-application">
@@ -388,8 +492,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
               {accoutingUrl && !loadingAccouting && (
                 <>
-                  {" "}
                   <div className="banking-url">
+                    <hr />
+
                     <div className="form-group">
                       <label>Accounting URL</label>
                       <input
@@ -440,9 +545,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
               <div className="form-group">
                 <input
                   type="checkbox"
-                  onClick={(e) =>
-                    setUploadBankStatementToggle(e.target.checked)
-                  }
+                  onClick={(e) => {
+                    setUploadBankStatementToggle(e.target.checked);
+                    setUploadBankStatement(e.target.checked);
+                  }}
                   name="Upload Bank Statement Copies Instead"
                   className="upload-checkbox"
                   checked={uploadBankStatementToggle}
@@ -474,12 +580,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                             className="d-flex justify-content-between my-2"
                             key={i}
                           >
-                            <div>{item.name}</div>{" "}
+                            <div className="file-name">
+                              {item.file ? item.file.name : ""}
+                            </div>{" "}
                             <div className="cursor-pointer">
                               {" "}
                               <i
                                 className="fa fa-trash cursor-pointer"
-                                onClick={() => deleteFile(i)}
+                                onClick={() => deleteFile(item, i)}
                               ></i>
                             </div>
                           </div>
@@ -543,8 +651,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
             className="btn btn-primary"
             style={{ backgroundColor: "#006090" }}
             onClick={() => {
-              setActiveStep(activeStep + 1);
-              setDashboardStepNo(activeStep + 1);
+              onSubmit();
             }}
             disabled={
               (uploadBankStatementToggle && !fileList.length) ||

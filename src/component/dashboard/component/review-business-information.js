@@ -65,33 +65,22 @@ const Accordion = ({ title, children, isPrimary, id }) => {
 
 function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
   const storedData = getReviewBusinessData();
-  console.log(
-    "🚀 ~ file: review-business-information.js ~ line 57 ~ ReviewBusinessInformation ~ storedData",
-    storedData
-  );
+
   const [directorList, setDirectorList] = useState([]);
 
   useEffect(() => {
-    console.log(data["ShareHolderList"], "*", data);
-    console.log("%%%", getDirectorData());
     if (data && data["lmc_bi_business_number"] && !data["ShareHolderList"]) {
       getDirectorList(data["lmc_bi_business_number"]).then((resp) => {
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 59 ~ getDirectorList ~ resp",
-          resp
-        );
         setDirectorList(resp.items);
         if (!getDirectorData()) {
           generateDirectorArray(resp.items);
         }
       });
     } else if (data["ShareHolderList"]) {
-      console.log(`data["ShareHolderList"]`, data["ShareHolderList"]);
       setDirectorList(data["ShareHolderList"]);
       if (!getDirectorData()) {
         generateDirectorArray(data["ShareHolderList"]);
       }
-      console.log("directorList", directorList);
     }
   }, []);
 
@@ -133,10 +122,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
 
   const generateDirectorArray = (data) => {
     if (data) {
-      console.log(
-        "🚀 ~ file: review-business-information.js ~ line 134 ~ generateDirectorArray ~ data",
-        data
-      );
       let list = [...data];
 
       if (list.length) {
@@ -150,22 +135,11 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
           } else {
             updatedList.push(item);
           }
-          console.log(
-            "🚀 ~ file: review-business-information.js ~ line 143 ~ list.forEach ~ item",
-            item["resigned_on"]
-          );
         });
-
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 142 ~ generateDirectorArray ~ updatedList",
-          updatedList
-        );
 
         updatedList.length > 0 &&
           updatedList.map((item) => {
-            console.log("resigned_on", item["resigned_on"]);
             let name = item.name && item.name.split(",");
-            console.log("[primay", item);
             item[directorFieldNames.FIRSTNAME] = item[
               directorFieldNames.FIRSTNAME
             ]
@@ -178,9 +152,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
             ]
               ? item[directorFieldNames.LASTNAME]
               : "";
-            console.log(item["address"], "**");
             if (item["address"]) {
-              console.log("&&", item["address"]["postal_code"]);
               item[directorFieldNames.POSTALCODE] =
                 item["address"]["postal_code"] || "";
               item[directorFieldNames.STREET] =
@@ -203,11 +175,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                 item[directorFieldNames.ADDRESSLINE2] =
                   item["address"][directorFieldNames.ADDRESSLINE2];
               }
-
-              console.log(
-                "🚀 ~ file: review-business-information.js ~ line 124 ~ values=directorList.map ~ item",
-                item["address"]
-              );
             }
 
             item[directorFieldNames.LIVINGSINCE] = "";
@@ -235,10 +202,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
               item[directorFieldNames.RESIDENTIALSTATUS];
 
             if (item["date_of_birth"]) {
-              console.log(
-                "🚀 ~ file: review-business-information.js ~ line 109 ~ values=directorList.map ~ name",
-                item["date_of_birth"]
-              );
               item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
                 item["date_of_birth"]["year"] +
                 "-" +
@@ -258,7 +221,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
             delete item["officer_role"];
             delete item["country_of_residence"];
             delete item["identification"];
-            console.log("item12", item);
 
             item["HiddenShareHolderId"] = "";
             item["notified_on"] = "";
@@ -268,10 +230,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
           });
 
         let newList = [...updatedList];
-        console.log(
-          "🚀 ~ file: review-business-information.js ~ line 139 ~ generateDirectorArray ~ list",
-          newList
-        );
         newList.sort((item) => {
           if (item["is_primary"]) {
             return item["is_primary"] ? -1 : 1; // `false` values first
@@ -289,7 +247,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
 
   useEffect(() => {
     if (!storedData) {
-      console.log("no stored dara", initialValues);
       setReviewBusinessData(initialValues);
     }
   }, []);
@@ -317,8 +274,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
     [fieldNames.DIRECTORINFO]: patchDirectorData(data),
   };
 
-  console.log("intialo valyes", initialValues);
-
   return (
     <div className="dashboard-box position-relative card dashboard-card">
       <Formik
@@ -326,15 +281,11 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
         enableReinitialize
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
-          console.log("****", values);
           if (values["directorInfo"] && values["directorInfo"].length) {
             let index = values["directorInfo"].findIndex(
               (item) => item["is_primary"] || item["is_primary"] == 1
             );
-            console.log(
-              "🚀 ~ file: review-business-information.js ~ line 329 ~ ReviewBusinessInformation ~ index",
-              index
-            );
+
             if (index === -1) {
               ToastMessage(
                 "It is mandatrory to mark at least one director as primary!",
@@ -380,14 +331,12 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                       closeMenuOnSelect={true}
                       onBlur={() => {
                         setReviewBusinessData(values);
-                        console.log("Error", errors);
                       }}
                       onChange={(selectedOption) => {
                         setFieldValue(
                           fieldNames.BUSINESSSECTOR,
                           selectedOption
                         );
-                        console.log("Error", errors);
                       }}
                       name={fieldNames.BUSINESSSECTOR}
                       options={businessSectorList}
@@ -435,7 +384,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                       onChange={handleChange}
                       onBlur={() => {
                         setReviewBusinessData(values);
-                        console.log("errors", errors);
                       }}
                       value={values[fieldNames.BUSINESSSTARTDATE]}
                     />
@@ -631,10 +579,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                                   ]
                                                 }
                                                 onBlur={() => {
-                                                  console.log(
-                                                    "onablur",
-                                                    values
-                                                  );
                                                   setDirectorData(
                                                     values["directorInfo"]
                                                   );
@@ -837,7 +781,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                                   );
                                                 }}
                                                 onBlur={() => {
-                                                  console.log("values", values);
                                                   setDirectorData(
                                                     values["directorInfo"]
                                                   );

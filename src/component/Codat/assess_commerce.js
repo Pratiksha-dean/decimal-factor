@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Chart from "./Chart";
+import Loaderspinner from "../loader";
 
 
 
@@ -16,66 +17,76 @@ export default function AssessCommerce(props) {
   const [graphCategory, setGraphCategory] = useState('');
   const [customerDataSeries, setCustomerDataSeries] = useState([]);
   const [ordersDataSeries, setOrdersDataSeries] = useState([]);
+  const [showStatementRatios, setShowStatementRatios]= useState(false)
+  const [statementRatiosLoading, setStatementRatiosLoading] = useState(false)
 
 
   const getApiData = async (start, end) => {
+      
+      if (start !== '' && end != '') {
 
-    if (start !== '' && end != '') {
-
-      await axios.get(`${props.endUrl}/CODAT/assess_commerce/${props.leadId}/${start}/${end}`)
-        .then(res => {
-          console.log(res.data);
-
-          setSalesDataSeries([{
-            'name': 'Revenue',
-            'data': res.data.revenue
-          },
-          {
-            'name': 'Revenue Growth',
-            'data': res.data.revenue_g
-          }
-          ]);
-          setAvgValue(res.data.avgvalue);
-          setLifeValue(res.data.lifevalue);
-          setRetentionValue(res.data.retentionvalue);
-          setRefundValue(res.data.refundvalue);
-          setSalesDataCategoreis(res.data.date);
-
-          setCustomerDataSeries([{
-            'name': 'Existing customers',
-            'data': res.data.e_c
-          },
-          {
-            'name': 'New customers',
-            'data': res.data.n_c
-          },
-          {
-            'name': 'Total customers',
-            'data': res.data.t_c
-          }
-          ]);
-
-          setOrdersDataSeries([{
-            'name': 'Total order value',
-            'data': res.data.t_o_v
-          },
-          {
-            'name': 'Total refund value',
-            'data': res.data.t_r_v
-          }
-          ]);
-
-
-          setGraphCategory('customer');
-
-        }).catch(err => {
-
-
-        })
+        setShowStatementRatios(false)
+        setStatementRatiosLoading(true)
+        await axios.get(`${props.endUrl}/CODAT/assess_commerce/${props.leadId}/${start}/${end}`)
+          .then(res => {
+            console.log(res.data);
+  
+            setSalesDataSeries([{
+              'name': 'Revenue',
+              'data': res.data.revenue
+            },
+            {
+              'name': 'Revenue Growth',
+              'data': res.data.revenue_g
+            }
+            ]);
+            setAvgValue(res.data.avgvalue);
+            setLifeValue(res.data.lifevalue);
+            setRetentionValue(res.data.retentionvalue);
+            setRefundValue(res.data.refundvalue);
+            setSalesDataCategoreis(res.data.date);
+  
+            setCustomerDataSeries([{
+              'name': 'Existing customers',
+              'data': res.data.e_c
+            },
+            {
+              'name': 'New customers',
+              'data': res.data.n_c
+            },
+            {
+              'name': 'Total customers',
+              'data': res.data.t_c
+            }
+            ]);
+  
+            setOrdersDataSeries([{
+              'name': 'Total order value',
+              'data': res.data.t_o_v
+            },
+            {
+              'name': 'Total refund value',
+              'data': res.data.t_r_v
+            }
+            ]);
+  
+            setGraphCategory('customer');
+            setStatementRatiosLoading(false)
+            setShowStatementRatios(true)
+  
+          }).catch(err => {
+            console.log(err);
+            setStatementRatiosLoading(false)
+            setShowStatementRatios(false)
+          })
+    }
+    else
+    {
+        console.log("p compare start", start)
+        console.log('test false end', end)
+        setShowStatementRatios(false)
     }
   }
-
-
 
 
 
@@ -91,6 +102,13 @@ export default function AssessCommerce(props) {
               <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
             </div></div>
+            {
+                    statementRatiosLoading && (
+                        <div className="position-relative">
+                            <Loaderspinner size="45px" />
+                        </div>
+                    )
+                }
           <div className="col-md-3 source-sandbox">
             <label>Source </label> <img src={require("../../images/CommerceSandbox_Square.png")} alt="" className="commerce-img" />
             <label> Commerce Sandbox</label>
@@ -114,7 +132,10 @@ export default function AssessCommerce(props) {
 
         </div>
 
-        <div className="chart-div">
+       {
+        showStatementRatios && (
+          <>
+             <div className="chart-div">
           <h3>Sales</h3>
           <div className="chart-second">
             <div className="row">
@@ -128,8 +149,6 @@ export default function AssessCommerce(props) {
           </div>
 
           {lifeValue !== '' && <Chart categories={salesDataCategoreis} series={salesDataSeries} />}
-
-
 
           <div className="chart-second">
             <div className="row">
@@ -163,6 +182,12 @@ export default function AssessCommerce(props) {
 
           </div>
         </div>
+
+          </>
+        )
+       }
+
+        
 
       </div>
     </div>

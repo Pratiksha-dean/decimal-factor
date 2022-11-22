@@ -211,8 +211,9 @@ function ProvideConsent({ setActiveStep, activeStep }) {
 
         <div className="d-flex justify-content-between mt-2">
           <button
-            className="btn btn-secondary"
+            className="btn"
             type="button"
+            style={{ backgroundColor: "#E2E2E2" }}
             onClick={() => {
               setActiveStep(activeStep - 1);
               setDashboardStepNo(activeStep - 1);
