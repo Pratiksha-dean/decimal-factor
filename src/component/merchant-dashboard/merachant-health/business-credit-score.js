@@ -685,7 +685,7 @@ export default function BusinessCreditScore() {
                     <tbody>
                       {/* <th>hello</th> */}
                       <tr className="text-center credit-score-table-head">
-                        <th colspan="3">Latest ShareHolders Equity Figure </th>
+                        <th colspan="3">Latest Shareholders Equity Figure </th>
                       </tr>
                       <tr>
                         <td style={{ width: "40%" }}>
