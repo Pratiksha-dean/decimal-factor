@@ -12,25 +12,14 @@ function Header() {
   // const userDetails = getUserDetails();
   const location = useLocation();
   const { userDetails } = useAppSelector((state) => state.userDetailsReducer);
+  const { leadDetails } = useAppSelector((state) => state.leadDetailsReducer);
   console.log(
-    "🚀 ~ file: header.js ~ line 13 ~ Header ~ userDetails",
-    userDetails
+    "🚀 ~ file: header.js ~ line 16 ~ Header ~ leadDetails",
+    leadDetails
   );
-
-  console.log("🚀 ~ file: header.js ~ line 12 ~ Header ~ location", location);
   const [dasboardData, setDashboardData] = useState();
-  console.log(
-    "🚀 ~ file: header.js ~ line 10 ~ Header ~ dasboardData",
-    dasboardData
-  );
-
-  console.log(
-    "🚀 ~ file: header.js ~ line 9 ~ Header ~ userDetails",
-    userDetails
-  );
 
   const logoutUser = () => {
-    console.log("🚀 ~ file: header.js ~ line 11 ~ logoutUser ~ logoutUser");
     logout();
     navigate("/login");
   };
@@ -53,15 +42,6 @@ function Header() {
     return () => {};
   }, []);
 
-  useEffect(() => {
-    window.addEventListener("storage", (e) => {
-      // this.setState({ auth: true });
-      console.log(
-        "🚀 ~ file: header.js ~ line 22 ~ window.addEventListener ~ e",
-        e
-      );
-    });
-  }, [userDetails]);
   return (
     <header>
       <div className="container-fluid">
@@ -96,6 +76,7 @@ function Header() {
                   {...triggerHandler}
                 >
                   {dasboardData && dasboardData["lf_business_name"]}
+                  {/* {leadDetails && leadDetails["lf_business_name"]} */}
                 </div>
               )}
             </OverlayTrigger>

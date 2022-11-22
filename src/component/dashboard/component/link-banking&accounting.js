@@ -316,6 +316,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   };
 
   const deleteFile = (item, i) => {
+    let list = [...fileList];
+
     console.log(
       "🚀 ~ file: business-credit-score.js ~ line 66 ~ deleteFile ~ item",
       item
@@ -329,7 +331,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         );
         if (resp.status == "success") {
           ToastMessage(resp.records, "success");
-          getFiles();
+          // getFiles();
+          list.splice(i, 1);
+          setFileList(list);
         }
         console.log(
           "🚀 ~ file: business-credit-score.js ~ line 75 ~ deleteFile ~ resp",
@@ -337,9 +341,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         );
       });
     } else {
-      let list = [...fileList];
       list.splice(i, 1);
       setFileList(list);
+      ToastMessage("Lead Attachments Deleted Successfully.", "success");
     }
   };
 
@@ -658,7 +662,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                             className="d-flex justify-content-between my-2"
                             key={i}
                           >
-                            <div>{item.file ? item.file.name : ""}</div>{" "}
+                            <div className="file-name">{item.file ? item.file.name : ""}</div>{" "}
                             <div className="cursor-pointer">
                               {" "}
                               <i

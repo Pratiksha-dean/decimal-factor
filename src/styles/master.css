@@ -2613,3 +2613,27 @@ button#RFS-StepButton {
   text-overflow: ellipsis;
   margin-left: 50px;
 }
+
+.file-name {
+  min-width: 250px;
+}
+
+.credit-score-table-head th {
+  background-color: #006090;
+  color: white;
+  /* border: 5px #fff solid !important; */
+  padding: 0.75rem;
+}
+
+.credit-score-table td {
+  width: 40%;
+  padding: 10px;
+}
+
+.download-score-btn,
+.download-score-btn:hover {
+  background-color: #006090;
+  color: white;
+  float: right;
+  margin: 0 0 20px 0;
+}

@@ -22,8 +22,10 @@ export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
 export const UPDATE_LOGIN_TIMES_URL = `${API_URL}UpdateCustomerLoginTimes/`;
 export const UPLOAD_DOCUMENTS = `${API_URL}UKLeadattachments/`;
 export const GET_DOCUMENTS = `${API_URL}getLeadMasterAttachmentsUK/`;
+
 export const GET_DOCUMENTS_BANK_STMT = `${API_URL}getLeadMasterAttachments/`;
 export const DELETE_DOCUMENTS = `${API_URL}DeleteLeadMasterAttachment/`;
+export const GET_BUSINESS_ACCOUNT_SCORE = `${API_URL}creditsafe/company/`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -196,15 +198,26 @@ export async function getDocuments(id) {
   return data;
 }
 
-
-
 export async function getDocumentBankStatements(id) {
   const { data } = await axios.get(`${GET_DOCUMENTS_BANK_STMT}${id}`);
   return data;
 }
 
-
 export async function deleteDocuments(id) {
   const { data } = await axios.post(`${DELETE_DOCUMENTS}${id}`);
+  return data;
+}
+
+export async function getBusinessAccountScore(id) {
+  const { data } = await axios.get(
+    `${GET_BUSINESS_ACCOUNT_SCORE}${id}/creditSafeReportUK`
+  );
+  return data;
+}
+
+export async function downloadBusinessAccountScore(id) {
+  const { data } = await axios.get(
+    `${GET_BUSINESS_ACCOUNT_SCORE}${id}/creditSafeReportUKPDF`
+  );
   return data;
 }

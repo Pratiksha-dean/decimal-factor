@@ -19,17 +19,24 @@ import { useEffect } from "react";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
+import { useDispatch } from "react-redux/es";
+import { TRIGGER_REVIEW_APPLICATION_DETAILS } from "../../redux/actions/actionTypes";
 
 function ApplicationInformation() {
   const [dasboardData, setDashboardData] = useState();
   const userDetails = getUserDetails();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   console.log(initialValues);
   const getData = () => {
     if (userDetails && userDetails.lead_id) {
       getDashboardData(userDetails.lead_id).then((resp) => {
         setDashboardData(resp.records[0]);
+        dispatch({
+          type: TRIGGER_REVIEW_APPLICATION_DETAILS,
+          reviewApplicationDetails: resp.records[0],
+        });
       });
     }
   };

@@ -353,6 +353,8 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 }}
                 options={businessEntityList}
                 name={fieldNames.BUSINESSENTITY}
+                menuPortalTarget={document.body}
+                menuPosition={"fixed"}
                 placeholder="Select Business Entity"
                 styles={{
                   control: (styles, state) => {
@@ -400,6 +402,8 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                     setApplicationInfo(values);
                   }}
                   placeholder="Select Business Name"
+                  menuPortalTarget={document.body}
+                  menuPosition={"fixed"}
                   styles={{
                     control: (styles, state) => {
                       const borderColor =

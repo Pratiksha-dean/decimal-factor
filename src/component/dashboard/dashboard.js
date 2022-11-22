@@ -17,6 +17,9 @@ import { Stepper, Step } from "react-form-stepper";
 import StepWizard from "react-step-wizard";
 import { isAuthenticated } from "../authentication/authentication";
 import { useNavigate } from "react-router-dom/dist";
+import { useDispatch } from "react-redux/es";
+import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 function onFormSubmit() {}
 
@@ -42,11 +45,13 @@ export const getDashboardStepNo = () => {
 
 function Dashboard() {
   const [dasboardData, setDashboardData] = useState();
+
   const [isFormValid, setIsFormValid] = useState();
   const [stepNumber, setStepNumber] = useState();
   const [stepWizard, setStepWizard] = useState(null);
   const isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
   const naviagte = useNavigate();
+  const dispatch = useDispatch();
 
   const userDetails = getUserDetails();
   useEffect(() => {
@@ -63,6 +68,10 @@ function Dashboard() {
     if (userDetails && userDetails.lead_id) {
       getDashboardData(userDetails.lead_id).then((resp) => {
         setDashboardData(resp.records[0]);
+        dispatch({
+          type: TRIGGER_LEAD_DETAILS,
+          leadDetails: resp.records[0],
+        });
       });
     }
   };

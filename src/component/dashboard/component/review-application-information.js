@@ -19,9 +19,21 @@ import {
   setDashboardStepNo,
   setReviewAppData,
 } from "../dashboard";
+import { useAppSelector } from "../../../redux/hooks/hooks";
+import { useDispatch } from "react-redux/es";
+import { TRIGGER_REVIEW_APPLICATION_DETAILS } from "../../../redux/actions/actionTypes";
 
 function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
   const storedData = getReviewAppData();
+  const dispatch = useDispatch();
+  const { reviewApplicationDetails } = useAppSelector(
+    (state) => state.reviewApplicationDetailsReducer
+  );
+
+  console.log(
+    "🚀 ~ file: review-application-information.js ~ line 27 ~ ReviewApplicationInformation ~ reviewApplicationDetails",
+    reviewApplicationDetails
+  );
 
   const initialValues = {
     [fieldNames.AMOUNT]: storedData
@@ -54,6 +66,14 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
       setReviewAppData(initialValues);
     }
   }, []);
+
+  const storeReviewApplicationData = (details) => {
+    console.log(
+      "🚀 ~ file: review-application-information.js ~ line 71 ~ storeReviewApplicationData ~ details",
+      details
+    );
+
+  };
 
   return (
     <div className="dashboard-box position-relative card dashboard-card">
@@ -115,6 +135,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                         onChange={handleChange}
                         onBlur={(e) => {
                           setReviewAppData(values);
+                          storeReviewApplicationData(values);
                         }}
                         value={values[fieldNames.AMOUNT]}
                       />
@@ -131,6 +152,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                       }}
                       onBlur={(selectedOption) => {
                         setReviewAppData(values);
+                        storeReviewApplicationData(values);
                       }}
                       options={loadPurposeList}
                       name={fieldNames.LOANPURPOSE}
@@ -165,6 +187,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                       onChange={handleChange}
                       onBlur={(e) => {
                         setReviewAppData(values);
+                        storeReviewApplicationData(values);
                       }}
                       value={values[fieldNames.REQUIREDFUND]}
                       className={clsx(
@@ -209,6 +232,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                       }}
                       onBlur={(selectedOption) => {
                         setReviewAppData(values);
+                        storeReviewApplicationData(values);
                       }}
                       options={businessEntityList}
                       name={fieldNames.BUSINESSENTITY}
@@ -247,6 +271,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                         );
                         // setBusinessInfo(selectedOption);
                         setReviewAppData(values);
+                        storeReviewApplicationData(values);
                       }}
                       components={{
                         IndicatorSeparator: () => null,
@@ -255,6 +280,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                       // onInputChange={handleInputChange}
                       onBlur={(selectedOption) => {
                         setReviewAppData(values);
+                        storeReviewApplicationData(values);
                       }}
                       placeholder="Select Business Name"
                       styles={{
