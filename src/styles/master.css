@@ -2637,3 +2637,16 @@ button#RFS-StepButton {
   float: right;
   margin: 0 0 20px 0;
 }
+
+._loading_overlay_content.css-42igfv {
+  top: 50%;
+  position: fixed;
+  left: 50%;
+  width: 50px;
+  z-index: 99999;
+  height: 50px;
+  opacity: 1;
+  background: none !important;
+  transform: translate(-50%,-50%);
+  display: flex;
+}
