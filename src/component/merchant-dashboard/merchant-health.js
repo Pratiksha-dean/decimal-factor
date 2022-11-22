@@ -29,6 +29,8 @@ import NotFound from "../NotFound";
 
 //
 import styled, { css } from "styled-components";
+import { useDispatch } from "react-redux/es";
+import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
 
 const DarkBackground = styled.div`
   display: none; /* Hidden by default */
@@ -118,10 +120,6 @@ const dateSuffix = {
   31: "st",
 };
 function MerchantHealth() {
-  const [showPanel, togglePanel] = useState(false);
-  const [showPanel2, togglePanel2] = useState(false);
-  const [showPanel3, togglePanel3] = useState(false);
-  const [showPanel4, togglePanel4] = useState(false);
   const currentTabIndex = getCurrentTabIndex();
   const [tabIndex, setTabIndex] = useState(currentTabIndex);
   const [open, setOpen] = React.useState(false);
@@ -133,6 +131,7 @@ function MerchantHealth() {
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
   const [loadingServices, setLoadingServices] = useState(false);
+  const dispatch = useDispatch();
   console.log(
     "🚀 ~ file: merchant-health.js ~ line 116 ~ MerchantHealth ~ currentTabIndex",
     currentTabIndex
@@ -425,6 +424,10 @@ function MerchantHealth() {
       getDashboardData(userDetails.lead_id).then((resp) => {
         setLoadingBanking(false);
         setDashboardData(resp.records[0]);
+        dispatch({
+          type: TRIGGER_LEAD_DETAILS,
+          leadDetails: resp.records[0],
+        });
       });
     }
   };
