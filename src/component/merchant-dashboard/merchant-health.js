@@ -42,7 +42,7 @@ const DarkBackground = styled.div`
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 
-  ${props =>
+  ${(props) =>
     props.disappear &&
     css`
       display: block; /* show */
@@ -51,10 +51,6 @@ const DarkBackground = styled.div`
 //
 
 export const setCurrentTabIndex = (index) => {
-  console.log(
-    "🚀 ~ file: merchant-health.js ~ line 29 ~ setCurrentTabIndex ~ index",
-    index
-  );
   localStorage.setItem("activeTabIndex", index);
 };
 
@@ -136,7 +132,7 @@ function MerchantHealth() {
   const [dasboardData, setDashboardData] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
-  const [loadingServices, setLoadingServices] = useState(false)
+  const [loadingServices, setLoadingServices] = useState(false);
   console.log(
     "🚀 ~ file: merchant-health.js ~ line 116 ~ MerchantHealth ~ currentTabIndex",
     currentTabIndex
@@ -183,99 +179,116 @@ function MerchantHealth() {
   };
 
   useEffect(() => {
-    setLoadingServices(true)
+    setLoadingServices(true);
     if (userDetails && userDetails.lead_id && bankingStatus) {
       console.log("lead id", userDetails.lead_id);
-      let promise1=getBankingFinancialServices(lead_accountScore).then((data) => {
-        console.log("data", data);
-        let summaries = data.response.data.summaries;
-        setFinancialServicesSummary(summaries);
-        let totalIn = 0;
-        let totalOut = 0;
-        let monthlyAvgIn = 0;
-        let monthlyAvgOut = 0;
+      let promise1 = getBankingFinancialServices(lead_accountScore)
+        .then((data) => {
+          console.log("data", data);
+          let summaries = data.response.data.summaries;
+          setFinancialServicesSummary(summaries);
+          let totalIn = 0;
+          let totalOut = 0;
+          let monthlyAvgIn = 0;
+          let monthlyAvgOut = 0;
 
-        summaries.map((summary) => {
-          totalIn = Number(totalIn) + Number(summary.creditSummary.total);
-          totalOut = Number(totalOut) + Number(summary.debitSummary.total);
-          monthlyAvgIn =
-            Number(monthlyAvgIn) + Number(summary.creditSummary.monthlyAverage);
-          monthlyAvgOut =
-            Number(monthlyAvgOut) + Number(summary.debitSummary.monthlyAverage);
-        });
-
-        setFinancialServicesTotalIn(totalIn);
-        setFinancialServicesTotalOut(totalOut);
-        setFinancialServicesMonthlyAvgIn(monthlyAvgIn);
-        setFinancialServicesMonthlyAvgOut(monthlyAvgOut);
-        return Promise.resolve()
-      }).catch(err=>{
-        console.log(`Error occurred: ${err}`)
-        // alert(`Error occurred: ${err}`)
-        return Promise.resolve();
-      });
-
-      let promise2=getBankingIncome(lead_accountScore).then((data) => {
-        console.log("banking income data", data);
-        let summaries = data.response.data.summaries;
-        setIncomeAnalysisSummary(data.response.data.summaries);
-        let totalIn = 0;
-        let totalOut = 0;
-        let monthlyAvgIn = 0;
-        let monthlyAvgOut = 0;
-
-        summaries.map((summary) => {
-          totalIn = Number(totalIn) + Number(summary.creditSummary.total);
-          totalOut = Number(totalOut) + Number(summary.debitSummary.total);
-          monthlyAvgIn =
-            Number(monthlyAvgIn) + Number(summary.creditSummary.monthlyAverage);
-          monthlyAvgOut =
-            Number(monthlyAvgOut) + Number(summary.debitSummary.monthlyAverage);
-        });
-
-        setIncomeAnalysisTotalIn(totalIn);
-        setIncomeAnalysisTotalOut(totalOut);
-        setIncomeAnalysisMonthlyAvgIn(monthlyAvgIn);
-        setIncomeAnalysisMonthlyAvgOut(monthlyAvgOut);
-        return Promise.resolve()
-      }).catch(err=>{
-        console.log(`Error occurred: ${err}`)
-        // alert(`Error occurred: ${err}`)
-        return Promise.resolve();
-      });
-
-      let promise3=getRegularOutgoings(lead_accountScore).then((data) => {
-        console.log("data", data);
-        setRegularOutgoingsSummary(data.response.data.summaries);
-        return Promise.resolve()
-      }).catch(err=>{
-        console.log(`Error occurred: ${err}`)
-        // alert(`Error occurred: ${err}`)
-        return Promise.resolve();
-      });
-
-      let promise4= getEventFeed(lead_accountScore).then((data) => {
-        console.log("event data", data);
-        let summaries = data.response.months;
-        setEventFeedSummary(data.response.months);
-        console.log("months", eventFeedSummary);
-        let evCount = 0;
-        summaries.map((month) => {
-          month.data.events.map((ev) => {
-            evCount += 1;
+          summaries.map((summary) => {
+            totalIn = Number(totalIn) + Number(summary.creditSummary.total);
+            totalOut = Number(totalOut) + Number(summary.debitSummary.total);
+            monthlyAvgIn =
+              Number(monthlyAvgIn) +
+              Number(summary.creditSummary.monthlyAverage);
+            monthlyAvgOut =
+              Number(monthlyAvgOut) +
+              Number(summary.debitSummary.monthlyAverage);
           });
+
+          setFinancialServicesTotalIn(totalIn);
+          setFinancialServicesTotalOut(totalOut);
+          setFinancialServicesMonthlyAvgIn(monthlyAvgIn);
+          setFinancialServicesMonthlyAvgOut(monthlyAvgOut);
+          return Promise.resolve();
+        })
+        .catch((err) => {
+          console.log(`Error occurred: ${err}`);
+          // alert(`Error occurred: ${err}`)
+          return Promise.resolve();
         });
-        setEventCount(evCount);
-        return Promise.resolve()
-      }).catch(err=>{
-        console.log(`Error occurred: ${err}`)
-        // alert(`Error occurred: ${err}`)
-        return Promise.resolve();
+
+      let promise2 = getBankingIncome(lead_accountScore)
+        .then((data) => {
+          console.log("banking income data", data);
+          let summaries = data.response.data.summaries;
+          setIncomeAnalysisSummary(data.response.data.summaries);
+          let totalIn = 0;
+          let totalOut = 0;
+          let monthlyAvgIn = 0;
+          let monthlyAvgOut = 0;
+
+          summaries.map((summary) => {
+            totalIn = Number(totalIn) + Number(summary.creditSummary.total);
+            totalOut = Number(totalOut) + Number(summary.debitSummary.total);
+            monthlyAvgIn =
+              Number(monthlyAvgIn) +
+              Number(summary.creditSummary.monthlyAverage);
+            monthlyAvgOut =
+              Number(monthlyAvgOut) +
+              Number(summary.debitSummary.monthlyAverage);
+          });
+
+          setIncomeAnalysisTotalIn(totalIn);
+          setIncomeAnalysisTotalOut(totalOut);
+          setIncomeAnalysisMonthlyAvgIn(monthlyAvgIn);
+          setIncomeAnalysisMonthlyAvgOut(monthlyAvgOut);
+          return Promise.resolve();
+        })
+        .catch((err) => {
+          console.log(`Error occurred: ${err}`);
+          // alert(`Error occurred: ${err}`)
+          return Promise.resolve();
+        });
+
+      let promise3 = getRegularOutgoings(lead_accountScore)
+        .then((data) => {
+          console.log("data", data);
+          setRegularOutgoingsSummary(data.response.data.summaries);
+          return Promise.resolve();
+        })
+        .catch((err) => {
+          console.log(`Error occurred: ${err}`);
+          // alert(`Error occurred: ${err}`)
+          return Promise.resolve();
+        });
+
+      let promise4 = getEventFeed(lead_accountScore)
+        .then((data) => {
+          console.log("event data", data);
+          let summaries = data.response.months;
+          setEventFeedSummary(data.response.months);
+          console.log("months", eventFeedSummary);
+          let evCount = 0;
+          summaries.map((month) => {
+            month.data.events.map((ev) => {
+              evCount += 1;
+            });
+          });
+          setEventCount(evCount);
+          return Promise.resolve();
+        })
+        .catch((err) => {
+          console.log(`Error occurred: ${err}`);
+          // alert(`Error occurred: ${err}`)
+          return Promise.resolve();
+        });
+      let combinedPromise = Promise.all([
+        promise1,
+        promise2,
+        promise3,
+        promise4,
+      ]);
+      combinedPromise.then((res) => {
+        setLoadingServices(false);
       });
-      let combinedPromise=Promise.all([promise1, promise2, promise3, promise4])
-      combinedPromise.then((res)=>{
-        setLoadingServices(false)
-      })
     }
   }, [bankingStatus]);
 
@@ -752,16 +765,16 @@ function MerchantHealth() {
                     </div>
                     <TabPanel>
                       <section>
-                        {loadingBanking && !bankingUrl && (// 
-                          <>
-                           {/* <DarkBackground disappear={true}> */}
-                            {/* <div className="position-relative"> */}
+                        {loadingBanking &&
+                          !bankingUrl && ( //
+                            <>
+                              {/* <DarkBackground disappear={true}> */}
+                              {/* <div className="position-relative"> */}
                               <Loaderspinner size="45px" toDisappear={false} />
-                            {/* </div> */}
-                            {/* </DarkBackground> */}
-                          </>
-                         
-                        )}
+                              {/* </div> */}
+                              {/* </DarkBackground> */}
+                            </>
+                          )}
                         {!bankingUrl && !loadingBanking && !bankingStatus && (
                           <>
                             <button
@@ -916,813 +929,843 @@ function MerchantHealth() {
                               {bankingStatus && downloadInProgress && (
                                 <>
                                   {/* <DarkBackground disappear={true}> */}
-                                    <Loaderspinner size="45px" />
+                                  <Loaderspinner size="45px" />
                                   {/* </DarkBackground> */}
                                 </>
-                                
                               )}
-                              {
-                                 bankingStatus && loadingServices &&
-                                 (
-                                  <Loaderspinner size="45px" />
-                                 )
-                              }
-                              
-                              {
-                                bankingStatus && !loadingServices &&
-                                  (
-                                    <div>
+                              {bankingStatus && loadingServices && (
+                                <Loaderspinner size="45px" />
+                              )}
+
+                              {bankingStatus && !loadingServices && (
+                                <div>
                                   {/* financial services start */}
                                   <div className="row">
-                                <div className="col-md-6">
-                                  <div className="financial-service">
-                                    <h4>
-                                      Financial Services{" "}
-                                      <span>
-                                        ({financialServicesSummary.length})
-                                      </span>
-                                    </h4>
-                                    {(financialServicesSummary.length > 0 && (
-                                      <div>
-                                        {" "}
-                                        <div className="scroll-bar-2">
-                                          {financialServicesSummary.length >
-                                            0 &&
-                                            financialServicesSummary.map(
-                                              (service, index) => {
-                                                return index % 2 == 0 ? (
-                                                  <>
-                                                    <div className="card-1">
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            service.subCategoryDescription
-                                                          }
-                                                        </strong>
-                                                      </p>
-                                                      <p>
-                                                        {
-                                                          service.creditSummary
-                                                            .transactionCount
-                                                        }{" "}
-                                                        credit{" "}
-                                                        {service.creditSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (on{" "}
-                                                        {service.creditSummary.lastTransaction.substring(
-                                                          0,
-                                                          4
-                                                        ) >= "1997"
-                                                          ? service
+                                    <div className="col-md-6">
+                                      <div className="financial-service">
+                                        <h4>
+                                          Financial Services{" "}
+                                          <span>
+                                            ({financialServicesSummary.length})
+                                          </span>
+                                        </h4>
+                                        {(financialServicesSummary.length >
+                                          0 && (
+                                          <div>
+                                            {" "}
+                                            <div className="scroll-bar-2">
+                                              {financialServicesSummary.length >
+                                                0 &&
+                                                financialServicesSummary.map(
+                                                  (service, index) => {
+                                                    return index % 2 == 0 ? (
+                                                      <>
+                                                        <div className="card-1">
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                service.subCategoryDescription
+                                                              }
+                                                            </strong>
+                                                          </p>
+                                                          <p>
+                                                            {
+                                                              service
+                                                                .creditSummary
+                                                                .transactionCount
+                                                            }{" "}
+                                                            credit{" "}
+                                                            {service
                                                               .creditSummary
-                                                              .lastTransaction
-                                                          : "--"}
-                                                        )
-                                                      </p>
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            service.debitSummary
-                                                              .transactionCount
-                                                          }
-                                                        </strong>{" "}
-                                                        debit{" "}
-                                                        {service.debitSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (last on{" "}
-                                                        <span>
-                                                          {service.debitSummary.lastTransaction.substring(
-                                                            0,
-                                                            4
-                                                          ) >= "1997"
-                                                            ? service
-                                                                .debitSummary
-                                                                .lastTransaction
-                                                            : "--"}
-                                                          )
-                                                        </span>
-                                                      </p>
-                                                      <div className="box-id-1">
-                                                        <p>
-                                                          <strong>
-                                                            total in: +£
-                                                            {
-                                                              service
-                                                                .creditSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: +£
-                                                            {
-                                                              service
-                                                                .creditSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                      <div className="box-id-2">
-                                                        <p>
-                                                          <strong>
-                                                            total out: -£
-                                                            {
-                                                              service
-                                                                .debitSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: -£
-                                                            {
-                                                              service
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    <div className="card-1 card-2">
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            service.subCategoryDescription
-                                                          }
-                                                        </strong>
-                                                      </p>
-                                                      <p>
-                                                        {
-                                                          service.creditSummary
-                                                            .transactionCount
-                                                        }{" "}
-                                                        credit{" "}
-                                                        {service.creditSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (on{" "}
-                                                        {service.creditSummary.lastTransaction.substring(
-                                                          0,
-                                                          4
-                                                        ) >= "1997"
-                                                          ? service
-                                                              .creditSummary
-                                                              .lastTransaction
-                                                          : "--"}
-                                                        )
-                                                      </p>
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            service.debitSummary
-                                                              .transactionCount
-                                                          }
-                                                        </strong>{" "}
-                                                        debit{" "}
-                                                        {service.debitSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (last on{" "}
-                                                        <span>
-                                                          {service.debitSummary.lastTransaction.substring(
-                                                            0,
-                                                            4
-                                                          ) >= "1997"
-                                                            ? service
-                                                                .debitSummary
-                                                                .lastTransaction
-                                                            : "--"}
-                                                          )
-                                                        </span>
-                                                      </p>
-                                                      <div className="box-id-1">
-                                                        <p>
-                                                          <strong>
-                                                            total in: +£
-                                                            {
-                                                              service
-                                                                .creditSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: +£
-                                                            {
-                                                              service
-                                                                .creditSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                      <div className="box-id-2">
-                                                        <p>
-                                                          <strong>
-                                                            total out: -£
-                                                            {
-                                                              service
-                                                                .debitSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: -£
-                                                            {
-                                                              service
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                );
-                                              }
-                                            )}
-                                        </div>{" "}
-                                        <div className="card-bottom">
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>
-                                                total in: +£
-                                                {financialServicesTotalIn}
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: +£
-                                                {financialServicesMonthlyAvgIn}
-                                              </strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£
-                                                {financialServicesTotalOut}
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£
-                                                {financialServicesMonthlyAvgOut}
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    )) || (
-                                      <div>
-                                        <NotFound />
-                                      </div>
-                                    )}
-
-                                    {/* </div> */}
-                                  </div>
-                                </div>
-
-                                {/* income analysis start */}
-                                <div className="col-md-6">
-                                  <div className=" financial-service income-panel">
-                                    <h4>
-                                      Income ({incomeAnalysisSummary.length})
-                                    </h4>
-                                    {(incomeAnalysisSummary.length > 0 && (
-                                      <div>
-                                        <div className="scroll-bar-2">
-                                          {incomeAnalysisSummary.length > 0 &&
-                                            incomeAnalysisSummary.map(
-                                              (income, index) => {
-                                                return index % 2 == 0 ? (
-                                                  <>
-                                                    <div className="card-1 white-bg">
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            income.vendorDescription
-                                                          }{" "}
-                                                          <div className="">
-                                                            {
-                                                              income.subCategoryDescription
-                                                            }
-                                                          </div>
-                                                        </strong>
-                                                      </p>
-                                                      <p>
-                                                        {
-                                                          income.creditSummary
-                                                            .transactionCount
-                                                        }{" "}
-                                                        credit{" "}
-                                                        {income.creditSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (on{" "}
-                                                        {income.creditSummary.lastTransaction.substring(
-                                                          0,
-                                                          4
-                                                        ) >= "1997"
-                                                          ? income.creditSummary
-                                                              .lastTransaction
-                                                          : "--"}
-                                                        )
-                                                      </p>
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            income.debitSummary
-                                                              .transactionCount
-                                                          }
-                                                        </strong>{" "}
-                                                        debit{" "}
-                                                        {income.debitSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (last on{" "}
-                                                        <span>
-                                                          {income.debitSummary.lastTransaction.substring(
-                                                            0,
-                                                            4
-                                                          ) >= "1997"
-                                                            ? income
-                                                                .debitSummary
-                                                                .lastTransaction
-                                                            : "--"}
-                                                          )
-                                                        </span>
-                                                      </p>
-                                                      <div className="box-id-1">
-                                                        <p>
-                                                          <strong>
-                                                            total in: +£
-                                                            {
-                                                              income
-                                                                .creditSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: +£
-                                                            {
-                                                              income
-                                                                .creditSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                      <div className="box-id-2">
-                                                        <p>
-                                                          <strong>
-                                                            total out: -£
-                                                            {
-                                                              income
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: -£
-                                                            {
-                                                              income
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    <div className="card-1 card-2">
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            income.vendorDescription
-                                                          }{" "}
-                                                          <div className="">
-                                                            {
-                                                              income.subCategoryDescription
-                                                            }
-                                                          </div>
-                                                        </strong>
-                                                      </p>
-                                                      <p>
-                                                        {
-                                                          income.creditSummary
-                                                            .transactionCount
-                                                        }{" "}
-                                                        credit{" "}
-                                                        {income.creditSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (on{" "}
-                                                        {income.creditSummary.lastTransaction.substring(
-                                                          0,
-                                                          4
-                                                        ) >= "1997"
-                                                          ? income.creditSummary
-                                                              .lastTransaction
-                                                          : "--"}
-                                                        )
-                                                      </p>
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            income.debitSummary
-                                                              .transactionCount
-                                                          }
-                                                        </strong>{" "}
-                                                        debit{" "}
-                                                        {income.debitSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (last on{" "}
-                                                        <span>
-                                                          {income.debitSummary.lastTransaction.substring(
-                                                            0,
-                                                            4
-                                                          ) >= "1997"
-                                                            ? income
-                                                                .debitSummary
-                                                                .lastTransaction
-                                                            : "--"}
-                                                          )
-                                                        </span>
-                                                      </p>
-                                                      <div className="box-id-1">
-                                                        <p>
-                                                          <strong>
-                                                            total in: +£
-                                                            {
-                                                              income
-                                                                .creditSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: +£
-                                                            {
-                                                              income
-                                                                .creditSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                      <div className="box-id-2">
-                                                        <p>
-                                                          <strong>
-                                                            total out: -£
-                                                            {
-                                                              income
-                                                                .debitSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: -£
-                                                            {
-                                                              income
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                );
-                                              }
-                                            )}
-                                        </div>
-                                        <div className="card-bottom bottom-2">
-                                          <div className="box-id-1">
-                                            <p>
-                                              <strong>
-                                                total in: +£
-                                                {incomeAnalysisTotalIn}
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: +£
-                                                {incomeAnalysisMonthlyAvgIn}
-                                              </strong>
-                                            </p>
-                                          </div>
-                                          <div className="box-id-2">
-                                            <p>
-                                              <strong>
-                                                total out: -£
-                                                {incomeAnalysisTotalOut}
-                                              </strong>
-                                            </p>
-                                            <p>
-                                              <strong>
-                                                monthly av: -£
-                                                {incomeAnalysisMonthlyAvgOut}
-                                              </strong>
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    )) || (
-                                      <div>
-                                        <NotFound />
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                                  </div>
-
-                                  <div className="row">
-                                <div className="col-md-6">
-                                  <div className="financial-service">
-                                    <h4>
-                                      Regular Outgoings{" "}
-                                      <span>
-                                        ({regularOutgoingsSummary.length})
-                                      </span>
-                                    </h4>
-                                    {(regularOutgoingsSummary.length > 0 && (
-                                      <div>
-                                        <div className="scroll-bar-2 scroll-height">
-                                          {regularOutgoingsSummary &&
-                                            regularOutgoingsSummary.map(
-                                              (regOutgoing, index) => {
-                                                let date = new Date(
-                                                  regOutgoing.debitSummary.lastTransaction
-                                                );
-                                                return index % 2 == 0 ? (
-                                                  <>
-                                                    <div className="card-1">
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            regOutgoing.vendorDescription
-                                                          }{" "}
-                                                        </strong>
-                                                        <span>
-                                                          {
-                                                            regOutgoing.subCategoryDescription
-                                                          }
-                                                        </span>
-                                                      </p>
-
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            regOutgoing
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (on{" "}
+                                                            {service.creditSummary.lastTransaction.substring(
+                                                              0,
+                                                              4
+                                                            ) >= "1997"
+                                                              ? service
+                                                                  .creditSummary
+                                                                  .lastTransaction
+                                                              : "--"}
+                                                            )
+                                                          </p>
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                service
+                                                                  .debitSummary
+                                                                  .transactionCount
+                                                              }
+                                                            </strong>{" "}
+                                                            debit{" "}
+                                                            {service
                                                               .debitSummary
-                                                              .transactionCount
-                                                          }
-                                                        </strong>{" "}
-                                                        debit{" "}
-                                                        {regOutgoing
-                                                          .debitSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (last on{" "}
-                                                        <span>
-                                                          {regOutgoing.debitSummary.lastTransaction.substring(
-                                                            0,
-                                                            4
-                                                          ) >= "1997"
-                                                            ? regOutgoing
-                                                                .debitSummary
-                                                                .lastTransaction
-                                                            : "--"}
-                                                          )
-                                                        </span>
-                                                      </p>
-                                                      <div className="calender-div float-left">
-                                                        <div class="today">
-                                                          <div class="today-piece  top  day">
-                                                            {
-                                                              weekDayArray[
-                                                                date.getDay() -
-                                                                  1
-                                                              ]
-                                                            }
-                                                          </div>
-                                                          <div class="today-piece  middle  month">
-                                                            {
-                                                              monthArray[
-                                                                date.getMonth()
-                                                              ]
-                                                            }
-                                                          </div>
-                                                          <div class="today-piece  middle  date">
-                                                            {date.getDate()}
-                                                            {
-                                                              dateSuffix[
-                                                                date
-                                                                  .getDate()
-                                                                  .toString()
-                                                              ]
-                                                            }
-                                                          </div>
-                                                          <div class="today-piece  bottom  year">
-                                                            {date.getFullYear()}
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                      <div className="box-id-2">
-                                                        <p>
-                                                          <strong>
-                                                            total out: -£
-                                                            {
-                                                              regOutgoing
-                                                                .debitSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: -£
-                                                            {
-                                                              regOutgoing
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                ) : (
-                                                  <>
-                                                    <div className="card-1 card-2">
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            regOutgoing.vendorDescription
-                                                          }{" "}
-                                                        </strong>
-                                                        <span>
-                                                          {
-                                                            regOutgoing.subCategoryDescription
-                                                          }
-                                                        </span>
-                                                      </p>
-
-                                                      <p>
-                                                        <strong>
-                                                          {
-                                                            regOutgoing
-                                                              .debitSummary
-                                                              .transactionCount
-                                                          }
-                                                        </strong>{" "}
-                                                        debit{" "}
-                                                        {regOutgoing
-                                                          .debitSummary
-                                                          .transactionCount < 2
-                                                          ? "transaction"
-                                                          : "transactions"}{" "}
-                                                        (last on{" "}
-                                                        <span>
-                                                          {regOutgoing.debitSummary.lastTransaction.substring(
-                                                            0,
-                                                            4
-                                                          ) >= "1997"
-                                                            ? regOutgoing
-                                                                .debitSummary
-                                                                .lastTransaction
-                                                            : "--"}
-                                                          )
-                                                        </span>
-                                                      </p>
-                                                      <div className="calender-div float-left">
-                                                        <div class="today">
-                                                          <div class="today-piece  top  day">
-                                                            {
-                                                              weekDayArray[
-                                                                date.getDay() -
-                                                                  1
-                                                              ]
-                                                            }
-                                                          </div>
-                                                          <div class="today-piece  middle  month">
-                                                            {
-                                                              monthArray[
-                                                                date.getMonth()
-                                                              ]
-                                                            }
-                                                          </div>
-                                                          <div class="today-piece  middle  date">
-                                                            {date.getDate()}
-                                                            {
-                                                              dateSuffix[
-                                                                date
-                                                                  .getDate()
-                                                                  .toString()
-                                                              ]
-                                                            }
-                                                          </div>
-                                                          <div class="today-piece  bottom  year">
-                                                            {date.getFullYear()}
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                      <div className="box-id-2">
-                                                        <p>
-                                                          <strong>
-                                                            total out: -£
-                                                            {
-                                                              regOutgoing
-                                                                .debitSummary
-                                                                .total
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                        <p>
-                                                          <strong>
-                                                            monthly av: -£
-                                                            {
-                                                              regOutgoing
-                                                                .debitSummary
-                                                                .monthlyAverage
-                                                            }
-                                                          </strong>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </>
-                                                );
-                                              }
-                                            )}
-                                        </div>
-                                      </div>
-                                    )) || (
-                                      <div>
-                                        <NotFound />
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className=" financial-service income-panel">
-                                    <h4>Event Feed ({eventCount})</h4>
-                                    <div className="scroll-bar-2">
-                                      {(eventFeedSummary.length > 0 && (
-                                        <div>
-                                          {eventFeedSummary.length > 0 &&
-                                            eventFeedSummary.map(
-                                              (month, index) => {
-                                                return (
-                                                  month &&
-                                                  month.data.events.map(
-                                                    (ev) => {
-                                                      return (
-                                                        <>
-                                                          <div className="card-1 white-bg">
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (last on{" "}
+                                                            <span>
+                                                              {service.debitSummary.lastTransaction.substring(
+                                                                0,
+                                                                4
+                                                              ) >= "1997"
+                                                                ? service
+                                                                    .debitSummary
+                                                                    .lastTransaction
+                                                                : "--"}
+                                                              )
+                                                            </span>
+                                                          </p>
+                                                          <div className="box-id-1">
                                                             <p>
                                                               <strong>
+                                                                total in: +£
                                                                 {
-                                                                  ev.additionalInformation
+                                                                  service
+                                                                    .creditSummary
+                                                                    .total
                                                                 }
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              Last credit on{" "}
-                                                              {ev.eventDate}
+                                                              <strong>
+                                                                monthly av: +£
+                                                                {
+                                                                  service
+                                                                    .creditSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
                                                             </p>
-                                                            {/* <p>
+                                                          </div>
+                                                          <div className="box-id-2">
+                                                            <p>
+                                                              <strong>
+                                                                total out: -£
+                                                                {
+                                                                  service
+                                                                    .debitSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: -£
+                                                                {
+                                                                  service
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </>
+                                                    ) : (
+                                                      <>
+                                                        <div className="card-1 card-2">
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                service.subCategoryDescription
+                                                              }
+                                                            </strong>
+                                                          </p>
+                                                          <p>
+                                                            {
+                                                              service
+                                                                .creditSummary
+                                                                .transactionCount
+                                                            }{" "}
+                                                            credit{" "}
+                                                            {service
+                                                              .creditSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (on{" "}
+                                                            {service.creditSummary.lastTransaction.substring(
+                                                              0,
+                                                              4
+                                                            ) >= "1997"
+                                                              ? service
+                                                                  .creditSummary
+                                                                  .lastTransaction
+                                                              : "--"}
+                                                            )
+                                                          </p>
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                service
+                                                                  .debitSummary
+                                                                  .transactionCount
+                                                              }
+                                                            </strong>{" "}
+                                                            debit{" "}
+                                                            {service
+                                                              .debitSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (last on{" "}
+                                                            <span>
+                                                              {service.debitSummary.lastTransaction.substring(
+                                                                0,
+                                                                4
+                                                              ) >= "1997"
+                                                                ? service
+                                                                    .debitSummary
+                                                                    .lastTransaction
+                                                                : "--"}
+                                                              )
+                                                            </span>
+                                                          </p>
+                                                          <div className="box-id-1">
+                                                            <p>
+                                                              <strong>
+                                                                total in: +£
+                                                                {
+                                                                  service
+                                                                    .creditSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: +£
+                                                                {
+                                                                  service
+                                                                    .creditSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                          <div className="box-id-2">
+                                                            <p>
+                                                              <strong>
+                                                                total out: -£
+                                                                {
+                                                                  service
+                                                                    .debitSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: -£
+                                                                {
+                                                                  service
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </>
+                                                    );
+                                                  }
+                                                )}
+                                            </div>{" "}
+                                            <div className="card-bottom">
+                                              <div className="box-id-1">
+                                                <p>
+                                                  <strong>
+                                                    total in: +£
+                                                    {financialServicesTotalIn}
+                                                  </strong>
+                                                </p>
+                                                <p>
+                                                  <strong>
+                                                    monthly av: +£
+                                                    {
+                                                      financialServicesMonthlyAvgIn
+                                                    }
+                                                  </strong>
+                                                </p>
+                                              </div>
+                                              <div className="box-id-2">
+                                                <p>
+                                                  <strong>
+                                                    total out: -£
+                                                    {financialServicesTotalOut}
+                                                  </strong>
+                                                </p>
+                                                <p>
+                                                  <strong>
+                                                    monthly av: -£
+                                                    {
+                                                      financialServicesMonthlyAvgOut
+                                                    }
+                                                  </strong>
+                                                </p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )) || (
+                                          <div>
+                                            <NotFound />
+                                          </div>
+                                        )}
+
+                                        {/* </div> */}
+                                      </div>
+                                    </div>
+
+                                    {/* income analysis start */}
+                                    <div className="col-md-6">
+                                      <div className=" financial-service income-panel">
+                                        <h4>
+                                          Income ({incomeAnalysisSummary.length}
+                                          )
+                                        </h4>
+                                        {(incomeAnalysisSummary.length > 0 && (
+                                          <div>
+                                            <div className="scroll-bar-2">
+                                              {incomeAnalysisSummary.length >
+                                                0 &&
+                                                incomeAnalysisSummary.map(
+                                                  (income, index) => {
+                                                    return index % 2 == 0 ? (
+                                                      <>
+                                                        <div className="card-1 white-bg">
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                income.vendorDescription
+                                                              }{" "}
+                                                              <div className="">
+                                                                {
+                                                                  income.subCategoryDescription
+                                                                }
+                                                              </div>
+                                                            </strong>
+                                                          </p>
+                                                          <p>
+                                                            {
+                                                              income
+                                                                .creditSummary
+                                                                .transactionCount
+                                                            }{" "}
+                                                            credit{" "}
+                                                            {income
+                                                              .creditSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (on{" "}
+                                                            {income.creditSummary.lastTransaction.substring(
+                                                              0,
+                                                              4
+                                                            ) >= "1997"
+                                                              ? income
+                                                                  .creditSummary
+                                                                  .lastTransaction
+                                                              : "--"}
+                                                            )
+                                                          </p>
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                income
+                                                                  .debitSummary
+                                                                  .transactionCount
+                                                              }
+                                                            </strong>{" "}
+                                                            debit{" "}
+                                                            {income.debitSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (last on{" "}
+                                                            <span>
+                                                              {income.debitSummary.lastTransaction.substring(
+                                                                0,
+                                                                4
+                                                              ) >= "1997"
+                                                                ? income
+                                                                    .debitSummary
+                                                                    .lastTransaction
+                                                                : "--"}
+                                                              )
+                                                            </span>
+                                                          </p>
+                                                          <div className="box-id-1">
+                                                            <p>
+                                                              <strong>
+                                                                total in: +£
+                                                                {
+                                                                  income
+                                                                    .creditSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: +£
+                                                                {
+                                                                  income
+                                                                    .creditSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                          <div className="box-id-2">
+                                                            <p>
+                                                              <strong>
+                                                                total out: -£
+                                                                {
+                                                                  income
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: -£
+                                                                {
+                                                                  income
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </>
+                                                    ) : (
+                                                      <>
+                                                        <div className="card-1 card-2">
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                income.vendorDescription
+                                                              }{" "}
+                                                              <div className="">
+                                                                {
+                                                                  income.subCategoryDescription
+                                                                }
+                                                              </div>
+                                                            </strong>
+                                                          </p>
+                                                          <p>
+                                                            {
+                                                              income
+                                                                .creditSummary
+                                                                .transactionCount
+                                                            }{" "}
+                                                            credit{" "}
+                                                            {income
+                                                              .creditSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (on{" "}
+                                                            {income.creditSummary.lastTransaction.substring(
+                                                              0,
+                                                              4
+                                                            ) >= "1997"
+                                                              ? income
+                                                                  .creditSummary
+                                                                  .lastTransaction
+                                                              : "--"}
+                                                            )
+                                                          </p>
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                income
+                                                                  .debitSummary
+                                                                  .transactionCount
+                                                              }
+                                                            </strong>{" "}
+                                                            debit{" "}
+                                                            {income.debitSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (last on{" "}
+                                                            <span>
+                                                              {income.debitSummary.lastTransaction.substring(
+                                                                0,
+                                                                4
+                                                              ) >= "1997"
+                                                                ? income
+                                                                    .debitSummary
+                                                                    .lastTransaction
+                                                                : "--"}
+                                                              )
+                                                            </span>
+                                                          </p>
+                                                          <div className="box-id-1">
+                                                            <p>
+                                                              <strong>
+                                                                total in: +£
+                                                                {
+                                                                  income
+                                                                    .creditSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: +£
+                                                                {
+                                                                  income
+                                                                    .creditSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                          <div className="box-id-2">
+                                                            <p>
+                                                              <strong>
+                                                                total out: -£
+                                                                {
+                                                                  income
+                                                                    .debitSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: -£
+                                                                {
+                                                                  income
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </>
+                                                    );
+                                                  }
+                                                )}
+                                            </div>
+                                            <div className="card-bottom bottom-2">
+                                              <div className="box-id-1">
+                                                <p>
+                                                  <strong>
+                                                    total in: +£
+                                                    {incomeAnalysisTotalIn}
+                                                  </strong>
+                                                </p>
+                                                <p>
+                                                  <strong>
+                                                    monthly av: +£
+                                                    {incomeAnalysisMonthlyAvgIn}
+                                                  </strong>
+                                                </p>
+                                              </div>
+                                              <div className="box-id-2">
+                                                <p>
+                                                  <strong>
+                                                    total out: -£
+                                                    {incomeAnalysisTotalOut}
+                                                  </strong>
+                                                </p>
+                                                <p>
+                                                  <strong>
+                                                    monthly av: -£
+                                                    {
+                                                      incomeAnalysisMonthlyAvgOut
+                                                    }
+                                                  </strong>
+                                                </p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )) || (
+                                          <div>
+                                            <NotFound />
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="row">
+                                    <div className="col-md-6">
+                                      <div className="financial-service">
+                                        <h4>
+                                          Regular Outgoings{" "}
+                                          <span>
+                                            ({regularOutgoingsSummary.length})
+                                          </span>
+                                        </h4>
+                                        {(regularOutgoingsSummary.length >
+                                          0 && (
+                                          <div>
+                                            <div className="scroll-bar-2 scroll-height">
+                                              {regularOutgoingsSummary &&
+                                                regularOutgoingsSummary.map(
+                                                  (regOutgoing, index) => {
+                                                    let date = new Date(
+                                                      regOutgoing.debitSummary.lastTransaction
+                                                    );
+                                                    return index % 2 == 0 ? (
+                                                      <>
+                                                        <div className="card-1">
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                regOutgoing.vendorDescription
+                                                              }{" "}
+                                                            </strong>
+                                                            <span>
+                                                              {
+                                                                regOutgoing.subCategoryDescription
+                                                              }
+                                                            </span>
+                                                          </p>
+
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                regOutgoing
+                                                                  .debitSummary
+                                                                  .transactionCount
+                                                              }
+                                                            </strong>{" "}
+                                                            debit{" "}
+                                                            {regOutgoing
+                                                              .debitSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (last on{" "}
+                                                            <span>
+                                                              {regOutgoing.debitSummary.lastTransaction.substring(
+                                                                0,
+                                                                4
+                                                              ) >= "1997"
+                                                                ? regOutgoing
+                                                                    .debitSummary
+                                                                    .lastTransaction
+                                                                : "--"}
+                                                              )
+                                                            </span>
+                                                          </p>
+                                                          <div className="calender-div float-left">
+                                                            <div class="today">
+                                                              <div class="today-piece  top  day">
+                                                                {
+                                                                  weekDayArray[
+                                                                    date.getDay() -
+                                                                      1
+                                                                  ]
+                                                                }
+                                                              </div>
+                                                              <div class="today-piece  middle  month">
+                                                                {
+                                                                  monthArray[
+                                                                    date.getMonth()
+                                                                  ]
+                                                                }
+                                                              </div>
+                                                              <div class="today-piece  middle  date">
+                                                                {date.getDate()}
+                                                                {
+                                                                  dateSuffix[
+                                                                    date
+                                                                      .getDate()
+                                                                      .toString()
+                                                                  ]
+                                                                }
+                                                              </div>
+                                                              <div class="today-piece  bottom  year">
+                                                                {date.getFullYear()}
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                          <div className="box-id-2">
+                                                            <p>
+                                                              <strong>
+                                                                total out: -£
+                                                                {
+                                                                  regOutgoing
+                                                                    .debitSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: -£
+                                                                {
+                                                                  regOutgoing
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </>
+                                                    ) : (
+                                                      <>
+                                                        <div className="card-1 card-2">
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                regOutgoing.vendorDescription
+                                                              }{" "}
+                                                            </strong>
+                                                            <span>
+                                                              {
+                                                                regOutgoing.subCategoryDescription
+                                                              }
+                                                            </span>
+                                                          </p>
+
+                                                          <p>
+                                                            <strong>
+                                                              {
+                                                                regOutgoing
+                                                                  .debitSummary
+                                                                  .transactionCount
+                                                              }
+                                                            </strong>{" "}
+                                                            debit{" "}
+                                                            {regOutgoing
+                                                              .debitSummary
+                                                              .transactionCount <
+                                                            2
+                                                              ? "transaction"
+                                                              : "transactions"}{" "}
+                                                            (last on{" "}
+                                                            <span>
+                                                              {regOutgoing.debitSummary.lastTransaction.substring(
+                                                                0,
+                                                                4
+                                                              ) >= "1997"
+                                                                ? regOutgoing
+                                                                    .debitSummary
+                                                                    .lastTransaction
+                                                                : "--"}
+                                                              )
+                                                            </span>
+                                                          </p>
+                                                          <div className="calender-div float-left">
+                                                            <div class="today">
+                                                              <div class="today-piece  top  day">
+                                                                {
+                                                                  weekDayArray[
+                                                                    date.getDay() -
+                                                                      1
+                                                                  ]
+                                                                }
+                                                              </div>
+                                                              <div class="today-piece  middle  month">
+                                                                {
+                                                                  monthArray[
+                                                                    date.getMonth()
+                                                                  ]
+                                                                }
+                                                              </div>
+                                                              <div class="today-piece  middle  date">
+                                                                {date.getDate()}
+                                                                {
+                                                                  dateSuffix[
+                                                                    date
+                                                                      .getDate()
+                                                                      .toString()
+                                                                  ]
+                                                                }
+                                                              </div>
+                                                              <div class="today-piece  bottom  year">
+                                                                {date.getFullYear()}
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                          <div className="box-id-2">
+                                                            <p>
+                                                              <strong>
+                                                                total out: -£
+                                                                {
+                                                                  regOutgoing
+                                                                    .debitSummary
+                                                                    .total
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                            <p>
+                                                              <strong>
+                                                                monthly av: -£
+                                                                {
+                                                                  regOutgoing
+                                                                    .debitSummary
+                                                                    .monthlyAverage
+                                                                }
+                                                              </strong>
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      </>
+                                                    );
+                                                  }
+                                                )}
+                                            </div>
+                                          </div>
+                                        )) || (
+                                          <div>
+                                            <NotFound />
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                      <div className=" financial-service income-panel">
+                                        <h4>Event Feed ({eventCount})</h4>
+                                        <div className="scroll-bar-2">
+                                          {(eventFeedSummary.length > 0 && (
+                                            <div>
+                                              {eventFeedSummary.length > 0 &&
+                                                eventFeedSummary.map(
+                                                  (month, index) => {
+                                                    return (
+                                                      month &&
+                                                      month.data.events.map(
+                                                        (ev) => {
+                                                          return (
+                                                            <>
+                                                              <div className="card-1 white-bg">
+                                                                <p>
+                                                                  <strong>
+                                                                    {
+                                                                      ev.additionalInformation
+                                                                    }
+                                                                  </strong>
+                                                                </p>
+                                                                <p>
+                                                                  Last credit on{" "}
+                                                                  {ev.eventDate}
+                                                                </p>
+                                                                {/* <p>
                                             <strong>null</strong>
                                           </p>
                                           <p>
@@ -1797,28 +1840,26 @@ function MerchantHealth() {
                                             Last credit on
                                             2020-06-05T00:00:00+01:00
                                           </p> */}
-                                                          </div>
-                                                        </>
-                                                      );
-                                                    }
-                                                  )
-                                                );
-                                              }
-                                            )}
+                                                              </div>
+                                                            </>
+                                                          );
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                )}
+                                            </div>
+                                          )) || (
+                                            <div>
+                                              <NotFound />
+                                            </div>
+                                          )}
                                         </div>
-                                      )) || (
-                                        <div>
-                                          <NotFound />
-                                        </div>
-                                      )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                                  </div>
-                                </div>
-                                  )
-                              }
-                                
+                              )}
                             </div>
                           )}
                         </div>

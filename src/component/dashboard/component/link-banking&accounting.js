@@ -40,10 +40,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const [file, setFile] = useState();
   const storedData = getUploadBankStatement();
   const appData = getReviewAppData();
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 34 ~ LinkBankingAccounting ~ appData",
-    appData
-  );
   const userDetails = getUserDetails();
   const [accoutingUrl, setAccoutingUrl] = useState();
   const [bankingUrl, setBankingUrl] = useState();
@@ -68,34 +64,16 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         if (resp.records.length > 0 && resp["record_count"] !== 0) {
           let list = [];
           resp.records.forEach((item) => {
-            console.log("****", item);
-
             list.push({
               file: { name: item["la_file_description"] },
               type: item["la_doc_type"],
               id: item["la_id"],
             });
-
-            console.log(
-              "🚀 ~ file: business-credit-score.js ~ line 41 ~ resp.records.forEach ~ item",
-              item
-            );
-            console.log(
-              "🚀 ~ file: business-credit-score.js ~ line 29 ~ list.map ~ item",
-              item
-            );
           });
-          console.log(
-            "🚀 ~ file: business-credit-score.js ~ line 28 ~ getDocuments ~ list",
-            list
-          );
+
           setFileList(list);
         }
         // setFileList(resp.records);
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 28 ~ getDocuments ~ resp",
-          resp
-        );
       });
     }
   };
@@ -111,12 +89,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   function handleChange(event) {
     let list = [...fileList];
     let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
-
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 33 ~ handleChange ~ totalSizeMB",
-      totalSizeMB,
-      totalSizeMB < 5
-    );
     if (totalSizeMB < 5) {
       list.push({ file: event.target.files[0] });
       setFileList(list);
@@ -137,36 +109,19 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     };
 
     getCompanyID(payload.lm_id).then((resp) => {
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 140 ~ getCompanyID ~ resp",
-        resp
-      );
       if (resp["data"] && resp["data"]["codat_client_id"]) {
         setLoadingAccouting(false);
         setAccoutingUrl(
           `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
         );
       }
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 140 ~ getCompanyID ~ resp",
-        resp
-      );
+
       setLoadingAccouting(false);
 
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 140 ~ getCompanyID ~ resp",
-        resp
-      );
-
       if (!resp.data) {
-        console.log("&&");
         if (isClicked) {
           getLinkToAccountingData(payload)
             .then((resp) => {
-              console.log(
-                "🚀 ~ file: link-banking&accounting.js ~ line 152 ~ .then ~ resp",
-                resp
-              );
               if (resp.success == "false" && resp.code == 500) {
                 //  getCompanyID(payload.lm_id).then((resp) => {
                 //    setLoadingAccouting(false);
@@ -241,10 +196,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     // setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 113 ~ .then ~ resp",
-          resp
-        );
         if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
@@ -273,17 +224,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     // setLoadingBanking(true);
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 145 ~ .then ~ resp",
-          resp
-        );
-
         if (resp["response"] == "Completed") {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
           );
           setBankingStatus(true);
-          console.log(data, "**");
         }
         setLoadingBanking(false);
       })
@@ -318,27 +263,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const deleteFile = (item, i) => {
     let list = [...fileList];
 
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 66 ~ deleteFile ~ item",
-      item
-    );
     if (item["id"]) {
       deleteDocuments(item["id"]).then((resp) => {
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 72 ~ deleteDocuments ~ resp",
-          resp,
-          resp.status == "success"
-        );
         if (resp.status == "success") {
           ToastMessage(resp.records, "success");
           // getFiles();
           list.splice(i, 1);
           setFileList(list);
         }
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 75 ~ deleteFile ~ resp",
-          resp
-        );
       });
     } else {
       list.splice(i, 1);
@@ -375,23 +307,13 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   const onSubmit = () => {
     if (uploadBankStatementToggle) {
-      console.log("filelist", fileList);
       let identityProofDocs = fileList.map((item) => {
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 114 ~ ).map ~ item",
-          item
-        );
         if (!item.id) {
           return item.file;
         } else {
           return;
         }
       });
-
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 286 ~ onSubmit ~ identityProofDocs",
-        identityProofDocs
-      );
       uploadDocuments(
         {
           fullname: `${userDetails["first_name"]} ${userDetails["last_name"]}`,
@@ -405,10 +327,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
             setActiveStep(activeStep + 1);
             setDashboardStepNo(activeStep + 1);
           }
-          console.log(
-            "🚀 ~ file: business-credit-score.js ~ line 193 ~ ).then ~ resp",
-            resp
-          );
         })
         .catch((err) => {
           ToastMessage("Something went wrong!", "error");
@@ -662,7 +580,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                             className="d-flex justify-content-between my-2"
                             key={i}
                           >
-                            <div className="file-name">{item.file ? item.file.name : ""}</div>{" "}
+                            <div className="file-name">
+                              {item.file ? item.file.name : ""}
+                            </div>{" "}
                             <div className="cursor-pointer">
                               {" "}
                               <i

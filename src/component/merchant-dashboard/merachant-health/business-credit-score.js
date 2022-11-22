@@ -10,6 +10,7 @@ import {
   getDocuments,
   uploadDocuments,
 } from "../../../request";
+import Loaderspinner from "../../loader";
 import { getUserDetails } from "../../login/loginpage";
 import { ToastMessage } from "../../ToastMessage";
 
@@ -27,6 +28,8 @@ export default function BusinessCreditScore() {
   const [selectedFileType, setSelectedFileType] = useState("");
   const [isApproved, setIsApproved] = useState(false);
   const [businessCreditScore, setBusinessCreditScore] = useState(null);
+  const [loadingDownload, setLoadingDownload] = useState(false);
+  const [loadingCreditScore, setLoadingCreditScore] = useState(false);
   console.log(
     "🚀 ~ file: business-credit-score.js ~ line 29 ~ BusinessCreditScore ~  !==null",
     businessCreditScore
@@ -116,14 +119,23 @@ export default function BusinessCreditScore() {
   const hiddenFileIndentityProofInput = useRef(null);
 
   useEffect(() => {
-    getBusinessAccountScore(6209).then((resp) => {
-      setBusinessCreditScore(resp.data);
-      console.log(
-        "🚀 ~ file: business-credit-score.js ~ line 120 ~ getBusinessAccountScore ~ resp",
-        resp
-      );
-    });
-  }, []);
+    if (isApproved) {
+      setLoadingCreditScore(true);
+      getBusinessAccountScore(userDetails["lead_id"])
+        .then((resp) => {
+          setBusinessCreditScore(resp.data);
+          setLoadingCreditScore(false);
+
+          console.log(
+            "🚀 ~ file: business-credit-score.js ~ line 120 ~ getBusinessAccountScore ~ resp",
+            resp
+          );
+        })
+        .catch((err) => {
+          setLoadingCreditScore(false);
+        });
+    }
+  }, [isApproved]);
 
   const deleteFile = (item, i) => {
     console.log(
@@ -271,35 +283,68 @@ export default function BusinessCreditScore() {
     }
   };
 
-  const downaloadCreditScore = () => {
-    downloadBusinessAccountScore(userDetails["lead_id"])
-      .then((resp) => {
+  const downaloadCreditScore = async () => {
+    setLoadingDownload(true);
+    let response = await downloadBusinessAccountScore(userDetails["lead_id"])
+      .then((data) => {
+        console.log("pdf", data);
+        let url = JSON.parse(data.response).Url;
         console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 277 ~ downloadBusinessAccountScore ~ resp",
-          resp
+          "🚀 ~ file: business-credit-score.js ~ line 282 ~ .then ~ url",
+          url
         );
-        let fileUrl = `https://sales.decimalfactor.com/staging/${resp.file}`;
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 282 ~ .then ~ fileUrl",
-          fileUrl
-        );
-        // let alink = document.createElement("a");
-        // // alink.href = fileUrl;/
-        // alink.download = "SamplePDF.pdf";
-        // alink.click();
+        setLoadingDownload(false);
+        if (url) {
+          let alink = document.createElement("a");
+
+          alink.href = `https://sales.decimalfactor.com/staging/${url}`;
+          alink.download = "SamplePDF.pdf";
+          alink.click();
+        }
+        // if (url) {
+        //   console.log("link", url);
+        //   window.open(`${baseUrl}${url}`, "_blank");
+        // } else {
+        //   alert("There is no data");
+        // }
+        // setDownloadProgress(false);
       })
       .catch((err) => {
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 280 ~ downloadBusinessAccountScore ~ err",
-          err
-        );
+        console.log(`Error occured: ${err}`);
+        // setDownloadProgress(false);
+        setLoadingDownload(false);
+
+        alert(err);
       });
+    // downloadBusinessAccountScore(userDetails["lead_id"])
+    //   .then((resp) => {
+    //     console.log(
+    //       "🚀 ~ file: business-credit-score.js ~ line 277 ~ downloadBusinessAccountScore ~ resp",
+    //       resp,
+    //       JSON.parse(resp)
+    //     );
+    //     let fileUrl = `https://sales.decimalfactor.com/staging/${resp.file}`;
+    //     console.log(
+    //       "🚀 ~ file: business-credit-score.js ~ line 282 ~ .then ~ fileUrl",
+    //       fileUrl
+    //     );
+    //     // let alink = document.createElement("a");
+    //     // // alink.href = fileUrl;/
+    //     // alink.download = "SamplePDF.pdf";
+    //     // alink.click();
+    //   })
+    //   .catch((err) => {
+    //     console.log(
+    //       "🚀 ~ file: business-credit-score.js ~ line 280 ~ downloadBusinessAccountScore ~ err",
+    //       err
+    //     );
+    //   });
   };
 
   return (
     <section>
       <div className="business-panel">
-        {isApproved ? (
+        {!isApproved ? (
           <div className="row">
             <div className="col-md-12">
               <div className="form-group">
@@ -322,13 +367,13 @@ export default function BusinessCreditScore() {
                 )}
               </div>
             </div>
-            <div className="col-md-12">
+            <div className="col-12">
               <div
                 className="upload-doc-panel upload-doc-panel-merchant"
                 id="divcheck"
               >
                 <div className="row">
-                  <div className="col-md-5">
+                  <div className="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 ">
                     <div className="upload-area">
                       <p>
                         <strong>Please upload the following document :</strong>
@@ -419,8 +464,8 @@ export default function BusinessCreditScore() {
                       )}
                     </div>
                   </div>
-                  <div className="col-md-1"></div>
-                  <div className="col-md-12">
+                  {/* <div className="col-md-1"></div> */}
+                  <div className="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                     <p>
                       <strong>Select Document Category</strong>
                     </p>
@@ -544,250 +589,114 @@ export default function BusinessCreditScore() {
             </div>
           </div>
         ) : (
-          <div>
-            <div className="row">
-              <div className="col-12">
-                <button
-                  className="btn btn-primary download-score-btn"
-                  onClick={downaloadCreditScore}
-                >
-                  <i class="fa fa-cloud-arrow-down"></i> Download Your Business
-                  Credit Score
-                </button>
-              </div>
-              <div className="col-xxl-5 col-xl-5 col-lg-6 col-md-12 col-sm-12 col-12">
-                <table
-                  className="border credit-score-table mb-3"
-                  style={{ width: "100%" }}
-                  cellspacing="0"
-                  border="0"
-                >
-                  <tbody>
-                    {/* <th>hello</th> */}
-                    <tr className="text-center credit-score-table-head">
-                      <th colspan="3">Company Information</th>
-                    </tr>
-                    <tr>
-                      <td style={{ width: "40%" }}>
-                        <strong>Company name</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["companySummary"][
-                              "businessName"
-                            ]}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Company Number</strong>
-                      </td>
-                      <td>
-                        {" "}
-                        <strong>
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["companySummary"][
-                              "companyNumber"
-                            ]}
-                        </strong>
-                      </td>
-                    </tr>
+          <div className="">
+            {loadingCreditScore ? (
+              <Loaderspinner size="45px" />
+            ) : (
+              <div className="row">
+                <div className="col-12">
+                  <button
+                    className="btn btn-primary download-score-btn"
+                    onClick={downaloadCreditScore}
+                    disabled={loadingDownload}
+                  >
+                    <i class="fa fa-cloud-arrow-down"></i> Download Your
+                    Business Credit Score
+                  </button>
+                </div>
+                <div className="col-xxl-5 col-xl-5 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <table
+                    className="border credit-score-table mb-3"
+                    style={{ width: "100%" }}
+                    cellspacing="0"
+                    border="0"
+                  >
+                    <tbody>
+                      {/* <th>hello</th> */}
+                      <tr className="text-center credit-score-table-head">
+                        <th colspan="3">Company Summary</th>
+                      </tr>
+                      <tr>
+                        <td style={{ width: "40%" }}>
+                          <strong>Business name</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {businessCreditScore &&
+                              businessCreditScore["report"]["companySummary"][
+                                "businessName"
+                              ]}
+                          </strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Country</strong>
+                        </td>
+                        <td>
+                          <strong>
+                            {" "}
+                            {businessCreditScore &&
+                              businessCreditScore["report"]["companySummary"][
+                                "country"
+                              ]}
+                          </strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Company Number</strong>
+                        </td>
+                        <td>
+                          {" "}
+                          <strong>
+                            {businessCreditScore &&
+                              businessCreditScore["report"]["companySummary"][
+                                "companyNumber"
+                              ]}
+                          </strong>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td>
-                        <strong>Company Registration Number</strong>
-                      </td>
-                      <td>
-                        {" "}
-                        <strong>
-                          {" "}
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["companySummary"][
-                              "companyRegistrationNumber"
-                            ]}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Country</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {" "}
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["companySummary"][
-                              "country"
-                            ]}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Risk Score</strong>
-                      </td>
-                      <td>
-                        <strong></strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>International Score</strong>
-                      </td>
-                      <td>
-                        <strong></strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Credit Limit</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {" "}
-                          {businessCreditScore && (
-                            <>
-                              {businessCreditScore["report"]["creditScore"][
-                                "currentCreditRating"
-                              ]["creditLimit"]["value"] != "No limit" ? (
-                                <>
-                                  <span>&#163;</span>
-                                  <span>
-                                    {" "}
-                                    {
-                                      businessCreditScore["report"][
-                                        "creditScore"
-                                      ]["currentCreditRating"]["creditLimit"][
-                                        "value"
-                                      ]
-                                    }
-                                  </span>
-                                </>
-                              ) : (
-                                businessCreditScore["report"]["creditScore"][
-                                  "currentCreditRating"
-                                ]["creditLimit"]["value"]
-                              )}
-                            </>
-                          )}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Contract Limit</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {" "}
-                          <span>&#163;</span>
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["creditScore"][
-                              "currentContractLimit"
-                            ]["value"]}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Status</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {" "}
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["companySummary"][
-                              "companyStatus"
-                            ]["status"]}
-                        </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>DBT</strong>
-                      </td>
-                      <td>
-                        <strong> </strong>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong>Industry DBT</strong>
-                      </td>
-                      <td>
-                        <strong>
-                          {" "}
-                          {businessCreditScore &&
-                            businessCreditScore["report"]["paymentData"][
-                              "industryDBT"
-                            ]}
-                        </strong>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="col-xxl-7 col-xl-7 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div className="row">
-                  <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <table
-                      className="border credit-score-table mb-3"
-                      style={{ width: "100%" }}
-                    >
-                      <tr className="text-center credit-score-table-head">
-                        <th colspan="3">Credit Rating</th>
-                      </tr>
                       <tr>
                         <td>
-                          <strong>Common Value</strong>
+                          <strong>Company Registration Number</strong>
                         </td>
                         <td>
+                          {" "}
                           <strong>
                             {" "}
                             {businessCreditScore &&
                               businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["commonValue"]}
+                                "companyRegistrationNumber"
+                              ]}
                           </strong>
                         </td>
                       </tr>
-                      <tr>
-                        <td>
-                          <strong>Common Description</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["commonDescription"]}
-                          </strong>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-                  <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <table
-                      className="border credit-score-table "
-                      style={{ width: "100%" }}
-                    >
+                    </tbody>
+                  </table>
+
+                  <table
+                    className="border credit-score-table mb-3"
+                    style={{ width: "100%" }}
+                    cellspacing="0"
+                    border="0"
+                  >
+                    <tbody>
+                      {/* <th>hello</th> */}
                       <tr className="text-center credit-score-table-head">
-                        <th colspan="3">Credit Limit</th>
+                        <th colspan="3">Latest ShareHolders Equity Figure </th>
                       </tr>
                       <tr>
-                        <td>
+                        <td style={{ width: "40%" }}>
                           <strong>Currency</strong>
                         </td>
                         <td>
                           <strong>
-                            {" "}
                             {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["creditLimit"]["currency"]}
+                              businessCreditScore["report"][
+                                "shareCapitalStructure"
+                              ]["issuedShareCapital"]["currency"]}
                           </strong>
                         </td>
                       </tr>
@@ -799,191 +708,271 @@ export default function BusinessCreditScore() {
                           <strong>
                             {" "}
                             {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["creditLimit"]["value"]}
+                              businessCreditScore["report"][
+                                "shareCapitalStructure"
+                              ]["issuedShareCapital"]["value"]}
                           </strong>
                         </td>
                       </tr>
-                    </table>
-                  </div>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="col-xxl-7 col-xl-7 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div className="row">
+                    <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <table
+                        className="border credit-score-table mb-3"
+                        style={{ width: "100%" }}
+                      >
+                        <tr className="text-center credit-score-table-head">
+                          <th colspan="3">Credit Rating</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Common Value</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["commonValue"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Common Description</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["commonDescription"]}
+                            </strong>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <table
+                        className="border credit-score-table "
+                        style={{ width: "100%" }}
+                      >
+                        <tr className="text-center credit-score-table-head">
+                          <th colspan="3">Credit Limit</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Currency</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["creditLimit"]["currency"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Value</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["creditLimit"]["value"]}
+                            </strong>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
 
-                  <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <table
-                      className="border credit-score-table mt-3"
-                      style={{ width: "100%" }}
-                    >
-                      <tr className="text-center credit-score-table-head">
-                        <th colspan="3">Provider Value</th>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Max Value</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["providerValue"]["maxValue"]}
-                          </strong>
-                        </td>{" "}
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Min Value</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["providerValue"]["minValue"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Value</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["providerValue"]["value"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Provider Description</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "creditRating"
-                              ]["providerDescription"]}
-                          </strong>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
+                    <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <table
+                        className="border credit-score-table mt-3"
+                        style={{ width: "100%" }}
+                      >
+                        <tr className="text-center credit-score-table-head">
+                          <th colspan="3">Provider Value</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Max Value</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["providerValue"]["maxValue"]}
+                            </strong>
+                          </td>{" "}
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Min Value</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["providerValue"]["minValue"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Value</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["providerValue"]["value"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Provider Description</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"]["companySummary"][
+                                  "creditRating"
+                                ]["providerDescription"]}
+                            </strong>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
 
-                  <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <table
-                      className="border credit-score-table mt-3"
-                      style={{ width: "100%" }}
-                    >
-                      <tr className="text-center credit-score-table-head">
-                        <th colspan="3">Ccj Summary</th>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Exact Registered</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["exactRegistered"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Possible Registered</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["possibleRegistered"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Number Of Exact</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["numberOfExact"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Number Of Possible</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["numberOfPossible"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Number Of Satisfied</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["numberOfSatisfied"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Number Of Writs</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["numberOfWrits"]}
-                          </strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <strong>Currency</strong>
-                        </td>
-                        <td>
-                          <strong>
-                            {" "}
-                            {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "negativeInformation"
-                              ]["ccjSummary"]["currency"]}
-                          </strong>
-                        </td>
-                      </tr>
-                    </table>
+                    <div className="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <table
+                        className="border credit-score-table mt-3"
+                        style={{ width: "100%" }}
+                      >
+                        <tr className="text-center credit-score-table-head">
+                          <th colspan="3">Ccj Summary</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Exact Registered</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["exactRegistered"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Possible Registered</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["possibleRegistered"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Number Of Exact</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["numberOfExact"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Number Of Possible</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["numberOfPossible"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Number Of Satisfied</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["numberOfSatisfied"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Number Of Writs</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["numberOfWrits"]}
+                            </strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Currency</strong>
+                          </td>
+                          <td>
+                            <strong>
+                              {" "}
+                              {businessCreditScore &&
+                                businessCreditScore["report"][
+                                  "negativeInformation"
+                                ]["ccjSummary"]["currency"]}
+                            </strong>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

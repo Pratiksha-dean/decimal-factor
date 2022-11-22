@@ -20,7 +20,10 @@ import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import { useDispatch } from "react-redux/es";
-import { TRIGGER_REVIEW_APPLICATION_DETAILS } from "../../redux/actions/actionTypes";
+import {
+  TRIGGER_LEAD_DETAILS,
+  TRIGGER_REVIEW_APPLICATION_DETAILS,
+} from "../../redux/actions/actionTypes";
 
 function ApplicationInformation() {
   const [dasboardData, setDashboardData] = useState();
@@ -28,15 +31,18 @@ function ApplicationInformation() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(initialValues);
   const getData = () => {
     if (userDetails && userDetails.lead_id) {
       getDashboardData(userDetails.lead_id).then((resp) => {
-        setDashboardData(resp.records[0]);
+        console.log(
+          "🚀 ~ file: application-information.js ~ line 35 ~ getDashboardData ~ resp",
+          resp
+        );
         dispatch({
-          type: TRIGGER_REVIEW_APPLICATION_DETAILS,
-          reviewApplicationDetails: resp.records[0],
+          type: TRIGGER_LEAD_DETAILS,
+          leadDetails: resp.records[0],
         });
+        setDashboardData(resp.records[0]);
       });
     }
   };

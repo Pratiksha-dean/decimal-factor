@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import { useReducer } from "react";
 import { useState } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useDispatch } from "react-redux/es";
 import { useLocation, useNavigate } from "react-router-dom/dist";
+import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { getDashboardData, logout } from "../../request";
 import { getUserDetails } from "../login/loginpage";
@@ -18,9 +20,14 @@ function Header() {
     leadDetails
   );
   const [dasboardData, setDashboardData] = useState();
+  const dispatch = useDispatch();
 
   const logoutUser = () => {
     logout();
+    dispatch({
+      type: TRIGGER_LEAD_DETAILS,
+      leadDetails: {},
+    });
     navigate("/login");
   };
 
@@ -75,8 +82,8 @@ function Header() {
                   ref={ref}
                   {...triggerHandler}
                 >
-                  {dasboardData && dasboardData["lf_business_name"]}
-                  {/* {leadDetails && leadDetails["lf_business_name"]} */}
+                  {/* {dasboardData && dasboardData["lf_business_name"]} */}
+                  {leadDetails && leadDetails["lf_business_name"]}
                 </div>
               )}
             </OverlayTrigger>

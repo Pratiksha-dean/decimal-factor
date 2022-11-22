@@ -30,11 +30,6 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
     (state) => state.reviewApplicationDetailsReducer
   );
 
-  console.log(
-    "🚀 ~ file: review-application-information.js ~ line 27 ~ ReviewApplicationInformation ~ reviewApplicationDetails",
-    reviewApplicationDetails
-  );
-
   const initialValues = {
     [fieldNames.AMOUNT]: storedData
       ? storedData["amount"]
@@ -68,10 +63,10 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
   }, []);
 
   const storeReviewApplicationData = (details) => {
-    console.log(
-      "🚀 ~ file: review-application-information.js ~ line 71 ~ storeReviewApplicationData ~ details",
-      details
-    );
+    // console.log(
+    //   "🚀 ~ file: review-application-information.js ~ line 71 ~ storeReviewApplicationData ~ details",
+    //   details
+    // );
 
   };
 

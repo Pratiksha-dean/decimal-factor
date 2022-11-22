@@ -112,7 +112,6 @@ export async function getUserDetailsApi(id) {
 }
 
 export async function updateUpdateCustomerInfo(payload, id) {
-  console.log(payload);
   const { data } = await axios.post(
     `${UPDATE_USER_DETAILS_URL}${id}`,
     payload,
@@ -180,10 +179,6 @@ export async function updateLoginTimes(payload) {
 }
 
 export async function uploadDocuments(payload, id) {
-  console.log(
-    "🚀 ~ file: request.js ~ line 179 ~ uploadDocuments ~ payload",
-    payload
-  );
   const { data } = await axios.post(`${UPLOAD_DOCUMENTS}${id}`, payload, {
     headers: {
       "Content-Type": "multipart/form-data",
