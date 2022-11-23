@@ -644,8 +644,17 @@ export default function BusinessCreditScore() {
               <div className="col-md-12">
                 <div className="form-group">
                   <div
-                    className="border border-rounded p-3 mb-3"
-                    style={{ borderRadius: "10px" }}
+                    className="mb-3 p-3"
+                    style={{
+                      borderRadius: "5px",
+                      border:
+                        headingText.type == "disclaimer"
+                          ? "1px solid #dc3545"
+                          : "1px solid #006090",
+                      width:
+                        headingText.type == "disclaimer" ? "max-content" : "",
+                      backgroundColor: "#e8f2f7",
+                    }}
                   >
                     <h6
                       style={{ fontSize: "13px" }}
