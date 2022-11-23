@@ -39,10 +39,6 @@ function PersonalDetails() {
       ? `https://sales.decimalfactor.com/staging/${userDetails["profile_pic"]}`
       : "",
   });
-  console.log(
-    "🚀 ~ file: personal-details.js ~ line 36 ~ PersonalDetails ~ file",
-    file
-  );
 
   useEffect(() => {
     getData();
@@ -91,7 +87,6 @@ function PersonalDetails() {
       file: event.target.files[0],
       preview: URL.createObjectURL(event.target.files[0]),
     });
-    console.log("file", file);
   }
 
   const handleClick = (event) => {
@@ -122,10 +117,6 @@ function PersonalDetails() {
                   onSubmit={(values, { setSubmitting, resetForm }) => {
                     let payload = { ...values };
                     payload["uploadimage"] = file.file;
-                    console.log(
-                      "🚀 ~ file: personal-details.js ~ line 122 ~ PersonalDetails ~ file",
-                      file
-                    );
 
                     updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                       .then((resp) => {
@@ -361,7 +352,6 @@ function PersonalDetails() {
                               name="uploadimage"
                               className=""
                               onChange={(e) => {
-                                console.log(e.target.files);
                                 handleFileChange(e);
                                 setFieldValue("uploadimage", e.target.files[0]);
                               }}

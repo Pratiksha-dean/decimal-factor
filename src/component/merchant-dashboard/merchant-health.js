@@ -26,29 +26,8 @@ import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import BusinessCreditScore from "./merachant-health/business-credit-score";
 import NotFound from "../NotFound";
-
-//
-import styled, { css } from "styled-components";
-
-const DarkBackground = styled.div`
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 999; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-
-  ${(props) =>
-    props.disappear &&
-    css`
-      display: block; /* show */
-    `}
-`;
-//
+import { useDispatch } from "react-redux/es";
+import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
 
 export const setCurrentTabIndex = (index) => {
   localStorage.setItem("activeTabIndex", index);
@@ -118,14 +97,9 @@ const dateSuffix = {
   31: "st",
 };
 function MerchantHealth() {
-  const [showPanel, togglePanel] = useState(false);
-  const [showPanel2, togglePanel2] = useState(false);
-  const [showPanel3, togglePanel3] = useState(false);
-  const [showPanel4, togglePanel4] = useState(false);
   const currentTabIndex = getCurrentTabIndex();
   const [tabIndex, setTabIndex] = useState(currentTabIndex);
   const [open, setOpen] = React.useState(false);
-  const [linkToBaking, setLinkToBanking] = useState(false);
   const [accoutingUrl, setAccoutingUrl] = useState();
   const userDetails = getUserDetails();
   const [accountingStatus, setAccoutingStatus] = useState();
@@ -133,24 +107,14 @@ function MerchantHealth() {
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
   const [loadingServices, setLoadingServices] = useState(false);
-  console.log(
-    "🚀 ~ file: merchant-health.js ~ line 116 ~ MerchantHealth ~ currentTabIndex",
-    currentTabIndex
-  );
-
+  const dispatch = useDispatch();
   const [loadingBanking, setLoadingBanking] = useState(false);
   const [loadingAccouting, setLoadingAccouting] = useState(true);
-  console.log(
-    "🚀 ~ file: merchant-health.js ~ line 107 ~ MerchantHealth ~ loadingAccouting",
-    loadingAccouting
-  );
-
   const [financialServicesSummary, setFinancialServicesSummary] = useState([]);
   const [incomeAnalysisSummary, setIncomeAnalysisSummary] = useState([]);
   const [regularOutgoingsSummary, setRegularOutgoingsSummary] = useState([]);
   const [eventFeedSummary, setEventFeedSummary] = useState([]);
   const [eventCount, setEventCount] = useState(0);
-
   //Financial Services Aggregate
   const [financialServicesTotalIn, setFinancialServicesTotalIn] = useState(0);
   const [financialServicesTotalOut, setFinancialServicesTotalOut] = useState(0);
@@ -170,10 +134,6 @@ function MerchantHealth() {
   const [downloadInProgress, setDownloadProgress] = useState(false);
 
   const lead_accountScore = userDetails["lead_id"];
-  console.log(
-    "🚀 ~ file: merchant-health.js ~ line 157 ~ MerchantHealth ~ lead_accountScore",
-    lead_accountScore
-  );
   const handleOpen = () => {
     setOpen(!open);
   };
@@ -181,10 +141,8 @@ function MerchantHealth() {
   useEffect(() => {
     setLoadingServices(true);
     if (userDetails && userDetails.lead_id && bankingStatus) {
-      console.log("lead id", userDetails.lead_id);
       let promise1 = getBankingFinancialServices(lead_accountScore)
         .then((data) => {
-          console.log("data", data);
           let summaries = data.response.data.summaries;
           setFinancialServicesSummary(summaries);
           let totalIn = 0;
@@ -425,6 +383,10 @@ function MerchantHealth() {
       getDashboardData(userDetails.lead_id).then((resp) => {
         setLoadingBanking(false);
         setDashboardData(resp.records[0]);
+        dispatch({
+          type: TRIGGER_LEAD_DETAILS,
+          leadDetails: resp.records[0],
+        });
       });
     }
   };
@@ -435,10 +397,6 @@ function MerchantHealth() {
 
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: merchant-health.js ~ line 329 ~ .then ~ resp",
-          resp
-        );
         if (resp["status"] === "Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
@@ -454,14 +412,8 @@ function MerchantHealth() {
       .catch((err) => {
         setAccoutingStatus(false);
         setLoadingAccouting(true);
-
-        console.log(
-          "🚀 ~ file: merchant-health.js ~ line 344 ~ checkAccountingStatusClick ~ accoutingUrl",
-          accoutingUrl
-        );
         if (!accoutingUrl) {
           getLinkToAccouting();
-          console.log("sghds");
           // setLoadingAccouting(false);
         } else {
           // setLoadingAccouting(false);
@@ -474,8 +426,6 @@ function MerchantHealth() {
   };
 
   const getLinkToAccouting = (isClicked) => {
-    // setLoadingAccouting(true);
-
     let payload = {
       lm_id: userDetails["lead_id"],
       name: dasboardData["lf_business_name"],
@@ -483,11 +433,6 @@ function MerchantHealth() {
     };
 
     getCompanyID(payload.lm_id).then((resp) => {
-      console.log(
-        "🚀 ~ file: merchant-health.js ~ line 415 ~ getCompanyID ~ resp",
-        resp
-      );
-
       if (resp["data"] && resp["data"]["codat_client_id"]) {
         setLoadingAccouting(false);
         setAccoutingUrl(
@@ -503,15 +448,10 @@ function MerchantHealth() {
       }
 
       if (!resp.data) {
-        console.log("&&");
         setLoadingAccouting(false);
         if (isClicked) {
           getLinkToAccountingData(payload)
             .then((resp) => {
-              console.log(
-                "🚀 ~ file: link-banking&accounting.js ~ line 152 ~ .then ~ resp",
-                resp
-              );
               if (resp.success == "false" && resp.code == 500) {
                 //  getCompanyID(payload.lm_id).then((resp) => {
                 //    setLoadingAccouting(false);
@@ -539,91 +479,16 @@ function MerchantHealth() {
             });
         }
       }
-      // setAccoutingUrl(
-      //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-      // );
-      // console.log(
-      //   "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
-      //   resp
-      // );
-      // setLoadingAccouting(true);
-
-      console.log("open");
-
-      // setLoadingAccouting(false);
     });
-
-    return;
-    getLinkToAccountingData(payload)
-      .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
-          resp,
-          resp.success == "false" && resp.status == 500
-        );
-        // setLoadingAccouting(false);
-        if (
-          resp.success == "false" &&
-          resp.code == 500 &&
-          resp.message == "User Already Created"
-        ) {
-          getCompanyID(payload.lm_id).then((resp) => {
-            setAccoutingUrl(
-              `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-            );
-            console.log(
-              "🚀 ~ file: link-banking&accounting.js ~ line 86 ~ getCompanyID ~ resp",
-              resp
-            );
-            setLoadingAccouting(true);
-
-            console.log("open");
-
-            if (isClicked) {
-              window.open(
-                `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-                "_blank"
-              );
-            }
-            // setLoadingAccouting(false);
-          });
-        } else {
-          setAccoutingUrl(`https://link-uat.codat.io/company/${resp.data.id}`);
-          console.log("open");
-          setLoadingAccouting(true);
-          if (isClicked) {
-            window.open(
-              `https://link-uat.codat.io/company/${resp.data.id}`,
-              "_blank"
-            );
-          }
-
-          // setLoadingAccouting(false);
-        }
-      })
-      .catch((err) => {
-        console.log(
-          "🚀 ~ file: merchant-health.js ~ line 462 ~ getLinkToAccountingData ~ err",
-          err
-        );
-        ToastMessage("Something went wrong!", "error");
-      });
   };
 
   const checkBankingStatusClick = () => {
-    // setLoadingBanking(true);
     // userDetails["lead_id"];
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 103 ~ checkLinkingStatus ~ resp",
-          resp
-        );
-
         if (resp["response"] === "Completed") {
           setBankingStatus(true);
           setLoadingBanking(false);
-          // setAccoutingUrl(resp.data.redirect);
         }
       })
       .catch((err) => {
@@ -638,10 +503,6 @@ function MerchantHealth() {
   };
 
   const getLinkToBanking = (isClicked) => {
-    console.log(
-      "🚀 ~ file: merchant-health.js ~ line 486 ~ getLinkToBanking ~ isClicked",
-      isClicked
-    );
     setLoadingBanking(true);
 
     let payload = {
@@ -655,14 +516,8 @@ function MerchantHealth() {
     };
 
     getAccountScore(dasboardData["lm_id"], payload).then((resp) => {
-      console.log(
-        "🚀 ~ file: link-banking&accounting.js ~ line 61 ~ getLinkToAccountingData ~ resp",
-        resp
-      );
       if (resp.isSuccess == "1" && resp.url) {
         setLoadingBanking(false);
-
-        console.log("resp.url", resp.url);
         setBankingUrl(resp.url);
         if (isClicked) {
           window.open(resp.url, "_blank");
@@ -675,16 +530,12 @@ function MerchantHealth() {
   // obv_account_score_status;
   useEffect(() => {
     getData();
-    console.log("dashbaorddata", dasboardData);
     return () => {
       setCurrentTabIndex(0);
     };
   }, []);
 
-  console.log("*", bankingUrl, loadingBanking, bankingStatus);
-
   useEffect(() => {
-    console.log("dasboardData", dasboardData);
     if (dasboardData) {
       if (tabIndex == 0) {
         if (dasboardData["obv_account_score_status"] == "Start") {
@@ -704,23 +555,13 @@ function MerchantHealth() {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
-          console.log(
-            "🚀 ~ file: merchant-health.js ~ line 548 ~ useEffect ~ dasboardData",
-            dasboardData
-          );
           // setBankingStatus(false);
           setBankingStatus(true);
         } else {
           checkBankingStatusClick();
-          console.log("check");
         }
-        console.log(
-          "🚀 ~ file: merchant-health.js ~ line 190 ~ MerchantHealth ~ dasboardData",
-          dasboardData["obv_account_score_status"]
-        );
       } else if (tabIndex == 1) {
         checkAccountingStatusClick();
-        console.log("checkl");
       } else {
       }
     }
