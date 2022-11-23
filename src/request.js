@@ -21,8 +21,11 @@ export const REGULAR_OUTGOINGS_URL = `${API_URL}accountScore/5944/RegularOutgoin
 export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
 export const UPDATE_LOGIN_TIMES_URL = `${API_URL}UpdateCustomerLoginTimes/`;
 export const UPLOAD_DOCUMENTS = `${API_URL}UKLeadattachments/`;
-export const GET_DOCUMENTS = `${API_URL}GetLeadMasterAttachments/`;
+export const GET_DOCUMENTS = `${API_URL}getLeadMasterAttachmentsUK/`;
+
+export const GET_DOCUMENTS_BANK_STMT = `${API_URL}getLeadMasterAttachments/`;
 export const DELETE_DOCUMENTS = `${API_URL}DeleteLeadMasterAttachment/`;
+export const GET_BUSINESS_ACCOUNT_SCORE = `${API_URL}creditsafe/company/`;
 
 export async function getRequest() {
   const { data } = await axios.get(API_URL);
@@ -79,6 +82,7 @@ export const logout = () => {
   localStorage.removeItem("merchantDirectorData");
   localStorage.removeItem("provideConcentData");
   localStorage.removeItem("activeTabIndex");
+  localStorage.removeItem("uploadBankStatement");
   setStepNo(1);
 };
 
@@ -108,7 +112,6 @@ export async function getUserDetailsApi(id) {
 }
 
 export async function updateUpdateCustomerInfo(payload, id) {
-  console.log(payload);
   const { data } = await axios.post(
     `${UPDATE_USER_DETAILS_URL}${id}`,
     payload,
@@ -176,10 +179,6 @@ export async function updateLoginTimes(payload) {
 }
 
 export async function uploadDocuments(payload, id) {
-  console.log(
-    "🚀 ~ file: request.js ~ line 179 ~ uploadDocuments ~ payload",
-    payload
-  );
   const { data } = await axios.post(`${UPLOAD_DOCUMENTS}${id}`, payload, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -194,7 +193,26 @@ export async function getDocuments(id) {
   return data;
 }
 
+export async function getDocumentBankStatements(id) {
+  const { data } = await axios.get(`${GET_DOCUMENTS_BANK_STMT}${id}`);
+  return data;
+}
+
 export async function deleteDocuments(id) {
   const { data } = await axios.post(`${DELETE_DOCUMENTS}${id}`);
+  return data;
+}
+
+export async function getBusinessAccountScore(id) {
+  const { data } = await axios.get(
+    `${GET_BUSINESS_ACCOUNT_SCORE}${id}/creditSafeReportUK`
+  );
+  return data;
+}
+
+export async function downloadBusinessAccountScore(id) {
+  const { data } = await axios.get(
+    `${GET_BUSINESS_ACCOUNT_SCORE}${id}/creditSafeReportUKPDF`
+  );
   return data;
 }

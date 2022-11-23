@@ -10,6 +10,8 @@ import { Alert } from "react-bootstrap";
 import { isAuthenticated } from "../authentication/authentication";
 import { ToastContainer } from "react-toastify";
 import { ToastMessage } from "../ToastMessage";
+import { useDispatch } from "react-redux";
+import { TRIGGER_USER_DETAILS } from "../../redux/actions/actionTypes";
 
 const setEmailPassword = (data) => {
   localStorage.setItem("creds", data);
@@ -34,7 +36,8 @@ export const setToken = (data) => {
 export const getToken = (data) => {
   return localStorage.getItem("token");
 };
-function Login() {
+export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [error, setError] = useState();
   const savedCredentials = JSON.parse(localStorage.getItem("creds"));
@@ -87,6 +90,10 @@ function Login() {
               navigate("/authentication");
 
               setUserDetails(resp.data.data);
+              dispatch({
+                type: TRIGGER_USER_DETAILS,
+                userDetails: resp.data.data,
+              });
               setToken(resp.data.data.token);
               isAuthenticated(false);
               setLoading(false);
@@ -98,8 +105,8 @@ function Login() {
           }
         })
         .catch((err) => {
-          console.log("🚀 ~ file: loginpage.js ~ line 38 ~ login ~ err", err);
           setError("Something went wrong!");
+            setLoading(false);
           ToastMessage("Something went wrong!", "error");
         });
     },
@@ -209,5 +216,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

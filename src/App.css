@@ -123,3 +123,30 @@
   width: 180px;
   justify-content: flex-end;
 }
+
+.initials-profile-pic {
+  position: relative;
+
+  /* Colors */
+  background-color: #198754;
+  color: #fff;
+  border-color: white;
+
+  /* Rounded border */
+  border-radius: 50%;
+  height: 120px;
+  width: 120px;
+}
+
+.initials-profile-pic-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Montserrat";
+  font-size: 40px;
+  line-height: 49px;
+}

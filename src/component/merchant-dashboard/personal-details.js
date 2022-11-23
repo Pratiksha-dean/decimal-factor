@@ -20,12 +20,15 @@ import {
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { TRIGGER_USER_DETAILS } from "../../redux/actions/actionTypes";
+import { useDispatch } from "react-redux/es";
 
 function PersonalDetails() {
   const storeData = {};
   const data = {};
 
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const hiddenFileInput = useRef(null);
   const [dasboardData, setDashboardData] = useState();
@@ -133,6 +136,10 @@ function PersonalDetails() {
                             .then((response) => {
                               if (response.data.status == 1) {
                                 setUserDetails(response.data);
+                                dispatch({
+                                  type: TRIGGER_USER_DETAILS,
+                                  userDetails: response.data,
+                                });
                                 setToken(response.data.token);
                               }
                             })

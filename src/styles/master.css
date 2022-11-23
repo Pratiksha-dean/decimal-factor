@@ -494,6 +494,8 @@ header {
 img.user-img {
   margin-right: 12px;
   width: 26px;
+  height: 26px;
+  border-radius: 50%;
 }
 
 li.nav-item.business-btn {
@@ -1536,6 +1538,7 @@ button.btn.btn-primary.draft-btn {
 }
 .after-check-status ul.menu li.menu-item a {
   color: #000;
+  cursor: pointer;
 }
 
 .after-check-status ul.menu li.menu-item a:hover {
@@ -2205,6 +2208,13 @@ input.chkbalance {
   float: right;
 }
 
+.financial-service.income-panel {
+  margin-top: 40px !important;
+}
+.financial-service {
+  margin-top: 40px !important;
+}
+
 @media (max-width: 980px) {
   .login-box {
     width: 92%;
@@ -2423,109 +2433,91 @@ input.chkbalance {
     margin: 0 0px 10px 0px;
   }
 
-  .spinning-loader {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
+  div#RFS-StepperContainer {
+    overflow: auto;
+    padding: 100px 0px 20px 0px !important;
   }
 
-  .initial-avatar {
-    /* Center the content */
-    display: inline-block;
-    margin-right: 10px;
-    position: relative;
-
-    /* Colors */
-    background-color: #198754;
-
-    /* Rounded border */
-    border-radius: 50%;
-    height: 35px;
-    width: 35px;
-  }
-  .initial-avatar-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: "Montserrat";
+  .verify-panel .dashboard-box.position-relative.card.dashboard-card {
+    width: auto !important;
+    max-width: calc(100% - 100px);
+    float: right;
+    margin-top: 80px;
+    margin-right: 0px !important;
   }
 
-  .initials-profile-pic {
-    position: relative;
-
-    /* Colors */
-    background-color: #198754;
-    color: #fff;
-    border-color: white;
-
-    /* Rounded border */
-    border-radius: 50%;
-    height: 120px;
-    width: 120px;
+  .verify-panel.dashboard-panel-div
+    .dashboard-box.position-relative.card.dashboard-card {
+    width: 100% !important;
+    float: left !important;
+    max-width: 100% !important;
+    margin-top: 20px !important;
   }
-
-  .initials-profile-pic-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: "Montserrat";
-    font-size: 40px;
-    line-height: 49px;
-  }
-
-  .header-dropdown {
-    align-items: center;
-    display: flex;
-    width: 180px;
-    justify-content: flex-end;
-  }
-
-  .profile-pic {
-    border-radius: 50%;
-  }
-
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  .col-md-4.left-panel-box {
-    position: relative !important;
-  }
-  .left-panel {
-    height: 650px;
-  }
-
-  /* button.btn.btn-primary.next-btn {
-  float: none;
-  margin: 30px auto;
-  position: relative;
-  background: #006090;
-  border: 0px;
-  padding: 5px 20px;
-  height: 34px;
-  display: block;
-} */
-  /*
-.StepperContainer-0-2-1 {
-  width: 100px;
-  float: left;
-  display: block !important;
-  margin-right: 10px;
+}
+.no-data-panel h3 {
   text-align: center;
-  margin-left: -12px;
-  padding: 0px !important;
+  margin: 0 0px 10px 0px;
 }
 
+.initial-avatar {
+  /* Center the content */
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+
+  /* Colors */
+  background-color: #198754;
+
+  /* Rounded border */
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+}
+.initial-avatar-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Montserrat";
+}
+
+.header-dropdown {
+  align-items: center;
+  display: flex;
+  width: 180px;
+  justify-content: flex-end;
+}
+
+.profile-pic {
+  border-radius: 50%;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.col-md-4.left-panel-box {
+  position: relative !important;
+}
+.left-panel {
+  height: 650px;
+}
+
+.border-divider {
+  border-left: 0px #ccc solid;
+  width: 0;
+  height: 30px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+div#RFS-StepperContainer {
+  overflow: auto;
+  padding: 100px 0px 20px 0px !important;
+}
 div#RFS-StepMain {
   display: block !important;
   text-align: center;
@@ -2539,23 +2531,14 @@ button#RFS-StepButton {
 
 .verify-panel .dashboard-box.position-relative.card.dashboard-card {
   width: auto !important;
-  max-width: calc(100% - 100px);
-  float: right;
+  /* max-width: calc(100% - 100px); */
+  /* float: right; */
   margin-top: 80px;
   margin-right: 0px !important;
 }
 
-div#RFS-ConnectorContainer {
-  display: none;
-}
 div#RFS-StepContainer {
   padding: 0px !important;
-}
-#RFS-Label {
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 12px !important;
-  margin-top: 4px;
-  margin-bottom: 10px;
 }
 
 .verify-panel {
@@ -2567,82 +2550,28 @@ div#RFS-StepContainer {
 
 .StepperContainer-0-2-1 {
   padding-top: 80px !important;
-} */
-
-  .border-divider {
-    border-left: 0px #ccc solid;
-    width: 0;
-    height: 30px;
-    margin-top: 7px;
-    margin-left: 10px;
-  }
-  div#RFS-StepperContainer {
-    overflow: scroll;
-    padding: 100px 0px 20px 0px !important;
-  }
-  div#RFS-StepMain {
-    display: block !important;
-    text-align: center;
-    margin: 0 auto;
-    float: none;
-    width: 100px;
-  }
-  button#RFS-StepButton {
-    margin: 0 auto;
-  }
-
-  .verify-panel .dashboard-box.position-relative.card.dashboard-card {
-    width: auto !important;
-    /* max-width: calc(100% - 100px); */
-    /* float: right; */
-    margin-top: 80px;
-    margin-right: 0px !important;
-  }
-
-  div#RFS-ConnectorContainer {
-    display: none;
-  }
-  div#RFS-StepContainer {
-    padding: 0px !important;
-  }
-  #RFS-Label {
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 12px !important;
-    margin-top: 4px;
-    margin-bottom: 10px;
-  }
-
-  .verify-panel {
-    margin: 0px 0px 20px 0;
-    text-align: left;
-    width: 100%;
-    float: left;
-  }
-
-  .StepperContainer-0-2-1 {
-    padding-top: 80px !important;
-  }
-  */ .border-divider {
-    border-left: 0px #ccc solid;
-    width: 0;
-    height: 30px;
-    margin-top: 7px;
-    margin-left: 10px;
-  }
-  div#RFS-StepperContainer {
-    overflow: scroll;
-    padding: 100px 0px 20px 0px !important;
-  }
-
-  .proof-btns {
-    background: #006090;
-    border: 0px;
-    cursor: pointer;
-    /* padding: 0px 10px; */
-  }
+}
+.border-divider {
+  border-left: 0px #ccc solid;
+  width: 0;
+  height: 30px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+div#RFS-StepperContainer {
+  overflow: auto;
+  padding: 100px 0px 20px 0px !important;
 }
 
-.no-data-panel h3 {
+.proof-btns {
+  background: #006090;
+  border: 0px;
+  cursor: pointer;
+  /* padding: 0px 10px; */
+}
+
+div#RFS-StepMain {
+  display: block !important;
   text-align: center;
   margin: 0 auto;
   float: none;
@@ -2652,15 +2581,9 @@ button#RFS-StepButton {
   margin: 0 auto;
 }
 
-div#RFS-ConnectorContainer {
-  display: none;
-}
-div#RFS-StepContainer {
-  padding: 0px !important;
-}
 #RFS-Label {
   font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 12px !important;
+  /* font-size: 12px !important; */
   margin-top: 4px;
   margin-bottom: 10px;
 }
@@ -2675,21 +2598,44 @@ div#RFS-StepContainer {
 .StepperContainer-0-2-1 {
   padding-top: 80px !important;
 }
-*/ .border-divider {
+.border-divider {
   border-left: 0px #ccc solid;
   width: 0;
   height: 30px;
   margin-top: 7px;
   margin-left: 10px;
 }
-div#RFS-StepperContainer {
-  overflow: scroll;
-  padding: 100px 0px 20px 0px !important;
+
+.company-name {
+  white-space: nowrap;
+  width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 50px;
 }
 
-.no-data-panel h3 {
-  text-align: center;
-  margin: 0 0px 10px 0px;
+.file-name {
+  min-width: 250px;
+}
+
+.credit-score-table-head th {
+  background-color: #006090;
+  color: white;
+  /* border: 5px #fff solid !important; */
+  padding: 0.75rem;
+}
+
+.credit-score-table td {
+  width: 40%;
+  padding: 10px;
+}
+
+.download-score-btn,
+.download-score-btn:hover {
+  background-color: #006090;
+  color: white;
+  float: right;
+  margin: 0 0 20px 0;
 }
 
 ._loading_overlay_content.css-42igfv {

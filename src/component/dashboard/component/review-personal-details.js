@@ -22,10 +22,7 @@ export const getReviewPersonalData = () => {
 function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
   const userDetails = getUserDetails();
   const storedData = getReviewPersonalData();
-  console.log(
-    "🚀 ~ file: review-personal-details.js ~ line 23 ~ ReviewPersonalDetails ~ storedData",
-    storedData
-  );
+
   const initialValues = {
     [fieldNames.FIRSTNAME]: storedData
       ? storedData[fieldNames.FIRSTNAME]
@@ -43,7 +40,6 @@ function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
 
   useEffect(() => {
     if (!storedData) {
-      console.log("no stored dara", initialValues);
       setReviewPersonalData(initialValues);
     }
   }, []);
