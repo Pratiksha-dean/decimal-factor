@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -9,19 +9,22 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./redux/store";
 import { Provider } from "react-redux";
+import LoadingPage from "./component/LoadingPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <Router>
-        <ProSidebarProvider>
-          <App />
-        </ProSidebarProvider>
-      </Router>
-    </PersistGate>
-  </Provider>
+  <Suspense fallback={<LoadingPage />}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <ProSidebarProvider>
+            <App />
+          </ProSidebarProvider>
+        </Router>
+      </PersistGate>
+    </Provider>
+  </Suspense>
   // </React.StrictMode>
 );
 

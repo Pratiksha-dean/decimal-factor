@@ -4,9 +4,12 @@ import { useState } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useDispatch } from "react-redux/es";
 import { useLocation, useNavigate } from "react-router-dom/dist";
-import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
+import {
+  TRIGGER_LEAD_DETAILS,
+  TRIGGER_USER_DETAILS,
+} from "../../redux/actions/actionTypes";
 import { useAppSelector } from "../../redux/hooks/hooks";
-import { getDashboardData, logout } from "../../request";
+import { API_URL, getDashboardData, logout } from "../../request";
 import { getUserDetails } from "../login/loginpage";
 
 function Header() {
@@ -15,10 +18,6 @@ function Header() {
   const location = useLocation();
   const { userDetails } = useAppSelector((state) => state.userDetailsReducer);
   const { leadDetails } = useAppSelector((state) => state.leadDetailsReducer);
-  console.log(
-    "🚀 ~ file: header.js ~ line 16 ~ Header ~ leadDetails",
-    leadDetails
-  );
   const [dasboardData, setDashboardData] = useState();
   const dispatch = useDispatch();
 
@@ -27,6 +26,11 @@ function Header() {
     dispatch({
       type: TRIGGER_LEAD_DETAILS,
       leadDetails: {},
+    });
+
+    dispatch({
+      type: TRIGGER_USER_DETAILS,
+      userDetails: {},
     });
     navigate("/login");
   };
@@ -129,7 +133,7 @@ function Header() {
                 >
                   {userDetails["profile_pic"] ? (
                     <img
-                      src={`https://sales.decimalfactor.com/staging/${userDetails["profile_pic"]}`}
+                      src={`${API_URL}${userDetails["profile_pic"]}`}
                       alt=""
                       className="user-img"
                     />

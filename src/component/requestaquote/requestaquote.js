@@ -9,7 +9,6 @@ import ApplicationInformation from "./components/application-information";
 import BusinessInformation from "./components/business-information";
 import PersonalDetails from "./components/personal-details";
 import Confirmation from "./components/confirmation";
-import ConfirmationModal from "./components/confirmation-modal";
 import clsx from "clsx";
 
 function RequestAQuote() {

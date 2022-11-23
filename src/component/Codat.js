@@ -36,6 +36,7 @@ import OperatingFlow from "./Codat/OperatingFlow";
 import Debtors from "./Codat/Debtors";
 import AgedCreditors from "./Codat/AgedCreditors";
 import ExportFiles from "./Codat/ExportFiles";
+import { API_URL } from "../request";
 
 export default function Codat() {
   const [accountingApiValue, setAccountingApiValue] = useState("");
@@ -43,8 +44,8 @@ export default function Codat() {
   const [commerceApiValue, setCommerceApiValue] = useState("");
   const [currentApi, setCurrentApi] = useState("");
   const leadId = 6135;
-  const serverUrl = "https://sales.decimalfactor.com/staging/";
-  const endUrl = "https://sales.decimalfactor.com/staging/api";
+  const serverUrl = API_URL;
+  const endUrl = `${API_URL}api`;
   const handleCodat = (codatView) => {
     if (codatView === "accounting") {
       setCurrentApi(accountingApiValue);

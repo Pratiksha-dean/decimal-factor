@@ -36,7 +36,7 @@ function PersonalDetails() {
   const [file, setFile] = useState({
     file: "",
     preview: userDetails["profile_pic"]
-      ? `https://sales.decimalfactor.com/staging/${userDetails["profile_pic"]}`
+      ? `${API_URL}${userDetails["profile_pic"]}`
       : "",
   });
 

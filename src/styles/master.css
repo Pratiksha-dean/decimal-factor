@@ -2647,6 +2647,17 @@ button#RFS-StepButton {
   height: 50px;
   opacity: 1;
   background: none !important;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   display: flex;
+}
+
+.color-primary {
+  color: #006090;
+}
+
+.center {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
 }

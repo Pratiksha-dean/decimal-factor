@@ -4,6 +4,7 @@ import { Formik } from "formik";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import {
+  API_URL,
   deleteDocuments,
   downloadBusinessAccountScore,
   getBusinessAccountScore,
@@ -25,7 +26,18 @@ export default function BusinessCreditScore() {
   const [loadingDownload, setLoadingDownload] = useState(false);
   const [loadingCreditScore, setLoadingCreditScore] = useState(true);
   const [error, setError] = useState(false);
+
+  const disclaimerMsg = {
+    text: "Disclaimer : In-order to view your business credit score, we will need to verify your identity. Please complete the below:",
+    type: "disclaimer",
+  };
+
+  const submitMsg = {
+    text: "Thank you for sending over the documents. We will be in-touch via email after we have verified your details. After successful verification, you will be able to view your company business credit score along with a detailed report.",
+    type: "msg",
+  };
   const userDetails = getUserDetails();
+  const [headingText, setHeadingText] = useState(disclaimerMsg);
 
   useEffect(() => {
     getFiles();
@@ -37,6 +49,7 @@ export default function BusinessCreditScore() {
         if (resp.records.length > 0 && resp["record_count"] !== 0) {
           let countAddressProofApproved = 0;
           let countIdentityProofApproved = 0;
+          setHeadingText(submitMsg);
           let list = [];
           resp.records.forEach((item) => {
             if (
@@ -116,12 +129,18 @@ export default function BusinessCreditScore() {
           ToastMessage(resp.records, "success");
           list.splice(i, 1);
           setFileList(list);
+          if (!list.length) {
+            setHeadingText(disclaimerMsg);
+          }
           // getFiles();
         }
       });
     } else {
       list.splice(i, 1);
       setFileList(list);
+      if (!list.length) {
+        setHeadingText(disclaimerMsg);
+      }
       ToastMessage("Lead Attachments Deleted Successfully.", "success");
     }
   };
@@ -193,10 +212,8 @@ export default function BusinessCreditScore() {
         )
           .then((resp) => {
             if (resp.isSuccess == 1) {
-              ToastMessage(
-                "Thank you for sending over the documents. We will be in-touch via email after we have verified your details. After successful verification, you will be able to view your company business credit score along with a detailed report.",
-                "success"
-              );
+              ToastMessage("Attachments submitted successfully!", "success");
+              setHeadingText(disclaimerMsg);
               getFiles();
             }
           })
@@ -217,7 +234,7 @@ export default function BusinessCreditScore() {
         if (url) {
           let alink = document.createElement("a");
 
-          alink.href = `https://sales.decimalfactor.com/staging/${url}`;
+          alink.href = `${API_URL}${url}`;
           alink.download = "SamplePDF.pdf";
           alink.click();
         }
@@ -626,11 +643,31 @@ export default function BusinessCreditScore() {
             <div className="row">
               <div className="col-md-12">
                 <div className="form-group">
-                  <h6>
-                    {" "}
-                    In-order to view your business credit score, we will need to
-                    verify your identity. Please complete the below:
-                  </h6>
+                  <div
+                    className="mb-3 p-3"
+                    style={{
+                      borderRadius: "5px",
+                      border:
+                        headingText.type == "disclaimer"
+                          ? "1px solid #dc3545"
+                          : "1px solid #006090",
+                      width:
+                        headingText.type == "disclaimer" ? "max-content" : "",
+                      backgroundColor: "#e8f2f7",
+                    }}
+                  >
+                    <h6
+                      style={{ fontSize: "13px" }}
+                      className={clsx("mb-0 ", {
+                        "text-danger font-italic":
+                          headingText.type == "disclaimer",
+                        "color-primary": headingText.type == "msg",
+                      })}
+                    >
+                      {" "}
+                      {headingText.text}
+                    </h6>
+                  </div>
 
                   <input
                     type="checkbox"
@@ -670,7 +707,8 @@ export default function BusinessCreditScore() {
                           <li>
                             <b>Proof of ID.</b>
                             <ul>
-                              <li>-Drivers License -Passport Copy</li>
+                              <li>-Drivers License</li>
+                              <li className="pl-1"> OR</li>
                               <li>-Passport Copy</li>
                             </ul>
                           </li>
@@ -681,9 +719,11 @@ export default function BusinessCreditScore() {
                               <li>
                                 -Bank Statement (Dated within the last 90 days)
                               </li>
+                              <li className="pl-1"> OR</li>
                               <li>
                                 -Utility Bill (Dated within the last 90 days)
                               </li>
+                              <li className="pl-1"> OR</li>
                               <li>-Drivers License</li>
                             </ul>
                           </li>

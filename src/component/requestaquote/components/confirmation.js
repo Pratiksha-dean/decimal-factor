@@ -1,12 +1,8 @@
 import React from "react";
-import { useState } from "react";
-import { Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom/dist";
-import ConfirmationModal from "./confirmation-modal";
 import { removeData } from "./personal-details";
 
 function Confirmation() {
-  const [show, setShow] = useState(false);
   const navigate = useNavigate();
   return (
     <>
@@ -40,7 +36,6 @@ function Confirmation() {
           type="button"
           className="btn btn-primary next-btn"
           onClick={() => {
-            // setShow(true);
             removeData();
             navigate("/login");
           }}
@@ -48,12 +43,6 @@ function Confirmation() {
           Access Account <i className="fa fa-chevron-right"></i>
         </button>
       </div>
-
-      <Modal show={show} centered>
-        <Modal.Body>
-          <ConfirmationModal setShow={setShow} />
-        </Modal.Body>
-      </Modal>
     </>
   );
 }

@@ -52,42 +52,59 @@ export const residentialStatusList = [
 export const passwordRegex =
   /^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$/;
 
-export const getBase64 = (file) => {
-  return new Promise((resolve) => {
-    let fileInfo;
-    let baseURL;
-    // Make new FileReader
-    let reader = new FileReader();
-
-    // Convert the file to base64 text
-    reader.readAsDataURL(file);
-
-    // on reader load somthing...
-    reader.onload = () => {
-      // Make a fileInfo Object
-      baseURL = reader.result;
-      resolve(baseURL);
-    };
-  });
+export const weekDayArray = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+export const monthArray = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+export const dateSuffix = {
+  1: "st",
+  2: "nd",
+  3: "rd",
+  4: "th",
+  5: "th",
+  6: "th",
+  7: "th",
+  8: "th",
+  9: "th",
+  10: "th",
+  11: "th",
+  12: "th",
+  13: "th",
+  14: "th",
+  15: "th",
+  16: "th",
+  17: "th",
+  18: "th",
+  19: "th",
+  20: "th",
+  21: "st",
+  22: "nd",
+  23: "rd",
+  24: "th",
+  25: "th",
+  26: "th",
+  27: "th",
+  28: "th",
+  29: "th",
+  30: "th",
+  31: "st",
 };
-
-export const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
-  const byteCharacters = atob(b64Data);
-  const byteArrays = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-
-  const blob = new Blob(byteArrays, { type: contentType });
-  return blob;
-};
-

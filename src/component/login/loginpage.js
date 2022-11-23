@@ -18,10 +18,6 @@ const setEmailPassword = (data) => {
 };
 
 export const setUserDetails = (data) => {
-  console.log(
-    "🚀 ~ file: loginpage.js ~ line 19 ~ setUserDetails ~ data",
-    data
-  );
   localStorage.setItem("userDetails", JSON.stringify(data));
 };
 
@@ -106,7 +102,7 @@ export default function Login() {
         })
         .catch((err) => {
           setError("Something went wrong!");
-            setLoading(false);
+          setLoading(false);
           ToastMessage("Something went wrong!", "error");
         });
     },

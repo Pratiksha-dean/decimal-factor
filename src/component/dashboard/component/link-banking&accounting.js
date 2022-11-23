@@ -42,6 +42,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const appData = getReviewAppData();
   const userDetails = getUserDetails();
   const [accoutingUrl, setAccoutingUrl] = useState();
+  console.log(
+    "🚀 ~ file: link-banking&accounting.js ~ line 45 ~ LinkBankingAccounting ~ accoutingUrl",
+    accoutingUrl
+  );
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
   const [accountingStatus, setAccoutingStatus] = useState(false);
@@ -209,6 +213,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       })
       .catch((err) => {
         setAccoutingStatus(false);
+        setLoadingAccouting(false);
+
         if (!accoutingUrl) {
           getLinkToAccouting();
         }

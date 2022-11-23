@@ -4,14 +4,7 @@ import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import { NavLink } from "react-router-dom";
 
 function SiderBarMenu() {
-  const { collapseSidebar, collapsed  } = useProSidebar();
-  console.log(
-    "🚀 ~ file: sidebar.js ~ line 9 ~ SiderBarMenu ~ collapsed ",
-    collapsed 
-    
-  );
-
-  
+  const { collapseSidebar, collapsed } = useProSidebar();
 
   return (
     <div className="sidebar-panel">
