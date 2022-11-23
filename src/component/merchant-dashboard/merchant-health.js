@@ -26,6 +26,8 @@ import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import BusinessCreditScore from "./merachant-health/business-credit-score";
 import NotFound from "../NotFound";
+import { useDispatch } from "react-redux/es";
+import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
 
 export const setCurrentTabIndex = (index) => {
   localStorage.setItem("activeTabIndex", index);
