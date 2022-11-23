@@ -17,12 +17,6 @@ import { ToastMessage } from "../../ToastMessage";
 export default function BusinessCreditScore() {
   const [checkBusinessCredit, setCheckBusinessCreditScore] = useState(false);
   const [fileList, setFileList] = useState([]);
-  console.log(
-    "🚀 ~ file: business-credit-score.js ~ line 16 ~ BusinessCreditScore ~ fileList",
-    fileList
-  );
-  const [identityProofList, setIdentityProofList] = useState([]);
-  const [addressProofList, setAddressProofList] = useState([]);
   const [isIdentityProof, setIsIdentityProof] = useState(false);
   const [isAddressProof, setIsAddressProof] = useState(false);
   const [selectedFileType, setSelectedFileType] = useState("");
@@ -30,19 +24,7 @@ export default function BusinessCreditScore() {
   const [businessCreditScore, setBusinessCreditScore] = useState(null);
   const [loadingDownload, setLoadingDownload] = useState(false);
   const [loadingCreditScore, setLoadingCreditScore] = useState(true);
-  console.log(
-    "🚀 ~ file: business-credit-score.js ~ line 29 ~ BusinessCreditScore ~  !==null",
-    businessCreditScore
-  );
-  console.log(
-    "🚀 ~ file: business-credit-score.js ~ line 27 ~ BusinessCreditScore ~ isApproved",
-    isApproved
-  );
   const [error, setError] = useState(false);
-  console.log(
-    "🚀 ~ file: business-credit-score.js ~ line 18 ~ BusinessCreditScore ~ selectedFileType",
-    selectedFileType
-  );
   const userDetails = getUserDetails();
 
   useEffect(() => {
@@ -52,16 +34,11 @@ export default function BusinessCreditScore() {
   const getFiles = () => {
     if (userDetails && userDetails["lead_id"]) {
       getDocuments(userDetails["lead_id"]).then((resp) => {
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 40 ~ getDocuments ~ resp",
-          resp
-        );
         if (resp.records.length > 0 && resp["record_count"] !== 0) {
           let countAddressProofApproved = 0;
           let countIdentityProofApproved = 0;
           let list = [];
           resp.records.forEach((item) => {
-            console.log("****", item["la_status"]);
             if (
               item["la_status"] == 1 &&
               item["la_doc_type"] == "Proof of Identity"
@@ -74,11 +51,6 @@ export default function BusinessCreditScore() {
               countAddressProofApproved = countAddressProofApproved + 1;
             }
 
-            console.log(
-              "countAddressProofApproved > 0 &&countIdentityProofApproved > 0",
-              countAddressProofApproved > 0 && countIdentityProofApproved > 0
-            );
-
             if (
               countAddressProofApproved > 0 &&
               countIdentityProofApproved > 0
@@ -90,11 +62,6 @@ export default function BusinessCreditScore() {
                 .then((resp) => {
                   setBusinessCreditScore(resp.data);
                   setLoadingCreditScore(false);
-
-                  console.log(
-                    "🚀 ~ file: business-credit-score.js ~ line 120 ~ getBusinessAccountScore ~ resp",
-                    resp
-                  );
                 })
                 .catch((err) => {
                   setLoadingCreditScore(false);
@@ -102,7 +69,6 @@ export default function BusinessCreditScore() {
               // }
             } else {
               setLoadingCreditScore(false);
-              console.log("**");
             }
 
             list.push({
@@ -110,34 +76,11 @@ export default function BusinessCreditScore() {
               type: item["la_doc_type"],
               id: item["la_id"],
             });
-
-            console.log(
-              "🚀 ~ file: business-credit-score.js ~ line 41 ~ resp.records.forEach ~ item",
-              item
-            );
-            console.log(
-              "🚀 ~ file: business-credit-score.js ~ line 29 ~ list.map ~ item",
-              item
-            );
           });
-          console.log(
-            "🚀 ~ file: business-credit-score.js ~ line 55 ~ resp.records.forEach ~ countAddressProofApproved",
-            countAddressProofApproved,
-            countAddressProofApproved
-          );
-          console.log(
-            "🚀 ~ file: business-credit-score.js ~ line 28 ~ getDocuments ~ list",
-            list
-          );
           setFileList(list);
         } else {
           setLoadingCreditScore(false);
         }
-        // setFileList(resp.records);
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 28 ~ getDocuments ~ resp",
-          resp
-        );
       });
     }
   };
@@ -165,30 +108,16 @@ export default function BusinessCreditScore() {
   // }, [isApproved]);
 
   const deleteFile = (item, i) => {
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 66 ~ deleteFile ~ item",
-      item
-    );
-
     let list = [...fileList];
 
     if (item["id"]) {
       deleteDocuments(item["id"]).then((resp) => {
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 72 ~ deleteDocuments ~ resp",
-          resp,
-          resp.status == "success"
-        );
         if (resp.status == "success") {
           ToastMessage(resp.records, "success");
           list.splice(i, 1);
           setFileList(list);
           // getFiles();
         }
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 75 ~ deleteFile ~ resp",
-          resp
-        );
       });
     } else {
       list.splice(i, 1);
@@ -198,54 +127,28 @@ export default function BusinessCreditScore() {
   };
 
   function handleChange(event, type) {
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 30 ~ handleChange ~ type",
-      type
-    );
-    let list = [...fileList];
-    let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
-
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 33 ~ handleChange ~ totalSizeMB",
-      totalSizeMB,
-      totalSizeMB < 5
-    );
-    if (totalSizeMB < 5) {
-      list.push({ file: event.target.files[0], type: type });
-      setFileList(list);
-    } else {
-      ToastMessage("File size needs to be less than 5 MB", "error");
+    if (event.target.files[0]) {
+      let list = [...fileList];
+      let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
+      if (totalSizeMB < 5) {
+        list.push({ file: event.target.files[0], type: type });
+        setFileList(list);
+      } else {
+        ToastMessage("File size needs to be less than 5 MB", "error");
+      }
     }
   }
 
   function handleAddressFileChange(event, type) {
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 73 ~ handleAddressFileChange ~ event",
-      event
-    );
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 96 ~ handleAddressFileChange ~ type",
-      type
-    );
-
-    let list = [...fileList];
-    let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
-    // const binaryData = generateBinaryData(event.target.files[0]);
-    // console.log(
-    //   "🚀 ~ file: business-credit-score.js ~ line 59 ~ handleAddressFileChange ~ binaryData",
-    //   binaryData
-    // );
-
-    console.log(
-      "🚀 ~ file: business-credit-score.js ~ line 33 ~ handleChange ~ totalSizeMB",
-      totalSizeMB,
-      totalSizeMB < 5
-    );
-    if (totalSizeMB < 5) {
-      list.push({ file: event.target.files[0], type: type });
-      setFileList(list);
-    } else {
-      ToastMessage("File size needs to be less than 5 MB", "error");
+    if (event.target.files[0]) {
+      let list = [...fileList];
+      let totalSizeMB = event.target.files[0]["size"] / Math.pow(1024, 2);
+      if (totalSizeMB < 5) {
+        list.push({ file: event.target.files[0], type: type });
+        setFileList(list);
+      } else {
+        ToastMessage("File size needs to be less than 5 MB", "error");
+      }
     }
   }
 
@@ -254,11 +157,6 @@ export default function BusinessCreditScore() {
       ToastMessage("Please select the checkbox", "error");
       setError(true);
     } else {
-      console.log(
-        "🚀 ~ file: business-credit-score.js ~ line 76 ~ submitDocuments ~ file",
-        fileList
-      );
-
       let identityProofDocs = fileList
         .filter((file) => file.type == "Identity Proof")
         .map((item) => {
@@ -295,13 +193,12 @@ export default function BusinessCreditScore() {
         )
           .then((resp) => {
             if (resp.isSuccess == 1) {
-              ToastMessage("Attachments uploaded successfully!", "success");
+              ToastMessage(
+                "Thank you for sending over the documents. We will be in-touch via email after we have verified your details. After successful verification, you will be able to view your company business credit score along with a detailed report.",
+                "success"
+              );
               getFiles();
             }
-            console.log(
-              "🚀 ~ file: business-credit-score.js ~ line 193 ~ ).then ~ resp",
-              resp
-            );
           })
           .catch((err) => {
             ToastMessage("Something went wrong!", "error");
@@ -314,12 +211,8 @@ export default function BusinessCreditScore() {
     setLoadingDownload(true);
     let response = await downloadBusinessAccountScore(userDetails["lead_id"])
       .then((data) => {
-        console.log("pdf", data);
         let url = JSON.parse(data.response).Url;
-        console.log(
-          "🚀 ~ file: business-credit-score.js ~ line 282 ~ .then ~ url",
-          url
-        );
+
         setLoadingDownload(false);
         if (url) {
           let alink = document.createElement("a");
@@ -328,47 +221,14 @@ export default function BusinessCreditScore() {
           alink.download = "SamplePDF.pdf";
           alink.click();
         }
-        // if (url) {
-        //   console.log("link", url);
-        //   window.open(`${baseUrl}${url}`, "_blank");
-        // } else {
-        //   alert("There is no data");
-        // }
-        // setDownloadProgress(false);
       })
       .catch((err) => {
-        console.log(`Error occured: ${err}`);
-        // setDownloadProgress(false);
         setLoadingDownload(false);
 
         alert(err);
       });
-    // downloadBusinessAccountScore(userDetails["lead_id"])
-    //   .then((resp) => {
-    //     console.log(
-    //       "🚀 ~ file: business-credit-score.js ~ line 277 ~ downloadBusinessAccountScore ~ resp",
-    //       resp,
-    //       JSON.parse(resp)
-    //     );
-    //     let fileUrl = `https://sales.decimalfactor.com/staging/${resp.file}`;
-    //     console.log(
-    //       "🚀 ~ file: business-credit-score.js ~ line 282 ~ .then ~ fileUrl",
-    //       fileUrl
-    //     );
-    //     // let alink = document.createElement("a");
-    //     // // alink.href = fileUrl;/
-    //     // alink.download = "SamplePDF.pdf";
-    //     // alink.click();
-    //   })
-    //   .catch((err) => {
-    //     console.log(
-    //       "🚀 ~ file: business-credit-score.js ~ line 280 ~ downloadBusinessAccountScore ~ err",
-    //       err
-    //     );
-    //   });
   };
 
-  console.log("**", !isApproved, !businessCreditScore, !loadingCreditScore);
   return (
     <section>
       <div className="business-panel">
@@ -766,6 +626,12 @@ export default function BusinessCreditScore() {
             <div className="row">
               <div className="col-md-12">
                 <div className="form-group">
+                  <h6>
+                    {" "}
+                    In-order to view your business credit score, we will need to
+                    verify your identity. Please complete the below:
+                  </h6>
+
                   <input
                     type="checkbox"
                     onClick={(e) =>

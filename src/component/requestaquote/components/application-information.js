@@ -177,10 +177,6 @@ export const loadOptions = async (inputValue) => {
 
 function ApplicationInformation({ setStep, showSelectedState }) {
   const storedData = getApplicationInfo();
-  console.log(
-    "🚀 ~ file: application-information.js ~ line 180 ~ ApplicationInformation ~ storedData",
-    storedData
-  );
   const initialValues = {
     [fieldNames.AMOUNT]: storedData ? storedData[fieldNames.AMOUNT] : "",
     [fieldNames.REQUIREDFUND]: storedData
