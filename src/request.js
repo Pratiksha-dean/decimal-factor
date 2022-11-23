@@ -1,36 +1,31 @@
 import axios from "axios";
 import { setStepNo } from "./component/requestaquote/components/request-leftpanel";
 export const API_URL = process.env.REACT_APP_API_URL;
-export const SEARCH_COMPANY_URL = `${API_URL}SearchCompanies.php?SearchValue=`;
-export const CREATE_ACCOUNT_URL = `${API_URL}CreateCustomerForUK`;
-export const USER_LOGIN_URL = `${API_URL}UKCustomerLogin`;
-export const DASHBOARD_DATA_URL = `${API_URL}GetLeadMaster/`;
-export const VERIFY_ACCOUNT_URL = `${API_URL}UKCustomerVerify`;
-export const FORGOT_PASSWORD_URL = `${API_URL}UKForgetPassword`;
-export const DIRECTOR_LIST_API = `${API_URL}SearchCompanies.php?companyNumber=`;
-export const LINK_ACCOUTING_URL = `${API_URL}CODAT/CreateCodatAccount`;
-export const CHANGE_PASSWORD_URL = `${API_URL}UKPasswordChange`;
-export const USER_DETAILS_URL = `${API_URL}getUkCustomerDetails/`;
-export const UPDATE_USER_DETAILS_URL = `${API_URL}UpdateCustomerForUK/`;
+export const SEARCH_COMPANY_URL = `${API_URL}api/SearchCompanies.php?SearchValue=`;
+export const CREATE_ACCOUNT_URL = `${API_URL}api/CreateCustomerForUK`;
+export const USER_LOGIN_URL = `${API_URL}api/UKCustomerLogin`;
+export const DASHBOARD_DATA_URL = `${API_URL}api/GetLeadMaster/`;
+export const VERIFY_ACCOUNT_URL = `${API_URL}api/UKCustomerVerify`;
+export const FORGOT_PASSWORD_URL = `${API_URL}api/UKForgetPassword`;
+export const DIRECTOR_LIST_API = `${API_URL}api/SearchCompanies.php?companyNumber=`;
+export const LINK_ACCOUTING_URL = `${API_URL}api/CODAT/CreateCodatAccount`;
+export const CHANGE_PASSWORD_URL = `${API_URL}api/UKPasswordChange`;
+export const USER_DETAILS_URL = `${API_URL}api/getUkCustomerDetails/`;
+export const UPDATE_USER_DETAILS_URL = `${API_URL}api/UpdateCustomerForUK/`;
 
-export const RESET_PASSWORD_URL = `${API_URL}UKChangePassword`;
+export const RESET_PASSWORD_URL = `${API_URL}api/UKChangePassword`;
 
-export const FINANCIAL_SERVICE_URL = `${API_URL}accountScore/5944/FinancialServices`;
-export const INCOME_ANALYSIS_URL = `${API_URL}accountScore/5944/IncomeAnalysis`;
-export const REGULAR_OUTGOINGS_URL = `${API_URL}accountScore/5944/RegularOutgoings`;
-export const EVENTFEED_URL = `${API_URL}accountScore/5944/EventFeed`;
-export const UPDATE_LOGIN_TIMES_URL = `${API_URL}UpdateCustomerLoginTimes/`;
-export const UPLOAD_DOCUMENTS = `${API_URL}UKLeadattachments/`;
-export const GET_DOCUMENTS = `${API_URL}getLeadMasterAttachmentsUK/`;
+export const FINANCIAL_SERVICE_URL = `${API_URL}api/accountScore/5944/FinancialServices`;
+export const INCOME_ANALYSIS_URL = `${API_URL}api/accountScore/5944/IncomeAnalysis`;
+export const REGULAR_OUTGOINGS_URL = `${API_URL}api/accountScore/5944/RegularOutgoings`;
+export const EVENTFEED_URL = `${API_URL}api/accountScore/5944/EventFeed`;
+export const UPDATE_LOGIN_TIMES_URL = `${API_URL}api/UpdateCustomerLoginTimes/`;
+export const UPLOAD_DOCUMENTS = `${API_URL}api/UKLeadattachments/`;
+export const GET_DOCUMENTS = `${API_URL}api/getLeadMasterAttachmentsUK/`;
 
-export const GET_DOCUMENTS_BANK_STMT = `${API_URL}getLeadMasterAttachments/`;
-export const DELETE_DOCUMENTS = `${API_URL}DeleteLeadMasterAttachment/`;
-export const GET_BUSINESS_ACCOUNT_SCORE = `${API_URL}creditsafe/company/`;
-
-export async function getRequest() {
-  const { data } = await axios.get(API_URL);
-  return data;
-}
+export const GET_DOCUMENTS_BANK_STMT = `${API_URL}api/getLeadMasterAttachments/`;
+export const DELETE_DOCUMENTS = `${API_URL}api/DeleteLeadMasterAttachment/`;
+export const GET_BUSINESS_ACCOUNT_SCORE = `${API_URL}api/creditsafe/company/`;
 
 export function createAccount(payload) {
   return axios.post(CREATE_ACCOUNT_URL, payload);
@@ -97,12 +92,12 @@ export async function getLinkToAccountingData(payload) {
 }
 
 export async function getCompanyID(id) {
-  const { data } = await axios.get(`${API_URL}CODAT/${id}/getCompanyId`);
+  const { data } = await axios.get(`${API_URL}api/CODAT/${id}/getCompanyId`);
   return data;
 }
 
 export async function checkAccountingStatus(id) {
-  const { data } = await axios.get(`${API_URL}CODAT/${id}/checkStatus`);
+  const { data } = await axios.get(`${API_URL}api/CODAT/${id}/checkStatus`);
   return data;
 }
 
@@ -126,34 +121,36 @@ export async function updateUpdateCustomerInfo(payload, id) {
 
 export async function getBankingFinancialServices(id) {
   const { data } = await axios.get(
-    `${API_URL}accountScore/${id}/FinancialServices`
+    `${API_URL}api/accountScore/${id}/FinancialServices`
   );
   return data;
 }
 
 export async function getBankingIncome(id) {
   const { data } = await axios.get(
-    `${API_URL}accountScore/${id}/IncomeAnalysis`
+    `${API_URL}api/accountScore/${id}/IncomeAnalysis`
   );
   return data;
 }
 
 export async function getRegularOutgoings(id) {
   const { data } = await axios.get(
-    `${API_URL}accountScore/${id}/RegularOutgoings`
+    `${API_URL}api/accountScore/${id}/RegularOutgoings`
   );
   return data;
 }
 
 export async function getEventFeed(id) {
-  const { data } = await axios.get(`${API_URL}accountScore/${id}/EventFeed`);
+  const { data } = await axios.get(
+    `${API_URL}api/accountScore/${id}/EventFeed`
+  );
 
   return data;
 }
 
 export async function getAccountScore(id, payload) {
   const { data } = await axios.post(
-    `${API_URL}leadUK/${id}/generateConsentForAccountScore`,
+    `${API_URL}api/leadUK/${id}/generateConsentForAccountScore`,
     payload
   );
   return data;
@@ -161,14 +158,14 @@ export async function getAccountScore(id, payload) {
 
 export async function checkBankingStatus(id) {
   const { data } = await axios.get(
-    `${API_URL}leadUK/${id}/checkObvAccountScoreConsentStatus`
+    `${API_URL}api/leadUK/${id}/checkObvAccountScoreConsentStatus`
   );
   return data;
 }
 
 export async function bankingInsightsDownloadFile(fileType, id) {
   const { data } = await axios.get(
-    `${API_URL}accountScore/downloadfile/${fileType}/${id}`
+    `${API_URL}api/accountScore/downloadfile/${fileType}/${id}`
   );
   return data;
 }

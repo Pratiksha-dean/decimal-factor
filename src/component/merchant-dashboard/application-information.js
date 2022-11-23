@@ -22,7 +22,6 @@ import Loaderspinner from "../loader";
 import { useDispatch } from "react-redux/es";
 import {
   TRIGGER_LEAD_DETAILS,
-  TRIGGER_REVIEW_APPLICATION_DETAILS,
 } from "../../redux/actions/actionTypes";
 
 function ApplicationInformation() {
@@ -34,10 +33,6 @@ function ApplicationInformation() {
   const getData = () => {
     if (userDetails && userDetails.lead_id) {
       getDashboardData(userDetails.lead_id).then((resp) => {
-        console.log(
-          "🚀 ~ file: application-information.js ~ line 35 ~ getDashboardData ~ resp",
-          resp
-        );
         dispatch({
           type: TRIGGER_LEAD_DETAILS,
           leadDetails: resp.records[0],
@@ -307,11 +302,7 @@ function ApplicationInformation() {
                                   placeholder="Select Business Name"
                                   styles={{
                                     control: (styles, state) => {
-                                      console.log(
-                                        state,
-                                        touched[fieldNames.BUSINESSNAME] &&
-                                          errors[fieldNames.BUSINESSNAME]
-                                      );
+                            
                                       const borderColor =
                                         !state.hasValue &&
                                         touched[fieldNames.BUSINESSNAME] &&

@@ -21,10 +21,6 @@ function Authentication() {
   const [isCodeValid, setIsCodeValid] = useState(true);
   const naviagte = useNavigate();
   const userDetails = getUserDetails();
-  console.log(
-    "🚀 ~ file: authentication.js ~ line 23 ~ Authentication ~ userDetails",
-    userDetails
-  );
 
   const authenticationSchema = Yup.object().shape({
     code: Yup.string().min(6, "Too Short!").max(6, "Too Long!").required(),

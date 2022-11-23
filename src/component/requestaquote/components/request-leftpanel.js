@@ -69,14 +69,14 @@ function RequestLeftPanel({ step, setStep }) {
         Step {step} of {stepsList.length}
       </h4>
       <p>
-
         {step == 1 &&
           "To get started, we require some basic information to determine the right finance for you."}
         {step == 2 &&
           "We require some business information to determine your eligibility"}
         {step == 3 &&
           "We require personal information to be able to contact you with a personalized quote. You will also be able to create an account to our merchant portal, where you can add your financial data. This will help us speed up the process and provide a more suitable quote for you."}
-          {step==4 && "Quote request has been received. You can now access your merchant account." }
+        {step == 4 &&
+          "Quote request has been received. You can now access your merchant account."}
       </p>
 
       <ul id="progressbar">

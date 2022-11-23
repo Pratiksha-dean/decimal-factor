@@ -20,6 +20,7 @@ import { directorFieldNames, residentialStatusList } from "../Constants";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
+import { useAppSelector } from "../../redux/hooks/hooks";
 
 const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -52,10 +53,6 @@ const Accordion = ({ title, children, isPrimary }) => {
 };
 
 function BusinessInformation() {
-  const storedData = {};
-  const data = {};
-  const companyInfo = getCompanyInfo();
-
   const [directorList, setDirectorList] = useState([]);
 
   const validationSchema = Yup.object().shape({

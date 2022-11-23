@@ -4,7 +4,7 @@ import RequestAQuote from "./component/requestaquote/requestaquote";
 import Login, { getToken, getUserDetails } from "./component/login/loginpage";
 import Authentication from "./component/authentication/authentication";
 import ForgotPassword from "./component/forgot/forgot-password";
-import MerchantDashboard from "./component/merchant-dashboard/merchant-dashboard";
+// import MerchantDashboard from "./component/merchant-dashboard/merchant-dashboard";
 import Dashboard from "./component/dashboard/dashboard";
 import MerchantHealth from "./component/merchant-dashboard/merchant-health";
 import ApplicationInformation from "./component/merchant-dashboard/application-information";
@@ -177,14 +177,14 @@ const RoutePage = () => {
         }
       />
 
-      <Route
+      {/* <Route
         path="/merchant-dashboard"
         element={
           <PrivateRoute>
             <MerchantDashboard />
           </PrivateRoute>
         }
-      />
+      /> */}
 
       <Route
         path="/merchant-health"

@@ -20,6 +20,7 @@ import {
   getRegularOutgoings,
   getEventFeed,
   bankingInsightsDownloadFile,
+  API_URL,
 } from "../../request";
 import { getUserDetails } from "../login/loginpage";
 import { ToastMessage } from "../ToastMessage";
@@ -28,6 +29,7 @@ import BusinessCreditScore from "./merachant-health/business-credit-score";
 import NotFound from "../NotFound";
 import { useDispatch } from "react-redux/es";
 import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
+import { dateSuffix, monthArray, weekDayArray } from "../Constants";
 
 export const setCurrentTabIndex = (index) => {
   localStorage.setItem("activeTabIndex", index);
@@ -40,62 +42,6 @@ export const getCurrentTabIndex = () => {
   return Number(localStorage.getItem("activeTabIndex"));
 };
 
-const weekDayArray = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-const monthArray = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-const dateSuffix = {
-  1: "st",
-  2: "nd",
-  3: "rd",
-  4: "th",
-  5: "th",
-  6: "th",
-  7: "th",
-  8: "th",
-  9: "th",
-  10: "th",
-  11: "th",
-  12: "th",
-  13: "th",
-  14: "th",
-  15: "th",
-  16: "th",
-  17: "th",
-  18: "th",
-  19: "th",
-  20: "th",
-  21: "st",
-  22: "nd",
-  23: "rd",
-  24: "th",
-  25: "th",
-  26: "th",
-  27: "th",
-  28: "th",
-  29: "th",
-  30: "th",
-  31: "st",
-};
 function MerchantHealth() {
   const currentTabIndex = getCurrentTabIndex();
   const [tabIndex, setTabIndex] = useState(currentTabIndex);
@@ -130,9 +76,7 @@ function MerchantHealth() {
     useState(0);
   const [incomeAnalysisMonthlyAvgOut, setIncomeAnalysisMonthlyAvgOut] =
     useState(0);
-
   const [downloadInProgress, setDownloadProgress] = useState(false);
-
   const lead_accountScore = userDetails["lead_id"];
   const handleOpen = () => {
     setOpen(!open);
@@ -175,7 +119,6 @@ function MerchantHealth() {
 
       let promise2 = getBankingIncome(lead_accountScore)
         .then((data) => {
-          console.log("banking income data", data);
           let summaries = data.response.data.summaries;
           setIncomeAnalysisSummary(data.response.data.summaries);
           let totalIn = 0;
@@ -208,7 +151,6 @@ function MerchantHealth() {
 
       let promise3 = getRegularOutgoings(lead_accountScore)
         .then((data) => {
-          console.log("data", data);
           setRegularOutgoingsSummary(data.response.data.summaries);
           return Promise.resolve();
         })
@@ -220,10 +162,8 @@ function MerchantHealth() {
 
       let promise4 = getEventFeed(lead_accountScore)
         .then((data) => {
-          console.log("event data", data);
           let summaries = data.response.months;
           setEventFeedSummary(data.response.months);
-          console.log("months", eventFeedSummary);
           let evCount = 0;
           summaries.map((month) => {
             month.data.events.map((ev) => {
@@ -260,10 +200,8 @@ function MerchantHealth() {
           lead_accountScore
         )
           .then((data) => {
-            console.log("pdf", data);
             let url = JSON.parse(data.response).Url;
             if (url) {
-              console.log("link", url);
               window.open(url, "_blank");
             } else {
               alert("There is no data");
@@ -278,17 +216,14 @@ function MerchantHealth() {
         break;
       }
       case "PDF_UW": {
-        let baseUrl = "https://sales.decimalfactor.com/staging/";
         response = await bankingInsightsDownloadFile(
           "underwriters",
           lead_accountScore
         )
           .then((data) => {
-            console.log("pdf", data);
             let url = JSON.parse(data.response).Url;
             if (url) {
-              console.log("link", url);
-              window.open(`${baseUrl}${url}`, "_blank");
+              window.open(`${API_URL}${url}`, "_blank");
             } else {
               alert("There is no data");
             }
@@ -302,17 +237,14 @@ function MerchantHealth() {
         break;
       }
       case "PDF_RAW": {
-        let baseUrl = "https://sales.decimalfactor.com/staging/";
         response = await bankingInsightsDownloadFile(
           "rawdata",
           lead_accountScore
         )
           .then((data) => {
-            console.log("pdf", data);
             let url = JSON.parse(data.response).Url;
             if (url) {
-              console.log("link", url);
-              window.open(`${baseUrl}${url}`, "_blank");
+              window.open(`${API_URL}${url}`, "_blank");
             } else {
               alert("There is no data");
             }
@@ -332,10 +264,8 @@ function MerchantHealth() {
           lead_accountScore
         )
           .then((data) => {
-            console.log("pdf", data);
             let url = JSON.parse(data.response).Url;
             if (url) {
-              console.log("link", url);
               window.open(url, "_blank");
             } else {
               alert("There is no data");
@@ -351,17 +281,14 @@ function MerchantHealth() {
       }
 
       case "CSV_ALL": {
-        let baseUrl = "https://sales.decimalfactor.com/staging/";
         response = await bankingInsightsDownloadFile(
           "csvdata",
           lead_accountScore
         )
           .then((data) => {
-            console.log("pdf", data);
             let url = JSON.parse(data.response).Url;
             if (url) {
-              console.log("link", url);
-              window.open(`${baseUrl}${url}`, "_blank");
+              window.open(`${API_URL}${url}`, "_blank");
             } else {
               alert("There is no data");
             }
@@ -411,7 +338,6 @@ function MerchantHealth() {
       })
       .catch((err) => {
         setAccoutingStatus(false);
-        setLoadingAccouting(true);
         if (!accoutingUrl) {
           getLinkToAccouting();
           // setLoadingAccouting(false);
@@ -532,6 +458,7 @@ function MerchantHealth() {
     getData();
     return () => {
       setCurrentTabIndex(0);
+      setAccoutingUrl("");
     };
   }, []);
 
@@ -1751,57 +1678,60 @@ function MerchantHealth() {
                                 </div>
                               </div>
                             )}
-                          {accoutingUrl && !loadingAccouting && (
-                            <>
-                              <div class="banking-url">
-                                <div class="form-group">
-                                  <label>Accounting URL</label>
+                          {accoutingUrl &&
+                            (!loadingAccouting || loadingAccouting) && (
+                              <>
+                                <div class="banking-url">
+                                  <div class="form-group">
+                                    <label>Accounting URL</label>
 
-                                  <input
-                                    type="text"
-                                    name="url"
-                                    placeholder="https://www.domain.com/dummy-url-will-be-here"
-                                    className="form-control"
-                                    value={accoutingUrl}
-                                    disabled
-                                    id="accouting-url"
-                                  />
-                                  <button
-                                    class="copyicon-col btn btn-primary"
-                                    onClick={() => {
-                                      copyLinkToClipboard(accoutingUrl);
-                                    }}
-                                  >
-                                    <i
-                                      class="fa fa-clone"
-                                      aria-hidden="true"
-                                    ></i>
-                                  </button>
+                                    <input
+                                      type="text"
+                                      name="url"
+                                      placeholder="https://www.domain.com/dummy-url-will-be-here"
+                                      className="form-control"
+                                      value={accoutingUrl}
+                                      disabled
+                                      id="accouting-url"
+                                    />
+                                    <button
+                                      class="copyicon-col btn btn-primary"
+                                      onClick={() => {
+                                        copyLinkToClipboard(accoutingUrl);
+                                      }}
+                                    >
+                                      <i
+                                        class="fa fa-clone"
+                                        aria-hidden="true"
+                                      ></i>
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="banking-url">
-                                <div class="form-group">
-                                  <label>Status</label>
-                                  <input
-                                    type="text"
-                                    name="Status"
-                                    placeholder=""
-                                    class="form-control"
-                                    disabled
-                                    value={
-                                      accountingStatus ? "Linked" : "Unlinked"
-                                    }
-                                  />
-                                  <button
-                                    class="checkstatus-btn btn btn-primary"
-                                    onClick={() => checkAccountingStatusClick()}
-                                  >
-                                    Check status
-                                  </button>
+                                <div class="banking-url">
+                                  <div class="form-group">
+                                    <label>Status</label>
+                                    <input
+                                      type="text"
+                                      name="Status"
+                                      placeholder=""
+                                      class="form-control"
+                                      disabled
+                                      value={
+                                        accountingStatus ? "Linked" : "Unlinked"
+                                      }
+                                    />
+                                    <button
+                                      class="checkstatus-btn btn btn-primary"
+                                      onClick={() =>
+                                        checkAccountingStatusClick()
+                                      }
+                                    >
+                                      Check status
+                                    </button>
+                                  </div>
                                 </div>
-                              </div>
-                            </>
-                          )}
+                              </>
+                            )}
                           {accountingStatus && (
                             <div className="data-panel">
                               <Codat />
