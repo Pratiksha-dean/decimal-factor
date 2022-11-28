@@ -211,19 +211,19 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
           setLoadingAccouting(false);
-        } else if (resp["status"] == "PendingAuth") {
+        } else if (
+          resp["status"] == "PendingAuth" ||
+          resp["message"] === "Status Confirmed as Pending"
+        ) {
           setAccoutingStatus(false);
           setLoadingAccouting(false);
 
           // setAccoutingUrl(resp.data.redirect);
-        } else if (resp["message"] === "Status Confirmed as Pending") {
-          setAccoutingStatus(false);
-          setLoadingAccouting(false);
         }
       })
       .catch((err) => {
         setAccoutingStatus(false);
-        setLoadingAccouting(true);
+        // setLoadingAccouting(true);
 
         if (!accoutingUrl) {
           getLinkToAccouting();

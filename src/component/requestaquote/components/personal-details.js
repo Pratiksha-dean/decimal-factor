@@ -135,6 +135,25 @@ function PersonalDetails({ setStep, showSelectedState }) {
     setStepNo(2);
   };
 
+  const leadExistError = () => {
+    return (
+      <p className="mb-0">
+        An account for the chosen business name already exists.
+        <br /> Please change the business name in Step 1 (Application
+        Information) or click here to{" "}
+        <NavLink
+          to="/login"
+          onClick={() => {
+            removeData();
+          }}
+        >
+          Login
+        </NavLink>
+        .
+      </p>
+    );
+  };
+
   return (
     <div className="right-panel">
       <h2>Personal Details</h2>
@@ -182,7 +201,10 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 } else if (
                   resp.data.message_text == "Error! This Lead already exists."
                 ) {
-                  setError({ type: "lead", text: resp.data.message_text });
+                  setError({
+                    type: "lead",
+                    text: leadExistError(),
+                  });
                   ToastMessage(resp.data.message_text, "error");
                 } else {
                   ToastMessage("Something went wrong!", "error");
@@ -399,23 +421,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
 
             {error.type && error.text && (
               <>
-                <Alert variant="danger">
-                  {error.text}
-                  {error.type == "lead" && (
-                    <>
-                      <br />
-                      Click here to{" "}
-                      <NavLink
-                        to="/login"
-                        onClick={() => {
-                          removeData();
-                        }}
-                      >
-                        Login
-                      </NavLink>
-                    </>
-                  )}
-                </Alert>
+                <Alert variant="danger">{error.text}</Alert>
               </>
             )}
             <button
