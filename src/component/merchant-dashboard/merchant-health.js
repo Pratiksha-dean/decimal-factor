@@ -49,6 +49,10 @@ function MerchantHealth() {
   const [accoutingUrl, setAccoutingUrl] = useState();
   const userDetails = getUserDetails();
   const [accountingStatus, setAccoutingStatus] = useState();
+  console.log(
+    "🚀 ~ file: merchant-health.js ~ line 52 ~ MerchantHealth ~ accountingStatus",
+    accountingStatus
+  );
   const [dasboardData, setDashboardData] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
@@ -324,13 +328,16 @@ function MerchantHealth() {
 
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
-        if (resp["status"] === "Linked") {
+        if (resp["message"] === "Status Updated to Linked") {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
           setLoadingAccouting(false);
 
           // setLoadingAccouting(false);
-        } else if (resp.status == "PendingAuth") {
+        } else if (
+          resp.status == "PendingAuth" ||
+          resp["message"] === "Status Confirmed as Pending"
+        ) {
           // getLinkToAccouting();
           setAccoutingStatus(false);
           setLoadingAccouting(false);
@@ -538,7 +545,7 @@ function MerchantHealth() {
                             <>
                               {/* <DarkBackground disappear={true}> */}
                               {/* <div className="position-relative"> */}
-                              <Loaderspinner size="45px" toDisappear={false} />
+                              <Loaderspinner size="45px" />
                               {/* </div> */}
                               {/* </DarkBackground> */}
                             </>

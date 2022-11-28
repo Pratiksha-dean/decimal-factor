@@ -284,9 +284,14 @@ export default function BusinessCreditScore() {
                         <td>
                           <strong>
                             {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "businessName"
-                              ]}
+                            businessCreditScore["report"]["companySummary"] &&
+                            businessCreditScore["report"]["companySummary"][
+                              "businessName"
+                            ]
+                              ? businessCreditScore["report"]["companySummary"][
+                                  "businessName"
+                                ]
+                              : "-"}
                           </strong>
                         </td>
                       </tr>
@@ -298,9 +303,14 @@ export default function BusinessCreditScore() {
                           <strong>
                             {" "}
                             {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "country"
-                              ]}
+                            businessCreditScore["report"]["companySummary"] &&
+                            businessCreditScore["report"]["companySummary"][
+                              "country"
+                            ]
+                              ? businessCreditScore["report"]["companySummary"][
+                                  "country"
+                                ]
+                              : "-"}
                           </strong>
                         </td>
                       </tr>
@@ -312,9 +322,14 @@ export default function BusinessCreditScore() {
                           {" "}
                           <strong>
                             {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "companyNumber"
-                              ]}
+                            businessCreditScore["report"]["companySummary"] &&
+                            businessCreditScore["report"]["companySummary"][
+                              "companyNumber"
+                            ]
+                              ? businessCreditScore["report"]["companySummary"][
+                                  "companyNumber"
+                                ]
+                              : "-"}
                           </strong>
                         </td>
                       </tr>
@@ -324,13 +339,16 @@ export default function BusinessCreditScore() {
                           <strong>Company Registration Number</strong>
                         </td>
                         <td>
-                          {" "}
                           <strong>
-                            {" "}
                             {businessCreditScore &&
-                              businessCreditScore["report"]["companySummary"][
-                                "companyRegistrationNumber"
-                              ]}
+                            businessCreditScore["report"]["companySummary"] &&
+                            businessCreditScore["report"]["companySummary"][
+                              "companyRegistrationNumber"
+                            ]
+                              ? businessCreditScore["report"]["companySummary"][
+                                  "companyRegistrationNumber"
+                                ]
+                              : "-"}
                           </strong>
                         </td>
                       </tr>
@@ -355,9 +373,16 @@ export default function BusinessCreditScore() {
                         <td>
                           <strong>
                             {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "shareCapitalStructure"
-                              ]["issuedShareCapital"]["currency"]}
+                            businessCreditScore["report"][
+                              "shareCapitalStructure"
+                            ] &&
+                            businessCreditScore["report"][
+                              "shareCapitalStructure"
+                            ]["issuedShareCapital"]
+                              ? businessCreditScore["report"][
+                                  "shareCapitalStructure"
+                                ]["issuedShareCapital"]["currency"]
+                              : "-"}
                           </strong>
                         </td>
                       </tr>
@@ -369,9 +394,16 @@ export default function BusinessCreditScore() {
                           <strong>
                             {" "}
                             {businessCreditScore &&
-                              businessCreditScore["report"][
-                                "shareCapitalStructure"
-                              ]["issuedShareCapital"]["value"]}
+                            businessCreditScore["report"][
+                              "shareCapitalStructure"
+                            ] &&
+                            businessCreditScore["report"][
+                              "shareCapitalStructure"
+                            ]["issuedShareCapital"]
+                              ? businessCreditScore["report"][
+                                  "shareCapitalStructure"
+                                ]["issuedShareCapital"]["value"]
+                              : "-"}
                           </strong>
                         </td>
                       </tr>
@@ -396,9 +428,14 @@ export default function BusinessCreditScore() {
                             <strong>
                               {" "}
                               {businessCreditScore &&
-                                businessCreditScore["report"]["companySummary"][
-                                  "creditRating"
-                                ]["commonValue"]}
+                              businessCreditScore["report"]["companySummary"] &&
+                              businessCreditScore["report"]["companySummary"][
+                                "creditRating"
+                              ]["commonValue"]
+                                ? businessCreditScore["report"][
+                                    "companySummary"
+                                  ]["creditRating"]["commonValue"]
+                                : "-"}
                             </strong>
                           </td>
                         </tr>
@@ -410,9 +447,14 @@ export default function BusinessCreditScore() {
                             <strong>
                               {" "}
                               {businessCreditScore &&
-                                businessCreditScore["report"]["companySummary"][
-                                  "creditRating"
-                                ]["commonDescription"]}
+                              businessCreditScore["report"]["companySummary"] &&
+                              businessCreditScore["report"]["companySummary"][
+                                "creditRating"
+                              ]["commonDescription"]
+                                ? businessCreditScore["report"][
+                                    "companySummary"
+                                  ]["creditRating"]["commonDescription"]
+                                : "-"}
                             </strong>
                           </td>
                         </tr>
@@ -434,9 +476,14 @@ export default function BusinessCreditScore() {
                             <strong>
                               {" "}
                               {businessCreditScore &&
-                                businessCreditScore["report"]["companySummary"][
-                                  "creditRating"
-                                ]["creditLimit"]["currency"]}
+                              businessCreditScore["report"]["companySummary"] &&
+                              businessCreditScore["report"]["companySummary"][
+                                "creditRating"
+                              ]["creditLimit"]["currency"]
+                                ? businessCreditScore["report"][
+                                    "companySummary"
+                                  ]["creditRating"]["creditLimit"]["currency"]
+                                : "-"}
                             </strong>
                           </td>
                         </tr>
@@ -448,9 +495,14 @@ export default function BusinessCreditScore() {
                             <strong>
                               {" "}
                               {businessCreditScore &&
-                                businessCreditScore["report"]["companySummary"][
-                                  "creditRating"
-                                ]["creditLimit"]["value"]}
+                              businessCreditScore["report"]["companySummary"] &&
+                              businessCreditScore["report"]["companySummary"][
+                                "creditRating"
+                              ]["creditLimit"]["value"]
+                                ? businessCreditScore["report"][
+                                    "companySummary"
+                                  ]["creditRating"]["creditLimit"]["value"]
+                                : "-"}
                             </strong>
                           </td>
                         </tr>
@@ -473,9 +525,14 @@ export default function BusinessCreditScore() {
                             <strong>
                               {" "}
                               {businessCreditScore &&
-                                businessCreditScore["report"]["companySummary"][
-                                  "creditRating"
-                                ]["providerValue"]["maxValue"]}
+                              businessCreditScore["report"]["companySummary"] &&
+                              businessCreditScore["report"]["companySummary"][
+                                "creditRating"
+                              ]["providerValue"]["maxValue"]
+                                ? businessCreditScore["report"][
+                                    "companySummary"
+                                  ]["creditRating"]["providerValue"]["maxValue"]
+                                : "-"}
                             </strong>
                           </td>{" "}
                         </tr>
@@ -499,7 +556,6 @@ export default function BusinessCreditScore() {
                           </td>
                           <td>
                             <strong>
-                              {" "}
                               {businessCreditScore &&
                                 businessCreditScore["report"]["companySummary"][
                                   "creditRating"
@@ -564,7 +620,6 @@ export default function BusinessCreditScore() {
                           </td>
                           <td>
                             <strong>
-                              {" "}
                               {businessCreditScore &&
                                 businessCreditScore["report"][
                                   "negativeInformation"
@@ -925,32 +980,4 @@ export default function BusinessCreditScore() {
       </div>
     </section>
   );
-}
-
-{
-  /* <table
-                  className="border credit-score-table"
-                  style={{ width: "100%" }}
-                >
-                  <tr className="text-center credit-score-table-head">
-                    <th colspan="3">Company Summary</th>
-                  </tr>
-                  <tr>
-                    <td>Business Name</td>
-                    <td>Smith</td>
-                  </tr>
-                  <tr>
-                    <td>Country</td>
-                    <td>Jackson</td>
-                  </tr>
-                  <tr>
-                    <td>Company Number</td>
-                    <td>Jackson</td>
-                  </tr>
-
-                  <tr>
-                    <td>Company Registration Number</td>
-                    <td>Jackson</td>
-                  </tr>
-                </table> */
 }
