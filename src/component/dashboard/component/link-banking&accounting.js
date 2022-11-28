@@ -42,18 +42,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const appData = getReviewAppData();
   const userDetails = getUserDetails();
   const [accoutingUrl, setAccoutingUrl] = useState();
-  console.log(
-    "🚀 ~ file: link-banking&accounting.js ~ line 45 ~ LinkBankingAccounting ~ accoutingUrl",
-    accoutingUrl
-  );
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
   const [accountingStatus, setAccoutingStatus] = useState(false);
   const [loadingBanking, setLoadingBanking] = useState(false);
-  const [loadingAccouting, setLoadingAccouting] = useState(false);
-
-
-  const companyInfo = getCompanyInfo();
+  const [loadingAccouting, setLoadingAccouting] = useState(true);
   const [uploadBankStatementToggle, setUploadBankStatementToggle] =
     useState(storedData);
 
@@ -112,6 +105,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       name: data["lf_business_name"],
       platformType: "0",
     };
+    // if (isClicked) {
+    //   setLoadingAccoutingUrl(true);
+    // }
 
     getCompanyID(payload.lm_id)
       .then((resp) => {
@@ -122,13 +118,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
           );
         }
 
-        setLoadingAccouting(false);
+        // setLoadingAccouting(false);
 
         if (!resp.data) {
           if (isClicked) {
             getLinkToAccountingData(payload)
               .then((resp) => {
                 if (resp.success == "false" && resp.code == 500) {
+                  setLoadingAccouting(false);
                   //  getCompanyID(payload.lm_id).then((resp) => {
                   //    setLoadingAccouting(false);
                   //    setAccoutingUrl(
@@ -152,6 +149,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
               .catch((err) => {
                 ToastMessage("Something went wrong!", "error");
                 setLoadingAccouting(false);
+                // setLoadingAccoutingUrl(false);
               });
           }
         }
@@ -167,7 +165,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         // }
       })
       .catch((err) => {
-        setLoadingAccouting(false);
+        // setLoadingAccouting(false);
         console.log(
           "🚀 ~ file: link-banking&accounting.js ~ line 167 ~ getCompanyID ~ err",
           err
@@ -206,7 +204,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    setLoadingAccouting(true);
+    // setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
         if (resp["message"] === "Status Updated to Linked") {
@@ -218,10 +216,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
           setLoadingAccouting(false);
 
           // setAccoutingUrl(resp.data.redirect);
-          console.log(
-            "🚀 ~ file: link-banking&accounting.js ~ line 219 ~ .then ~ data",
-            data
-          );
         } else if (resp["message"] === "Status Confirmed as Pending") {
           setAccoutingStatus(false);
           setLoadingAccouting(false);
@@ -229,7 +223,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       })
       .catch((err) => {
         setAccoutingStatus(false);
-        setLoadingAccouting(false);
+        setLoadingAccouting(true);
 
         if (!accoutingUrl) {
           getLinkToAccouting();
@@ -303,12 +297,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   useEffect(() => {
     request();
-    checkAccountingStatusClick();
-    checkBankingStatusClick();
+    // checkAccountingStatusClick();
+    // checkBankingStatusClick();
   }, []);
 
   useEffect(() => {
     if (data) {
+      setLoadingAccouting(true);
+
       checkAccountingStatusClick();
 
       if (data["obv_account_score_status"] == "Start") {
