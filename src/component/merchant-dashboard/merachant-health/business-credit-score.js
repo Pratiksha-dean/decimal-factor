@@ -230,13 +230,12 @@ export default function BusinessCreditScore() {
       .then((data) => {
         let url = JSON.parse(data.response).Url;
 
-        setLoadingDownload(false);
         if (url) {
           let alink = document.createElement("a");
-
           alink.href = `${API_URL}${url}`;
           alink.download = "SamplePDF.pdf";
           alink.click();
+          setLoadingDownload(false);
         }
       })
       .catch((err) => {
@@ -255,11 +254,12 @@ export default function BusinessCreditScore() {
               <Loaderspinner size="45px" />
             ) : (
               <div className="row">
+                {loadingDownload && <Loaderspinner size="45px" />}
+
                 <div className="col-12">
                   <button
                     className="btn btn-primary download-score-btn"
                     onClick={downaloadCreditScore}
-                    disabled={loadingDownload}
                   >
                     <i class="fa fa-cloud-arrow-down"></i> Download Your
                     Business Credit Score
