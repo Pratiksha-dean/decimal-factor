@@ -2661,3 +2661,54 @@ button#RFS-StepButton {
   left: 50%;
   top: 50%;
 }
+
+
+
+@media (min-width: 1440px) {
+  .container-fluid.merchant-body{
+    max-width: 1140px;
+    padding: 0px 15px;
+    margin: 0 auto;
+}
+
+.box-shape {
+  height: 42px;
+  background: #fff;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
+  float: left;
+  padding: 0px 5px;
+  border-radius: 5px;
+  line-height: 42px;
+  width: 100%;
+}
+.accouting-info label {
+  margin-bottom: 12px !important;
+  font-size: 12px !important;
+}
+
+.box-shape select {
+  border: 0px;
+  float: right;
+  width: 80px;
+  margin-top: 13px;
+  height: auto !important;
+}
+
+.box-shape input.period-compare {
+  border-radius: 10px;
+  border: 1px #ccc solid;
+  padding: 8px;
+  width: 51px;
+  float: right;
+  height: 30px !important;
+  margin-top: 5px;
+}
+input.period-start {
+  border: 0px;
+  background: 0px;
+  float: right;
+  width: 90px;
+  font-size: 12px;
+}
+
+}
