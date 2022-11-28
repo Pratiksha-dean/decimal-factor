@@ -52,6 +52,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const [loadingBanking, setLoadingBanking] = useState(false);
   const [loadingAccouting, setLoadingAccouting] = useState(false);
 
+
   const companyInfo = getCompanyInfo();
   const [uploadBankStatementToggle, setUploadBankStatementToggle] =
     useState(storedData);
@@ -112,92 +113,100 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       platformType: "0",
     };
 
-    getCompanyID(payload.lm_id).then((resp) => {
-      if (resp["data"] && resp["data"]["codat_client_id"]) {
-        setLoadingAccouting(false);
-        setAccoutingUrl(
-          `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-        );
-      }
-
-      setLoadingAccouting(false);
-
-      if (!resp.data) {
-        if (isClicked) {
-          getLinkToAccountingData(payload)
-            .then((resp) => {
-              if (resp.success == "false" && resp.code == 500) {
-                //  getCompanyID(payload.lm_id).then((resp) => {
-                //    setLoadingAccouting(false);
-                //    setAccoutingUrl(
-                //      `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-                //    );
-                //    if (isClicked) {
-                //      window.open(
-                //        `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-                //        "_blank"
-                //      );
-                //    }
-                //  });
-              } else {
-                setAccoutingUrl(resp.data.redirect);
-                if (isClicked) {
-                  window.open(resp.data.redirect, "_blank");
-                }
-                setLoadingAccouting(false);
-              }
-            })
-            .catch((err) => {
-              ToastMessage("Something went wrong!", "error");
-              setLoadingAccouting(false);
-            });
-        }
-      }
-
-      // setAccoutingUrl(
-      //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-      // );
-      // if (isClicked) {
-      //   window.open(
-      //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-      //     "_blank"
-      //   );
-      // }
-    });
-    return;
-    getLinkToAccountingData(payload)
+    getCompanyID(payload.lm_id)
       .then((resp) => {
-        if (resp.success == "false" && resp.code == 500) {
-          getCompanyID(payload.lm_id).then((resp) => {
-            setLoadingAccouting(false);
-
-            setAccoutingUrl(
-              `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-            );
-            if (isClicked) {
-              window.open(
-                `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-                "_blank"
-              );
-            }
-          });
-        } else {
-          setAccoutingUrl(resp.data.redirect);
-          if (isClicked) {
-            window.open(resp.data.redirect, "_blank");
-          }
+        if (resp["data"] && resp["data"]["codat_client_id"]) {
           setLoadingAccouting(false);
+          setAccoutingUrl(
+            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+          );
         }
+
+        setLoadingAccouting(false);
+
+        if (!resp.data) {
+          if (isClicked) {
+            getLinkToAccountingData(payload)
+              .then((resp) => {
+                if (resp.success == "false" && resp.code == 500) {
+                  //  getCompanyID(payload.lm_id).then((resp) => {
+                  //    setLoadingAccouting(false);
+                  //    setAccoutingUrl(
+                  //      `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+                  //    );
+                  //    if (isClicked) {
+                  //      window.open(
+                  //        `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+                  //        "_blank"
+                  //      );
+                  //    }
+                  //  });
+                } else {
+                  setAccoutingUrl(resp.data.redirect);
+                  if (isClicked) {
+                    window.open(resp.data.redirect, "_blank");
+                  }
+                  setLoadingAccouting(false);
+                }
+              })
+              .catch((err) => {
+                ToastMessage("Something went wrong!", "error");
+                setLoadingAccouting(false);
+              });
+          }
+        }
+
+        // setAccoutingUrl(
+        //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+        // );
+        // if (isClicked) {
+        //   window.open(
+        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+        //     "_blank"
+        //   );
+        // }
       })
       .catch((err) => {
-        ToastMessage("Something went wrong!", "error");
         setLoadingAccouting(false);
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js ~ line 167 ~ getCompanyID ~ err",
+          err
+        );
       });
+    // return;
+    // getLinkToAccountingData(payload)
+    //   .then((resp) => {
+    //     if (resp.success == "false" && resp.code == 500) {
+    //       getCompanyID(payload.lm_id).then((resp) => {
+    //         setLoadingAccouting(false);
+
+    //         setAccoutingUrl(
+    //           `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+    //         );
+    //         if (isClicked) {
+    //           window.open(
+    //             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+    //             "_blank"
+    //           );
+    //         }
+    //       });
+    //     } else {
+    //       setAccoutingUrl(resp.data.redirect);
+    //       if (isClicked) {
+    //         window.open(resp.data.redirect, "_blank");
+    //       }
+    //       setLoadingAccouting(false);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     ToastMessage("Something went wrong!", "error");
+    //     setLoadingAccouting(false);
+    //   });
   };
 
   const checkAccountingStatusClick = () => {
     // userDetails["lead_id"];
-    // setLoadingAccouting(true);
+    setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
         if (resp["message"] === "Status Updated to Linked") {
@@ -209,6 +218,13 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
           setLoadingAccouting(false);
 
           // setAccoutingUrl(resp.data.redirect);
+          console.log(
+            "🚀 ~ file: link-banking&accounting.js ~ line 219 ~ .then ~ data",
+            data
+          );
+        } else if (resp["message"] === "Status Confirmed as Pending") {
+          setAccoutingStatus(false);
+          setLoadingAccouting(false);
         }
       })
       .catch((err) => {
@@ -293,8 +309,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   useEffect(() => {
     if (data) {
-      setLoadingAccouting(true);
-
       checkAccountingStatusClick();
 
       if (data["obv_account_score_status"] == "Start") {

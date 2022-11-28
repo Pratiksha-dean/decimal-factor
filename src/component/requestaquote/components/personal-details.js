@@ -184,6 +184,8 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 ) {
                   setError({ type: "lead", text: resp.data.message_text });
                   ToastMessage(resp.data.message_text, "error");
+                } else {
+                  ToastMessage("Something went wrong!", "error");
                 }
                 setLoading(false);
               } else {
