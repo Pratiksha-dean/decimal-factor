@@ -1509,7 +1509,7 @@ function MerchantHealth() {
                                     <div className="col-md-6">
                                       <div className=" financial-service income-panel">
                                         <h4>Event Feed ({eventCount})</h4>
-                                        <div className="scroll-bar-2">
+                                        <div className="scroll-bar-2 events-panel">
                                           {(eventFeedSummary.length > 0 && (
                                             <div>
                                               {eventFeedSummary.length > 0 &&
