@@ -133,18 +133,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
               .then((resp) => {
                 if (resp.success == "false" && resp.code == 500) {
                   setLoadingAccouting(false);
-                  //  getCompanyID(payload.lm_id).then((resp) => {
-                  //    setLoadingAccouting(false);
-                  //    setAccoutingUrl(
-                  //      `https://link.codat.io/company/${resp.data.codat_client_id}`
-                  //    );
-                  //    if (isClicked) {
-                  //      window.open(
-                  //        `https://link.codat.io/company/${resp.data.codat_client_id}`,
-                  //        "_blank"
-                  //      );
-                  //    }
-                  //  });
                 } else {
                   setAccoutingUrl(resp.data.redirect);
                   if (isClicked) {
@@ -156,31 +144,14 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
               .catch((err) => {
                 ToastMessage("Something went wrong!", "error");
                 setLoadingAccouting(false);
-                // setLoadingAccoutingUrl(false);
               });
           }
         }
-
-        // setAccoutingUrl(
-        //   `https://link.codat.io/company/${resp.data.codat_client_id}`
-        // );
-        // if (isClicked) {
-        //   window.open(
-        //     `https://link.codat.io/company/${resp.data.codat_client_id}`,
-        //     "_blank"
-        //   );
-        // }
       })
-      .catch((err) => {
-        // setLoadingAccouting(false);
-
-      });
-
+      .catch((err) => {});
   };
 
   const checkAccountingStatusClick = () => {
-    // userDetails["lead_id"];
-    // setLoadingAccouting(true);
     checkAccountingStatus(userDetails["lead_id"])
       .then((resp) => {
         if (resp["message"] === "Status Updated to Linked") {
@@ -204,8 +175,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   };
 
   const checkBankingStatusClick = () => {
-    // userDetails["lead_id"];
-    // setLoadingBanking(true);
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
         if (resp["response"] == "Completed") {
@@ -265,8 +234,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   useEffect(() => {
     request();
-    // checkAccountingStatusClick();
-    // checkBankingStatusClick();
   }, []);
 
   useEffect(() => {

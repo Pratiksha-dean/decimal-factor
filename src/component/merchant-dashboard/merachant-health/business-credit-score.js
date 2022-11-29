@@ -120,7 +120,6 @@ export default function BusinessCreditScore() {
           if (!list.length) {
             setHeadingText(disclaimerMsg);
           }
-          // getFiles();
         }
       });
     } else {
