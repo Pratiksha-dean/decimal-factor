@@ -19,7 +19,7 @@ export default function AssessBalanceSheet(props) {
     const [statementRatiosLoading, setStatementRatiosLoading] = useState(false)
 
 const handleClassClick = () => {
-    const profitstatement = document.querySelectorAll("tr[class^='balancestatement-label-']");    
+    const profitstatement = document.querySelectorAll("tr[class^='balancestatement-label-']");
     for (let i of profitstatement) {
         i.addEventListener("click", (e) => {
             if(e.target.type !='checkbox'){
@@ -27,19 +27,19 @@ const handleClassClick = () => {
                 Array.from(document.getElementsByClassName('sub-' + clname)).forEach(function(element) {
                     element.classList.toggle("hide");
                 });
-                
+
                 Array.from(document.getElementsByClassName('sub-sub-' + clname)).forEach(function(element) {
                     element.classList.add("hide");
                 });
-                
+
                 Array.from(document.getElementsByClassName('sub-sub-sub-' + clname)).forEach(function(element) {
                     element.classList.add("hide");
-                });    
+                });
             }
         })
     }
 
-    const subprofitstatement = document.querySelectorAll("tr[class^='sub-balancestatement-label-']");    
+    const subprofitstatement = document.querySelectorAll("tr[class^='sub-balancestatement-label-']");
     for (let i of subprofitstatement) {
         i.addEventListener("click", (e) => {
             if(e.target.type !='checkbox'){
@@ -47,11 +47,11 @@ const handleClassClick = () => {
                 Array.from(document.getElementsByClassName('sub-' + clname)).forEach(function(element) {
                     element.classList.toggle("hide");
                 });
-                
+
                 Array.from(document.getElementsByClassName('sub-sub-' + clname)).forEach(function(element) {
                     element.classList.add("hide");
                 });
-          
+
                 Array.from(document.getElementsByClassName('sub-sub-sub-' + clname)).forEach(function(element) {
                     element.classList.add("hide");
                 });
@@ -59,8 +59,8 @@ const handleClassClick = () => {
         })
     }
 
-    const subsubprofitstatement = document.querySelectorAll("tr[class^='sub-sub-balancestatement-label-']");    
-    
+    const subsubprofitstatement = document.querySelectorAll("tr[class^='sub-sub-balancestatement-label-']");
+
     for (let i of subsubprofitstatement) {
         i.addEventListener("click", (e) => {
             if(e.target.type !='checkbox'){
@@ -74,12 +74,12 @@ const handleClassClick = () => {
                 Array.from(document.getElementsByClassName('sub-sub-sub-' + clname)).forEach(function(element) {
                     element.classList.add("hide");
                 });
-                
+
             }
         })
     }
 
-    const profitratios = document.querySelectorAll("tr[class^='balanceratios-label-']");    
+    const profitratios = document.querySelectorAll("tr[class^='balanceratios-label-']");
       for (let i of profitratios) {
           i.addEventListener("click", (e) => {
                   let clname = e.currentTarget.className.replace(" padding-left-1", "");
@@ -91,9 +91,8 @@ const handleClassClick = () => {
 
 }
    const getBalanceSheetData = async(plength,pCompare,pStart) => {
-        
+
     if(plength && pCompare && pStart){
-        console.log("p compare", pCompare)
         setShowStatementRatios(false)
         setStatementRatiosLoading(true)
 
@@ -115,22 +114,19 @@ const handleClassClick = () => {
                     'data': res.data.equity
                 }
                 ]);
-                const myTimeout = setTimeout(handleClassClick, 1000); 
+                const myTimeout = setTimeout(handleClassClick, 1000);
                 setStatementRatiosLoading(false)
-                setShowStatementRatios(true)              
+                setShowStatementRatios(true)
         }).catch(err => {
-            console.log(err);
             setStatementRatiosLoading(false)
             setShowStatementRatios(false)
         });
     }
     else{
-        console.log("p compare", pCompare)
-        console.log('test false', pStart)
         setShowStatementRatios(false)
     }
-    
-    
+
+
 
 
    }
@@ -160,23 +156,23 @@ const handleClassClick = () => {
       }
     },
     legend: {
-      
+
       height:50
-      
+
     },
     series: [
         {
           name: "Asset",
           data: [190, 220, 20, 260],
         },
-       
+
         {
-          name: "Liability", 
+          name: "Liability",
           data: [103, 605, 98, 83],
         },
         {
             name: "Equity",
-            data: [203, 305, 198, 283], 
+            data: [203, 305, 198, 283],
           },
       ]
   };
@@ -186,11 +182,11 @@ const handleClassClick = () => {
               <div className="col-md-12">
               <h3>Balance Sheet</h3>
               <div className="row">
-              
+
               <div className="col-md-3">
                 <div className=" col-for-logo">
                 <img src={require("../../images/gbp.png")} alt="" className="logo-dashboard" />
-              
+
                 <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
                 </div></div>
@@ -206,7 +202,7 @@ const handleClassClick = () => {
                 <label>Period Start</label>
                 <input type="month" value={periodStart} className="period-start" onChange={(e)=>{
                         setPeriodStart(e.target.value);
-                       getBalanceSheetData(periodLength, periodCompare, e.target.value); 
+                       getBalanceSheetData(periodLength, periodCompare, e.target.value);
                 }}/>
                 </div></div>
                 <div className="col-md-3 ">
@@ -214,7 +210,7 @@ const handleClassClick = () => {
                 <label>Period Length</label>
                 <select value={periodLength} onChange={(e)=>{
                         setPeriodLength(e.target.value);
-                       getBalanceSheetData(e.target.value, periodCompare, periodStart); 
+                       getBalanceSheetData(e.target.value, periodCompare, periodStart);
                 }}>
                 <option value="1">1 Month</option>
                     <option value="2">2 Months</option>
@@ -226,9 +222,9 @@ const handleClassClick = () => {
                 <div className="col-md-3 ">
                     <div class="box-shape">
                     <label>Period to Compare</label>
-                    <input type="number" className="period-compare" value={periodCompare} onChange={(e)=>{ 
+                    <input type="number" className="period-compare" value={periodCompare} onChange={(e)=>{
                     setPeriodCompare(e.target.value); getBalanceSheetData(periodLength,e.target.value,periodStart); }} name="" />
-              
+
                 </div></div>
                 </div>
                 {
@@ -243,7 +239,7 @@ const handleClassClick = () => {
                                         <h3 className="groupbydebtor">Statement</h3>
                                         <div className=" scroll-bar scroll-bar-2">
                                         <table id="assess-profitloss-table" className="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
-                                        {statementData} 
+                                        {statementData}
 
                                         </table>
                                     </div></div>
@@ -262,10 +258,10 @@ const handleClassClick = () => {
                                 </div>
                             </div>
                         </>
-                
+
               </div>
                     )
-            } 
+            }
         </div>
         </div>
 

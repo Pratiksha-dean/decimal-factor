@@ -22,15 +22,14 @@ export default function AssessCommerce(props) {
 
 
   const getApiData = async (start, end) => {
-      
+
       if (start !== '' && end != '') {
 
         setShowStatementRatios(false)
         setStatementRatiosLoading(true)
         await axios.get(`${props.endUrl}/CODAT/assess_commerce/${props.leadId}/${start}/${end}`)
           .then(res => {
-            console.log(res.data);
-  
+
             setSalesDataSeries([{
               'name': 'Revenue',
               'data': res.data.revenue
@@ -45,7 +44,7 @@ export default function AssessCommerce(props) {
             setRetentionValue(res.data.retentionvalue);
             setRefundValue(res.data.refundvalue);
             setSalesDataCategoreis(res.data.date);
-  
+
             setCustomerDataSeries([{
               'name': 'Existing customers',
               'data': res.data.e_c
@@ -59,7 +58,7 @@ export default function AssessCommerce(props) {
               'data': res.data.t_c
             }
             ]);
-  
+
             setOrdersDataSeries([{
               'name': 'Total order value',
               'data': res.data.t_o_v
@@ -69,21 +68,18 @@ export default function AssessCommerce(props) {
               'data': res.data.t_r_v
             }
             ]);
-  
+
             setGraphCategory('customer');
             setStatementRatiosLoading(false)
             setShowStatementRatios(true)
-  
+
           }).catch(err => {
-            console.log(err);
             setStatementRatiosLoading(false)
             setShowStatementRatios(false)
           })
     }
     else
     {
-        console.log("p compare start", start)
-        console.log('test false end', end)
         setShowStatementRatios(false)
     }
   }
@@ -187,7 +183,7 @@ export default function AssessCommerce(props) {
         )
        }
 
-        
+
 
       </div>
     </div>

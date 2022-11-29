@@ -7,6 +7,7 @@ import {
   checkAccountingStatus,
   checkBankingStatus,
   checkLinkingStatus,
+  CODAT_BASE_URL,
   deleteDocuments,
   getAccountScore,
   getCompanyID,
@@ -51,28 +52,36 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
     useState(storedData);
 
   const [fileList, setFileList] = useState([]);
+  const [loadFiles, setLoadFiles] = useState(false);
 
   useEffect(() => {
     getFiles();
   }, []);
 
   const getFiles = () => {
-    if (userDetails && userDetails["lead_id"] && storedData) {
-      getDocumentBankStatements(userDetails["lead_id"]).then((resp) => {
-        if (resp.records.length > 0 && resp["record_count"] !== 0) {
-          let list = [];
-          resp.records.forEach((item) => {
-            list.push({
-              file: { name: item["la_file_description"] },
-              type: item["la_doc_type"],
-              id: item["la_id"],
+    if (userDetails && userDetails["lead_id"]) {
+      setLoadFiles(true);
+      getDocumentBankStatements(userDetails["lead_id"])
+        .then((resp) => {
+          if (resp.records.length > 0 && resp["record_count"] !== 0) {
+            let list = [];
+            resp.records.forEach((item) => {
+              list.push({
+                file: { name: item["la_file_description"] },
+                type: item["la_doc_type"],
+                id: item["la_id"],
+              });
             });
-          });
 
-          setFileList(list);
-        }
-        // setFileList(resp.records);
-      });
+            setFileList(list);
+            setLoadFiles(false);
+          }
+          // setFileList(resp.records);
+        })
+        .catch((err) => {
+          setFileList([]);
+          setLoadFiles(false);
+        });
     }
   };
 
@@ -113,9 +122,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
       .then((resp) => {
         if (resp["data"] && resp["data"]["codat_client_id"]) {
           setLoadingAccouting(false);
-          setAccoutingUrl(
-            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-          );
+          setAccoutingUrl(`${CODAT_BASE_URL}${resp.data.codat_client_id}`);
         }
 
         // setLoadingAccouting(false);
@@ -129,11 +136,11 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                   //  getCompanyID(payload.lm_id).then((resp) => {
                   //    setLoadingAccouting(false);
                   //    setAccoutingUrl(
-                  //      `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+                  //      `https://link.codat.io/company/${resp.data.codat_client_id}`
                   //    );
                   //    if (isClicked) {
                   //      window.open(
-                  //        `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+                  //        `https://link.codat.io/company/${resp.data.codat_client_id}`,
                   //        "_blank"
                   //      );
                   //    }
@@ -155,51 +162,20 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         }
 
         // setAccoutingUrl(
-        //   `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
+        //   `https://link.codat.io/company/${resp.data.codat_client_id}`
         // );
         // if (isClicked) {
         //   window.open(
-        //     `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+        //     `https://link.codat.io/company/${resp.data.codat_client_id}`,
         //     "_blank"
         //   );
         // }
       })
       .catch((err) => {
         // setLoadingAccouting(false);
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 167 ~ getCompanyID ~ err",
-          err
-        );
-      });
-    // return;
-    // getLinkToAccountingData(payload)
-    //   .then((resp) => {
-    //     if (resp.success == "false" && resp.code == 500) {
-    //       getCompanyID(payload.lm_id).then((resp) => {
-    //         setLoadingAccouting(false);
 
-    //         setAccoutingUrl(
-    //           `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-    //         );
-    //         if (isClicked) {
-    //           window.open(
-    //             `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-    //             "_blank"
-    //           );
-    //         }
-    //       });
-    //     } else {
-    //       setAccoutingUrl(resp.data.redirect);
-    //       if (isClicked) {
-    //         window.open(resp.data.redirect, "_blank");
-    //       }
-    //       setLoadingAccouting(false);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     ToastMessage("Something went wrong!", "error");
-    //     setLoadingAccouting(false);
-    //   });
+      });
+
   };
 
   const checkAccountingStatusClick = () => {
@@ -217,21 +193,13 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         ) {
           setAccoutingStatus(false);
           setLoadingAccouting(false);
-
-          // setAccoutingUrl(resp.data.redirect);
         }
       })
       .catch((err) => {
         setAccoutingStatus(false);
-        // setLoadingAccouting(true);
-
         if (!accoutingUrl) {
           getLinkToAccouting();
         }
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
-          err
-        );
       });
   };
 
@@ -323,13 +291,23 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
   const onSubmit = () => {
     if (uploadBankStatementToggle) {
-      let identityProofDocs = fileList.map((item) => {
+      let identityProofDocs;
+      identityProofDocs = fileList.map((item, i) => {
         if (!item.id) {
           return item.file;
         } else {
-          return;
+          return null;
         }
       });
+
+      identityProofDocs = identityProofDocs.filter((item) => {
+        return item !== null;
+      });
+
+      if (!identityProofDocs.length && fileList.length) {
+        setActiveStep(activeStep + 1);
+        setDashboardStepNo(activeStep + 1);
+      }
       uploadDocuments(
         {
           fullname: `${userDetails["first_name"]} ${userDetails["last_name"]}`,
@@ -585,7 +563,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                     </li>
                   </ul>
 
-                  {fileList.length > 0 && (
+                  {loadFiles && (
+                    <strong className="my-2">Loading Files...</strong>
+                  )}
+                  {!loadFiles && fileList.length > 0 && (
                     <div className="uploaded-file">
                       <p>
                         <strong>File Uploaded:</strong>

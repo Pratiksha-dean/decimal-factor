@@ -10,6 +10,7 @@ import { getUserDetails } from "../../login/loginpage";
 import { setDashboardStepNo } from "../dashboard";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Tooltip } from "react-bootstrap";
+import { removeDoubleSpace } from "../../Constants";
 
 export const setReviewPersonalData = (data) => {
   localStorage.setItem("reviewPersonalInfo", JSON.stringify(data));
@@ -26,10 +27,10 @@ function ReviewPersonalDetails({ data, activeStep, setActiveStep }) {
   const initialValues = {
     [fieldNames.FIRSTNAME]: storedData
       ? storedData[fieldNames.FIRSTNAME]
-      : data["lf_opener_name"].split(" ")[0],
+      : removeDoubleSpace(data["lf_opener_name"]).split(" ")[0],
     [fieldNames.LASTNAME]: storedData
       ? storedData[fieldNames.LASTNAME]
-      : data["lf_opener_name"].split(" ")[1],
+      : removeDoubleSpace(data["lf_opener_name"]).split(" ")[1],
     [fieldNames.EMAIL]: storedData
       ? storedData[fieldNames.EMAIL]
       : data["lf_business_email"],

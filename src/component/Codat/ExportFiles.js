@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 
 export default function ExportFiles(props) {
-    
+
     const [openexport, setOpenexport] = useState(false);
     const [createDataExport, setCreateDataExport] = useState(true);
     const [createAuditExport, setCreateAuditExport] = useState(true);
@@ -32,9 +32,8 @@ export default function ExportFiles(props) {
             } else {
                 setDataExportUrl('');
             }
-            
+
         }).catch(err => {
-            console.log(err);
         });
 
         await axios.get(`${props.endUrl}/CODAT/download_audit_data/${props.leadId}`)
@@ -45,13 +44,12 @@ export default function ExportFiles(props) {
                 setDataAuditUrl('');
             }
         }).catch(err => {
-            console.log(err);
         });
-        
-      
+
+
     }
     useEffect(()=>{
-        
+
         checkDownloadFiles();
     },props);
     return(
@@ -64,39 +62,39 @@ export default function ExportFiles(props) {
                     <p>Generate a new file or download last available report</p>
                     {createDataExport?<button onClick={exportData} className="btn btn-primary create-new-data" id="export-codat-data">Create New Data Export</button>:''}
                     {createAuditExport?<button onClick={exportAudit} className="btn btn-primary create-new-data" id="export-assess-codat-data">Create New Audit Export</button>:''}
-                   
+
                     <p>Export accounting and banking data shared by the company</p>
                 </div>
                 {dataAuditUrl || dataExportUrl?<p><strong>Last export</strong></p>:''}
-                
+
                 <div className="row" id="codat-download-cointainer">
                    {dataExportUrl ? (<>
                     <div className="col-md-8">
-                        <p><i className="fa fa-calendar"></i> 
+                        <p><i className="fa fa-calendar"></i>
                             <span>All Data Export </span></p>
                     </div>
                     <div className="col-md-4">
-                        
+
                         <a href={dataExportUrl} className="export-download">Download!</a>
 
                     </div></>):''
                     }
                     {dataAuditUrl ? (<>
                     <div className="col-md-8">
-                        <p><i className="fa fa-calendar"></i> 
+                        <p><i className="fa fa-calendar"></i>
                             <span>Audit Data Export</span></p>
                     </div>
                     <div className="col-md-4">
-                        
+
                         <a href={dataAuditUrl}  className="export-download">Download!</a>
 
                     </div></>):''}
-                    
+
                     </div>
-                 <button onClick={checkDownloadFiles} className="btn btn-primary refresh-btn" id="export-data-refresh">Refresh</button> 
+                 <button onClick={checkDownloadFiles} className="btn btn-primary refresh-btn" id="export-data-refresh">Refresh</button>
                 </div>
                 ) : null}
                     </div>
     )
-    
+
 }

@@ -46,7 +46,12 @@ export default function BusinessCreditScore() {
   const getFiles = () => {
     if (userDetails && userDetails["lead_id"]) {
       getDocuments(userDetails["lead_id"]).then((resp) => {
-        if (resp.records.length > 0 && resp["record_count"] !== 0) {
+        if (
+          resp &&
+          resp.records &&
+          resp.records.length > 0 &&
+          resp["record_count"] !== 0
+        ) {
           let countAddressProofApproved = 0;
           let countIdentityProofApproved = 0;
           setHeadingText(submitMsg);
@@ -101,24 +106,7 @@ export default function BusinessCreditScore() {
   const hiddenFileAddressProofInput = useRef(null);
   const hiddenFileIndentityProofInput = useRef(null);
 
-  // useEffect(() => {
-  //   if (isApproved) {
-  //     setLoadingCreditScore(true);
-  //     getBusinessAccountScore(userDetails["lead_id"])
-  //       .then((resp) => {
-  //         setBusinessCreditScore(resp.data);
-  //         setLoadingCreditScore(false);
 
-  //         console.log(
-  //           "🚀 ~ file: business-credit-score.js ~ line 120 ~ getBusinessAccountScore ~ resp",
-  //           resp
-  //         );
-  //       })
-  //       .catch((err) => {
-  //         setLoadingCreditScore(false);
-  //       });
-  //   }
-  // }, [isApproved]);
 
   const deleteFile = (item, i) => {
     let list = [...fileList];
@@ -234,6 +222,7 @@ export default function BusinessCreditScore() {
           let alink = document.createElement("a");
           alink.href = `${API_URL}${url}`;
           alink.download = "SamplePDF.pdf";
+          alink.target = "_blank";
           alink.click();
           setLoadingDownload(false);
         }
