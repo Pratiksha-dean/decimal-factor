@@ -2662,14 +2662,43 @@ button#RFS-StepButton {
   top: 50%;
 }
 
+.dashboard-body.bg-change-color{
+  
+  --page-width-minus-scroll: calc(100vw - (100vw - 100%));
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
+  min-width: var(--content-min-width);
+}
 
+.container-fluid.merchant-body {
+  max-width: var(--content-with-sidebar-max-width);
+  margin:0 auto ;
+}
+:root {
+  --modal-border-radius: 10px;
+  --header-height: 96px;
+  --content-min-width: 1100px;
+  --content-max-width: 1216px;
+  --sidebar-width: 238px;
+  --sidebar-margin-right: 2rem;
+  --content-with-sidebar-max-width: calc(
+    var(--content-max-width) + var(--sidebar-width) +
+    var(--sidebar-margin-right)
+  );
+  --content-with-sidebar-min-width: calc(
+    var(--content-min-width) + var(--sidebar-width) +
+    var(--sidebar-margin-right)
+  );
+}
 
 @media (min-width: 1440px) {
-  .container-fluid.merchant-body{
-    max-width: 1140px;
-    padding: 0px 15px;
-    margin: 0 auto;
+ 
+  .sidebar {
+   
+    max-height: 812px;
+    
 }
+
 
 .box-shape {
   height: 42px;
@@ -2701,7 +2730,7 @@ button#RFS-StepButton {
   width: 51px;
   float: right;
   height: 30px !important;
-  margin-top: 5px;
+  margin-top: 5px; 
 }
 input.period-start {
   border: 0px;
