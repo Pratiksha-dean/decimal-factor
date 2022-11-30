@@ -21,6 +21,7 @@ import {
   getEventFeed,
   bankingInsightsDownloadFile,
   API_URL,
+  CODAT_BASE_URL,
 } from "../../request";
 import { getUserDetails } from "../login/loginpage";
 import { ToastMessage } from "../ToastMessage";
@@ -49,10 +50,6 @@ function MerchantHealth() {
   const [accoutingUrl, setAccoutingUrl] = useState();
   const userDetails = getUserDetails();
   const [accountingStatus, setAccoutingStatus] = useState();
-  console.log(
-    "🚀 ~ file: merchant-health.js ~ line 52 ~ MerchantHealth ~ accountingStatus",
-    accountingStatus
-  );
   const [dasboardData, setDashboardData] = useState();
   const [bankingUrl, setBankingUrl] = useState();
   const [bankingStatus, setBankingStatus] = useState(false);
@@ -116,8 +113,6 @@ function MerchantHealth() {
           return Promise.resolve();
         })
         .catch((err) => {
-          console.log(`Error occurred: ${err}`);
-          // alert(`Error occurred: ${err}`)
           return Promise.resolve();
         });
 
@@ -148,8 +143,6 @@ function MerchantHealth() {
           return Promise.resolve();
         })
         .catch((err) => {
-          console.log(`Error occurred: ${err}`);
-          // alert(`Error occurred: ${err}`)
           return Promise.resolve();
         });
 
@@ -159,8 +152,6 @@ function MerchantHealth() {
           return Promise.resolve();
         })
         .catch((err) => {
-          console.log(`Error occurred: ${err}`);
-          // alert(`Error occurred: ${err}`)
           return Promise.resolve();
         });
 
@@ -178,8 +169,6 @@ function MerchantHealth() {
           return Promise.resolve();
         })
         .catch((err) => {
-          console.log(`Error occurred: ${err}`);
-          // alert(`Error occurred: ${err}`)
           return Promise.resolve();
         });
       let combinedPromise = Promise.all([
@@ -213,7 +202,6 @@ function MerchantHealth() {
             setDownloadProgress(false);
           })
           .catch((err) => {
-            console.log(`Error occured: ${err}`);
             setDownloadProgress(false);
             alert(err);
           });
@@ -234,7 +222,6 @@ function MerchantHealth() {
             setDownloadProgress(false);
           })
           .catch((err) => {
-            console.log(`Error occured: ${err}`);
             setDownloadProgress(false);
             alert(err);
           });
@@ -255,7 +242,6 @@ function MerchantHealth() {
             setDownloadProgress(false);
           })
           .catch((err) => {
-            console.log(`Error occured: ${err}`);
             setDownloadProgress(false);
             alert(err);
           });
@@ -277,7 +263,6 @@ function MerchantHealth() {
             setDownloadProgress(false);
           })
           .catch((err) => {
-            console.log(`Error occured: ${err}`);
             setDownloadProgress(false);
             alert(err);
           });
@@ -299,7 +284,6 @@ function MerchantHealth() {
             setDownloadProgress(false);
           })
           .catch((err) => {
-            console.log(`Error occured: ${err}`);
             setDownloadProgress(false);
             alert(err);
           });
@@ -323,7 +307,6 @@ function MerchantHealth() {
   };
 
   const checkAccountingStatusClick = () => {
-    // userDetails["lead_id"];
     setLoadingAccouting(true);
 
     checkAccountingStatus(userDetails["lead_id"])
@@ -333,12 +316,10 @@ function MerchantHealth() {
           setAccoutingUrl(resp.data.redirect);
           setLoadingAccouting(false);
 
-          // setLoadingAccouting(false);
         } else if (
           resp.status == "PendingAuth" ||
           resp["message"] === "Status Confirmed as Pending"
         ) {
-          // getLinkToAccouting();
           setAccoutingStatus(false);
           setLoadingAccouting(false);
         }
@@ -347,14 +328,7 @@ function MerchantHealth() {
         setAccoutingStatus(false);
         if (!accoutingUrl) {
           getLinkToAccouting();
-          // setLoadingAccouting(false);
-        } else {
-          // setLoadingAccouting(false);
         }
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
-          err
-        );
       });
   };
 
@@ -368,13 +342,11 @@ function MerchantHealth() {
     getCompanyID(payload.lm_id).then((resp) => {
       if (resp["data"] && resp["data"]["codat_client_id"]) {
         setLoadingAccouting(false);
-        setAccoutingUrl(
-          `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-        );
+        setAccoutingUrl(`${CODAT_BASE_URL}${resp.data.codat_client_id}`);
 
         if (isClicked) {
           window.open(
-            `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
+            `${CODAT_BASE_URL}${resp.data.codat_client_id}`,
             "_blank"
           );
         }
@@ -386,18 +358,6 @@ function MerchantHealth() {
           getLinkToAccountingData(payload)
             .then((resp) => {
               if (resp.success == "false" && resp.code == 500) {
-                //  getCompanyID(payload.lm_id).then((resp) => {
-                //    setLoadingAccouting(false);
-                //    setAccoutingUrl(
-                //      `https://link-uat.codat.io/company/${resp.data.codat_client_id}`
-                //    );
-                //    if (isClicked) {
-                //      window.open(
-                //        `https://link-uat.codat.io/company/${resp.data.codat_client_id}`,
-                //        "_blank"
-                //      );
-                //    }
-                //  });
               } else {
                 setAccoutingUrl(resp.data.redirect);
                 if (isClicked) {
@@ -416,7 +376,6 @@ function MerchantHealth() {
   };
 
   const checkBankingStatusClick = () => {
-    // userDetails["lead_id"];
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
         if (resp["response"] === "Completed") {
@@ -427,11 +386,6 @@ function MerchantHealth() {
       .catch((err) => {
         setBankingStatus(false);
         setLoadingBanking(false);
-
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js ~ line 112 ~ checkLinkingStatus ~ err",
-          err
-        );
       });
   };
 
@@ -460,7 +414,6 @@ function MerchantHealth() {
       }
     });
   };
-  // obv_account_score_status;
   useEffect(() => {
     getData();
     return () => {
@@ -478,18 +431,10 @@ function MerchantHealth() {
           );
 
           setBankingStatus(false);
-
-          // if (isClickedLinkedToBanking) {
-          //   window.open(
-          //     `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`,
-          //     "_blank"
-          //   );
-          // }
         } else if (dasboardData["obv_account_score_status"] == "Completed") {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
-          // setBankingStatus(false);
           setBankingStatus(true);
         } else {
           checkBankingStatusClick();
@@ -543,11 +488,7 @@ function MerchantHealth() {
                         {loadingBanking &&
                           !bankingUrl && ( //
                             <>
-                              {/* <DarkBackground disappear={true}> */}
-                              {/* <div className="position-relative"> */}
                               <Loaderspinner size="45px" />
-                              {/* </div> */}
-                              {/* </DarkBackground> */}
                             </>
                           )}
                         {!bankingUrl && !loadingBanking && !bankingStatus && (

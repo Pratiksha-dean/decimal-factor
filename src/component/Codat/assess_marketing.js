@@ -7,7 +7,7 @@ import Loaderspinner from "../loader";
 
 
 
-export default function AssessMarketing(props) { 
+export default function AssessMarketing(props) {
     const [arrowclassName4, setarrowclassName4] = useState('fa fa-chevron-right');
     const [arrowclassName5, setarrowclassName5] = useState('fa fa-chevron-right');
 
@@ -20,9 +20,9 @@ export default function AssessMarketing(props) {
     const [showMarketing, setShowMarketing]= useState(false)
     const [marketingLoading, setMarketingLoading] = useState(false)
 
- 
+
     const handleClassClick = () => {
-      const profitstatement = document.querySelectorAll("tr[class^='marketing-label-']");    
+      const profitstatement = document.querySelectorAll("tr[class^='marketing-label-']");
       for (let i of profitstatement) {
           i.addEventListener("click", (e) => {
                   let clname = e.currentTarget.className.replace(" padding-left-1", "");
@@ -33,7 +33,7 @@ export default function AssessMarketing(props) {
       }
     }
     const getApiData = async (start, leng, compa) => {
-      
+
       if(start!=='' && leng!=='' && compa!=''){
         setShowMarketing(false)
         setMarketingLoading(true)
@@ -54,17 +54,13 @@ export default function AssessMarketing(props) {
           setShowMarketing(true)
           const myTimeout = setTimeout(handleClassClick, 1000);
         }).catch(err => {
-          console.log(err);
           setMarketingLoading(false)
           setShowMarketing(false)
           const myTimeout = setTimeout(handleClassClick, 1000);
         })
-        
+
       }
       else{
-        console.log("p compare start", start)
-        console.log('test false length', leng)
-        console.log('test false compa', compa)
         setShowMarketing(false)
     }
     }
@@ -77,7 +73,7 @@ export default function AssessMarketing(props) {
               <div className="col-md-3">
                 <div className=" col-for-logo">
                 <img src={require("../../images/gbp.png")} alt="" className="logo-dashboard" />
-              
+
                 <h3><strong>GBP</strong>
                 <span>Great British Pound</span></h3>
                 </div></div>
@@ -109,20 +105,20 @@ export default function AssessMarketing(props) {
                 <label>Period to Compare</label>
                 <input type="number" name="" className="period-compare" value={periodCompare} onChange={(e)=>{setPeriodCompare(e.target.value); getApiData(periodStart, periodLength, e.target.value) }}/>
                 </div></div>
-               
+
                 </div>
                 {
                   showMarketing && (
                     <>
                         <div className="chart-div">
                 {marketingData!=='' && <Chart categories={dataCategoreis} series={dataSeries} />}
-              
+
                 <div className="table-data-div">
                     <div className="col s12"  id="">
                         <div className="">
                         <h3 className="groupbydebtor">Marketing</h3>
                         <div className=" scroll-bar scroll-bar-2">
-                       
+
                             <table id="assess-profitloss-table" class="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
                                {marketingData}
                             </table>
@@ -131,12 +127,12 @@ export default function AssessMarketing(props) {
                     </div>
                     </div>
               </div>
-                    
+
                     </>
 
                   )
                 }
-                
+
         </div>
         </div>
 

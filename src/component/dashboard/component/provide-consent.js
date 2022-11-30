@@ -79,11 +79,6 @@ function ProvideConsent({ setActiveStep, activeStep }) {
         })
         .catch((err) => {
           setLoading(false);
-
-          console.log(
-            "🚀 ~ file: provide-consent.js ~ line 43 ~ updateUpdateCustomerInfo ~ err",
-            err
-          );
         });
     },
   });

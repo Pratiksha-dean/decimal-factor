@@ -27,10 +27,7 @@ export default function EmailVerification() {
         }
       })
       .catch((err) => {
-        console.log(
-          "🚀 ~ file: confirmation-modal.js ~ line 13 ~ verifyAccount ~ err",
-          err
-        );
+  
       });
   }, [token]);
 

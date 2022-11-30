@@ -108,3 +108,8 @@ export const dateSuffix = {
   30: "th",
   31: "st",
 };
+
+
+  export const removeDoubleSpace = (name) => {
+    return name.replace(/\s{2,}/g, " ");
+  };

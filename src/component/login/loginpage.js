@@ -80,7 +80,6 @@ export default function Login() {
               };
 
               updateLoginTimes(obj).then((res) => {
-                console.log("re", res);
               });
 
               navigate("/authentication");

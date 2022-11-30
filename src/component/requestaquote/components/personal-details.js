@@ -14,14 +14,6 @@ import { NavLink } from "react-router-dom";
 import { ToastMessage } from "../../ToastMessage";
 import { directorFieldNames } from "../../Constants";
 
-export const setVerificationToken = (token) => {
-  localStorage.setItem("verificationToken", token);
-};
-
-export const getVerificationToken = () => {
-  return localStorage.getItem("verificationToken");
-};
-
 export const removeData = () => {
   localStorage.removeItem("personalInfo");
   localStorage.removeItem("businessInfo");
@@ -115,10 +107,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
     [fieldNames.PASSWORD]: Yup.string()
       .required("required")
       .matches(passwordRegex, "Phone number is not valid"),
-    // [fieldNames.PASSWORD]: Yup.string()
-    //   .min(6, "Minimum 3 symbols")
-    //   .max(8, "Maximum 50 symbols")
-    //   .required("Password is required"),
     [fieldNames.CONFIRMPASSWORD]: Yup.string()
       .matches(passwordRegex, "Phone number is not valid")
       .required("New password is required")
@@ -211,7 +199,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
                 }
                 setLoading(false);
               } else {
-                setVerificationToken(resp.data.token);
                 setStep(4);
                 showSelectedState(4);
                 setStepNo(4);
@@ -221,10 +208,6 @@ function PersonalDetails({ setStep, showSelectedState }) {
             })
             .catch((err) => {
               setLoading(false);
-              console.log(
-                "🚀 ~ file: personal-details.js ~ line 74 ~ createAccount ~ err",
-                err
-              );
             });
           setTimeout(() => {
             setSubmitting(false);

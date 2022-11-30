@@ -771,10 +771,6 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                                   }
                                                 }
                                                 onChange={(phone) => {
-                                                  console.log(
-                                                    "🚀 ~ file: review-business-information.js ~ line 773 ~ ReviewBusinessInformation ~ phone",
-                                                    phone
-                                                  );
                                                   setFieldValue(
                                                     `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
                                                     phone

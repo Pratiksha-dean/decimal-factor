@@ -134,12 +134,7 @@ function PersonalDetails() {
                                 setToken(response.data.token);
                               }
                             })
-                            .catch((err) => {
-                              console.log(
-                                "🚀 ~ file: loginpage.js ~ line 68 ~ getUserDetails ~ err",
-                                err
-                              );
-                            });
+                            .catch((err) => {});
                         } else {
                           ToastMessage("Something went wrong!", "error");
                         }
