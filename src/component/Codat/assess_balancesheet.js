@@ -15,10 +15,50 @@ export default function AssessBalanceSheet(props) {
     const[statementData,setStatementData] = useState('');
     const [dataCategoreis, setDataCategoreis] = useState([]);
     const [dataSeries, setDataSeries] = useState([]);
-    const [showStatementRatios, setShowStatementRatios]= useState(false)
-    const [statementRatiosLoading, setStatementRatiosLoading] = useState(false)
+    const [showStatementRatios, setShowStatementRatios]= useState(false);
+    const [statementRatiosLoading, setStatementRatiosLoading] = useState(false);
+    let resourceData = [];
+
+  const handleSelectAllCheckbox = () => {
+    document.getElementById("selectAllBalance").checked = false;
+    Array.from(
+      document.getElementsByClassName("chkbalance")
+    ).forEach(function (element) {
+      element.checked = false;
+    });
+    setDataSeries([]);
+  }
+
+  const generateChart = () => {
+    const seriesData = [];
+    Array.from(document.getElementsByClassName("chkbalance")).forEach(
+      function (element) {
+        if(element.checked === true){
+          let name = element.alt.replace('_',' ');
+          seriesData.push({
+            name: name,
+            data: resourceData[element.alt],
+          })
+          
+        }
+    });
+    setDataSeries(seriesData);
+    
+  }
 
 const handleClassClick = () => {
+    document.getElementById("selectAllBalance").addEventListener("click", handleSelectAllCheckbox);
+    const chkbalance = document.querySelectorAll(
+      "input[class^='chkbalance']"
+    );
+
+    for (let i of chkbalance) {
+      i.addEventListener("click", (e) => {
+        generateChart();
+      })
+    }
+
+
     const profitstatement = document.querySelectorAll("tr[class^='balancestatement-label-']");
     for (let i of profitstatement) {
         i.addEventListener("click", (e) => {
@@ -100,6 +140,7 @@ const handleClassClick = () => {
         .then( res => {
                 setStatementData(Parser(res.data.data.split("class=").join("className=")));
                 setRatioData(Parser(res.data.ratio.split("class=").join("className=")));
+                resourceData = res.data;
                 setDataCategoreis(res.data.date);
                 setDataSeries([{
                     'name': 'Asset',

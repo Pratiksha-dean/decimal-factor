@@ -2,6 +2,10 @@ body {
   font-size: 14px;
   /* font-family: "Montserrat"; */
 }
+.apexcharts-legend-text{
+  text-transform: capitalize;
+}
+
 .left-panel {
   width: 100%;
   background: url(../images/left_panel_bg.png);

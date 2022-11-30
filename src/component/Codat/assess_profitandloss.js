@@ -16,8 +16,46 @@ export default function AssessProfitAndLoss(props) {
   const [dataSeries, setDataSeries] = useState([]);
   const [showStatementRatios, setShowStatementRatios] = useState(false);
   const [statementRatiosLoading, setStatementRatiosLoading] = useState(false);
+  let resourceData = [];
+
+  const handleSelectAllCheckbox = () => {
+    document.getElementById("selectAllProfit").checked = false;
+    Array.from(
+      document.getElementsByClassName("chkprofitloss")
+    ).forEach(function (element) {
+      element.checked = false;
+    });
+    setDataSeries([]);
+  }
+
+  const generateChart = () => {
+    const seriesData = [];
+    Array.from(document.getElementsByClassName("chkprofitloss")).forEach(
+      function (element) {
+        if(element.checked === true){
+          let name = element.alt.replace('_',' ');
+          seriesData.push({
+            name: name,
+            data: resourceData[element.alt],
+          })
+          
+        }
+    });
+    setDataSeries(seriesData);
+    
+  }
 
   const handleClassClick = () => {
+    document.getElementById("selectAllProfit").addEventListener("click", handleSelectAllCheckbox);
+    const chkProfitLoss = document.querySelectorAll(
+      "input[class^='chkprofitloss']"
+    );
+
+    for (let i of chkProfitLoss) {
+      i.addEventListener("click", (e) => {
+        generateChart();
+      })
+    }
     const profitstatement = document.querySelectorAll(
       "tr[class^='profitstatement-label-']"
     );
@@ -132,6 +170,7 @@ export default function AssessProfitAndLoss(props) {
           setRatioData(
             Parser(res.data.ratio.split("class=").join("className="))
           );
+          resourceData = res.data;
           setDataCategoreis(res.data.date);
           setDataSeries([
             {
@@ -148,7 +187,7 @@ export default function AssessProfitAndLoss(props) {
             },
           ]);
           const myTimeout = setTimeout(handleClassClick, 1000);
-
+        
           setStatementRatiosLoading(false);
           setShowStatementRatios(true);
         })
