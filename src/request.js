@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setStepNo } from "./component/requestaquote/components/request-leftpanel";
-export const API_URL = process.env.REACT_APP_PROD_API_URL;
+export const API_URL = process.env.REACT_APP_STAGING_API_URL;
 export const SEARCH_COMPANY_URL = `${API_URL}api/SearchCompanies.php?SearchValue=`;
 export const CREATE_ACCOUNT_URL = `${API_URL}api/CreateCustomerForUK`;
 export const USER_LOGIN_URL = `${API_URL}api/UKCustomerLogin`;
