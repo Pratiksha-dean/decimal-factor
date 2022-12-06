@@ -26,8 +26,12 @@ export const directorFieldNames = {
   ADDRESSLINE2: "address_line_2",
   HIDDENSHAREHOLDERID: "HiddenShareHolderId",
   KINDOFSHAREHOLDER: "kindofShareHolder",
-  WHENTOMOVETOADDRESS: "when_move_to_address",
-  PREVIOUSADDRESS: "PreviousAddress",
+  WHENTOMOVETOADDRESS: "livingSince",
+  PREVIOUSADDRESS: "previousAddress",
+  ADDRESS: "address",
+  POSTCODE: "postcode",
+  HOUSENUMBER: "houseNumber1",
+  HOUSENAME: "houseName",
 };
 
 export const residentialStatusList = [
