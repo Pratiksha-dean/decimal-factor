@@ -16,6 +16,7 @@ import { getDirectorList } from "../../../request";
 import { useState } from "react";
 import { directorFieldNames, residentialStatusList } from "../../Constants";
 import { ToastMessage } from "../../ToastMessage";
+import moment from "moment";
 
 export const setReviewBusinessData = (data) => {
   localStorage.setItem("reviewBusinessInfo", JSON.stringify(data));
@@ -35,7 +36,7 @@ export const getDirectorData = () => {
 
 export const initialDirectorObject = {
   [directorFieldNames.NATUREOFCONTROL]: "",
-  [directorFieldNames.TOTALSHARECOUNT]: "",
+  [directorFieldNames.KINDOFSHAREHOLDER]: "",
   [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]: "",
   [directorFieldNames.POSTALCODE]: "",
   [directorFieldNames.ADDRESS]: "",
@@ -107,6 +108,8 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
     }
   }, []);
 
+  const today = new Date();
+
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
@@ -118,9 +121,11 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
       .of(
         Yup.object().shape({
           [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
-          [directorFieldNames.TOTALSHARECOUNT]: Yup.string().nullable(true),
-          [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
-            Yup.string().nullable(true),
+          [directorFieldNames.KINDOFSHAREHOLDER]: Yup.string().nullable(true),
+          [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]: Yup.date().max(
+            new Date(Date.now() - 567648000000),
+            "You must be at least 18 years"
+          ),
           [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
           [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
           [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
@@ -138,6 +143,21 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
           [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
           [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
           [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+          [directorFieldNames.PREVIOUSADDRESS]: Yup.array()
+            .of(
+              Yup.object().shape({
+                [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
+                [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+                [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+                [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
+                [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
+                [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
+                [directorFieldNames.WHENTOMOVETOADDRESS]:
+                  Yup.string().nullable(true),
+                id: Yup.string().nullable(true),
+              })
+            )
+            .nullable(true),
         })
       )
       .nullable(true),
@@ -179,7 +199,8 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
               item[directorFieldNames.POSTALCODE] =
                 item["address"]["postal_code"] || "";
               item[directorFieldNames.STREET] =
-                item["address"]["address_line_1"] || "";
+                item["address"]["address_line_1"] ||
+                item[directorFieldNames.STREET];
               item[directorFieldNames.COUNTY] = item["address"]["locality"]
                 ? item["address"]["locality"]
                 : "";
@@ -206,7 +227,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
             item[directorFieldNames.PHONENUMBER] = item["phone"]
               ? item["phone"]
               : item[directorFieldNames.PHONENUMBER];
-            item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
+            item[directorFieldNames.KINDOFSHAREHOLDER] = item["share_count"]
               ? item["share_count"]
               : "";
 
@@ -234,6 +255,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                   ? item["date_of_birth"]["day"]
                   : 1;
             }
+    
             delete item["address"];
             delete item["appointed_on"];
             delete item["links"];
@@ -715,12 +737,12 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                             </label>
                                             <input
                                               type="text"
-                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
+                                              name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`}
                                               onChange={handleChange}
                                               value={
                                                 item[
                                                   directorFieldNames
-                                                    .TOTALSHARECOUNT
+                                                    .KINDOFSHAREHOLDER
                                                 ]
                                               }
                                               className="form-control"
@@ -842,6 +864,9 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                               type="date"
                                               className="form-control"
                                               placeholder="04/11/2022"
+                                              max={moment().format(
+                                                "YYYY-MM-DD"
+                                              )}
                                               name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
                                               onChange={handleChange}
                                               value={

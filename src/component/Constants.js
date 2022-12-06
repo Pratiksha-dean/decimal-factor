@@ -25,6 +25,9 @@ export const directorFieldNames = {
   ADDRESSLINE1: "address_line_1",
   ADDRESSLINE2: "address_line_2",
   HIDDENSHAREHOLDERID: "HiddenShareHolderId",
+  KINDOFSHAREHOLDER: "kindofShareHolder",
+  WHENTOMOVETOADDRESS: "when_move_to_address",
+  PREVIOUSADDRESS: "PreviousAddress",
 };
 
 export const residentialStatusList = [
@@ -109,7 +112,6 @@ export const dateSuffix = {
   31: "st",
 };
 
-
-  export const removeDoubleSpace = (name) => {
-    return name.replace(/\s{2,}/g, " ");
-  };
+export const removeDoubleSpace = (name) => {
+  return name.replace(/\s{2,}/g, " ");
+};

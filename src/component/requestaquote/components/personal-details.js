@@ -37,7 +37,7 @@ export const generateDirectorListPayload = (data) => {
         year = splitDate[0];
       }
       return {
-        kindofShareHolder: "",
+        kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
         HiddenShareHolderId: item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
         natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
         fullName: item[directorFieldNames.FIRSTNAME],

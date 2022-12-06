@@ -829,7 +829,7 @@ label.set-primary {
   background: #ececec;
   border: 0px;
   border-radius: 6px;
-  line-height: 50px;
+  /* line-height: 50px; */
   margin: 10px 0px;
 }
 
@@ -2742,4 +2742,7 @@ button#RFS-StepButton {
     width: 90px;
     font-size: 12px;
   }
+}
+.css-319lph-ValueContainer {
+  height: 43px;
 }

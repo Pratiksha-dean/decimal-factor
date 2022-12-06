@@ -22,6 +22,7 @@ import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { initialDirectorObject } from "../dashboard/component/review-business-information";
+import moment from "moment/moment";
 
 const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -66,7 +67,7 @@ function BusinessInformation() {
     [fieldNames.DIRECTORINFO]: Yup.array().of(
       Yup.object().shape({
         [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
-        [directorFieldNames.TOTALSHARECOUNT]: Yup.string().nullable(true),
+        [directorFieldNames.KINDOFSHAREHOLDER]: Yup.string().nullable(true),
         [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
           Yup.string().nullable(true),
         [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
@@ -87,6 +88,21 @@ function BusinessInformation() {
         [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
         [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
         [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.number().nullable(true),
+        [directorFieldNames.PREVIOUSADDRESS]: Yup.array()
+          .of(
+            Yup.object().shape({
+              [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
+              [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+              [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+              [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
+              [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
+              [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
+              [directorFieldNames.WHENTOMOVETOADDRESS]:
+                Yup.string().nullable(true),
+              id: Yup.string().nullable(true),
+            })
+          )
+          .nullable(true),
       })
     ),
   });
@@ -145,8 +161,10 @@ function BusinessInformation() {
         item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
           ? item["phonenumber"]
           : "";
-        item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
-          ? item["share_count"]
+        item[directorFieldNames.KINDOFSHAREHOLDER] = item[
+          directorFieldNames.KINDOFSHAREHOLDER
+        ]
+          ? item[directorFieldNames.KINDOFSHAREHOLDER]
           : "";
 
         if (values.length > 1) {
@@ -161,6 +179,8 @@ function BusinessInformation() {
 
         item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
           item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
+        item[directorFieldNames.PREVIOUSADDRESS] =
+          item[directorFieldNames.PREVIOUSADDRESS];
         delete item["address"];
         delete item["appointed_on"];
         delete item["links"];
@@ -201,6 +221,11 @@ function BusinessInformation() {
     [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
   };
 
+  console.log(
+    "🚀 ~ file: review-business-information.js:322 ~ ReviewBusinessInformation ~ initialValues",
+    initialValues
+  );
+
   const updateDirectorInfo = (payload, id, resetForm) => {
     updateUpdateCustomerInfo(payload, id)
       .then((resp) => {
@@ -233,7 +258,7 @@ function BusinessInformation() {
           year = splitDate[0];
         }
         return {
-          kindofShareHolder: "",
+          kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
           HiddenShareHolderId:
             item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
           natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
@@ -687,14 +712,14 @@ function BusinessInformation() {
                                                         </label>
                                                         <input
                                                           type="text"
-                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`}
                                                           onChange={
                                                             handleChange
                                                           }
                                                           value={
                                                             item[
                                                               directorFieldNames
-                                                                .TOTALSHARECOUNT
+                                                                .KINDOFSHAREHOLDER
                                                             ]
                                                           }
                                                           className="form-control"
@@ -764,12 +789,15 @@ function BusinessInformation() {
                                                     <div className="col-md-3">
                                                       <div className="form-group">
                                                         <label>
-                                                          Date of Birth
+                                                          Date of Birth new
                                                         </label>
                                                         <input
                                                           type="date"
                                                           className="form-control"
                                                           placeholder="04/11/2022"
+                                                          max={moment().format(
+                                                            "YYYY-MM-DD"
+                                                          )}
                                                           name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
                                                           onChange={
                                                             handleChange
@@ -989,10 +1017,11 @@ function BusinessInformation() {
                                                       </div>
                                                     </div>
                                                     <div className="col-md-3">
-                                                      <div className="form-group">
+                                                      <div className="form-group ">
                                                         <label>
                                                           Residential Status
                                                         </label>
+                                                        
 
                                                         <Select
                                                           closeMenuOnSelect={
@@ -1043,6 +1072,18 @@ function BusinessInformation() {
                                                             ) => ({
                                                               ...base,
                                                               zIndex: 9999,
+                                                            }),
+                                                            valueContainer: (
+                                                              provided,
+                                                              state
+                                                            ) => ({
+                                                              ...provided,
+                                                            }),
+                                                            input: (
+                                                              provided,
+                                                              state
+                                                            ) => ({
+                                                              ...provided,
                                                             }),
                                                           }}
                                                           components={{
