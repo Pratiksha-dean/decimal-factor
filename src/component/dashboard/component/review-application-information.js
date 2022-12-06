@@ -6,6 +6,7 @@ import AsyncSelect from "react-select/async";
 
 import {
   businessEntityList,
+  checkCompanyType,
   fieldNames,
   loadOptions,
   loadPurposeList,
@@ -234,7 +235,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                 <div className="col-md-4">
                   <div className="form-group business-entity">
                     <label>Business Name</label>
-                    <AsyncSelect
+                    {/* <AsyncSelect
                       closeMenuOnSelect={true}
                       value={{ label: values[fieldNames.BUSINESSNAME] }}
                       name={fieldNames.BUSINESSNAME}
@@ -268,7 +269,70 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                           return { ...styles, borderColor };
                         },
                       }}
-                    />
+                    /> */}
+
+                   {checkCompanyType(values[fieldNames.BUSINESSENTITY]) ? (
+                      <AsyncSelect
+                        closeMenuOnSelect={true}
+                        value={{ label: values[fieldNames.BUSINESSNAME] }}
+                        name={fieldNames.BUSINESSNAME}
+                        loadOptions={loadOptions}
+                        onChange={(selectedOption) => {
+                          setFieldValue(
+                            fieldNames.BUSINESSNAME,
+                            selectedOption.value
+                          );
+                          // setBusinessInfo(selectedOption);
+                          setReviewAppData(values);
+                        }}
+                        components={{
+                          IndicatorSeparator: () => null,
+                          DropdownIndicator: () => null,
+                        }}
+                        // onInputChange={handleInputChange}
+                        onBlur={(selectedOption) => {
+                          setReviewAppData(values);
+                        }}
+                        placeholder="Select Business Name"
+                        styles={{
+                          control: (styles, state) => {
+                            const borderColor =
+                              !state.hasValue &&
+                              touched[fieldNames.BUSINESSNAME] &&
+                              errors[fieldNames.BUSINESSNAME]
+                                ? "red"
+                                : "#ced4da";
+
+                            return { ...styles, borderColor };
+                          },
+                        }}
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        placeholder="Enter Business Name"
+                        name={fieldNames.BUSINESSNAME}
+                        onChange={handleChange}
+                        onBlur={(selectedOption) => {
+                          setReviewAppData(values);
+                        }}
+                        value={values[fieldNames.BUSINESSNAME]}
+                        className={clsx(
+                          "form-control ",
+                          {
+                            "is-invalid":
+                              touched[fieldNames.BUSINESSNAME] &&
+                              errors[fieldNames.BUSINESSNAME],
+                          },
+                          {
+                            "is-valid":
+                              touched[fieldNames.BUSINESSNAME] &&
+                              !errors[fieldNames.BUSINESSNAME],
+                          }
+                        )}
+                      />
+                    )} 
+
                   </div>
                 </div>
               </div>

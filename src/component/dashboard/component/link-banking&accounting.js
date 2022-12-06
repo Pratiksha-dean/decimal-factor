@@ -74,9 +74,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
             });
 
             setFileList(list);
-            setLoadFiles(false);
           }
           // setFileList(resp.records);
+          setLoadFiles(false);
         })
         .catch((err) => {
           setFileList([]);
@@ -109,6 +109,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   };
 
   const getLinkToAccouting = (isClicked) => {
+    console.log(
+      "🚀 ~ file: link-banking&accounting.js:112 ~ getLinkToAccouting ~ isClicked",
+      isClicked
+    );
     let payload = {
       lm_id: userDetails["lead_id"],
       name: data["lf_business_name"],
@@ -120,6 +124,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
     getCompanyID(payload.lm_id)
       .then((resp) => {
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js:127 ~ .then ~ resp",
+          resp
+        );
         if (resp["data"] && resp["data"]["codat_client_id"]) {
           setLoadingAccouting(false);
           setAccoutingUrl(`${CODAT_BASE_URL}${resp.data.codat_client_id}`);
@@ -145,6 +153,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                 ToastMessage("Something went wrong!", "error");
                 setLoadingAccouting(false);
               });
+          } else {
+            setLoadingAccouting(false);
           }
         }
       })
@@ -167,6 +177,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         }
       })
       .catch((err) => {
+        console.log(
+          "🚀 ~ file: link-banking&accounting.js:170 ~ checkAccountingStatusClick ~ err",
+          err
+        );
         setAccoutingStatus(false);
         if (!accoutingUrl) {
           getLinkToAccouting();
@@ -177,7 +191,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   const checkBankingStatusClick = () => {
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        if (resp["response"] == "Completed") {
+        if (
+          resp["response"] == "Completed" ||
+          resp["response"] === "CompletedAddition"
+        ) {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
           );
@@ -249,6 +266,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         setBankingStatus(false);
       } else if (data["obv_account_score_status"] == "Completed") {
         setBankingStatus(true);
+           setBankingUrl(
+             `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
+           );
       }
     } else {
       setLoadingBanking(true);

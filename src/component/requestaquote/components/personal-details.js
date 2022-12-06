@@ -37,7 +37,7 @@ export const generateDirectorListPayload = (data) => {
         year = splitDate[0];
       }
       return {
-        kindofShareHolder: "",
+        kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
         HiddenShareHolderId: item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
         natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
         fullName: item[directorFieldNames.FIRSTNAME],
@@ -156,19 +156,26 @@ function PersonalDetails({ setStep, showSelectedState }) {
           const applicationInfo = getApplicationInfo();
           const businesssInfo = getBusinessInfo();
           const companyInfo = getCompanyInfo();
+          console.log(" ", companyInfo);
 
           let payload = { ...applicationInfo, ...businesssInfo, ...values };
+          console.log(
+            "🚀 ~ file: personal-details.js:161 ~ PersonalDetails ~ payload",
+            payload
+          );
           payload["businessSector"] = payload["businessSector"].value;
-          payload["businessId"] = companyInfo["company_number"]
-            ? companyInfo["company_number"]
+          payload["businessId"] =
+            companyInfo && companyInfo["company_number"]
+              ? companyInfo["company_number"]
+              : "";
+          payload["businessAddress"] = companyInfo
+            ? companyInfo["address"]["locality"] +
+              "," +
+              companyInfo["address"]["address_line_1"]
             : "";
-          payload["businessAddress"] =
-            companyInfo["address"]["locality"] +
-            "," +
-            companyInfo["address"]["address_line_1"];
           payload["businessZipcode"] =
-            companyInfo["address"]["postal_code"] || "";
-          payload["businessName"] = companyInfo["title"];
+            (companyInfo && companyInfo["address"]["postal_code"]) || "";
+          payload["businessName"] = applicationInfo["businessName"];
           payload["businessEntity"] = payload["businessEntity"].value;
           payload["loanPurpose"] = payload["loanPurpose"].value;
 
@@ -208,6 +215,7 @@ function PersonalDetails({ setStep, showSelectedState }) {
             })
             .catch((err) => {
               setLoading(false);
+              ToastMessage("Something went wrong!", "error");
             });
           setTimeout(() => {
             setSubmitting(false);

@@ -315,7 +315,6 @@ function MerchantHealth() {
           setAccoutingStatus(true);
           setAccoutingUrl(resp.data.redirect);
           setLoadingAccouting(false);
-
         } else if (
           resp.status == "PendingAuth" ||
           resp["message"] === "Status Confirmed as Pending"
@@ -376,9 +375,14 @@ function MerchantHealth() {
   };
 
   const checkBankingStatusClick = () => {
+    // response: "CompletedAddition";
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        if (resp["response"] === "Completed") {
+        console.log("🚀 ~ file: merchant-health.js:382 ~ .then ~ resp", resp);
+        if (
+          resp["response"] === "Completed" ||
+          resp["response"] === "CompletedAddition"
+        ) {
           setBankingStatus(true);
           setLoadingBanking(false);
         }
@@ -437,6 +441,7 @@ function MerchantHealth() {
           );
           setBankingStatus(true);
         } else {
+          setLoadingBanking(true);
           checkBankingStatusClick();
         }
       } else if (tabIndex == 1) {

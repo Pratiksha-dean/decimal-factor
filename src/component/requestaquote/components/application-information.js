@@ -50,35 +50,6 @@ export const fieldNames = {
   CURRENTPASSWORD: "currentpassword",
 };
 
-// "PreviousAddress": [],
-// "shareHolderID": "7404",
-// "kindofShareHolder": "",
-// "nationality": null,
-// "natures_of_control": "individual-beneficial-owner",
-// "country_of_residence": null,
-// "fullName": "Hilary Phillips",
-// "firstName": "Hilary",
-// "lastName": "Phillips",
-// "DOB_day": "01",
-// "DOB_month": "04",
-// "DOB_year": "1944",
-// "locality": null,
-// "address_line_1": "Old Gloucester Street",
-// "postal_code": "WC1N 3AX",
-// "notified_on": null,
-// "phonenumber": "789654478555",
-// "email_id": "badhwaryash@gmail.com",
-// "is_primary": "1",
-// "residentialStatus": "18003",
-// "houseNumber": "27",
-// "houseName": "27",
-// "street": "Old Gloucester Street",
-// "city": null,
-// "town": "United Kingdom",
-// "county": "London",
-// "living_since": "04/11/2015",
-// "companyName": ""
-
 export const loadPurposeList = [
   { value: "42001", label: "Cash Flow / Working Capital" },
   { value: "42002", label: "Expansion" },
@@ -160,6 +131,30 @@ export const validationSchema = Yup.object().shape({
   [fieldNames.BUSINESSENTITY]: Yup.string().required(),
   [fieldNames.BUSINESSNAME]: Yup.string().required(),
 });
+
+export const checkCompanyType = (type) => {
+  let list = [
+    "Private Limited Company",
+    "Public Limited Company",
+    "Limited Partnership",
+    "Private Limited Company use of 'Limited' exemption",
+    "Limited Liability Partnership",
+    "UK Establishment Company",
+  ];
+  let index = list.findIndex((item) => {
+    return item == type.value;
+  });
+  if (index === -1) {
+    return false;
+  } else {
+    return true;
+  }
+
+  // -Company house should only be run for
+  // ivate limited company, Public limited company, limited
+  // partnership, private limited company use of “limited” exemption,
+  //  limited liability partnership, uk establishment company.
+};
 
 export const getApplicationInfo = () => {
   return JSON.parse(localStorage.getItem("applicationInfo"));
@@ -343,6 +338,7 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                 closeMenuOnSelect={true}
                 onChange={(selectedOption) => {
                   setFieldValue(fieldNames.BUSINESSENTITY, selectedOption);
+                  checkCompanyType(values[fieldNames.BUSINESSENTITY]);
                 }}
                 onBlur={(selectedOption) => {
                   setApplicationInfo(values);
@@ -373,9 +369,10 @@ function ApplicationInformation({ setStep, showSelectedState }) {
             {values[fieldNames.BUSINESSENTITY] && (
               <div className="form-group business-entity">
                 <label>Business Name</label>
-
-                <AsyncSelect
+                {/* <AsyncSelect
                   closeMenuOnSelect={true}
+                  // isClearable={true}
+                  // backspaceRemovesValue={true}
                   value={{
                     label: values[fieldNames.BUSINESSNAME],
                     value: values[fieldNames.BUSINESSNAME],
@@ -383,12 +380,14 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   name={fieldNames.BUSINESSNAME}
                   loadOptions={loadOptions}
                   onChange={(selectedOption) => {
-                    setFieldValue(
-                      fieldNames.BUSINESSNAME,
-                      selectedOption.value
-                    );
-                    setApplicationInfo(values);
-                    setCompanyInfo(selectedOption.data);
+                    if (selectedOption && selectedOption.value) {
+                      setFieldValue(
+                        fieldNames.BUSINESSNAME,
+                        selectedOption.value
+                      );
+                      setApplicationInfo(values);
+                      setCompanyInfo(selectedOption.data);
+                    }
                   }}
                   components={{
                     IndicatorSeparator: () => null,
@@ -412,7 +411,76 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                       return { ...styles, borderColor };
                     },
                   }}
-                />
+                /> */}
+                {checkCompanyType(values[fieldNames.BUSINESSENTITY]) ? (
+                  <AsyncSelect
+                    closeMenuOnSelect={true}
+                    // isClearable={true}
+                    // backspaceRemovesValue={true}
+                    value={{
+                      label: values[fieldNames.BUSINESSNAME],
+                      value: values[fieldNames.BUSINESSNAME],
+                    }}
+                    name={fieldNames.BUSINESSNAME}
+                    loadOptions={loadOptions}
+                    onChange={(selectedOption) => {
+                      if (selectedOption && selectedOption.value) {
+                        setFieldValue(
+                          fieldNames.BUSINESSNAME,
+                          selectedOption.value
+                        );
+                        setApplicationInfo(values);
+                        setCompanyInfo(selectedOption.data);
+                      }
+                    }}
+                    components={{
+                      IndicatorSeparator: () => null,
+                      DropdownIndicator: () => null,
+                    }}
+                    onBlur={(selectedOption) => {
+                      setApplicationInfo(values);
+                    }}
+                    placeholder="Select Business Name"
+                    menuPortalTarget={document.body}
+                    menuPosition={"fixed"}
+                    styles={{
+                      control: (styles, state) => {
+                        const borderColor =
+                          !values[fieldNames.BUSINESSNAME] &&
+                          touched[fieldNames.BUSINESSNAME] &&
+                          errors[fieldNames.BUSINESSNAME]
+                            ? "red"
+                            : "#ced4da";
+
+                        return { ...styles, borderColor };
+                      },
+                    }}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    placeholder="Enter Business Name"
+                    name={fieldNames.BUSINESSNAME}
+                    onChange={handleChange}
+                    onBlur={(e) => {
+                      setApplicationInfo(values);
+                    }}
+                    value={values[fieldNames.BUSINESSNAME]}
+                    className={clsx(
+                      "form-control ",
+                      {
+                        "is-invalid":
+                          touched[fieldNames.BUSINESSNAME] &&
+                          errors[fieldNames.BUSINESSNAME],
+                      },
+                      {
+                        "is-valid":
+                          touched[fieldNames.BUSINESSNAME] &&
+                          !errors[fieldNames.BUSINESSNAME],
+                      }
+                    )}
+                  />
+                )}
               </div>
             )}
 

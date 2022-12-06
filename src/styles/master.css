@@ -2,7 +2,7 @@ body {
   font-size: 14px;
   /* font-family: "Montserrat"; */
 }
-.apexcharts-legend-text{
+.apexcharts-legend-text {
   text-transform: capitalize;
 }
 
@@ -829,7 +829,7 @@ label.set-primary {
   background: #ececec;
   border: 0px;
   border-radius: 6px;
-  line-height: 50px;
+  /* line-height: 50px; */
   margin: 10px 0px;
 }
 
@@ -2659,6 +2659,10 @@ button#RFS-StepButton {
   color: #006090;
 }
 
+.bg-app-primary {
+  background-color: #006090;
+}
+
 .center {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -2666,8 +2670,7 @@ button#RFS-StepButton {
   top: 50%;
 }
 
-.dashboard-body.bg-change-color{
-  
+.dashboard-body.bg-change-color {
   --page-width-minus-scroll: calc(100vw - (100vw - 100%));
   padding-left: var(--content-padding);
   padding-right: var(--content-padding);
@@ -2676,7 +2679,7 @@ button#RFS-StepButton {
 
 .container-fluid.merchant-body {
   max-width: var(--content-with-sidebar-max-width);
-  margin:0 auto ;
+  margin: 0 auto;
 }
 :root {
   --modal-border-radius: 10px;
@@ -2687,61 +2690,59 @@ button#RFS-StepButton {
   --sidebar-margin-right: 2rem;
   --content-with-sidebar-max-width: calc(
     var(--content-max-width) + var(--sidebar-width) +
-    var(--sidebar-margin-right)
+      var(--sidebar-margin-right)
   );
   --content-with-sidebar-min-width: calc(
     var(--content-min-width) + var(--sidebar-width) +
-    var(--sidebar-margin-right)
+      var(--sidebar-margin-right)
   );
 }
 
 @media (min-width: 1440px) {
- 
   .sidebar {
-   
     max-height: 812px;
-    
-}
+  }
 
+  .box-shape {
+    height: 42px;
+    background: #fff;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
+    float: left;
+    padding: 0px 5px;
+    border-radius: 5px;
+    line-height: 42px;
+    width: 100%;
+  }
+  .accouting-info label {
+    margin-bottom: 12px !important;
+    font-size: 12px !important;
+  }
 
-.box-shape {
-  height: 42px;
-  background: #fff;
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
-  float: left;
-  padding: 0px 5px;
-  border-radius: 5px;
-  line-height: 42px;
-  width: 100%;
-}
-.accouting-info label {
-  margin-bottom: 12px !important;
-  font-size: 12px !important;
-}
+  .box-shape select {
+    border: 0px;
+    float: right;
+    width: 80px;
+    margin-top: 13px;
+    height: auto !important;
+  }
 
-.box-shape select {
-  border: 0px;
-  float: right;
-  width: 80px;
-  margin-top: 13px;
-  height: auto !important;
+  .box-shape input.period-compare {
+    border-radius: 10px;
+    border: 1px #ccc solid;
+    padding: 8px;
+    width: 51px;
+    float: right;
+    height: 30px !important;
+    margin-top: 5px;
+  }
+  input.period-start {
+    border: 0px;
+    background: 0px;
+    float: right;
+    width: 90px;
+    font-size: 12px;
+  }
 }
-
-.box-shape input.period-compare {
-  border-radius: 10px;
-  border: 1px #ccc solid;
-  padding: 8px;
-  width: 51px;
-  float: right;
-  height: 30px !important;
-  margin-top: 5px; 
-}
-input.period-start {
-  border: 0px;
-  background: 0px;
-  float: right;
-  width: 90px;
-  font-size: 12px;
-}
-
+.css-319lph-ValueContainer {
+  height: 43px;
 }

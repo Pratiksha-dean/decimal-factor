@@ -21,6 +21,8 @@ import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import { useAppSelector } from "../../redux/hooks/hooks";
+import { initialDirectorObject } from "../dashboard/component/review-business-information";
+import moment from "moment/moment";
 
 const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -65,7 +67,7 @@ function BusinessInformation() {
     [fieldNames.DIRECTORINFO]: Yup.array().of(
       Yup.object().shape({
         [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
-        [directorFieldNames.TOTALSHARECOUNT]: Yup.string().nullable(true),
+        [directorFieldNames.KINDOFSHAREHOLDER]: Yup.string().nullable(true),
         [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
           Yup.string().nullable(true),
         [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
@@ -86,6 +88,21 @@ function BusinessInformation() {
         [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
         [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
         [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.number().nullable(true),
+        [directorFieldNames.PREVIOUSADDRESS]: Yup.array()
+          .of(
+            Yup.object().shape({
+              [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
+              [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+              [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+              [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
+              [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
+              [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
+              [directorFieldNames.WHENTOMOVETOADDRESS]:
+                Yup.string().nullable(true),
+              id: Yup.string().nullable(true),
+            })
+          )
+          .nullable(true),
       })
     ),
   });
@@ -144,8 +161,10 @@ function BusinessInformation() {
         item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
           ? item["phonenumber"]
           : "";
-        item[directorFieldNames.TOTALSHARECOUNT] = item["share_count"]
-          ? item["share_count"]
+        item[directorFieldNames.KINDOFSHAREHOLDER] = item[
+          directorFieldNames.KINDOFSHAREHOLDER
+        ]
+          ? item[directorFieldNames.KINDOFSHAREHOLDER]
           : "";
 
         if (values.length > 1) {
@@ -160,6 +179,8 @@ function BusinessInformation() {
 
         item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
           item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
+        item[directorFieldNames.PREVIOUSADDRESS] =
+          item[directorFieldNames.PREVIOUSADDRESS];
         delete item["address"];
         delete item["appointed_on"];
         delete item["links"];
@@ -200,6 +221,11 @@ function BusinessInformation() {
     [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
   };
 
+  console.log(
+    "🚀 ~ file: review-business-information.js:322 ~ ReviewBusinessInformation ~ initialValues",
+    initialValues
+  );
+
   const updateDirectorInfo = (payload, id, resetForm) => {
     updateUpdateCustomerInfo(payload, id)
       .then((resp) => {
@@ -232,7 +258,7 @@ function BusinessInformation() {
           year = splitDate[0];
         }
         return {
-          kindofShareHolder: "",
+          kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
           HiddenShareHolderId:
             item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
           natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
@@ -514,569 +540,604 @@ function BusinessInformation() {
                               </div>
                             </div>
                           </div>
-                          {values.directorInfo &&
-                            values.directorInfo.length > 0 && (
-                              <div className="row">
-                                <div className="col-md-12">
-                                  <div className="director-panel">
-                                    <h4>Directors of Business Name</h4>
-                                    <FieldArray
-                                      name={fieldNames.DIRECTORINFO}
-                                      render={(arrayHelpers) => (
-                                        <>
-                                          {values.directorInfo &&
-                                            values.directorInfo.length > 0 &&
-                                            values.directorInfo.map(
-                                              (item, index) => (
-                                                <Accordion
-                                                  title={
+                          {
+                            <div className="row">
+                              <div className="col-md-12">
+                                <div className="director-panel">
+                                  {values.directorInfo &&
+                                    values.directorInfo.length > 0 && (
+                                      <h4>Directors of Business Name</h4>
+                                    )}
+
+                                  <FieldArray
+                                    name={fieldNames.DIRECTORINFO}
+                                    render={(arrayHelpers) => (
+                                      <>
+                                        <button
+                                          type="button"
+                                          className="btn btn-primary bg-app-primary"
+                                          onClick={() => {
+                                            if (
+                                              values.directorInfo &&
+                                              values.directorInfo.length > 0
+                                            ) {
+                                              arrayHelpers.insert(
+                                                values.directorInfo.length + 1,
+                                                initialDirectorObject
+                                              );
+                                            } else {
+                                              initialDirectorObject[
+                                                directorFieldNames.ISPRIMARY
+                                              ] = true;
+                                              arrayHelpers.insert(
+                                                0,
+                                                initialDirectorObject
+                                              );
+                                            }
+                                          }}
+                                        >
+                                          Add Director
+                                        </button>
+                                        {values.directorInfo &&
+                                          values.directorInfo.length > 0 &&
+                                          values.directorInfo.map(
+                                            (item, index) => (
+                                              <Accordion
+                                                title={
+                                                  item[
+                                                    directorFieldNames.FIRSTNAME
+                                                  ] +
+                                                    " " +
                                                     item[
                                                       directorFieldNames
-                                                        .FIRSTNAME
-                                                    ] +
-                                                      " " +
-                                                      item[
-                                                        directorFieldNames
-                                                          .LASTNAME
-                                                      ] || ""
-                                                  }
-                                                  key={index}
-                                                  isPrimary={
-                                                    item[
-                                                      directorFieldNames
-                                                        .ISPRIMARY
-                                                    ]
-                                                  }
-                                                  id={`accordian${index}`}
-                                                >
-                                                  <div className="director-field">
-                                                    <div className="row">
-                                                      <div className="col-md-12">
-                                                        <div className="form-group">
-                                                          <input
-                                                            type="checkbox"
-                                                            className="primary-checkbox"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
-                                                            onChange={(e) => {
-                                                              values.directorInfo.forEach(
-                                                                (item, i) => {
-                                                                  if (
-                                                                    index == i
-                                                                  ) {
-                                                                    setFieldValue(
-                                                                      `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`,
-                                                                      e.target
-                                                                        .checked
-                                                                    );
-                                                                  } else {
-                                                                    setFieldValue(
-                                                                      `${fieldNames.DIRECTORINFO}.${i}.${directorFieldNames.ISPRIMARY}`,
-                                                                      false
-                                                                    );
-                                                                  }
+                                                        .LASTNAME
+                                                    ] || ""
+                                                }
+                                                key={index}
+                                                isPrimary={
+                                                  item[
+                                                    directorFieldNames.ISPRIMARY
+                                                  ]
+                                                }
+                                                id={`accordian${index}`}
+                                              >
+                                                <div className="director-field">
+                                                  <div className="row">
+                                                    <div className="col-md-12">
+                                                      <div className="form-group">
+                                                        <input
+                                                          type="checkbox"
+                                                          className="primary-checkbox"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`}
+                                                          onChange={(e) => {
+                                                            values.directorInfo.forEach(
+                                                              (item, i) => {
+                                                                if (
+                                                                  index == i
+                                                                ) {
+                                                                  setFieldValue(
+                                                                    `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ISPRIMARY}`,
+                                                                    e.target
+                                                                      .checked
+                                                                  );
+                                                                } else {
+                                                                  setFieldValue(
+                                                                    `${fieldNames.DIRECTORINFO}.${i}.${directorFieldNames.ISPRIMARY}`,
+                                                                    false
+                                                                  );
                                                                 }
-                                                              );
-                                                            }}
-                                                            checked={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .ISPRIMARY
-                                                              ]
-                                                            }
-                                                          />
-                                                          <label className="set-primary">
-                                                            Set as Primary
-                                                          </label>
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            First Name
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Joana"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.FIRSTNAME}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .FIRSTNAME
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Last Name
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Last Name"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LASTNAME}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .LASTNAME
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Nature of Control
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Nature of Control"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.NATUREOFCONTROL}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .NATUREOFCONTROL
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            % of Total Share
-                                                            Count
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOTALSHARECOUNT}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .TOTALSHARECOUNT
-                                                              ]
-                                                            }
-                                                            className="form-control"
-                                                            placeholder="% of Total Share Count"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Email Address
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Email Address"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAILID}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .EMAILID
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>Phone</label>
-
-                                                          <PhoneInput
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
-                                                            country={"gb"}
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .PHONENUMBER
-                                                              ]
-                                                            }
-                                                            inputStyle={
-                                                              touched[
-                                                                directorFieldNames
-                                                                  .PHONENUMBER
-                                                              ] &&
-                                                              errors[
-                                                                directorFieldNames
-                                                                  .PHONENUMBER
-                                                              ] && {
-                                                                borderColor:
-                                                                  "red",
                                                               }
-                                                            }
-                                                            onChange={(
-                                                              phone
-                                                            ) => {
-                                                              setFieldValue(
-                                                                `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
-                                                                phone
-                                                              );
-                                                            }}
-                                                            inputClass={"w-100"}
-                                                            placeholder="Enter Phone Number"
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Date of Birth
-                                                          </label>
-                                                          <input
-                                                            type="date"
-                                                            className="form-control"
-                                                            placeholder="04/11/2022"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .SHAREHOLDERDOBFULLFORMAT
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            POSTALCODE
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="POSTALCODE"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTALCODE}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .POSTALCODE
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div
-                                                        className="col-md-3"
-                                                        hidden
-                                                      >
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Choose Address
-                                                          </label>
-
-                                                          <select
-                                                            class="form-select form-control"
-                                                            aria-label="Default select example"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .CHOOSEADDRESS
-                                                              ]
-                                                            }
-                                                          >
-                                                            <option
-                                                              selected
-                                                              disabled
-                                                            >
-                                                              Choose Address
-                                                            </option>
-                                                          </select>
-                                                        </div>
+                                                            );
+                                                          }}
+                                                          checked={
+                                                            item[
+                                                              directorFieldNames
+                                                                .ISPRIMARY
+                                                            ]
+                                                          }
+                                                        />
+                                                        <label className="set-primary">
+                                                          Set as Primary
+                                                        </label>
                                                       </div>
                                                     </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          First Name
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="Joana"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.FIRSTNAME}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .FIRSTNAME
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>Last Name</label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="Last Name"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LASTNAME}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .LASTNAME
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          Nature of Control
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="Nature of Control"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.NATUREOFCONTROL}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .NATUREOFCONTROL
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          % of Total Share Count
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .KINDOFSHAREHOLDER
+                                                            ]
+                                                          }
+                                                          className="form-control"
+                                                          placeholder="% of Total Share Count"
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          Email Address
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="Email Address"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.EMAILID}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .EMAILID
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>Phone</label>
 
-                                                    <input
+                                                        <PhoneInput
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`}
+                                                          country={"gb"}
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .PHONENUMBER
+                                                            ]
+                                                          }
+                                                          inputStyle={
+                                                            touched[
+                                                              directorFieldNames
+                                                                .PHONENUMBER
+                                                            ] &&
+                                                            errors[
+                                                              directorFieldNames
+                                                                .PHONENUMBER
+                                                            ] && {
+                                                              borderColor:
+                                                                "red",
+                                                            }
+                                                          }
+                                                          onChange={(phone) => {
+                                                            setFieldValue(
+                                                              `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PHONENUMBER}`,
+                                                              phone
+                                                            );
+                                                          }}
+                                                          inputClass={"w-100"}
+                                                          placeholder="Enter Phone Number"
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          Date of Birth new
+                                                        </label>
+                                                        <input
+                                                          type="date"
+                                                          className="form-control"
+                                                          placeholder="04/11/2022"
+                                                          max={moment().format(
+                                                            "YYYY-MM-DD"
+                                                          )}
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.SHAREHOLDERDOBFULLFORMAT}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .SHAREHOLDERDOBFULLFORMAT
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          POSTALCODE
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="POSTALCODE"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTALCODE}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .POSTALCODE
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className="col-md-3"
                                                       hidden
-                                                      type="text"
-                                                      name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE1}`}
-                                                      onChange={handleChange}
-                                                      value={
-                                                        item[
-                                                          directorFieldNames
-                                                            .ADDRESSLINE1
-                                                        ]
-                                                      }
-                                                      className="form-control"
-                                                      placeholder="% of Total Share Count"
-                                                    />
+                                                    >
+                                                      <div className="form-group">
+                                                        <label>
+                                                          Choose Address
+                                                        </label>
 
-                                                    <input
-                                                      type="text"
-                                                      name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE2}`}
-                                                      onChange={handleChange}
-                                                      hidden
-                                                      value={
-                                                        item[
-                                                          directorFieldNames
-                                                            .ADDRESSLINE2
-                                                        ]
-                                                      }
-                                                      className="form-control"
-                                                      placeholder="% of Total Share Count"
-                                                    />
-
-                                                    <input
-                                                      type="text"
-                                                      name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HIDDENSHAREHOLDERID}`}
-                                                      onChange={handleChange}
-                                                      hidden
-                                                      value={
-                                                        item[
-                                                          directorFieldNames
-                                                            .HIDDENSHAREHOLDERID
-                                                        ]
-                                                      }
-                                                      className="form-control"
-                                                      placeholder="% of Total Share Count"
-                                                    />
-                                                    <div className="row">
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            House Number
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="House Number"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NUMBER}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .HOUSE_NUMBER
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            House Name
-                                                          </label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="House Name"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NAME}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .HOUSE_NAME
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>Street</label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Street"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.STREET}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .STREET
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>County</label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="County"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.COUNTY}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .COUNTY
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>Town</label>
-                                                          <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            placeholder="Town"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOWN}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .TOWN
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Residential Status
-                                                          </label>
-
-                                                          <Select
-                                                            closeMenuOnSelect={
-                                                              true
-                                                            }
-                                                            onChange={(
-                                                              selectedOption
-                                                            ) =>
-                                                              setFieldValue(
-                                                                `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`,
-                                                                selectedOption
-                                                              )
-                                                            }
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`}
-                                                            options={
-                                                              residentialStatusList
-                                                            }
-                                                            menuPortalTarget={
-                                                              document.body
-                                                            }
-                                                            menuPosition={
-                                                              "fixed"
-                                                            }
-                                                            placeholder="Select Residential Status"
-                                                            styles={{
-                                                              control: (
-                                                                styles,
-                                                                state
-                                                              ) => {
-                                                                const borderColor =
-                                                                  !state.hasValue &&
-                                                                  touched[
-                                                                    directorFieldNames
-                                                                      .RESIDENTIALSTATUS
-                                                                  ] &&
-                                                                  errors[
-                                                                    directorFieldNames
-                                                                      .RESIDENTIALSTATUS
-                                                                  ]
-                                                                    ? "red"
-                                                                    : "#ced4da";
-
-                                                                return {
-                                                                  ...styles,
-                                                                  borderColor,
-                                                                };
-                                                              },
-                                                              menuPortal: (
-                                                                base
-                                                              ) => ({
-                                                                ...base,
-                                                                zIndex: 9999,
-                                                              }),
-                                                            }}
-                                                            components={{
-                                                              IndicatorSeparator:
-                                                                () => null,
-                                                            }}
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .RESIDENTIALSTATUS
-                                                              ]
-                                                            }
-                                                            onBlur={() => {
-                                                              // setDirectorData(
-                                                              //   values["directorInfo"]
-                                                              // );
-                                                            }}
-                                                          />
-                                                        </div>
-                                                      </div>
-                                                      <div className="col-md-3">
-                                                        <div className="form-group">
-                                                          <label>
-                                                            Living Since
-                                                          </label>
-                                                          <input
-                                                            type="date"
-                                                            className="form-control"
-                                                            placeholder="Living Since"
-                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
-                                                            onChange={
-                                                              handleChange
-                                                            }
-                                                            value={
-                                                              item[
-                                                                directorFieldNames
-                                                                  .LIVINGSINCE
-                                                              ]
-                                                            }
-                                                          />
-                                                        </div>
+                                                        <select
+                                                          class="form-select form-control"
+                                                          aria-label="Default select example"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .CHOOSEADDRESS
+                                                            ]
+                                                          }
+                                                        >
+                                                          <option
+                                                            selected
+                                                            disabled
+                                                          >
+                                                            Choose Address
+                                                          </option>
+                                                        </select>
                                                       </div>
                                                     </div>
                                                   </div>
-                                                </Accordion>
-                                              )
-                                            )}
-                                        </>
-                                      )}
-                                    />
-                                  </div>
+
+                                                  <input
+                                                    hidden
+                                                    type="text"
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE1}`}
+                                                    onChange={handleChange}
+                                                    value={
+                                                      item[
+                                                        directorFieldNames
+                                                          .ADDRESSLINE1
+                                                      ]
+                                                    }
+                                                    className="form-control"
+                                                    placeholder="% of Total Share Count"
+                                                  />
+
+                                                  <input
+                                                    type="text"
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE2}`}
+                                                    onChange={handleChange}
+                                                    hidden
+                                                    value={
+                                                      item[
+                                                        directorFieldNames
+                                                          .ADDRESSLINE2
+                                                      ]
+                                                    }
+                                                    className="form-control"
+                                                    placeholder="% of Total Share Count"
+                                                  />
+
+                                                  <input
+                                                    type="text"
+                                                    name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HIDDENSHAREHOLDERID}`}
+                                                    onChange={handleChange}
+                                                    hidden
+                                                    value={
+                                                      item[
+                                                        directorFieldNames
+                                                          .HIDDENSHAREHOLDERID
+                                                      ]
+                                                    }
+                                                    className="form-control"
+                                                    placeholder="% of Total Share Count"
+                                                  />
+                                                  <div className="row">
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          House Number
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="House Number"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NUMBER}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .HOUSE_NUMBER
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          House Name
+                                                        </label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="House Name"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HOUSE_NAME}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .HOUSE_NAME
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>Street</label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="Street"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.STREET}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .STREET
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>County</label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="County"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.COUNTY}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .COUNTY
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>Town</label>
+                                                        <input
+                                                          type="text"
+                                                          className="form-control"
+                                                          placeholder="Town"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.TOWN}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .TOWN
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group ">
+                                                        <label>
+                                                          Residential Status
+                                                        </label>
+                                                        
+
+                                                        <Select
+                                                          closeMenuOnSelect={
+                                                            true
+                                                          }
+                                                          onChange={(
+                                                            selectedOption
+                                                          ) =>
+                                                            setFieldValue(
+                                                              `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`,
+                                                              selectedOption
+                                                            )
+                                                          }
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.RESIDENTIALSTATUS}`}
+                                                          options={
+                                                            residentialStatusList
+                                                          }
+                                                          menuPortalTarget={
+                                                            document.body
+                                                          }
+                                                          menuPosition={"fixed"}
+                                                          placeholder="Select Residential Status"
+                                                          styles={{
+                                                            control: (
+                                                              styles,
+                                                              state
+                                                            ) => {
+                                                              const borderColor =
+                                                                !state.hasValue &&
+                                                                touched[
+                                                                  directorFieldNames
+                                                                    .RESIDENTIALSTATUS
+                                                                ] &&
+                                                                errors[
+                                                                  directorFieldNames
+                                                                    .RESIDENTIALSTATUS
+                                                                ]
+                                                                  ? "red"
+                                                                  : "#ced4da";
+
+                                                              return {
+                                                                ...styles,
+                                                                borderColor,
+                                                              };
+                                                            },
+                                                            menuPortal: (
+                                                              base
+                                                            ) => ({
+                                                              ...base,
+                                                              zIndex: 9999,
+                                                            }),
+                                                            valueContainer: (
+                                                              provided,
+                                                              state
+                                                            ) => ({
+                                                              ...provided,
+                                                            }),
+                                                            input: (
+                                                              provided,
+                                                              state
+                                                            ) => ({
+                                                              ...provided,
+                                                            }),
+                                                          }}
+                                                          components={{
+                                                            IndicatorSeparator:
+                                                              () => null,
+                                                          }}
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .RESIDENTIALSTATUS
+                                                            ]
+                                                          }
+                                                          onBlur={() => {
+                                                            // setDirectorData(
+                                                            //   values["directorInfo"]
+                                                            // );
+                                                          }}
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                      <div className="form-group">
+                                                        <label>
+                                                          Living Since
+                                                        </label>
+                                                        <input
+                                                          type="date"
+                                                          className="form-control"
+                                                          placeholder="Living Since"
+                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
+                                                          onChange={
+                                                            handleChange
+                                                          }
+                                                          value={
+                                                            item[
+                                                              directorFieldNames
+                                                                .LIVINGSINCE
+                                                            ]
+                                                          }
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </Accordion>
+                                            )
+                                          )}
+                                      </>
+                                    )}
+                                  />
                                 </div>
                               </div>
-                            )}
+                            </div>
+                          }
                         </div>
                         <button
                           className="btn btn-primary save-btn next-btn"

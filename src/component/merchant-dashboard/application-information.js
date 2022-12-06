@@ -7,6 +7,7 @@ import Header from "../header/header";
 import SiderBarMenu from "./component/sidebar";
 import {
   businessEntityList,
+  checkCompanyType,
   fieldNames,
   loadOptions,
   loadPurposeList,
@@ -20,9 +21,7 @@ import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import { useDispatch } from "react-redux/es";
-import {
-  TRIGGER_LEAD_DETAILS,
-} from "../../redux/actions/actionTypes";
+import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
 
 function ApplicationInformation() {
   const [dasboardData, setDashboardData] = useState();
@@ -281,39 +280,108 @@ function ApplicationInformation() {
                             </div>
                             <div className="col-md-4">
                               <div className="form-group business-entity">
-                                <label>Business Name</label>
-                                <AsyncSelect
-                                  closeMenuOnSelect={true}
-                                  value={{
-                                    label: values[fieldNames.BUSINESSNAME],
-                                  }}
-                                  name={fieldNames.BUSINESSNAME}
-                                  loadOptions={loadOptions}
-                                  onChange={(selectedOption) => {
-                                    setFieldValue(
-                                      fieldNames.BUSINESSNAME,
-                                      selectedOption.value
-                                    );
-                                  }}
-                                  components={{
-                                    IndicatorSeparator: () => null,
-                                    DropdownIndicator: () => null,
-                                  }}
-                                  placeholder="Select Business Name"
-                                  styles={{
-                                    control: (styles, state) => {
-                            
-                                      const borderColor =
-                                        !state.hasValue &&
-                                        touched[fieldNames.BUSINESSNAME] &&
-                                        errors[fieldNames.BUSINESSNAME]
-                                          ? "red"
-                                          : "#ced4da";
+                                {values[fieldNames.BUSINESSENTITY] && (
+                                  <div className="form-group business-entity">
+                                    <label>Business Name</label>
+                                    {/* <AsyncSelect
+                                      closeMenuOnSelect={true}
+                                      value={{
+                                        label: values[fieldNames.BUSINESSNAME],
+                                      }}
+                                      name={fieldNames.BUSINESSNAME}
+                                      loadOptions={loadOptions}
+                                      onChange={(selectedOption) => {
+                                        setFieldValue(
+                                          fieldNames.BUSINESSNAME,
+                                          selectedOption.value
+                                        );
+                                      }}
+                                      components={{
+                                        IndicatorSeparator: () => null,
+                                        DropdownIndicator: () => null,
+                                      }}
+                                      placeholder="Select Business Name"
+                                      styles={{
+                                        control: (styles, state) => {
+                                          const borderColor =
+                                            !state.hasValue &&
+                                            touched[fieldNames.BUSINESSNAME] &&
+                                            errors[fieldNames.BUSINESSNAME]
+                                              ? "red"
+                                              : "#ced4da";
 
-                                      return { ...styles, borderColor };
-                                    },
-                                  }}
-                                />
+                                          return { ...styles, borderColor };
+                                        },
+                                      }}
+                                    /> */}
+                                    {checkCompanyType(
+                                      values[fieldNames.BUSINESSENTITY]
+                                    ) ? (
+                                      <AsyncSelect
+                                        closeMenuOnSelect={true}
+                                        value={{
+                                          label:
+                                            values[fieldNames.BUSINESSNAME],
+                                        }}
+                                        name={fieldNames.BUSINESSNAME}
+                                        loadOptions={loadOptions}
+                                        onChange={(selectedOption) => {
+                                          setFieldValue(
+                                            fieldNames.BUSINESSNAME,
+                                            selectedOption.value
+                                          );
+                                        }}
+                                        components={{
+                                          IndicatorSeparator: () => null,
+                                          DropdownIndicator: () => null,
+                                        }}
+                                        placeholder="Select Business Name"
+                                        styles={{
+                                          control: (styles, state) => {
+                                            const borderColor =
+                                              !state.hasValue &&
+                                              touched[
+                                                fieldNames.BUSINESSNAME
+                                              ] &&
+                                              errors[fieldNames.BUSINESSNAME]
+                                                ? "red"
+                                                : "#ced4da";
+
+                                            return { ...styles, borderColor };
+                                          },
+                                        }}
+                                      />
+                                    ) : (
+                                      <input
+                                        type="text"
+                                        placeholder="Enter Business Name"
+                                        name={fieldNames.BUSINESSNAME}
+                                        onChange={handleChange}
+                                        onBlur={(e) => {
+                                          // setApplicationInfo(values);
+                                        }}
+                                        value={values[fieldNames.BUSINESSNAME]}
+                                        className={clsx(
+                                          "form-control ",
+                                          {
+                                            "is-invalid":
+                                              touched[
+                                                fieldNames.BUSINESSNAME
+                                              ] &&
+                                              errors[fieldNames.BUSINESSNAME],
+                                          },
+                                          {
+                                            "is-valid":
+                                              touched[
+                                                fieldNames.BUSINESSNAME
+                                              ] &&
+                                              !errors[fieldNames.BUSINESSNAME],
+                                          }
+                                        )}
+                                      />
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
