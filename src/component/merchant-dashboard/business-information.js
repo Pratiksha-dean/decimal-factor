@@ -26,6 +26,7 @@ import Loaderspinner from "../loader";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { initialDirectorObject } from "../dashboard/component/review-business-information";
 import moment from "moment/moment";
+import { useRef } from "react";
 
 const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -59,6 +60,9 @@ const Accordion = ({ title, children, isPrimary }) => {
 
 function BusinessInformation() {
   const [directorList, setDirectorList] = useState([]);
+  const [isTouched, setIsTouched] = useState(false);
+  const [isAddedPrevAddress, setIsAddedPrevAddress] = useState(false);
+  const PreviousArrayHelperRef = useRef();
 
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
@@ -95,30 +99,24 @@ function BusinessInformation() {
           [directorFieldNames.PREVIOUSADDRESS]: Yup.array()
             .of(
               Yup.object().shape({
-                [directorFieldNames.ADDRESS]: Yup.string()
-                  .nullable(true)
-                  .required(),
+                [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
+                // .required(),
                 // [directorFieldNames.ADDRESSLINE2]: Yup.string()
                 //   .nullable(true)
                 //   .required(),
-                [directorFieldNames.COUNTY]: Yup.string()
-                  .nullable(true)
-                  .required(),
-                [directorFieldNames.POSTCODE]: Yup.string()
-                  .nullable(true)
-                  .required(),
-                [directorFieldNames.HOUSENUMBER]: Yup.string()
-                  .nullable(true)
-                  .required(),
-                [directorFieldNames.HOUSENAME]: Yup.string()
-                  .nullable(true)
-                  .required(),
-                [directorFieldNames.WHENTOMOVETOADDRESS]: Yup.string()
-                  .nullable(true)
-                  .required(),
-                [directorFieldNames.TOWN]: Yup.string()
-                  .nullable(true)
-                  .required(),
+                [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.POSTCODE]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.HOUSENUMBER]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.HOUSENAME]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.WHENTOMOVETOADDRESS]:
+                  Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.TOWN]: Yup.string().nullable(true),
+                // .required(),
                 id: Yup.string().nullable(true),
               })
             )
@@ -136,7 +134,7 @@ function BusinessInformation() {
     [directorFieldNames.HOUSENAME]: "",
     [directorFieldNames.WHENTOMOVETOADDRESS]: "",
     [directorFieldNames.TOWN]: "",
-    shareholderNo: "1",
+    [directorFieldNames.PREVIOUSADDSHAREHOLDERID]: "",
   };
   const [dasboardData, setDashboardData] = useState();
   const userDetails = getUserDetails();
@@ -213,8 +211,24 @@ function BusinessInformation() {
           item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
         if (item["PreviousAddress"] && item["PreviousAddress"].length > 0) {
           item["PreviousAddress"].map((item1, i) => {
-            let splittedDate = item1["when_move_to_address"].split("/");
-            let date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+            console.log("********", item1);
+            let splittedDate = [];
+            if (item1["living_since"]) {
+              splittedDate = item1["living_since"].split("/");
+            } else if (item1["when_move_to_address"]) {
+              splittedDate = item1["when_move_to_address"].split("/");
+            }
+            item[directorFieldNames.PREVIOUSADDSHAREHOLDERID] =
+              item["shareHolderID"];
+
+            console.log(
+              "🚀 ~ file: business-information.js:239 ~ item",
+              splittedDate
+            );
+            let date;
+            if (splittedDate.length) {
+              date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+            }
             item1[directorFieldNames.WHENTOMOVETOADDRESS] = date || "";
             console.log(
               "🚀 ~ file: business-information.js:222 ~ item[directorFieldNames.PREVIOUSADDRESS].map ~ date",
@@ -222,10 +236,15 @@ function BusinessInformation() {
             );
             item1[directorFieldNames.ADDRESS] = item1["address_line_1"];
             item["shareholderNo"] = i + 1;
+            item1[directorFieldNames.HOUSENUMBER] = item1["house_number"];
+            item1[directorFieldNames.HOUSENAME] = item1["house_name"];
             item1[directorFieldNames.POSTCODE] =
               item1[directorFieldNames.POSTCODE];
             delete item1["postal_code"];
             delete item1["when_move_to_address"];
+            delete item1["house_name"];
+            delete item1["house_number"];
+
             console.log(
               "🚀 ~ file: business-information.js:187 ~ item[directorFieldNames.PREVIOUSADDRESS].map ~ item",
               item1
@@ -295,6 +314,41 @@ function BusinessInformation() {
       });
   };
 
+  const limitLivingSince = (i, livingSince, prevAddress) => {
+    console.log(
+      "🚀 ~ file: business-information.js:318 ~ limitLivingSince ~ prevAddress",
+      prevAddress
+    );
+    console.log(
+      "🚀 ~ file: business-information.js:318 ~ limitLivingSince ~ i",
+      i,
+      livingSince,
+      prevAddress
+    );
+
+    if (i == 0) {
+      return livingSince;
+    } else if (i == 1) {
+      return prevAddress[0]["livingSince"];
+    } else {
+      return prevAddress[i - 1]["livingSince"];
+    }
+
+    // i == 0
+    //   ? moment(item[directorFieldNames.LIVINGSINCE]).format("YYYY-MM-DD")
+    //   : i == 1
+    //   ? moment(
+    //       values.directorInfo[index][directorFieldNames.PREVIOUSADDRESS][0][
+    //         directorFieldNames.WHENTOMOVETOADDRESS
+    //       ]
+    //     )
+    //   : moment(
+    //       values.directorInfo[index][directorFieldNames.PREVIOUSADDRESS][
+    //         i - 1
+    //       ][directorFieldNames.WHENTOMOVETOADDRESS]
+    //     );
+  };
+
   const generateDirectorListPayload = (data) => {
     console.log(
       "🚀 ~ file: business-information.js:294 ~ generateDirectorListPayload ~ data",
@@ -313,13 +367,15 @@ function BusinessInformation() {
           month = splitDate[1];
           year = splitDate[0];
         }
-        item["previousAddress"].forEach((ele) => {
-          prevAddress.push(ele);
-        });
-        console.log(
-          "🚀 ~ file: business-information.js:317 ~ data1 ~ prevAddress",
-          prevAddress
-        );
+        if (item["previousAddress"] && item["previousAddress"].length) {
+          item["previousAddress"].forEach((ele) => {
+            prevAddress.push(ele);
+          });
+          console.log(
+            "🚀 ~ file: business-information.js:317 ~ data1 ~ prevAddress",
+            prevAddress
+          );
+        }
         return {
           kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
           HiddenShareHolderId:
@@ -380,9 +436,35 @@ function BusinessInformation() {
                   <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
+                    validateOnChange={false}
+                    // validateOnBlur={true}
                     enableReinitialize
                     onSubmit={(values, { setSubmitting, resetForm }) => {
+                      setIsTouched(true);
+
                       let payload = { ...values };
+                      let prevAddress = generateDirectorListPayload(
+                        payload["directorInfo"]
+                      ).prevAddress;
+                      let areTruthy;
+                      console.log(
+                        "🚀 ~ file: business-information.js:391 ~ BusinessInformation ~ isAddedPrevAddress",
+                        isAddedPrevAddress
+                      );
+                      if (isAddedPrevAddress && prevAddress.length) {
+                        prevAddress.forEach((ele) => {
+                          areTruthy = Object.values(ele).every(
+                            (value) => value
+                          );
+                        });
+                      } else {
+                        areTruthy = true;
+                      }
+
+                      console.log(
+                        "🚀 ~ file: business-information.js:407 ~ BusinessInformation ~ areTruthy",
+                        areTruthy
+                      );
                       payload["businessSector"] =
                         payload["businessSector"].value;
                       // payload["ShareHolderArr"] = payload["directorInfo"];
@@ -396,23 +478,33 @@ function BusinessInformation() {
                         ).prevAddress;
                       console.log(
                         "🚀 ~ file: business-information.js:420 ~ BusinessInformation ~ payload",
-                        payload
+                        payload,
+                        generateDirectorListPayload(payload["directorInfo"])
+                          .prevAddress
                       );
 
+                      // return;
                       delete payload["directorInfo"];
-
-                      if (
-                        payload["ShareHolderArr"] &&
-                        payload["ShareHolderArr"].length
-                      ) {
-                        let index = payload["ShareHolderArr"].findIndex(
-                          (item) => item["is_primary"] == 1
-                        );
-                        if (index === -1) {
-                          ToastMessage(
-                            "It is mandatrory to mark at least one director as primary!",
-                            "error"
+                      if (areTruthy) {
+                        if (
+                          payload["ShareHolderArr"] &&
+                          payload["ShareHolderArr"].length
+                        ) {
+                          let index = payload["ShareHolderArr"].findIndex(
+                            (item) => item["is_primary"] == 1
                           );
+                          if (index === -1) {
+                            ToastMessage(
+                              "It is mandatrory to mark at least one director as primary!",
+                              "error"
+                            );
+                          } else {
+                            updateDirectorInfo(
+                              payload,
+                              userDetails["lead_id"],
+                              resetForm
+                            );
+                          }
                         } else {
                           updateDirectorInfo(
                             payload,
@@ -420,16 +512,6 @@ function BusinessInformation() {
                             resetForm
                           );
                         }
-                      } else {
-                        updateDirectorInfo(
-                          payload,
-                          userDetails["lead_id"],
-                          resetForm
-                        );
-
-                        setTimeout(() => {
-                          setSubmitting(false);
-                        }, 400);
                       }
                     }}
                   >
@@ -1098,6 +1180,7 @@ function BusinessInformation() {
                                                           closeMenuOnSelect={
                                                             true
                                                           }
+                                                          classNamePrefix="mySelect"
                                                           onChange={(
                                                             selectedOption
                                                           ) =>
@@ -1180,13 +1263,9 @@ function BusinessInformation() {
                                                       render={(
                                                         arrayHelpers
                                                       ) => {
+                                                        PreviousArrayHelperRef.current =
+                                                          arrayHelpers;
                                                         console.log(
-                                                          "🚀 ~ file: business-information.js:1125 ~ BusinessInformation ~ arrayHelpers",
-
-                                                          // touched &&
-                                                          //   touched[
-                                                          //     "directorInfo"
-                                                          //   ] ,
                                                           index,
                                                           touched
                                                         );
@@ -1214,6 +1293,30 @@ function BusinessInformation() {
                                                                         .value
                                                                     );
 
+                                                                    console.log(
+                                                                      "insert@",
+                                                                      Number(
+                                                                        moment().diff(
+                                                                          moment(
+                                                                            e
+                                                                              .target
+                                                                              .value
+                                                                          ),
+                                                                          "years"
+                                                                        )
+                                                                      ),
+                                                                      Number(
+                                                                        moment().diff(
+                                                                          moment(
+                                                                            e
+                                                                              .target
+                                                                              .value
+                                                                          ),
+                                                                          "years"
+                                                                        )
+                                                                      ) < 3
+                                                                    );
+
                                                                     if (
                                                                       Number(
                                                                         moment().diff(
@@ -1224,17 +1327,7 @@ function BusinessInformation() {
                                                                           ),
                                                                           "years"
                                                                         )
-                                                                      ) < 3 &&
-                                                                      Number(
-                                                                        moment().diff(
-                                                                          moment(
-                                                                            e
-                                                                              .target
-                                                                              .value
-                                                                          ),
-                                                                          "years"
-                                                                        )
-                                                                      ) !== 0
+                                                                      ) < 3
                                                                     ) {
                                                                       if (
                                                                         values
@@ -1250,15 +1343,34 @@ function BusinessInformation() {
                                                                           .length ==
                                                                           0
                                                                       ) {
-                                                                        arrayHelpers.insert(
-                                                                          0,
-                                                                          initialPreviousAddressObj
+                                                                        if (
+                                                                          item[
+                                                                            directorFieldNames
+                                                                              .ISPRIMARY
+                                                                          ]
+                                                                        ) {
+                                                                          initialPreviousAddressObj[
+                                                                            directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                          ] =
+                                                                            item[
+                                                                              directorFieldNames
+                                                                                .HIDDENSHAREHOLDERID
+                                                                            ] |
+                                                                            "0";
+                                                                          arrayHelpers.insert(
+                                                                            0,
+                                                                            initialPreviousAddressObj
+                                                                          );
+                                                                          setIsAddedPrevAddress(
+                                                                            true
+                                                                          );
+                                                                        }
+                                                                        // }
+                                                                      } else {
+                                                                        arrayHelpers.remove(
+                                                                          0
                                                                         );
                                                                       }
-                                                                    } else {
-                                                                      arrayHelpers.remove(
-                                                                        0
-                                                                      );
                                                                     }
                                                                   }}
                                                                   value={
@@ -1297,8 +1409,9 @@ function BusinessInformation() {
                                                                 (item1, i) => {
                                                                   console.log(
                                                                     "item1",
-                                                                    errors,
-                                                                    touched
+                                                                    item1,
+                                                                    isTouched,
+                                                                    isAddedPrevAddress
                                                                   );
                                                                   return (
                                                                     <>
@@ -1316,14 +1429,15 @@ function BusinessInformation() {
                                                                       {/* <div className="row mx-1"> */}
                                                                       <input
                                                                         type="text"
-                                                                        name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}["shareholderNo"]`}
+                                                                        name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.PREVIOUSADDSHAREHOLDERID}`}
                                                                         onChange={
                                                                           handleChange
                                                                         }
                                                                         hidden
                                                                         value={
-                                                                          item[
-                                                                            "shareholderNo"
+                                                                          item1[
+                                                                            directorFieldNames
+                                                                              .PREVIOUSADDSHAREHOLDERID
                                                                           ]
                                                                         }
                                                                         className="form-control"
@@ -1335,40 +1449,26 @@ function BusinessInformation() {
                                                                             POSTALCODE
                                                                           </label>
                                                                           <input
-                                                                            type="number"
+                                                                            type="text"
                                                                             className={clsx(
-                                                                              "form-control "
-                                                                              // {
-                                                                              //   "is-invalid":
-                                                                              //     touched[
-                                                                              //       fieldNames
-                                                                              //         .DIRECTORINFO
-                                                                              //     ][
-                                                                              //       index
-                                                                              //     ][
-                                                                              //       directorFieldNames
-                                                                              //         .PREVIOUSADDRESS
-                                                                              //     ] !==
-                                                                              //       null &&
-                                                                              //     touched[
-                                                                              //       fieldNames
-                                                                              //         .DIRECTORINFO
-                                                                              //     ][
-                                                                              //       index
-                                                                              //     ][
-                                                                              //       directorFieldNames
-                                                                              //         .PREVIOUSADDRESS
-                                                                              //     ][
-                                                                              //       i
-                                                                              //     ][
-                                                                              //       directorFieldNames
-                                                                              //         .POSTCODE
-                                                                              //     ],
-                                                                              // }
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .POSTCODE
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                             )}
                                                                             placeholder="Postal Code"
                                                                             name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.POSTCODE}`}
                                                                             onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            onBlur={
                                                                               handleChange
                                                                             }
                                                                             value={
@@ -1389,7 +1489,17 @@ function BusinessInformation() {
                                                                           <input
                                                                             type="text"
                                                                             className={clsx(
-                                                                              "form-control "
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .HOUSENUMBER
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                               // {
                                                                               //   "is-invalid":
                                                                               //     touched &&
@@ -1461,7 +1571,17 @@ function BusinessInformation() {
                                                                           <input
                                                                             type="text"
                                                                             className={clsx(
-                                                                              "form-control "
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .HOUSENAME
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                               // {
                                                                               //   "is-invalid":
                                                                               //     touched &&
@@ -1545,7 +1665,17 @@ function BusinessInformation() {
                                                                           <input
                                                                             type="text"
                                                                             className={clsx(
-                                                                              "form-control "
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .ADDRESS
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                               // {
                                                                               //   "is-invalid":
                                                                               //     touched &&
@@ -1616,7 +1746,17 @@ function BusinessInformation() {
                                                                           <input
                                                                             type="text"
                                                                             className={clsx(
-                                                                              "form-control "
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .COUNTY
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                               // {
                                                                               //   "is-invalid":
                                                                               //     touched &&
@@ -1687,7 +1827,17 @@ function BusinessInformation() {
                                                                           <input
                                                                             type="text"
                                                                             className={clsx(
-                                                                              "form-control "
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .TOWN
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                               // {
                                                                               //   "is-invalid":
                                                                               //     touched &&
@@ -1763,7 +1913,17 @@ function BusinessInformation() {
                                                                           <input
                                                                             type="date"
                                                                             className={clsx(
-                                                                              "form-control "
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .WHENTOMOVETOADDRESS
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
                                                                               // {
                                                                               //   "is-invalid":
                                                                               //     touched &&
@@ -1887,37 +2047,51 @@ function BusinessInformation() {
                                                                                       i +
                                                                                         1
                                                                                     );
-                                                                                    arrayHelpers.insert(
+                                                                                    if (
+                                                                                      item[
+                                                                                        directorFieldNames
+                                                                                          .ISPRIMARY
+                                                                                      ]
+                                                                                    ) {
+                                                                                      arrayHelpers.insert(
+                                                                                        i +
+                                                                                          1,
+                                                                                        initialPreviousAddressObj
+                                                                                      );
+                                                                                      setIsAddedPrevAddress(
+                                                                                        true
+                                                                                      );
+                                                                                    }
+                                                                                  } else {
+                                                                                    arrayHelpers.remove(
                                                                                       i +
-                                                                                        1,
-                                                                                      initialPreviousAddressObj
+                                                                                        1
                                                                                     );
+                                                                                    // setIsAddedPrevAddress(
+                                                                                    //   false
+                                                                                    // );
+                                                                                    // arrayHelpers.insert(
+                                                                                    //   i,
+                                                                                    //   initialPreviousAddressObj
+                                                                                    // );
                                                                                   }
-                                                                                } else {
-                                                                                  arrayHelpers.remove(
-                                                                                    i +
-                                                                                      1
-                                                                                  );
-                                                                                  // arrayHelpers.insert(
-                                                                                  //   i,
-                                                                                  //   initialPreviousAddressObj
-                                                                                  // );
                                                                                 }
                                                                               }
                                                                             }
-                                                                            max={
-                                                                              i ==
-                                                                              0
-                                                                                ? moment(
-                                                                                    item[
-                                                                                      directorFieldNames
-                                                                                        .LIVINGSINCE
-                                                                                    ]
-                                                                                  ).format(
-                                                                                    "YYYY-MM-DD"
-                                                                                  )
-                                                                                : moment()
-                                                                            }
+                                                                            max={limitLivingSince(
+                                                                              i,
+                                                                              item[
+                                                                                directorFieldNames
+                                                                                  .LIVINGSINCE
+                                                                              ],
+                                                                              values
+                                                                                .directorInfo[
+                                                                                index
+                                                                              ][
+                                                                                directorFieldNames
+                                                                                  .PREVIOUSADDRESS
+                                                                              ]
+                                                                            )}
                                                                             value={
                                                                               item1[
                                                                                 directorFieldNames
