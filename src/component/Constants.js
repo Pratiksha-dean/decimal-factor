@@ -32,7 +32,8 @@ export const directorFieldNames = {
   POSTCODE: "postcode",
   HOUSENUMBER: "houseNumber1",
   HOUSENAME: "houseName",
-  PREVIOUSADDSHAREHOLDERID: "previousAddshareHolderID",
+  PREVIOUSADDSHAREHOLDERID: "shareholderNo",
+  SHAREHOLDERARRAY: "ShareHolderArr",
 };
 
 export const residentialStatusList = [

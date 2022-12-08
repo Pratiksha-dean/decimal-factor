@@ -266,9 +266,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         setBankingStatus(false);
       } else if (data["obv_account_score_status"] == "Completed") {
         setBankingStatus(true);
-           setBankingUrl(
-             `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
-           );
+        setBankingUrl(
+          `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
+        );
       }
     } else {
       setLoadingBanking(true);

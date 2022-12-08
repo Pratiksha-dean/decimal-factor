@@ -137,6 +137,7 @@ function BusinessInformation() {
     [directorFieldNames.PREVIOUSADDSHAREHOLDERID]: "",
   };
   const [dasboardData, setDashboardData] = useState();
+
   const userDetails = getUserDetails();
   const [loading, setLoading] = useState(false);
 
@@ -156,154 +157,180 @@ function BusinessInformation() {
   };
 
   const patchDirectorData = (data) => {
-    let values = directorList;
-    if (values && values.length) {
-      values = directorList.map((item) => {
-        // let name = item.name.split(",");
-        item["fullName"] = item["firstName"];
-        item["lastName"] = item["lastName"];
-        if (item["address"]) {
-          item[directorFieldNames.POSTCODE] =
-            item["address"][directorFieldNames.POSTCODE];
-          item[directorFieldNames.STREET] = item["address"]["address_line_1"];
-          item[directorFieldNames.COUNTY] = item["address"]["locality"];
+    if (data) {
+      let values;
+      if (data["ShareHolderList"] && data["ShareHolderList"].length) {
+        values = [...data["ShareHolderList"]];
+      }
+      if (values && values.length) {
+        values = values.map((item, i) => {
+          // let name = item.name.split(",");
+          item["fullName"] = item["firstName"];
+          item["lastName"] = item["lastName"];
+          if (item["address"]) {
+            item[directorFieldNames.POSTCODE] =
+              item["address"][directorFieldNames.POSTCODE];
+            item[directorFieldNames.STREET] = item["address"]["address_line_1"];
+            item[directorFieldNames.COUNTY] = item["address"]["locality"];
 
-          item[directorFieldNames.TOWN] = "";
-        }
-        item[directorFieldNames.RESIDENTIALSTATUS] =
-          residentialStatusList[
-            residentialStatusList.findIndex(
-              (data) => item["residentialStatus"] == data.value
-            )
-          ];
+            item[directorFieldNames.TOWN] = "";
+          }
+          item[directorFieldNames.RESIDENTIALSTATUS] =
+            residentialStatusList[
+              residentialStatusList.findIndex(
+                (data) => item["residentialStatus"] == data.value
+              )
+            ];
 
-        item[directorFieldNames.HOUSE_NAME] = item["houseName"] || "";
-        item[directorFieldNames.HOUSE_NUMBER] = item["houseNumber"];
+          item[directorFieldNames.HOUSE_NAME] = item["houseName"] || "";
+          item[directorFieldNames.HOUSE_NUMBER] = item["houseNumber"];
 
-        if (item["living_since"]) {
-          let splittedDate = item["living_since"].split("/");
-          let date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
-          item[directorFieldNames.LIVINGSINCE] = date || "";
-        }
+          if (item["living_since"]) {
+            let splittedDate = item["living_since"].split("/");
+            let date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+            item[directorFieldNames.LIVINGSINCE] = date || "";
+          }
 
-        item[directorFieldNames.NATUREOFCONTROL] = item["natures_of_control"];
-        item[directorFieldNames.EMAILID] = item[directorFieldNames.EMAILID];
-        item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
-          ? item["phonenumber"]
-          : "";
-        item[directorFieldNames.KINDOFSHAREHOLDER] = item[
-          directorFieldNames.KINDOFSHAREHOLDER
-        ]
-          ? item[directorFieldNames.KINDOFSHAREHOLDER]
-          : "";
+          item[directorFieldNames.NATUREOFCONTROL] = item["natures_of_control"];
+          item[directorFieldNames.EMAILID] = item[directorFieldNames.EMAILID];
+          item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
+            ? item["phonenumber"]
+            : "";
+          item[directorFieldNames.KINDOFSHAREHOLDER] = item[
+            directorFieldNames.KINDOFSHAREHOLDER
+          ]
+            ? item[directorFieldNames.KINDOFSHAREHOLDER]
+            : "";
 
-        if (values.length > 1) {
-          item[directorFieldNames.ISPRIMARY] =
-            item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
-        } else {
-          item[directorFieldNames.ISPRIMARY] = true;
-        }
+          if (values.length > 1) {
+            item[directorFieldNames.ISPRIMARY] =
+              item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
+          } else {
+            item[directorFieldNames.ISPRIMARY] = true;
+          }
 
-        item[directorFieldNames.CHOOSEADDRESS] = "";
-        item[directorFieldNames.HIDDENSHAREHOLDERID] = item["shareHolderID"];
+          item[directorFieldNames.CHOOSEADDRESS] = "";
+          item[directorFieldNames.HIDDENSHAREHOLDERID] = item["shareHolderID"];
 
-        item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
-          item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
-        if (item["PreviousAddress"] && item["PreviousAddress"].length > 0) {
-          item["PreviousAddress"].map((item1, i) => {
-            console.log("********", item1);
-            let splittedDate = [];
-            if (item1["living_since"]) {
-              splittedDate = item1["living_since"].split("/");
-            } else if (item1["when_move_to_address"]) {
-              splittedDate = item1["when_move_to_address"].split("/");
-            }
-            item[directorFieldNames.PREVIOUSADDSHAREHOLDERID] =
-              item["shareHolderID"];
+          item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
+            item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
+          if (item["PreviousAddress"] && item["PreviousAddress"].length > 0) {
+            item["PreviousAddress"].map((item1, index) => {
+              let splittedDate = [];
+              if (item1["living_since"]) {
+                splittedDate = item1["living_since"].split("/");
+              } else if (item1["when_move_to_address"]) {
+                splittedDate = item1["when_move_to_address"].split("/");
+              }
+              item1[directorFieldNames.PREVIOUSADDSHAREHOLDERID] = i + 1;
+              // item["shareHolderID"];
 
-            console.log(
-              "🚀 ~ file: business-information.js:239 ~ item",
-              splittedDate
-            );
-            let date;
-            if (splittedDate.length) {
-              date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
-            }
-            item1[directorFieldNames.WHENTOMOVETOADDRESS] = date || "";
-            console.log(
-              "🚀 ~ file: business-information.js:222 ~ item[directorFieldNames.PREVIOUSADDRESS].map ~ date",
-              date
-            );
-            item1[directorFieldNames.ADDRESS] = item1["address_line_1"];
-            item["shareholderNo"] = i + 1;
-            item1[directorFieldNames.HOUSENUMBER] = item1["house_number"];
-            item1[directorFieldNames.HOUSENAME] = item1["house_name"];
-            item1[directorFieldNames.POSTCODE] =
-              item1[directorFieldNames.POSTCODE];
-            delete item1["postal_code"];
-            delete item1["when_move_to_address"];
-            delete item1["house_name"];
-            delete item1["house_number"];
+              let date;
+              if (splittedDate.length) {
+                date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+              }
+              item1[directorFieldNames.WHENTOMOVETOADDRESS] = date || "";
 
-            console.log(
-              "🚀 ~ file: business-information.js:187 ~ item[directorFieldNames.PREVIOUSADDRESS].map ~ item",
-              item1
-            );
-          });
-        }
-        item[directorFieldNames.PREVIOUSADDRESS] = item["PreviousAddress"];
-        delete item["address"];
-        delete item["appointed_on"];
-        delete item["links"];
-        delete item["date_of_birth"];
-        delete item["occupation"];
-        delete item["nationality"];
-        delete item["resigned_on"];
-        delete item["officer_role"];
-        delete item["country_of_residence"];
+              item1[directorFieldNames.ADDRESS] = item1["address_line_1"];
+              // item["shareholderNo"] = i + 1;
+              item1[directorFieldNames.HOUSENUMBER] = item1["house_number"];
+              item1[directorFieldNames.HOUSENAME] = item1["house_name"];
+              item1[directorFieldNames.POSTCODE] =
+                item1[directorFieldNames.POSTCODE];
 
-        return item;
-      });
+              delete item1["postal_code"];
+              delete item1["when_move_to_address"];
+              delete item1["house_name"];
+              delete item1["house_number"];
+              delete item1["address_line_1"];
+              delete item1["address_line_2"];
+              delete item1["id"];
+            });
+          }
+          item[directorFieldNames.PREVIOUSADDRESS] = item["PreviousAddress"];
+          delete item["address"];
+          delete item["appointed_on"];
+          delete item["links"];
+          delete item["date_of_birth"];
+          delete item["occupation"];
+          delete item["nationality"];
+          delete item["resigned_on"];
+          delete item["officer_role"];
+          delete item["country_of_residence"];
+
+          return item;
+        });
+      }
+      return values;
     }
-    return values;
   };
 
-  const initialValues = {
-    [fieldNames.BUSINESSSECTOR]: dasboardData
-      ? businessSectorList[
-          businessSectorList.findIndex(
-            (item) => dasboardData.lf_business_sector == item.value
-          )
-        ]
-      : "",
-    [fieldNames.BUSINESSSTARTDATE]: dasboardData
-      ? dasboardData["AppBusinessStartDate"]
-      : "",
+  const patchInitialData = (data1) => {
+    let data = JSON.parse(JSON.stringify(data1));
+    let initialValues = {
+      [fieldNames.BUSINESSSECTOR]: data
+        ? businessSectorList[
+            businessSectorList.findIndex(
+              (item) => data.lf_business_sector == item.value
+            )
+          ]
+        : "",
+      [fieldNames.BUSINESSSTARTDATE]: data ? data["AppBusinessStartDate"] : "",
 
-    [fieldNames.CARDPAYMENTAMOUNT]: dasboardData
-      ? dasboardData["lf_monthly_credit_card_volume"]
-      : "",
-    [fieldNames.SUPPLIERDUEAMOUNT]: dasboardData
-      ? dasboardData["AppCurrentValueOverdueInvoices"]
-      : "",
-    [fieldNames.BUSINESSLEGALNUMBER]: dasboardData
-      ? dasboardData["lmc_bi_business_number"]
-      : "",
-    [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
+      [fieldNames.CARDPAYMENTAMOUNT]: data
+        ? data["lf_monthly_credit_card_volume"]
+        : "",
+      [fieldNames.SUPPLIERDUEAMOUNT]: data
+        ? data["AppCurrentValueOverdueInvoices"]
+        : "",
+      [fieldNames.BUSINESSLEGALNUMBER]: data
+        ? data["lmc_bi_business_number"]
+        : "",
+      [fieldNames.DIRECTORINFO]: patchDirectorData(data),
+    };
+
+
+
+    return initialValues;
   };
-  console.log(
-    "🚀 ~ file: business-information.js:269 ~ BusinessInformation ~ initialValues",
-    initialValues
-  );
 
-  const updateDirectorInfo = (payload, id, resetForm) => {
+  // const initialValues = {
+  //   [fieldNames.BUSINESSSECTOR]: dasboardData
+  //     ? businessSectorList[
+  //         businessSectorList.findIndex(
+  //           (item) => dasboardData.lf_business_sector == item.value
+  //         )
+  //       ]
+  //     : "",
+  //   [fieldNames.BUSINESSSTARTDATE]: dasboardData
+  //     ? dasboardData["AppBusinessStartDate"]
+  //     : "",
+
+  //   [fieldNames.CARDPAYMENTAMOUNT]: dasboardData
+  //     ? dasboardData["lf_monthly_credit_card_volume"]
+  //     : "",
+  //   [fieldNames.SUPPLIERDUEAMOUNT]: dasboardData
+  //     ? dasboardData["AppCurrentValueOverdueInvoices"]
+  //     : "",
+  //   [fieldNames.BUSINESSLEGALNUMBER]: dasboardData
+  //     ? dasboardData["lmc_bi_business_number"]
+  //     : "",
+  //   [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
+  // };
+  // console.log(
+  //   "🚀 ~ file: business-information.js:306 ~ BusinessInformation ~ initialValues",
+  //   initialValues
+  // );
+
+  const updateDirectorInfo = (payload, id, areTruthy) => {
     updateUpdateCustomerInfo(payload, id)
       .then((resp) => {
         setLoading(false);
         if (resp.isSuccess == 1) {
           ToastMessage("Data saved successfully!", "success");
-          resetForm({});
+          // resetForm({});
           getData();
+          areTruthy = false;
         } else {
           ToastMessage("Something went wrong!", "error");
         }
@@ -315,17 +342,6 @@ function BusinessInformation() {
   };
 
   const limitLivingSince = (i, livingSince, prevAddress) => {
-    console.log(
-      "🚀 ~ file: business-information.js:318 ~ limitLivingSince ~ prevAddress",
-      prevAddress
-    );
-    console.log(
-      "🚀 ~ file: business-information.js:318 ~ limitLivingSince ~ i",
-      i,
-      livingSince,
-      prevAddress
-    );
-
     if (i == 0) {
       return livingSince;
     } else if (i == 1) {
@@ -333,27 +349,20 @@ function BusinessInformation() {
     } else {
       return prevAddress[i - 1]["livingSince"];
     }
-
-    // i == 0
-    //   ? moment(item[directorFieldNames.LIVINGSINCE]).format("YYYY-MM-DD")
-    //   : i == 1
-    //   ? moment(
-    //       values.directorInfo[index][directorFieldNames.PREVIOUSADDRESS][0][
-    //         directorFieldNames.WHENTOMOVETOADDRESS
-    //       ]
-    //     )
-    //   : moment(
-    //       values.directorInfo[index][directorFieldNames.PREVIOUSADDRESS][
-    //         i - 1
-    //       ][directorFieldNames.WHENTOMOVETOADDRESS]
-    //     );
   };
 
-  const generateDirectorListPayload = (data) => {
-    console.log(
-      "🚀 ~ file: business-information.js:294 ~ generateDirectorListPayload ~ data",
-      data
-    );
+  function diff_years(dt2, dt1) {
+    dt2.setHours(0, 0, 0);
+
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60 * 60 * 24;
+
+    return (dt2.getTime() - dt1.getTime()) / 31536000000;
+  }
+
+  const generateDirectorListPayload = (data1) => {
+
+    let data = [...data1];
     if (data != null) {
       let prevAddress = [];
       let data1 = data.map((item) => {
@@ -371,10 +380,7 @@ function BusinessInformation() {
           item["previousAddress"].forEach((ele) => {
             prevAddress.push(ele);
           });
-          console.log(
-            "🚀 ~ file: business-information.js:317 ~ data1 ~ prevAddress",
-            prevAddress
-          );
+
         }
         return {
           kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
@@ -434,24 +440,36 @@ function BusinessInformation() {
                   <Loaderspinner size="45px" />
                 ) : (
                   <Formik
-                    initialValues={initialValues}
+                    initialValues={patchInitialData(dasboardData)}
                     validationSchema={validationSchema}
                     validateOnChange={false}
                     // validateOnBlur={true}
-                    enableReinitialize
+                    enableReinitialize={dasboardData}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
                       setIsTouched(true);
-
                       let payload = { ...values };
                       let prevAddress = generateDirectorListPayload(
                         payload["directorInfo"]
                       ).prevAddress;
                       let areTruthy;
-                      console.log(
-                        "🚀 ~ file: business-information.js:391 ~ BusinessInformation ~ isAddedPrevAddress",
-                        isAddedPrevAddress
-                      );
+                      if (
+                        prevAddress.length &&
+                        diff_years(
+                          new Date(),
+                          new Date(
+                            prevAddress[prevAddress.length - 1]["livingSince"]
+                          )
+                        ) < 3
+                      ) {
+                        PreviousArrayHelperRef.current.insert(
+                          prevAddress.length + 1,
+                          initialPreviousAddressObj
+                        );
+                        prevAddress.push(initialPreviousAddressObj);
+
+                      }
                       if (isAddedPrevAddress && prevAddress.length) {
+
                         prevAddress.forEach((ele) => {
                           areTruthy = Object.values(ele).every(
                             (value) => value
@@ -461,10 +479,6 @@ function BusinessInformation() {
                         areTruthy = true;
                       }
 
-                      console.log(
-                        "🚀 ~ file: business-information.js:407 ~ BusinessInformation ~ areTruthy",
-                        areTruthy
-                      );
                       payload["businessSector"] =
                         payload["businessSector"].value;
                       // payload["ShareHolderArr"] = payload["directorInfo"];
@@ -476,21 +490,20 @@ function BusinessInformation() {
                         generateDirectorListPayload(
                           payload["directorInfo"]
                         ).prevAddress;
-                      console.log(
-                        "🚀 ~ file: business-information.js:420 ~ BusinessInformation ~ payload",
-                        payload,
-                        generateDirectorListPayload(payload["directorInfo"])
-                          .prevAddress
-                      );
+                 
 
                       // return;
-                      delete payload["directorInfo"];
+                      // delete payload["directorInfo"];
+                      // return;
                       if (areTruthy) {
+                        let newPayload = { ...payload };
+                        delete newPayload["directorInfo"];
+
                         if (
-                          payload["ShareHolderArr"] &&
-                          payload["ShareHolderArr"].length
+                          newPayload["ShareHolderArr"] &&
+                          newPayload["ShareHolderArr"].length
                         ) {
-                          let index = payload["ShareHolderArr"].findIndex(
+                          let index = newPayload["ShareHolderArr"].findIndex(
                             (item) => item["is_primary"] == 1
                           );
                           if (index === -1) {
@@ -500,16 +513,16 @@ function BusinessInformation() {
                             );
                           } else {
                             updateDirectorInfo(
-                              payload,
+                              newPayload,
                               userDetails["lead_id"],
-                              resetForm
+                              areTruthy
                             );
                           }
                         } else {
                           updateDirectorInfo(
-                            payload,
+                            newPayload,
                             userDetails["lead_id"],
-                            resetForm
+                            areTruthy
                           );
                         }
                       }
@@ -1265,10 +1278,7 @@ function BusinessInformation() {
                                                       ) => {
                                                         PreviousArrayHelperRef.current =
                                                           arrayHelpers;
-                                                        console.log(
-                                                          index,
-                                                          touched
-                                                        );
+
                                                         return (
                                                           <>
                                                             <div className="col-md-3">
@@ -1284,6 +1294,7 @@ function BusinessInformation() {
                                                                     "YYYY-MM-DD"
                                                                   )}
                                                                   name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
+                                                                  onBlur={() => {}}
                                                                   onChange={(
                                                                     e
                                                                   ) => {
@@ -1293,39 +1304,11 @@ function BusinessInformation() {
                                                                         .value
                                                                     );
 
-                                                                    console.log(
-                                                                      "insert@",
-                                                                      Number(
-                                                                        moment().diff(
-                                                                          moment(
-                                                                            e
-                                                                              .target
-                                                                              .value
-                                                                          ),
-                                                                          "years"
-                                                                        )
-                                                                      ),
-                                                                      Number(
-                                                                        moment().diff(
-                                                                          moment(
-                                                                            e
-                                                                              .target
-                                                                              .value
-                                                                          ),
-                                                                          "years"
-                                                                        )
-                                                                      ) < 3
-                                                                    );
-
                                                                     if (
-                                                                      Number(
-                                                                        moment().diff(
-                                                                          moment(
-                                                                            e
-                                                                              .target
-                                                                              .value
-                                                                          ),
-                                                                          "years"
+                                                                      diff_years(
+                                                                        new Date(),
+                                                                        new Date(
+                                                                          e.target.value
                                                                         )
                                                                       ) < 3
                                                                     ) {
@@ -1352,11 +1335,8 @@ function BusinessInformation() {
                                                                           initialPreviousAddressObj[
                                                                             directorFieldNames.PREVIOUSADDSHAREHOLDERID
                                                                           ] =
-                                                                            item[
-                                                                              directorFieldNames
-                                                                                .HIDDENSHAREHOLDERID
-                                                                            ] |
-                                                                            "0";
+                                                                            index +
+                                                                            1;
                                                                           arrayHelpers.insert(
                                                                             0,
                                                                             initialPreviousAddressObj
@@ -1367,9 +1347,12 @@ function BusinessInformation() {
                                                                         }
                                                                         // }
                                                                       } else {
-                                                                        arrayHelpers.remove(
-                                                                          0
-                                                                        );
+                                                                        // console.log(
+                                                                        //   "remove"
+                                                                        // );
+                                                                        // arrayHelpers.remove(
+                                                                        //   0
+                                                                        // );
                                                                       }
                                                                     }
                                                                   }}
@@ -1407,12 +1390,6 @@ function BusinessInformation() {
                                                                   .PREVIOUSADDRESS
                                                               ].map(
                                                                 (item1, i) => {
-                                                                  console.log(
-                                                                    "item1",
-                                                                    item1,
-                                                                    isTouched,
-                                                                    isAddedPrevAddress
-                                                                  );
                                                                   return (
                                                                     <>
                                                                       <div
@@ -1990,34 +1967,23 @@ function BusinessInformation() {
                                                                                     .target
                                                                                     .value
                                                                                 );
-                                                                                console.log(
-                                                                                  "values",
-                                                                                  touched
-                                                                                );
 
                                                                                 if (
-                                                                                  Number(
-                                                                                    moment().diff(
-                                                                                      moment(
-                                                                                        e
-                                                                                          .target
-                                                                                          .value
-                                                                                      ),
-                                                                                      "years"
+                                                                                  diff_years(
+                                                                                    new Date(),
+                                                                                    new Date(
+                                                                                      e.target.value
                                                                                     )
                                                                                   ) <
-                                                                                    3 &&
-                                                                                  Number(
-                                                                                    moment().diff(
-                                                                                      moment(
-                                                                                        e
-                                                                                          .target
-                                                                                          .value
-                                                                                      ),
-                                                                                      "years"
-                                                                                    )
-                                                                                  ) !==
-                                                                                    0
+                                                                                  3
+                                                                                  //   &&
+                                                                                  // diff_years(
+                                                                                  //   new Date(),
+                                                                                  //   new Date(
+                                                                                  //     e.target.value
+                                                                                  //   )
+                                                                                  // ) !==
+                                                                                  //   0
                                                                                 ) {
                                                                                   if (
                                                                                     values
@@ -2039,10 +2005,6 @@ function BusinessInformation() {
                                                                                       .length >=
                                                                                       1
                                                                                   ) {
-                                                                                    console.log(
-                                                                                      "insert",
-                                                                                      i
-                                                                                    );
                                                                                     arrayHelpers.remove(
                                                                                       i +
                                                                                         1
@@ -2053,6 +2015,11 @@ function BusinessInformation() {
                                                                                           .ISPRIMARY
                                                                                       ]
                                                                                     ) {
+                                                                                      initialPreviousAddressObj[
+                                                                                        directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                                      ] =
+                                                                                        index +
+                                                                                        1;
                                                                                       arrayHelpers.insert(
                                                                                         i +
                                                                                           1,
@@ -2075,6 +2042,11 @@ function BusinessInformation() {
                                                                                     //   initialPreviousAddressObj
                                                                                     // );
                                                                                   }
+                                                                                } else {
+                                                                                  arrayHelpers.remove(
+                                                                                    i +
+                                                                                      1
+                                                                                  );
                                                                                 }
                                                                               }
                                                                             }
@@ -2101,9 +2073,6 @@ function BusinessInformation() {
                                                                           />
                                                                         </div>
                                                                       </div>
-                                                                      {/* </div> */}
-                                                                      {/* )}
-                                                                      /> */}
                                                                     </>
                                                                   );
                                                                 }
