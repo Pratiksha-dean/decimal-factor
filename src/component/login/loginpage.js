@@ -79,10 +79,10 @@ export default function Login() {
                 lead_id: resp.data.data.lead_id,
               };
 
-              updateLoginTimes(obj).then((res) => {
-              });
+              updateLoginTimes(obj).then((res) => {});
 
-              navigate("/authentication");
+              // navigate("/authentication");
+              navigate("/dashboard");
 
               setUserDetails(resp.data.data);
               dispatch({

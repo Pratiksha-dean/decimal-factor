@@ -55,7 +55,7 @@ function MerchantHealth() {
   const [bankingStatus, setBankingStatus] = useState(false);
   const [loadingServices, setLoadingServices] = useState(false);
   const dispatch = useDispatch();
-  const [loadingBanking, setLoadingBanking] = useState(false);
+  const [loadingBanking, setLoadingBanking] = useState(true);
   const [loadingAccouting, setLoadingAccouting] = useState(true);
   const [financialServicesSummary, setFinancialServicesSummary] = useState([]);
   const [incomeAnalysisSummary, setIncomeAnalysisSummary] = useState([]);
@@ -456,6 +456,7 @@ function MerchantHealth() {
     ToastMessage("Url copied to clipboard!", "success");
   };
 
+  console.log("  loadingBanking;", loadingBanking);
   return (
     <div className="dashboard-panel">
       <Header />

@@ -221,10 +221,7 @@ function BusinessInformation() {
     [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
   };
 
-  console.log(
-    "🚀 ~ file: review-business-information.js:322 ~ ReviewBusinessInformation ~ initialValues",
-    initialValues
-  );
+
 
   const updateDirectorInfo = (payload, id, resetForm) => {
     updateUpdateCustomerInfo(payload, id)
@@ -1021,7 +1018,7 @@ function BusinessInformation() {
                                                         <label>
                                                           Residential Status
                                                         </label>
-                                                        
+
 
                                                         <Select
                                                           closeMenuOnSelect={
