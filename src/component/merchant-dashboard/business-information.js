@@ -61,7 +61,9 @@ const Accordion = ({ title, children, isPrimary }) => {
 function BusinessInformation() {
   const [directorList, setDirectorList] = useState([]);
   const [isTouched, setIsTouched] = useState(false);
+
   const [isAddedPrevAddress, setIsAddedPrevAddress] = useState(false);
+
   const PreviousArrayHelperRef = useRef();
 
   const validationSchema = Yup.object().shape({
@@ -289,8 +291,6 @@ function BusinessInformation() {
       [fieldNames.DIRECTORINFO]: patchDirectorData(data),
     };
 
-
-
     return initialValues;
   };
 
@@ -322,21 +322,23 @@ function BusinessInformation() {
   //   initialValues
   // );
 
-  const updateDirectorInfo = (payload, id, areTruthy) => {
+  const updateDirectorInfo = (payload, id, setAreTruthy, resetForm) => {
     updateUpdateCustomerInfo(payload, id)
       .then((resp) => {
         setLoading(false);
+        setIsTouched(false);
         if (resp.isSuccess == 1) {
           ToastMessage("Data saved successfully!", "success");
-          // resetForm({});
+          resetForm({});
           getData();
-          areTruthy = false;
+          // setAreTruthy(false);
         } else {
           ToastMessage("Something went wrong!", "error");
         }
       })
       .catch((err) => {
         setLoading(false);
+        setIsTouched(false);
         ToastMessage("Something went wrong!", "error");
       });
   };
@@ -361,7 +363,6 @@ function BusinessInformation() {
   }
 
   const generateDirectorListPayload = (data1) => {
-
     let data = [...data1];
     if (data != null) {
       let prevAddress = [];
@@ -380,7 +381,6 @@ function BusinessInformation() {
           item["previousAddress"].forEach((ele) => {
             prevAddress.push(ele);
           });
-
         }
         return {
           kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
@@ -418,6 +418,17 @@ function BusinessInformation() {
     }
   };
 
+  const [areTruthy, setAreTruthy] = useState(false);
+
+  function dateIsValid(date) {
+    console.log(
+      "🚀 ~ file: business-information.js:427 ~ dateIsValid ~ date",
+      date,
+      date instanceof Date && !isNaN(date)
+    );
+    return date instanceof Date && !isNaN(date);
+  }
+
   return (
     <div className="dashboard-panel">
       <Header />
@@ -447,11 +458,17 @@ function BusinessInformation() {
                     enableReinitialize={dasboardData}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
                       setIsTouched(true);
+                      let isTrue;
                       let payload = { ...values };
-                      let prevAddress = generateDirectorListPayload(
-                        payload["directorInfo"]
-                      ).prevAddress;
-                      let areTruthy;
+                      let prevAddress = [];
+                      if (payload["directorInfo"]) {
+                        prevAddress = generateDirectorListPayload(
+                          payload["directorInfo"]
+                        ).prevAddress;
+                      }
+
+                      // let areTruthy;
+
                       if (
                         prevAddress.length &&
                         diff_years(
@@ -461,41 +478,49 @@ function BusinessInformation() {
                           )
                         ) < 3
                       ) {
-                        PreviousArrayHelperRef.current.insert(
-                          prevAddress.length + 1,
-                          initialPreviousAddressObj
-                        );
+                        setIsAddedPrevAddress(true);
+                        document.getElementById("hidden-btn").click();
+                        setAreTruthy(false);
                         prevAddress.push(initialPreviousAddressObj);
 
-                      }
-                      if (isAddedPrevAddress && prevAddress.length) {
-
                         prevAddress.forEach((ele) => {
-                          areTruthy = Object.values(ele).every(
+                          let truthy = Object.values(ele).every(
                             (value) => value
                           );
+                          isTrue = truthy;
+
+                          setAreTruthy(truthy);
+                        });
+                      } else if (prevAddress.length) {
+                        prevAddress.forEach((ele) => {
+                          let truthy = Object.values(ele).every(
+                            (value) => value
+                          );
+
+                          isTrue = truthy;
+                          setAreTruthy(truthy);
                         });
                       } else {
-                        areTruthy = true;
+                        setAreTruthy(true);
+                        isTrue = true;
                       }
 
                       payload["businessSector"] =
                         payload["businessSector"].value;
                       // payload["ShareHolderArr"] = payload["directorInfo"];
-                      payload["ShareHolderArr"] = generateDirectorListPayload(
-                        payload["directorInfo"]
-                      ).data1;
-
-                      payload[directorFieldNames.PREVIOUSADDRESS] =
-                        generateDirectorListPayload(
+                      if (payload["directorInfo"]) {
+                        payload["ShareHolderArr"] = generateDirectorListPayload(
                           payload["directorInfo"]
-                        ).prevAddress;
-                 
+                        ).data1;
+                        payload[directorFieldNames.PREVIOUSADDRESS] =
+                          generateDirectorListPayload(
+                            payload["directorInfo"]
+                          ).prevAddress;
+                      }
 
                       // return;
                       // delete payload["directorInfo"];
-                      // return;
-                      if (areTruthy) {
+                      if (isTrue) {
                         let newPayload = { ...payload };
                         delete newPayload["directorInfo"];
 
@@ -515,14 +540,16 @@ function BusinessInformation() {
                             updateDirectorInfo(
                               newPayload,
                               userDetails["lead_id"],
-                              areTruthy
+                              setAreTruthy,
+                              resetForm
                             );
                           }
                         } else {
                           updateDirectorInfo(
                             newPayload,
                             userDetails["lead_id"],
-                            areTruthy
+                            setAreTruthy,
+                            resetForm
                           );
                         }
                       }
@@ -1294,16 +1321,9 @@ function BusinessInformation() {
                                                                     "YYYY-MM-DD"
                                                                   )}
                                                                   name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
-                                                                  onBlur={() => {}}
-                                                                  onChange={(
+                                                                  onBlur={(
                                                                     e
                                                                   ) => {
-                                                                    setFieldValue(
-                                                                      `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`,
-                                                                      e.target
-                                                                        .value
-                                                                    );
-
                                                                     if (
                                                                       diff_years(
                                                                         new Date(),
@@ -1337,6 +1357,7 @@ function BusinessInformation() {
                                                                           ] =
                                                                             index +
                                                                             1;
+
                                                                           arrayHelpers.insert(
                                                                             0,
                                                                             initialPreviousAddressObj
@@ -1354,7 +1375,21 @@ function BusinessInformation() {
                                                                         //   0
                                                                         // );
                                                                       }
+                                                                    } else {
+                                                                      setFieldValue(
+                                                                        `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}`,
+                                                                        []
+                                                                      );
                                                                     }
+                                                                  }}
+                                                                  onChange={(
+                                                                    e
+                                                                  ) => {
+                                                                    setFieldValue(
+                                                                      `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`,
+                                                                      e.target
+                                                                        .value
+                                                                    );
                                                                   }}
                                                                   value={
                                                                     item[
@@ -1627,6 +1662,9 @@ function BusinessInformation() {
                                                                             arrayHelpers.remove(
                                                                               i
                                                                             );
+                                                                            setAreTruthy(
+                                                                              false
+                                                                            );
                                                                           }}
                                                                           className="cursor-pointer text-danger"
                                                                         >
@@ -1878,6 +1916,54 @@ function BusinessInformation() {
                                                                         </div>
                                                                       </div>
 
+                                                                      <button
+                                                                        type="button"
+                                                                        id="hidden-btn"
+                                                                        hidden
+                                                                        onClick={() => {
+                                                                          let payload =
+                                                                            {
+                                                                              ...values,
+                                                                            };
+
+                                                                          let prevAddress =
+                                                                            generateDirectorListPayload(
+                                                                              payload[
+                                                                                "directorInfo"
+                                                                              ]
+                                                                            ).prevAddress;
+
+                                                                          if (
+                                                                            prevAddress.length &&
+                                                                            diff_years(
+                                                                              new Date(),
+                                                                              new Date(
+                                                                                prevAddress[
+                                                                                  prevAddress.length -
+                                                                                    1
+                                                                                ][
+                                                                                  "livingSince"
+                                                                                ]
+                                                                              )
+                                                                            ) <
+                                                                              3
+                                                                          ) {
+                                                                            initialPreviousAddressObj[
+                                                                              directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                            ] =
+                                                                              index +
+                                                                              1;
+                                                                            arrayHelpers.insert(
+                                                                              prevAddress.length +
+                                                                                1,
+                                                                              initialPreviousAddressObj
+                                                                            );
+                                                                          }
+                                                                        }}
+                                                                      >
+                                                                        click
+                                                                      </button>
+
                                                                       <div className="col-md-3">
                                                                         <div className="form-group">
                                                                           <label>
@@ -1901,61 +1987,165 @@ function BusinessInformation() {
                                                                                   ] ==
                                                                                     "",
                                                                               }
-                                                                              // {
-                                                                              //   "is-invalid":
-                                                                              //     touched &&
-                                                                              //     Object.keys(
-                                                                              //       touched
-                                                                              //     )
-                                                                              //       .length &&
-                                                                              //     touched
-                                                                              //       .directorInfo[
-                                                                              //       index
-                                                                              //     ]
-                                                                              //       .PreviousAddress[
-                                                                              //       i
-                                                                              //     ] &&
-                                                                              //     touched
-                                                                              //       .directorInfo[
-                                                                              //       index
-                                                                              //     ]
-                                                                              //       .PreviousAddress[
-                                                                              //       i
-                                                                              //     ][
-                                                                              //       directorFieldNames
-                                                                              //         .WHENTOMOVETOADDRESS
-                                                                              //     ] &&
-                                                                              //     errors &&
-                                                                              //     Object.keys(
-                                                                              //       errors
-                                                                              //     )
-                                                                              //       .length &&
-                                                                              //     errors
-                                                                              //       .directorInfo[
-                                                                              //       index
-                                                                              //     ]
-                                                                              //       .PreviousAddress[
-                                                                              //       i
-                                                                              //     ] &&
-                                                                              //     Object.keys(
-                                                                              //       errors
-                                                                              //     )
-                                                                              //       .length &&
-                                                                              //     errors
-                                                                              //       .directorInfo[
-                                                                              //       index
-                                                                              //     ]
-                                                                              //       .PreviousAddress[
-                                                                              //       i
-                                                                              //     ][
-                                                                              //       directorFieldNames
-                                                                              //         .WHENTOMOVETOADDRESS
-                                                                              //     ],
-                                                                              // }
                                                                             )}
                                                                             placeholder="Previous
                                                                   Living Since 1"
                                                                             name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.WHENTOMOVETOADDRESS}`}
+                                                                            onBlur={(
+                                                                              e
+                                                                            ) => {
+                                                                              if (
+                                                                                diff_years(
+                                                                                  new Date(),
+                                                                                  new Date(
+                                                                                    e.target.value
+                                                                                  )
+                                                                                ) <
+                                                                                3
+                                                                                //   &&
+                                                                                // diff_years(
+                                                                                //   new Date(),
+                                                                                //   new Date(
+                                                                                //     e.target.value
+                                                                                //   )
+                                                                                // ) !==
+                                                                                //   0
+                                                                              ) {
+                                                                                console.log(
+                                                                                  "diff",
+                                                                                  diff_years(
+                                                                                    new Date(),
+                                                                                    new Date(
+                                                                                      e.target.value
+                                                                                    )
+                                                                                  )
+                                                                                );
+                                                                                if (
+                                                                                  values
+                                                                                    .directorInfo[
+                                                                                    index
+                                                                                  ][
+                                                                                    directorFieldNames
+                                                                                      .PREVIOUSADDRESS
+                                                                                  ]
+                                                                                    .length !=
+                                                                                    0 &&
+                                                                                  values
+                                                                                    .directorInfo[
+                                                                                    index
+                                                                                  ][
+                                                                                    directorFieldNames
+                                                                                      .PREVIOUSADDRESS
+                                                                                  ]
+                                                                                    .length >=
+                                                                                    1
+                                                                                ) {
+                                                                                  if (
+                                                                                    item[
+                                                                                      directorFieldNames
+                                                                                        .ISPRIMARY
+                                                                                    ] &&
+                                                                                    !values
+                                                                                      .directorInfo[
+                                                                                      index
+                                                                                    ][
+                                                                                      directorFieldNames
+                                                                                        .PREVIOUSADDRESS
+                                                                                    ][
+                                                                                      i +
+                                                                                        1
+                                                                                    ]
+                                                                                  ) {
+                                                                                    arrayHelpers.remove(
+                                                                                      i +
+                                                                                        1
+                                                                                    );
+                                                                                    initialPreviousAddressObj[
+                                                                                      directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                                    ] =
+                                                                                      index +
+                                                                                      1;
+                                                                                    console.log(
+                                                                                      "insert"
+                                                                                    );
+                                                                                    arrayHelpers.insert(
+                                                                                      i +
+                                                                                        1,
+                                                                                      initialPreviousAddressObj
+                                                                                    );
+                                                                                    console.log(
+                                                                                      "sdgs"
+                                                                                    );
+                                                                                    setIsAddedPrevAddress(
+                                                                                      true
+                                                                                    );
+                                                                                  }
+                                                                                } else {
+                                                                                  arrayHelpers.remove(
+                                                                                    i +
+                                                                                      1
+                                                                                  );
+                                                                                  // setIsAddedPrevAddress(
+                                                                                  //   false
+                                                                                  // );
+                                                                                  // arrayHelpers.insert(
+                                                                                  //   i,
+                                                                                  //   initialPreviousAddressObj
+                                                                                  // );
+                                                                                }
+                                                                              } else {
+                                                                                values.directorInfo[
+                                                                                  index
+                                                                                ][
+                                                                                  directorFieldNames
+                                                                                    .PREVIOUSADDRESS
+                                                                                ].forEach(
+                                                                                  (
+                                                                                    el,
+                                                                                    elIndex
+                                                                                  ) => {
+                                                                                    console.log(
+                                                                                      " elIndex",
+                                                                                      i !=
+                                                                                        elIndex &&
+                                                                                        elIndex >
+                                                                                          i
+                                                                                    );
+                                                                                    if (
+                                                                                      i !=
+                                                                                        elIndex &&
+                                                                                      elIndex >
+                                                                                        i
+                                                                                    ) {
+                                                                                      console.log(
+                                                                                        "🚀 ~ file: business-information.js:2044 ~ BusinessInformation ~ PreviousArrayHelperRef",
+                                                                                        PreviousArrayHelperRef
+                                                                                      );
+                                                                                      arrayHelpers.pop(
+                                                                                        elIndex
+                                                                                      );
+
+                                                                                      console.log(
+                                                                                        "values",
+                                                                                        values
+                                                                                      );
+                                                                                    }
+
+                                                                                    // arrayHelpers.remove(
+                                                                                    //   values
+                                                                                    //     .directorInfo[
+                                                                                    //     index
+                                                                                    //   ][
+                                                                                    //     directorFieldNames
+                                                                                    //       .PREVIOUSADDRESS
+                                                                                    //   ]
+                                                                                    //     .length -
+                                                                                    //     1
+                                                                                    // );
+                                                                                  }
+                                                                                );
+                                                                              }
+                                                                            }}
                                                                             onChange={
                                                                               // handleChange
                                                                               (
@@ -1967,87 +2157,6 @@ function BusinessInformation() {
                                                                                     .target
                                                                                     .value
                                                                                 );
-
-                                                                                if (
-                                                                                  diff_years(
-                                                                                    new Date(),
-                                                                                    new Date(
-                                                                                      e.target.value
-                                                                                    )
-                                                                                  ) <
-                                                                                  3
-                                                                                  //   &&
-                                                                                  // diff_years(
-                                                                                  //   new Date(),
-                                                                                  //   new Date(
-                                                                                  //     e.target.value
-                                                                                  //   )
-                                                                                  // ) !==
-                                                                                  //   0
-                                                                                ) {
-                                                                                  if (
-                                                                                    values
-                                                                                      .directorInfo[
-                                                                                      index
-                                                                                    ][
-                                                                                      directorFieldNames
-                                                                                        .PREVIOUSADDRESS
-                                                                                    ]
-                                                                                      .length !=
-                                                                                      0 &&
-                                                                                    values
-                                                                                      .directorInfo[
-                                                                                      index
-                                                                                    ][
-                                                                                      directorFieldNames
-                                                                                        .PREVIOUSADDRESS
-                                                                                    ]
-                                                                                      .length >=
-                                                                                      1
-                                                                                  ) {
-                                                                                    arrayHelpers.remove(
-                                                                                      i +
-                                                                                        1
-                                                                                    );
-                                                                                    if (
-                                                                                      item[
-                                                                                        directorFieldNames
-                                                                                          .ISPRIMARY
-                                                                                      ]
-                                                                                    ) {
-                                                                                      initialPreviousAddressObj[
-                                                                                        directorFieldNames.PREVIOUSADDSHAREHOLDERID
-                                                                                      ] =
-                                                                                        index +
-                                                                                        1;
-                                                                                      arrayHelpers.insert(
-                                                                                        i +
-                                                                                          1,
-                                                                                        initialPreviousAddressObj
-                                                                                      );
-                                                                                      setIsAddedPrevAddress(
-                                                                                        true
-                                                                                      );
-                                                                                    }
-                                                                                  } else {
-                                                                                    arrayHelpers.remove(
-                                                                                      i +
-                                                                                        1
-                                                                                    );
-                                                                                    // setIsAddedPrevAddress(
-                                                                                    //   false
-                                                                                    // );
-                                                                                    // arrayHelpers.insert(
-                                                                                    //   i,
-                                                                                    //   initialPreviousAddressObj
-                                                                                    // );
-                                                                                  }
-                                                                                } else {
-                                                                                  arrayHelpers.remove(
-                                                                                    i +
-                                                                                      1
-                                                                                  );
-                                                                                }
                                                                               }
                                                                             }
                                                                             max={limitLivingSince(

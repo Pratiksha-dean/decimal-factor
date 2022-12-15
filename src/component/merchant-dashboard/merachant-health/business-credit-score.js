@@ -106,8 +106,6 @@ export default function BusinessCreditScore() {
   const hiddenFileAddressProofInput = useRef(null);
   const hiddenFileIndentityProofInput = useRef(null);
 
-
-
   const deleteFile = (item, i) => {
     let list = [...fileList];
 
@@ -202,6 +200,8 @@ export default function BusinessCreditScore() {
               ToastMessage("Attachments submitted successfully!", "success");
               setHeadingText(disclaimerMsg);
               getFiles();
+            } else if (resp.status == "error") {
+              ToastMessage("Something went wrong!", "error");
             }
           })
           .catch((err) => {

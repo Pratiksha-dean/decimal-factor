@@ -296,8 +296,8 @@ function MerchantHealth() {
     if (userDetails && userDetails.lead_id) {
       setLoadingBanking(true);
       getDashboardData(userDetails.lead_id).then((resp) => {
-        setLoadingBanking(false);
         setDashboardData(resp.records[0]);
+        setLoadingBanking(false);
         dispatch({
           type: TRIGGER_LEAD_DETAILS,
           leadDetails: resp.records[0],
@@ -378,10 +378,10 @@ function MerchantHealth() {
     // response: "CompletedAddition";
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log("🚀 ~ file: merchant-health.js:382 ~ .then ~ resp", resp);
         if (
           resp["response"] === "Completed" ||
-          resp["response"] === "CompletedAddition"
+          resp["response"] === "CompletedAddition" ||
+          resp["response"] === "OpenBankingCancelled"
         ) {
           setBankingStatus(true);
           setLoadingBanking(false);
@@ -429,13 +429,19 @@ function MerchantHealth() {
   useEffect(() => {
     if (dasboardData) {
       if (tabIndex == 0) {
-        if (dasboardData["obv_account_score_status"] == "Start") {
+        if (
+          dasboardData["obv_account_score_status"] == "Start"
+        ) {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
 
           setBankingStatus(false);
-        } else if (dasboardData["obv_account_score_status"] == "Completed") {
+        } else if (
+          dasboardData["obv_account_score_status"] == "Completed" ||
+          dasboardData["obv_account_score_status"] == "CompletedAddition" ||
+          dasboardData["obv_account_score_status"] === "OpenBankingCancelled"
+        ) {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
@@ -456,7 +462,6 @@ function MerchantHealth() {
     ToastMessage("Url copied to clipboard!", "success");
   };
 
-  console.log("  loadingBanking;", loadingBanking);
   return (
     <div className="dashboard-panel">
       <Header />
@@ -666,7 +671,7 @@ function MerchantHealth() {
                                     <div className="col-md-6">
                                       <div className="financial-service">
                                         <h4>
-                                          Financial Services{" "}
+                                          Financial Services
                                           <span>
                                             ({financialServicesSummary.length})
                                           </span>
@@ -768,11 +773,9 @@ function MerchantHealth() {
                                                             <p>
                                                               <strong>
                                                                 total out: -£
-                                                                {
-                                                                  service
-                                                                    .debitSummary
-                                                                    .total
-                                                                }
+                                                                {service.debitSummary.total.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                             <p>
@@ -876,11 +879,9 @@ function MerchantHealth() {
                                                             <p>
                                                               <strong>
                                                                 total out: -£
-                                                                {
-                                                                  service
-                                                                    .debitSummary
-                                                                    .total
-                                                                }
+                                                                {service.debitSummary.total.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                             <p>
@@ -921,7 +922,9 @@ function MerchantHealth() {
                                                 <p>
                                                   <strong>
                                                     total out: -£
-                                                    {financialServicesTotalOut}
+                                                    {financialServicesTotalOut.toFixed(
+                                                      2
+                                                    )}
                                                   </strong>
                                                 </p>
                                                 <p>
