@@ -2746,3 +2746,23 @@ button#RFS-StepButton {
 .mySelect__value-container {
   height: 43px;
 }
+
+.sidebar-panel .sub-menu a:first-child {
+  padding: 0px 10px 0px 15px !important;
+}
+
+.sidebar-panel .sub-menu .ejzYLa {
+  background-color: unset !important;
+}
+
+.sidebar-panel .sub-menu .eVPmrC:hover {
+  background-color: unset !important;
+}
+
+.sidebar-panel .sub-menu .lkTtqM:hover {
+  background-color: #e2eff4 !important;
+}
+
+.sidebar-panel .sub-menu .menu-icon {
+  margin-right: 0 !important;
+}

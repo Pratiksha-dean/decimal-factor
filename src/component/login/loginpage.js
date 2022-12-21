@@ -70,28 +70,33 @@ export default function Login() {
             ToastMessage("Something went wrong!", "error");
           } else {
             if (resp.data.data.status == 1) {
-              ToastMessage(
-                "Login successful! Verify code to proceed further.",
-                "success"
-              );
-              let obj = {
-                email: resp.data.data.email,
-                lead_id: resp.data.data.lead_id,
-              };
+              if (resp.data.is_lead_active == 1) {
+                ToastMessage(
+                  "Login successful! Verify code to proceed further.",
+                  "success"
+                );
+                let obj = {
+                  email: resp.data.data.email,
+                  lead_id: resp.data.data.lead_id,
+                };
 
-              updateLoginTimes(obj).then((res) => {});
+                updateLoginTimes(obj).then((res) => {});
 
-              // navigate("/authentication");
-              navigate("/dashboard");
+                // navigate("/authentication");
+                navigate("/dashboard");
 
-              setUserDetails(resp.data.data);
-              dispatch({
-                type: TRIGGER_USER_DETAILS,
-                userDetails: resp.data.data,
-              });
-              setToken(resp.data.data.token);
-              isAuthenticated(false);
-              setLoading(false);
+                setUserDetails(resp.data.data);
+                dispatch({
+                  type: TRIGGER_USER_DETAILS,
+                  userDetails: resp.data.data,
+                });
+                setToken(resp.data.data.token);
+                isAuthenticated(false);
+                setLoading(false);
+              } else {
+                setLoading(false);
+                ToastMessage("This account does not exists!", "error");
+              }
             } else {
               setError("Please verify your email to login");
               setLoading(false);

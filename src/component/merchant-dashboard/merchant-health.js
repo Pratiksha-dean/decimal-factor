@@ -429,9 +429,7 @@ function MerchantHealth() {
   useEffect(() => {
     if (dasboardData) {
       if (tabIndex == 0) {
-        if (
-          dasboardData["obv_account_score_status"] == "Start"
-        ) {
+        if (dasboardData["obv_account_score_status"] == "Start") {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
@@ -1691,7 +1689,7 @@ function MerchantHealth() {
                             )}
                           {accountingStatus && (
                             <div className="data-panel">
-                              <Codat />
+                              <Codat leadId={lead_accountScore} />
                             </div>
                           )}
                         </div>

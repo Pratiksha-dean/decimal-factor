@@ -14,7 +14,9 @@ export const USER_DETAILS_URL = `${API_URL}api/getUkCustomerDetails/`;
 export const UPDATE_USER_DETAILS_URL = `${API_URL}api/UpdateCustomerForUK/`;
 
 export const RESET_PASSWORD_URL = `${API_URL}api/UKChangePassword`;
-export const CODAT_BASE_URL = "https://link.codat.io/company/";
+
+// app-uat.codat.io/
+export const CODAT_BASE_URL = process.env.REACT_APP_STAGING_CODAT_BASE_URL;
 
 export const FINANCIAL_SERVICE_URL = `${API_URL}api/accountScore/5944/FinancialServices`;
 export const INCOME_ANALYSIS_URL = `${API_URL}api/accountScore/5944/IncomeAnalysis`;
@@ -23,10 +25,13 @@ export const EVENTFEED_URL = `${API_URL}api/accountScore/5944/EventFeed`;
 export const UPDATE_LOGIN_TIMES_URL = `${API_URL}api/UpdateCustomerLoginTimes/`;
 export const UPLOAD_DOCUMENTS = `${API_URL}api/UKLeadattachments/`;
 export const GET_DOCUMENTS = `${API_URL}api/getLeadMasterAttachmentsUK/`;
+export const GET_ALL_DOCUMENTS = `${API_URL}api/GetLeadMasterAttachments/`;
 
 export const GET_DOCUMENTS_BANK_STMT = `${API_URL}api/getLeadMasterAttachments/`;
 export const DELETE_DOCUMENTS = `${API_URL}api/DeleteLeadMasterAttachment/`;
 export const GET_BUSINESS_ACCOUNT_SCORE = `${API_URL}api/creditsafe/company/`;
+
+export const UPLOAD_FILES = `${API_URL}api/LeadAttachmentsFile/`;
 
 export function createAccount(payload) {
   return axios.post(CREATE_ACCOUNT_URL, payload);
@@ -188,6 +193,21 @@ export async function uploadDocuments(payload, id) {
 
 export async function getDocuments(id) {
   const { data } = await axios.get(`${GET_DOCUMENTS}${id}`);
+  return data;
+}
+
+export async function getAllDocuments(id) {
+  const { data } = await axios.get(`${GET_ALL_DOCUMENTS}${id}`);
+  return data;
+}
+
+export async function uploadFiles(id, payload) {
+  console.log("🚀 ~ file: request.js:205 ~ uploadFiles ~ payload", payload);
+  const { data } = await axios.post(`${UPLOAD_FILES}${id}`, payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data;
 }
 

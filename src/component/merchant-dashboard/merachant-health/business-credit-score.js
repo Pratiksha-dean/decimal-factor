@@ -219,7 +219,7 @@ export default function BusinessCreditScore() {
 
         if (url) {
           let alink = document.createElement("a");
-          alink.href = `${API_URL}${url}`;
+          alink.href = `${API_URL}api/${url}`;
           alink.download = "SamplePDF.pdf";
           alink.target = "_blank";
           alink.click();
@@ -810,27 +810,6 @@ export default function BusinessCreditScore() {
                                 </tbody>
                               </table>
                             </div>
-                            {/* {fileList.map((item, i) => {
-                          return (
-                            <div
-                              className="d-flex justify-content-between my-2"
-                              key={i}
-                            >
-                              <div>{item.name}</div>{" "}
-                              <div className="cursor-pointer">
-                                {" "}
-                                <i
-                                  className="fa fa-trash cursor-pointer"
-                                  onClick={() => deleteFile(i)}
-                                ></i>
-                              </div>
-                            </div>
-                          );
-                        })} */}
-                            {/* <p>
-                        <span>MY-ID-PROOF.JPG</span>{" "}
-                        <i className="fa fa-trash"></i>
-                      </p> */}
                           </div>
                         )}
                       </div>

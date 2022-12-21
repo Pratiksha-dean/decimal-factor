@@ -14,6 +14,8 @@ import EmailVerification from "./component/email-verification/email-verification
 import ChangePassword from "./component/change-password/change-password";
 import NotFound from "./component/NotFound";
 import ChangePasswordWrapper from "./component/change-password/change-password-wrapper";
+import UploadFiles from "./component/merchant-dashboard/files/upload-files";
+import ViewFiles from "./component/merchant-dashboard/files/view-files";
 
 const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
@@ -136,6 +138,24 @@ const RoutePage = () => {
         element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/upload-files"
+        element={
+          <PrivateRoute>
+            <UploadFiles />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/view-files"
+        element={
+          <PrivateRoute>
+            <ViewFiles />
           </PrivateRoute>
         }
       />
