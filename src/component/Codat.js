@@ -38,12 +38,11 @@ import AgedCreditors from "./Codat/AgedCreditors";
 import ExportFiles from "./Codat/ExportFiles";
 import { API_URL } from "../request";
 
-export default function Codat() {
+export default function Codat({ leadId }) {
   const [accountingApiValue, setAccountingApiValue] = useState("");
   const [assessApiValue, setAssessApiValue] = useState("");
   const [commerceApiValue, setCommerceApiValue] = useState("");
   const [currentApi, setCurrentApi] = useState("");
-  const leadId = 6135;
   const serverUrl = API_URL;
   const endUrl = `${API_URL}api`;
   const handleCodat = (codatView) => {

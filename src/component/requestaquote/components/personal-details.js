@@ -156,13 +156,9 @@ function PersonalDetails({ setStep, showSelectedState }) {
           const applicationInfo = getApplicationInfo();
           const businesssInfo = getBusinessInfo();
           const companyInfo = getCompanyInfo();
-          console.log(" ", companyInfo);
 
           let payload = { ...applicationInfo, ...businesssInfo, ...values };
-          console.log(
-            "🚀 ~ file: personal-details.js:161 ~ PersonalDetails ~ payload",
-            payload
-          );
+
           payload["businessSector"] = payload["businessSector"].value;
           payload["businessId"] =
             companyInfo && companyInfo["company_number"]

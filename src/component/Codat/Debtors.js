@@ -19,6 +19,8 @@ export default function Debtors(props) {
       if (response.data) {
         setResultData(Parser(response.data));
         setLoading(false);
+      } else {
+        setLoading(false);
       }
     } else {
       alert("Please fill all the required fill");

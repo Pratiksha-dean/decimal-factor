@@ -1,6 +1,9 @@
 import React from "react";
 import Header from "../header/header";
-import { fieldNames } from "../requestaquote/components/application-information";
+import {
+  businessEntityList,
+  fieldNames,
+} from "../requestaquote/components/application-information";
 import SiderBarMenu from "./component/sidebar";
 import Select from "react-select";
 import clsx from "clsx";
@@ -23,6 +26,7 @@ import Loaderspinner from "../loader";
 import { useAppSelector } from "../../redux/hooks/hooks";
 import { initialDirectorObject } from "../dashboard/component/review-business-information";
 import moment from "moment/moment";
+import { useRef } from "react";
 
 const Accordion = ({ title, children, isPrimary }) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -56,6 +60,11 @@ const Accordion = ({ title, children, isPrimary }) => {
 
 function BusinessInformation() {
   const [directorList, setDirectorList] = useState([]);
+  const [isTouched, setIsTouched] = useState(false);
+
+  const [isAddedPrevAddress, setIsAddedPrevAddress] = useState(false);
+
+  const PreviousArrayHelperRef = useRef();
 
   const validationSchema = Yup.object().shape({
     [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
@@ -64,50 +73,73 @@ function BusinessInformation() {
     [fieldNames.BUSINESSSECTOR]: Yup.string().required(),
     [fieldNames.BUSINESSLEGALNUMBER]: Yup.string().required(),
 
-    [fieldNames.DIRECTORINFO]: Yup.array().of(
-      Yup.object().shape({
-        [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
-        [directorFieldNames.KINDOFSHAREHOLDER]: Yup.string().nullable(true),
-        [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
-          Yup.string().nullable(true),
-        [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
-        [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
-        [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
-        [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
-        [directorFieldNames.STREET]: Yup.string().nullable(true),
-        [directorFieldNames.COUNTY]: Yup.string().nullable(true),
-        [directorFieldNames.TOWN]: Yup.string().nullable(true),
-        [directorFieldNames.RESIDENTIALSTATUS]: Yup.string().nullable(true),
-        [directorFieldNames.LIVINGSINCE]: Yup.string().nullable(true),
-        [directorFieldNames.FIRSTNAME]: Yup.string().nullable(true),
-        [directorFieldNames.LASTNAME]: Yup.string().nullable(true),
-        [directorFieldNames.PHONENUMBER]: Yup.string().nullable(true),
-        [directorFieldNames.EMAILID]: Yup.string().nullable(true),
-        [directorFieldNames.ISPRIMARY]: Yup.string().nullable(true),
-        [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
-        [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
-        [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
-        [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.number().nullable(true),
-        [directorFieldNames.PREVIOUSADDRESS]: Yup.array()
-          .of(
-            Yup.object().shape({
-              [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
-              [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
-              [directorFieldNames.COUNTY]: Yup.string().nullable(true),
-              [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
-              [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
-              [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
-              [directorFieldNames.WHENTOMOVETOADDRESS]:
-                Yup.string().nullable(true),
-              id: Yup.string().nullable(true),
-            })
-          )
-          .nullable(true),
-      })
-    ),
+    [fieldNames.DIRECTORINFO]: Yup.array()
+      .of(
+        Yup.object().shape({
+          [directorFieldNames.NATUREOFCONTROL]: Yup.string().nullable(true),
+          [directorFieldNames.KINDOFSHAREHOLDER]: Yup.string().nullable(true),
+          [directorFieldNames.SHAREHOLDERDOBFULLFORMAT]:
+            Yup.string().nullable(true),
+          [directorFieldNames.POSTALCODE]: Yup.string().nullable(true),
+          [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
+          [directorFieldNames.HOUSE_NUMBER]: Yup.string().nullable(true),
+          [directorFieldNames.HOUSE_NAME]: Yup.string().nullable(true),
+          [directorFieldNames.STREET]: Yup.string().nullable(true),
+          [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+          [directorFieldNames.TOWN]: Yup.string().nullable(true),
+          [directorFieldNames.RESIDENTIALSTATUS]: Yup.string().nullable(true),
+          [directorFieldNames.LIVINGSINCE]: Yup.string().nullable(true),
+          [directorFieldNames.FIRSTNAME]: Yup.string().nullable(true),
+          [directorFieldNames.LASTNAME]: Yup.string().nullable(true),
+          [directorFieldNames.PHONENUMBER]: Yup.string().nullable(true),
+          [directorFieldNames.EMAILID]: Yup.string().nullable(true),
+          [directorFieldNames.ISPRIMARY]: Yup.string().nullable(true),
+          [directorFieldNames.CHOOSEADDRESS]: Yup.string().nullable(true),
+          [directorFieldNames.ADDRESSLINE1]: Yup.string().nullable(true),
+          [directorFieldNames.ADDRESSLINE2]: Yup.string().nullable(true),
+          [directorFieldNames.HIDDENSHAREHOLDERID]: Yup.number().nullable(true),
+          [directorFieldNames.PREVIOUSADDRESS]: Yup.array()
+            .of(
+              Yup.object().shape({
+                [directorFieldNames.ADDRESS]: Yup.string().nullable(true),
+                // .required(),
+                // [directorFieldNames.ADDRESSLINE2]: Yup.string()
+                //   .nullable(true)
+                //   .required(),
+                [directorFieldNames.COUNTY]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.POSTCODE]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.HOUSENUMBER]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.HOUSENAME]: Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.WHENTOMOVETOADDRESS]:
+                  Yup.string().nullable(true),
+                // .required(),
+                [directorFieldNames.TOWN]: Yup.string().nullable(true),
+                // .required(),
+                id: Yup.string().nullable(true),
+              })
+            )
+            .nullable(true),
+        })
+      )
+      .nullable(true),
   });
 
+  const initialPreviousAddressObj = {
+    [directorFieldNames.ADDRESS]: "",
+    [directorFieldNames.COUNTY]: "",
+    [directorFieldNames.POSTCODE]: "",
+    [directorFieldNames.HOUSENUMBER]: "",
+    [directorFieldNames.HOUSENAME]: "",
+    [directorFieldNames.WHENTOMOVETOADDRESS]: "",
+    [directorFieldNames.TOWN]: "",
+    [directorFieldNames.PREVIOUSADDSHAREHOLDERID]: "",
+  };
   const [dasboardData, setDashboardData] = useState();
+
   const userDetails = getUserDetails();
   const [loading, setLoading] = useState(false);
 
@@ -127,125 +159,213 @@ function BusinessInformation() {
   };
 
   const patchDirectorData = (data) => {
-    let values = directorList;
-    if (values && values.length) {
-      values = directorList.map((item) => {
-        // let name = item.name.split(",");
-        item["fullName"] = item["firstName"];
-        item["lastName"] = item["lastName"];
-        if (item["address"]) {
-          item[directorFieldNames.POSTCODE] =
-            item["address"][directorFieldNames.POSTCODE];
-          item[directorFieldNames.STREET] = item["address"]["address_line_1"];
-          item[directorFieldNames.COUNTY] = item["address"]["locality"];
+    if (data) {
+      let values;
+      if (data["ShareHolderList"] && data["ShareHolderList"].length) {
+        values = [...data["ShareHolderList"]];
+      }
+      if (values && values.length) {
+        values = values.map((item, i) => {
+          // let name = item.name.split(",");
+          item["fullName"] = item["firstName"];
+          item["lastName"] = item["lastName"];
+          if (item["address"]) {
+            item[directorFieldNames.POSTCODE] =
+              item["address"][directorFieldNames.POSTCODE];
+            item[directorFieldNames.STREET] = item["address"]["address_line_1"];
+            item[directorFieldNames.COUNTY] = item["address"]["locality"];
 
-          item[directorFieldNames.TOWN] = "";
-        }
-        item[directorFieldNames.RESIDENTIALSTATUS] =
-          residentialStatusList[
-            residentialStatusList.findIndex(
-              (data) => item["residentialStatus"] == data.value
-            )
-          ];
+            item[directorFieldNames.TOWN] = "";
+          }
+          item[directorFieldNames.RESIDENTIALSTATUS] =
+            residentialStatusList[
+              residentialStatusList.findIndex(
+                (data) => item["residentialStatus"] == data.value
+              )
+            ];
 
-        item[directorFieldNames.HOUSE_NAME] = item["houseName"] || "";
-        item[directorFieldNames.HOUSE_NUMBER] = item["houseNumber"];
+          item[directorFieldNames.HOUSE_NAME] = item["houseName"] || "";
+          item[directorFieldNames.HOUSE_NUMBER] = item["houseNumber"];
 
-        if (item["living_since"]) {
-          let splittedDate = item["living_since"].split("/");
-          let date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
-          item[directorFieldNames.LIVINGSINCE] = date || "";
-        }
-        item[directorFieldNames.NATUREOFCONTROL] = item["natures_of_control"];
-        item[directorFieldNames.EMAILID] = item[directorFieldNames.EMAILID];
-        item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
-          ? item["phonenumber"]
-          : "";
-        item[directorFieldNames.KINDOFSHAREHOLDER] = item[
-          directorFieldNames.KINDOFSHAREHOLDER
-        ]
-          ? item[directorFieldNames.KINDOFSHAREHOLDER]
-          : "";
+          if (item["living_since"]) {
+            let splittedDate = item["living_since"].split("/");
+            let date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+            item[directorFieldNames.LIVINGSINCE] = date || "";
+          }
 
-        if (values.length > 1) {
-          item[directorFieldNames.ISPRIMARY] =
-            item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
-        } else {
-          item[directorFieldNames.ISPRIMARY] = true;
-        }
+          item[directorFieldNames.NATUREOFCONTROL] = item["natures_of_control"];
+          item[directorFieldNames.EMAILID] = item[directorFieldNames.EMAILID];
+          item[directorFieldNames.PHONENUMBER] = item["phonenumber"]
+            ? item["phonenumber"]
+            : "";
+          item[directorFieldNames.KINDOFSHAREHOLDER] = item[
+            directorFieldNames.KINDOFSHAREHOLDER
+          ]
+            ? item[directorFieldNames.KINDOFSHAREHOLDER]
+            : "";
 
-        item[directorFieldNames.CHOOSEADDRESS] = "";
-        item[directorFieldNames.HIDDENSHAREHOLDERID] = item["shareHolderID"];
+          if (values.length > 1) {
+            item[directorFieldNames.ISPRIMARY] =
+              item[directorFieldNames.ISPRIMARY] == 1 ? true : false;
+          } else {
+            item[directorFieldNames.ISPRIMARY] = true;
+          }
 
-        item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
-          item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
-        item[directorFieldNames.PREVIOUSADDRESS] =
-          item[directorFieldNames.PREVIOUSADDRESS];
-        delete item["address"];
-        delete item["appointed_on"];
-        delete item["links"];
-        delete item["date_of_birth"];
-        delete item["occupation"];
-        delete item["nationality"];
-        delete item["resigned_on"];
-        delete item["officer_role"];
-        delete item["country_of_residence"];
+          item[directorFieldNames.CHOOSEADDRESS] = "";
+          item[directorFieldNames.HIDDENSHAREHOLDERID] = item["shareHolderID"];
 
-        return item;
-      });
+          item[directorFieldNames.SHAREHOLDERDOBFULLFORMAT] =
+            item["DOB_year"] + "-" + item["DOB_month"] + "-" + item["DOB_day"];
+          if (item["PreviousAddress"] && item["PreviousAddress"].length > 0) {
+            item["PreviousAddress"].map((item1, index) => {
+              let splittedDate = [];
+              if (item1["living_since"]) {
+                splittedDate = item1["living_since"].split("/");
+              } else if (item1["when_move_to_address"]) {
+                splittedDate = item1["when_move_to_address"].split("/");
+              }
+              item1[directorFieldNames.PREVIOUSADDSHAREHOLDERID] = i + 1;
+              // item["shareHolderID"];
+
+              let date;
+              if (splittedDate.length) {
+                date = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+              }
+              item1[directorFieldNames.WHENTOMOVETOADDRESS] = date || "";
+
+              item1[directorFieldNames.ADDRESS] = item1["address_line_1"];
+              // item["shareholderNo"] = i + 1;
+              item1[directorFieldNames.HOUSENUMBER] = item1["house_number"];
+              item1[directorFieldNames.HOUSENAME] = item1["house_name"];
+              item1[directorFieldNames.POSTCODE] =
+                item1[directorFieldNames.POSTCODE];
+
+              delete item1["postal_code"];
+              delete item1["when_move_to_address"];
+              delete item1["house_name"];
+              delete item1["house_number"];
+              delete item1["address_line_1"];
+              delete item1["address_line_2"];
+              delete item1["id"];
+            });
+          }
+          item[directorFieldNames.PREVIOUSADDRESS] = item["PreviousAddress"];
+          delete item["address"];
+          delete item["appointed_on"];
+          delete item["links"];
+          delete item["date_of_birth"];
+          delete item["occupation"];
+          delete item["nationality"];
+          delete item["resigned_on"];
+          delete item["officer_role"];
+          delete item["country_of_residence"];
+
+          return item;
+        });
+      }
+      return values;
     }
-    return values;
   };
 
-  const initialValues = {
-    [fieldNames.BUSINESSSECTOR]: dasboardData
-      ? businessSectorList[
-          businessSectorList.findIndex(
-            (item) => dasboardData.lf_business_sector == item.value
-          )
-        ]
-      : "",
-    [fieldNames.BUSINESSSTARTDATE]: dasboardData
-      ? dasboardData["AppBusinessStartDate"]
-      : "",
+  const patchInitialData = (data1) => {
+    let data = JSON.parse(JSON.stringify(data1));
+    let initialValues = {
+      [fieldNames.BUSINESSSECTOR]: data
+        ? businessSectorList[
+            businessSectorList.findIndex(
+              (item) => data.lf_business_sector == item.value
+            )
+          ]
+        : "",
+      [fieldNames.BUSINESSSTARTDATE]: data ? data["AppBusinessStartDate"] : "",
 
-    [fieldNames.CARDPAYMENTAMOUNT]: dasboardData
-      ? dasboardData["lf_monthly_credit_card_volume"]
-      : "",
-    [fieldNames.SUPPLIERDUEAMOUNT]: dasboardData
-      ? dasboardData["AppCurrentValueOverdueInvoices"]
-      : "",
-    [fieldNames.BUSINESSLEGALNUMBER]: dasboardData
-      ? dasboardData["lmc_bi_business_number"]
-      : "",
-    [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
+      [fieldNames.CARDPAYMENTAMOUNT]: data
+        ? data["lf_monthly_credit_card_volume"]
+        : "",
+      [fieldNames.SUPPLIERDUEAMOUNT]: data
+        ? data["AppCurrentValueOverdueInvoices"]
+        : "",
+      [fieldNames.BUSINESSLEGALNUMBER]: data
+        ? data["lmc_bi_business_number"]
+        : "",
+      [fieldNames.DIRECTORINFO]: patchDirectorData(data),
+    };
+
+    return initialValues;
   };
 
-  console.log(
-    "🚀 ~ file: review-business-information.js:322 ~ ReviewBusinessInformation ~ initialValues",
-    initialValues
-  );
+  // const initialValues = {
+  //   [fieldNames.BUSINESSSECTOR]: dasboardData
+  //     ? businessSectorList[
+  //         businessSectorList.findIndex(
+  //           (item) => dasboardData.lf_business_sector == item.value
+  //         )
+  //       ]
+  //     : "",
+  //   [fieldNames.BUSINESSSTARTDATE]: dasboardData
+  //     ? dasboardData["AppBusinessStartDate"]
+  //     : "",
 
-  const updateDirectorInfo = (payload, id, resetForm) => {
+  //   [fieldNames.CARDPAYMENTAMOUNT]: dasboardData
+  //     ? dasboardData["lf_monthly_credit_card_volume"]
+  //     : "",
+  //   [fieldNames.SUPPLIERDUEAMOUNT]: dasboardData
+  //     ? dasboardData["AppCurrentValueOverdueInvoices"]
+  //     : "",
+  //   [fieldNames.BUSINESSLEGALNUMBER]: dasboardData
+  //     ? dasboardData["lmc_bi_business_number"]
+  //     : "",
+  //   [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
+  // };
+  // console.log(
+  //   "🚀 ~ file: business-information.js:306 ~ BusinessInformation ~ initialValues",
+  //   initialValues
+  // );
+
+  const updateDirectorInfo = (payload, id, setAreTruthy, resetForm) => {
     updateUpdateCustomerInfo(payload, id)
       .then((resp) => {
         setLoading(false);
+        setIsTouched(false);
         if (resp.isSuccess == 1) {
           ToastMessage("Data saved successfully!", "success");
           resetForm({});
           getData();
+          // setAreTruthy(false);
         } else {
           ToastMessage("Something went wrong!", "error");
         }
       })
       .catch((err) => {
         setLoading(false);
+        setIsTouched(false);
         ToastMessage("Something went wrong!", "error");
       });
   };
 
-  const generateDirectorListPayload = (data) => {
+  const limitLivingSince = (i, livingSince, prevAddress) => {
+    if (i == 0) {
+      return livingSince;
+    } else if (i == 1) {
+      return prevAddress[0]["livingSince"];
+    } else {
+      return prevAddress[i - 1]["livingSince"];
+    }
+  };
+
+  function diff_years(dt2, dt1) {
+    dt2.setHours(0, 0, 0);
+
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60 * 60 * 24;
+
+    return (dt2.getTime() - dt1.getTime()) / 31536000000;
+  }
+
+  const generateDirectorListPayload = (data1) => {
+    let data = [...data1];
     if (data != null) {
+      let prevAddress = [];
       let data1 = data.map((item) => {
         let day = "";
         let month = "";
@@ -256,6 +376,11 @@ function BusinessInformation() {
           day = splitDate[2];
           month = splitDate[1];
           year = splitDate[0];
+        }
+        if (item["previousAddress"] && item["previousAddress"].length) {
+          item["previousAddress"].forEach((ele) => {
+            prevAddress.push(ele);
+          });
         }
         return {
           kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
@@ -286,11 +411,23 @@ function BusinessInformation() {
           is_active: "1",
           street: item[directorFieldNames.STREET] || "",
           companyName: "undefined",
+          // [directorFieldNames.PREVIOUSADDRESS]: prevAddress,
         };
       });
-      return data1;
+      return { data1, prevAddress };
     }
   };
+
+  const [areTruthy, setAreTruthy] = useState(false);
+
+  function dateIsValid(date) {
+    console.log(
+      "🚀 ~ file: business-information.js:427 ~ dateIsValid ~ date",
+      date,
+      date instanceof Date && !isNaN(date)
+    );
+    return date instanceof Date && !isNaN(date);
+  }
 
   return (
     <div className="dashboard-panel">
@@ -314,48 +451,107 @@ function BusinessInformation() {
                   <Loaderspinner size="45px" />
                 ) : (
                   <Formik
-                    initialValues={initialValues}
+                    initialValues={patchInitialData(dasboardData)}
                     validationSchema={validationSchema}
-                    enableReinitialize
+                    validateOnChange={false}
+                    // validateOnBlur={true}
+                    enableReinitialize={dasboardData}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
+                      setIsTouched(true);
+                      let isTrue;
                       let payload = { ...values };
+                      let prevAddress = [];
+                      if (payload["directorInfo"]) {
+                        prevAddress = generateDirectorListPayload(
+                          payload["directorInfo"]
+                        ).prevAddress;
+                      }
+
+                      // let areTruthy;
+
+                      if (
+                        prevAddress.length &&
+                        diff_years(
+                          new Date(),
+                          new Date(
+                            prevAddress[prevAddress.length - 1]["livingSince"]
+                          )
+                        ) < 3
+                      ) {
+                        setIsAddedPrevAddress(true);
+                        document.getElementById("hidden-btn").click();
+                        setAreTruthy(false);
+                        prevAddress.push(initialPreviousAddressObj);
+
+                        prevAddress.forEach((ele) => {
+                          let truthy = Object.values(ele).every(
+                            (value) => value
+                          );
+                          isTrue = truthy;
+
+                          setAreTruthy(truthy);
+                        });
+                      } else if (prevAddress.length) {
+                        prevAddress.forEach((ele) => {
+                          let truthy = Object.values(ele).every(
+                            (value) => value
+                          );
+
+                          isTrue = truthy;
+                          setAreTruthy(truthy);
+                        });
+                      } else {
+                        setAreTruthy(true);
+                        isTrue = true;
+                      }
+
                       payload["businessSector"] =
                         payload["businessSector"].value;
                       // payload["ShareHolderArr"] = payload["directorInfo"];
-                      payload["ShareHolderArr"] = generateDirectorListPayload(
-                        payload["directorInfo"]
-                      );
-                      delete payload["directorInfo"];
+                      if (payload["directorInfo"]) {
+                        payload["ShareHolderArr"] = generateDirectorListPayload(
+                          payload["directorInfo"]
+                        ).data1;
+                        payload[directorFieldNames.PREVIOUSADDRESS] =
+                          generateDirectorListPayload(
+                            payload["directorInfo"]
+                          ).prevAddress;
+                      }
 
-                      if (
-                        payload["ShareHolderArr"] &&
-                        payload["ShareHolderArr"].length
-                      ) {
-                        let index = payload["ShareHolderArr"].findIndex(
-                          (item) => item["is_primary"] == 1
-                        );
-                        if (index === -1) {
-                          ToastMessage(
-                            "It is mandatrory to mark at least one director as primary!",
-                            "error"
+                      // return;
+                      // delete payload["directorInfo"];
+                      if (isTrue) {
+                        let newPayload = { ...payload };
+                        delete newPayload["directorInfo"];
+
+                        if (
+                          newPayload["ShareHolderArr"] &&
+                          newPayload["ShareHolderArr"].length
+                        ) {
+                          let index = newPayload["ShareHolderArr"].findIndex(
+                            (item) => item["is_primary"] == 1
                           );
+                          if (index === -1) {
+                            ToastMessage(
+                              "It is mandatrory to mark at least one director as primary!",
+                              "error"
+                            );
+                          } else {
+                            updateDirectorInfo(
+                              newPayload,
+                              userDetails["lead_id"],
+                              setAreTruthy,
+                              resetForm
+                            );
+                          }
                         } else {
                           updateDirectorInfo(
-                            payload,
+                            newPayload,
                             userDetails["lead_id"],
+                            setAreTruthy,
                             resetForm
                           );
                         }
-                      } else {
-                        updateDirectorInfo(
-                          payload,
-                          userDetails["lead_id"],
-                          resetForm
-                        );
-
-                        setTimeout(() => {
-                          setSubmitting(false);
-                        }, 400);
                       }
                     }}
                   >
@@ -366,6 +562,7 @@ function BusinessInformation() {
                       handleChange,
                       handleSubmit,
                       setFieldValue,
+                      isSubmitting,
                     }) => (
                       <form onSubmit={handleSubmit}>
                         <div className="review-application">
@@ -789,7 +986,7 @@ function BusinessInformation() {
                                                     <div className="col-md-3">
                                                       <div className="form-group">
                                                         <label>
-                                                          Date of Birth new
+                                                          Date of Birth
                                                         </label>
                                                         <input
                                                           type="date"
@@ -817,7 +1014,7 @@ function BusinessInformation() {
                                                           POSTALCODE
                                                         </label>
                                                         <input
-                                                          type="text"
+                                                          type="number"
                                                           className="form-control"
                                                           placeholder="POSTALCODE"
                                                           name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.POSTALCODE}`}
@@ -866,7 +1063,6 @@ function BusinessInformation() {
                                                       </div>
                                                     </div>
                                                   </div>
-
                                                   <input
                                                     hidden
                                                     type="text"
@@ -881,7 +1077,6 @@ function BusinessInformation() {
                                                     className="form-control"
                                                     placeholder="% of Total Share Count"
                                                   />
-
                                                   <input
                                                     type="text"
                                                     name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.ADDRESSLINE2}`}
@@ -896,7 +1091,6 @@ function BusinessInformation() {
                                                     className="form-control"
                                                     placeholder="% of Total Share Count"
                                                   />
-
                                                   <input
                                                     type="text"
                                                     name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.HIDDENSHAREHOLDERID}`}
@@ -1017,16 +1211,16 @@ function BusinessInformation() {
                                                       </div>
                                                     </div>
                                                     <div className="col-md-3">
-                                                      <div className="form-group ">
+                                                      <div className=" ">
                                                         <label>
                                                           Residential Status
                                                         </label>
-                                                        
 
                                                         <Select
                                                           closeMenuOnSelect={
                                                             true
                                                           }
+                                                          classNamePrefix="mySelect"
                                                           onChange={(
                                                             selectedOption
                                                           ) =>
@@ -1104,28 +1298,898 @@ function BusinessInformation() {
                                                         />
                                                       </div>
                                                     </div>
-                                                    <div className="col-md-3">
-                                                      <div className="form-group">
-                                                        <label>
-                                                          Living Since
-                                                        </label>
-                                                        <input
-                                                          type="date"
-                                                          className="form-control"
-                                                          placeholder="Living Since"
-                                                          name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
-                                                          onChange={
-                                                            handleChange
-                                                          }
-                                                          value={
-                                                            item[
-                                                              directorFieldNames
-                                                                .LIVINGSINCE
-                                                            ]
-                                                          }
-                                                        />
-                                                      </div>
-                                                    </div>
+                                                    <FieldArray
+                                                      name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}`}
+                                                      render={(
+                                                        arrayHelpers
+                                                      ) => {
+                                                        PreviousArrayHelperRef.current =
+                                                          arrayHelpers;
+
+                                                        return (
+                                                          <>
+                                                            <div className="col-md-3">
+                                                              <div className="form-group">
+                                                                <label>
+                                                                  Living Since
+                                                                </label>
+                                                                <input
+                                                                  type="date"
+                                                                  className="form-control"
+                                                                  placeholder="Living Since"
+                                                                  max={moment().format(
+                                                                    "YYYY-MM-DD"
+                                                                  )}
+                                                                  name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`}
+                                                                  onBlur={(
+                                                                    e
+                                                                  ) => {
+                                                                    if (
+                                                                      diff_years(
+                                                                        new Date(),
+                                                                        new Date(
+                                                                          e.target.value
+                                                                        )
+                                                                      ) < 3
+                                                                    ) {
+                                                                      if (
+                                                                        values
+                                                                          .directorInfo
+                                                                          .length &&
+                                                                        values
+                                                                          .directorInfo[
+                                                                          index
+                                                                        ][
+                                                                          directorFieldNames
+                                                                            .PREVIOUSADDRESS
+                                                                        ]
+                                                                          .length ==
+                                                                          0
+                                                                      ) {
+                                                                        if (
+                                                                          item[
+                                                                            directorFieldNames
+                                                                              .ISPRIMARY
+                                                                          ]
+                                                                        ) {
+                                                                          initialPreviousAddressObj[
+                                                                            directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                          ] =
+                                                                            index +
+                                                                            1;
+
+                                                                          arrayHelpers.insert(
+                                                                            0,
+                                                                            initialPreviousAddressObj
+                                                                          );
+                                                                          setIsAddedPrevAddress(
+                                                                            true
+                                                                          );
+                                                                        }
+                                                                        // }
+                                                                      } else {
+                                                                        // console.log(
+                                                                        //   "remove"
+                                                                        // );
+                                                                        // arrayHelpers.remove(
+                                                                        //   0
+                                                                        // );
+                                                                      }
+                                                                    } else {
+                                                                      setFieldValue(
+                                                                        `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}`,
+                                                                        []
+                                                                      );
+                                                                    }
+                                                                  }}
+                                                                  onChange={(
+                                                                    e
+                                                                  ) => {
+                                                                    setFieldValue(
+                                                                      `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.LIVINGSINCE}`,
+                                                                      e.target
+                                                                        .value
+                                                                    );
+                                                                  }}
+                                                                  value={
+                                                                    item[
+                                                                      directorFieldNames
+                                                                        .LIVINGSINCE
+                                                                    ]
+                                                                  }
+                                                                />
+                                                              </div>
+                                                            </div>
+                                                            {values.directorInfo &&
+                                                              values
+                                                                .directorInfo
+                                                                .length > 0 &&
+                                                              values
+                                                                .directorInfo[
+                                                                index
+                                                              ][
+                                                                directorFieldNames
+                                                                  .PREVIOUSADDRESS
+                                                              ] &&
+                                                              values
+                                                                .directorInfo[
+                                                                index
+                                                              ][
+                                                                directorFieldNames
+                                                                  .PREVIOUSADDRESS
+                                                              ].length > 0 &&
+                                                              values.directorInfo[
+                                                                index
+                                                              ][
+                                                                directorFieldNames
+                                                                  .PREVIOUSADDRESS
+                                                              ].map(
+                                                                (item1, i) => {
+                                                                  return (
+                                                                    <>
+                                                                      <div
+                                                                        className="col-md-12"
+                                                                        key={i}
+                                                                      >
+                                                                        <hr />
+                                                                      </div>
+                                                                      {/* <FieldArray
+                                                                        name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}`}
+                                                                        render={(
+                                                                          arrayHelpers
+                                                                        ) => ( */}
+                                                                      {/* <div className="row mx-1"> */}
+                                                                      <input
+                                                                        type="text"
+                                                                        name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.PREVIOUSADDSHAREHOLDERID}`}
+                                                                        onChange={
+                                                                          handleChange
+                                                                        }
+                                                                        hidden
+                                                                        value={
+                                                                          item1[
+                                                                            directorFieldNames
+                                                                              .PREVIOUSADDSHAREHOLDERID
+                                                                          ]
+                                                                        }
+                                                                        className="form-control"
+                                                                        placeholder="% of Total Share Count"
+                                                                      />
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            POSTALCODE
+                                                                          </label>
+                                                                          <input
+                                                                            type="text"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .POSTCODE
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                            )}
+                                                                            placeholder="Postal Code"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.POSTCODE}`}
+                                                                            onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            onBlur={
+                                                                              handleChange
+                                                                            }
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .POSTCODE
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            House
+                                                                            Number
+                                                                          </label>
+                                                                          <input
+                                                                            type="text"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .HOUSENUMBER
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                              // {
+                                                                              //   "is-invalid":
+                                                                              //     touched &&
+                                                                              //     Object.keys(
+                                                                              //       touched
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .HOUSE_NUMBER
+                                                                              //     ] &&
+                                                                              //     errors &&
+                                                                              //     Object.keys(
+                                                                              //       errors
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .HOUSE_NUMBER
+                                                                              //     ],
+                                                                              // }
+                                                                            )}
+                                                                            placeholder="House Number"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.HOUSENUMBER}`}
+                                                                            onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .HOUSENUMBER
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            House
+                                                                            Name
+                                                                          </label>
+                                                                          <input
+                                                                            type="text"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .HOUSENAME
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                              // {
+                                                                              //   "is-invalid":
+                                                                              //     touched &&
+                                                                              //     Object.keys(
+                                                                              //       touched
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .HOUSE_NAME
+                                                                              //     ] &&
+                                                                              //     errors &&
+                                                                              //     Object.keys(
+                                                                              //       errors
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .HOUSE_NAME
+                                                                              //     ],
+                                                                              // }
+                                                                            )}
+                                                                            placeholder="House Name"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.HOUSENAME}`}
+                                                                            onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .HOUSENAME
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                      <div className="col-md-3 d-flex align-items-center">
+                                                                        <span
+                                                                          onClick={() => {
+                                                                            arrayHelpers.remove(
+                                                                              i
+                                                                            );
+                                                                            setAreTruthy(
+                                                                              false
+                                                                            );
+                                                                          }}
+                                                                          className="cursor-pointer text-danger"
+                                                                        >
+                                                                          Remove
+                                                                        </span>
+                                                                      </div>
+
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            Street
+                                                                          </label>
+                                                                          <input
+                                                                            type="text"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .ADDRESS
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                              // {
+                                                                              //   "is-invalid":
+                                                                              //     touched &&
+                                                                              //     Object.keys(
+                                                                              //       touched
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .ADDRESS
+                                                                              //     ] &&
+                                                                              //     errors &&
+                                                                              //     Object.keys(
+                                                                              //       errors
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .ADDRESS
+                                                                              //     ],
+                                                                              // }
+                                                                            )}
+                                                                            placeholder="Street"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.ADDRESS}`}
+                                                                            onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .ADDRESS
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            County
+                                                                          </label>
+                                                                          <input
+                                                                            type="text"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .COUNTY
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                              // {
+                                                                              //   "is-invalid":
+                                                                              //     touched &&
+                                                                              //     Object.keys(
+                                                                              //       touched
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .HOUSE_NAME
+                                                                              //     ] &&
+                                                                              //     errors &&
+                                                                              //     Object.keys(
+                                                                              //       errors
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .HOUSE_NAME
+                                                                              //     ],
+                                                                              // }
+                                                                            )}
+                                                                            placeholder="County"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.COUNTY}`}
+                                                                            onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .COUNTY
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            Town
+                                                                          </label>
+                                                                          <input
+                                                                            type="text"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .TOWN
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                              // {
+                                                                              //   "is-invalid":
+                                                                              //     touched &&
+                                                                              //     Object.keys(
+                                                                              //       touched
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     touched
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .TOWN
+                                                                              //     ] &&
+                                                                              //     errors &&
+                                                                              //     Object.keys(
+                                                                              //       errors
+                                                                              //     )
+                                                                              //       .length &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ] &&
+                                                                              //     errors
+                                                                              //       .directorInfo[
+                                                                              //       index
+                                                                              //     ]
+                                                                              //       .PreviousAddress[
+                                                                              //       i
+                                                                              //     ][
+                                                                              //       directorFieldNames
+                                                                              //         .TOWN
+                                                                              //     ],
+                                                                              // }
+                                                                            )}
+                                                                            placeholder="Town"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.TOWN}`}
+                                                                            onChange={
+                                                                              handleChange
+                                                                            }
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .TOWN
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+
+                                                                      <button
+                                                                        type="button"
+                                                                        id="hidden-btn"
+                                                                        hidden
+                                                                        onClick={() => {
+                                                                          let payload =
+                                                                            {
+                                                                              ...values,
+                                                                            };
+
+                                                                          let prevAddress =
+                                                                            generateDirectorListPayload(
+                                                                              payload[
+                                                                                "directorInfo"
+                                                                              ]
+                                                                            ).prevAddress;
+
+                                                                          if (
+                                                                            prevAddress.length &&
+                                                                            diff_years(
+                                                                              new Date(),
+                                                                              new Date(
+                                                                                prevAddress[
+                                                                                  prevAddress.length -
+                                                                                    1
+                                                                                ][
+                                                                                  "livingSince"
+                                                                                ]
+                                                                              )
+                                                                            ) <
+                                                                              3
+                                                                          ) {
+                                                                            initialPreviousAddressObj[
+                                                                              directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                            ] =
+                                                                              index +
+                                                                              1;
+                                                                            arrayHelpers.insert(
+                                                                              prevAddress.length +
+                                                                                1,
+                                                                              initialPreviousAddressObj
+                                                                            );
+                                                                          }
+                                                                        }}
+                                                                      >
+                                                                        click
+                                                                      </button>
+
+                                                                      <div className="col-md-3">
+                                                                        <div className="form-group">
+                                                                          <label>
+                                                                            Previous
+                                                                            Living
+                                                                            Since
+                                                                            {i +
+                                                                              1}
+                                                                          </label>
+                                                                          <input
+                                                                            type="date"
+                                                                            className={clsx(
+                                                                              "form-control ",
+                                                                              {
+                                                                                "is-invalid":
+                                                                                  isAddedPrevAddress &&
+                                                                                  isTouched &&
+                                                                                  item1[
+                                                                                    directorFieldNames
+                                                                                      .WHENTOMOVETOADDRESS
+                                                                                  ] ==
+                                                                                    "",
+                                                                              }
+                                                                            )}
+                                                                            placeholder="Previous
+                                                                  Living Since 1"
+                                                                            name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.WHENTOMOVETOADDRESS}`}
+                                                                            onBlur={(
+                                                                              e
+                                                                            ) => {
+                                                                              if (
+                                                                                diff_years(
+                                                                                  new Date(),
+                                                                                  new Date(
+                                                                                    e.target.value
+                                                                                  )
+                                                                                ) <
+                                                                                3
+                                                                                //   &&
+                                                                                // diff_years(
+                                                                                //   new Date(),
+                                                                                //   new Date(
+                                                                                //     e.target.value
+                                                                                //   )
+                                                                                // ) !==
+                                                                                //   0
+                                                                              ) {
+                                                                                console.log(
+                                                                                  "diff",
+                                                                                  diff_years(
+                                                                                    new Date(),
+                                                                                    new Date(
+                                                                                      e.target.value
+                                                                                    )
+                                                                                  )
+                                                                                );
+                                                                                if (
+                                                                                  values
+                                                                                    .directorInfo[
+                                                                                    index
+                                                                                  ][
+                                                                                    directorFieldNames
+                                                                                      .PREVIOUSADDRESS
+                                                                                  ]
+                                                                                    .length !=
+                                                                                    0 &&
+                                                                                  values
+                                                                                    .directorInfo[
+                                                                                    index
+                                                                                  ][
+                                                                                    directorFieldNames
+                                                                                      .PREVIOUSADDRESS
+                                                                                  ]
+                                                                                    .length >=
+                                                                                    1
+                                                                                ) {
+                                                                                  if (
+                                                                                    item[
+                                                                                      directorFieldNames
+                                                                                        .ISPRIMARY
+                                                                                    ] &&
+                                                                                    !values
+                                                                                      .directorInfo[
+                                                                                      index
+                                                                                    ][
+                                                                                      directorFieldNames
+                                                                                        .PREVIOUSADDRESS
+                                                                                    ][
+                                                                                      i +
+                                                                                        1
+                                                                                    ]
+                                                                                  ) {
+                                                                                    arrayHelpers.remove(
+                                                                                      i +
+                                                                                        1
+                                                                                    );
+                                                                                    initialPreviousAddressObj[
+                                                                                      directorFieldNames.PREVIOUSADDSHAREHOLDERID
+                                                                                    ] =
+                                                                                      index +
+                                                                                      1;
+                                                                                    console.log(
+                                                                                      "insert"
+                                                                                    );
+                                                                                    arrayHelpers.insert(
+                                                                                      i +
+                                                                                        1,
+                                                                                      initialPreviousAddressObj
+                                                                                    );
+                                                                                    console.log(
+                                                                                      "sdgs"
+                                                                                    );
+                                                                                    setIsAddedPrevAddress(
+                                                                                      true
+                                                                                    );
+                                                                                  }
+                                                                                } else {
+                                                                                  arrayHelpers.remove(
+                                                                                    i +
+                                                                                      1
+                                                                                  );
+                                                                                  // setIsAddedPrevAddress(
+                                                                                  //   false
+                                                                                  // );
+                                                                                  // arrayHelpers.insert(
+                                                                                  //   i,
+                                                                                  //   initialPreviousAddressObj
+                                                                                  // );
+                                                                                }
+                                                                              } else {
+                                                                                values.directorInfo[
+                                                                                  index
+                                                                                ][
+                                                                                  directorFieldNames
+                                                                                    .PREVIOUSADDRESS
+                                                                                ].forEach(
+                                                                                  (
+                                                                                    el,
+                                                                                    elIndex
+                                                                                  ) => {
+                                                                                    console.log(
+                                                                                      " elIndex",
+                                                                                      i !=
+                                                                                        elIndex &&
+                                                                                        elIndex >
+                                                                                          i
+                                                                                    );
+                                                                                    if (
+                                                                                      i !=
+                                                                                        elIndex &&
+                                                                                      elIndex >
+                                                                                        i
+                                                                                    ) {
+                                                                                      console.log(
+                                                                                        "🚀 ~ file: business-information.js:2044 ~ BusinessInformation ~ PreviousArrayHelperRef",
+                                                                                        PreviousArrayHelperRef
+                                                                                      );
+                                                                                      arrayHelpers.pop(
+                                                                                        elIndex
+                                                                                      );
+
+                                                                                      console.log(
+                                                                                        "values",
+                                                                                        values
+                                                                                      );
+                                                                                    }
+
+                                                                                    // arrayHelpers.remove(
+                                                                                    //   values
+                                                                                    //     .directorInfo[
+                                                                                    //     index
+                                                                                    //   ][
+                                                                                    //     directorFieldNames
+                                                                                    //       .PREVIOUSADDRESS
+                                                                                    //   ]
+                                                                                    //     .length -
+                                                                                    //     1
+                                                                                    // );
+                                                                                  }
+                                                                                );
+                                                                              }
+                                                                            }}
+                                                                            onChange={
+                                                                              // handleChange
+                                                                              (
+                                                                                e
+                                                                              ) => {
+                                                                                setFieldValue(
+                                                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.PREVIOUSADDRESS}.${i}.${directorFieldNames.WHENTOMOVETOADDRESS}`,
+                                                                                  e
+                                                                                    .target
+                                                                                    .value
+                                                                                );
+                                                                              }
+                                                                            }
+                                                                            max={limitLivingSince(
+                                                                              i,
+                                                                              item[
+                                                                                directorFieldNames
+                                                                                  .LIVINGSINCE
+                                                                              ],
+                                                                              values
+                                                                                .directorInfo[
+                                                                                index
+                                                                              ][
+                                                                                directorFieldNames
+                                                                                  .PREVIOUSADDRESS
+                                                                              ]
+                                                                            )}
+                                                                            value={
+                                                                              item1[
+                                                                                directorFieldNames
+                                                                                  .WHENTOMOVETOADDRESS
+                                                                              ]
+                                                                            }
+                                                                          />
+                                                                        </div>
+                                                                      </div>
+                                                                    </>
+                                                                  );
+                                                                }
+                                                              )}
+                                                          </>
+                                                        );
+                                                      }}
+                                                    />
                                                   </div>
                                                 </div>
                                               </Accordion>

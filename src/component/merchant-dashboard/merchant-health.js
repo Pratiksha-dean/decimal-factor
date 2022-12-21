@@ -55,7 +55,7 @@ function MerchantHealth() {
   const [bankingStatus, setBankingStatus] = useState(false);
   const [loadingServices, setLoadingServices] = useState(false);
   const dispatch = useDispatch();
-  const [loadingBanking, setLoadingBanking] = useState(false);
+  const [loadingBanking, setLoadingBanking] = useState(true);
   const [loadingAccouting, setLoadingAccouting] = useState(true);
   const [financialServicesSummary, setFinancialServicesSummary] = useState([]);
   const [incomeAnalysisSummary, setIncomeAnalysisSummary] = useState([]);
@@ -296,8 +296,8 @@ function MerchantHealth() {
     if (userDetails && userDetails.lead_id) {
       setLoadingBanking(true);
       getDashboardData(userDetails.lead_id).then((resp) => {
-        setLoadingBanking(false);
         setDashboardData(resp.records[0]);
+        setLoadingBanking(false);
         dispatch({
           type: TRIGGER_LEAD_DETAILS,
           leadDetails: resp.records[0],
@@ -378,10 +378,10 @@ function MerchantHealth() {
     // response: "CompletedAddition";
     checkBankingStatus(userDetails["lead_id"])
       .then((resp) => {
-        console.log("🚀 ~ file: merchant-health.js:382 ~ .then ~ resp", resp);
         if (
           resp["response"] === "Completed" ||
-          resp["response"] === "CompletedAddition"
+          resp["response"] === "CompletedAddition" ||
+          resp["response"] === "OpenBankingCancelled"
         ) {
           setBankingStatus(true);
           setLoadingBanking(false);
@@ -435,7 +435,11 @@ function MerchantHealth() {
           );
 
           setBankingStatus(false);
-        } else if (dasboardData["obv_account_score_status"] == "Completed") {
+        } else if (
+          dasboardData["obv_account_score_status"] == "Completed" ||
+          dasboardData["obv_account_score_status"] == "CompletedAddition" ||
+          dasboardData["obv_account_score_status"] === "OpenBankingCancelled"
+        ) {
           setBankingUrl(
             `https://connect.consents.online/decimalfactor?externalref=${dasboardData["obv_account_score_customer_ref_id"]}`
           );
@@ -665,7 +669,7 @@ function MerchantHealth() {
                                     <div className="col-md-6">
                                       <div className="financial-service">
                                         <h4>
-                                          Financial Services{" "}
+                                          Financial Services
                                           <span>
                                             ({financialServicesSummary.length})
                                           </span>
@@ -767,11 +771,9 @@ function MerchantHealth() {
                                                             <p>
                                                               <strong>
                                                                 total out: -£
-                                                                {
-                                                                  service
-                                                                    .debitSummary
-                                                                    .total
-                                                                }
+                                                                {service.debitSummary.total.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                             <p>
@@ -875,11 +877,9 @@ function MerchantHealth() {
                                                             <p>
                                                               <strong>
                                                                 total out: -£
-                                                                {
-                                                                  service
-                                                                    .debitSummary
-                                                                    .total
-                                                                }
+                                                                {service.debitSummary.total.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                             <p>
@@ -920,7 +920,9 @@ function MerchantHealth() {
                                                 <p>
                                                   <strong>
                                                     total out: -£
-                                                    {financialServicesTotalOut}
+                                                    {financialServicesTotalOut.toFixed(
+                                                      2
+                                                    )}
                                                   </strong>
                                                 </p>
                                                 <p>
@@ -1687,7 +1689,7 @@ function MerchantHealth() {
                             )}
                           {accountingStatus && (
                             <div className="data-panel">
-                              <Codat />
+                              <Codat leadId={lead_accountScore} />
                             </div>
                           )}
                         </div>

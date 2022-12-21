@@ -14,6 +14,8 @@ import EmailVerification from "./component/email-verification/email-verification
 import ChangePassword from "./component/change-password/change-password";
 import NotFound from "./component/NotFound";
 import ChangePasswordWrapper from "./component/change-password/change-password-wrapper";
+import UploadFiles from "./component/merchant-dashboard/files/upload-files";
+import ViewFiles from "./component/merchant-dashboard/files/view-files";
 
 const RoutePage = () => {
   const PrivateRoute = ({ children }) => {
@@ -21,28 +23,26 @@ const RoutePage = () => {
     let userDetails = getUserDetails();
 
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
-    if (
-      (!token && !isAuthenticated) ||
-      (token == null && isAuthenticated == null)
-    ) {
+    if (!token || token == null) {
       return <Navigate to="/login" />;
-    } else if (token && isAuthenticated) {
+    } else if (token) {
       return (
         <>
           {/* <AppSidebar /> */} {/* your other components */}
           {children}
         </>
       );
-    } else {
-      return <Navigate to="/authentication" />;
     }
+    //  {
+    //   return <Navigate to="/authentication" />;
+    // }
   };
 
   const ProtectedRoute = ({ children }) => {
     let token = getToken();
     let userDetails = getUserDetails();
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
-    if (token && isAuthenticated) {
+    if (token) {
       return <Navigate to="/dashboard" />;
     } else if (token == null && isAuthenticated == null) {
       return <Navigate to="/login" />;
@@ -60,7 +60,7 @@ const RoutePage = () => {
     let token = localStorage.getItem("token");
     let isAuthenticated = JSON.parse(localStorage.getItem("isAuthenticated"));
 
-    if (token !== "" && token !== null && isAuthenticated) {
+    if (token !== "" && token !== null) {
       return <Navigate to="/dashboard" />;
     }
     return <>{children}</>;
@@ -68,32 +68,6 @@ const RoutePage = () => {
 
   return (
     <Routes>
-      {/* {isAuthenticated && token ? (
-        <>
-          <Route path="/*" element={<Navigate to="/dashboard" />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/merchant-dashboard" element={<MerchantDashboard />} />
-          <Route path="/merchant-health" element={<MerchantHealth />} />
-          <Route
-            path="/application-information"
-            element={<ApplicationInformation />}
-          />
-          <Route
-            path="/business-information"
-            element={<BusinessInformation />}
-          />
-          <Route path="/personal-details" element={<PersonalDetails />} />
-          <Route path="/change-password" element={<ChangePassword /> } />
-          <Route path="/inner-change-password" element={<InnerChangePassword /> } />
-
-          <Route path="/*" element={<RequestAQuote />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify/:token" element={<EmailVerification />} />
-        </>
-      )}
-      <Route path="/authentication" element={<Authentication />} /> */}
-
       <Route path="/notfound" element={<NotFound />} />
       <Route
         path="/*"
@@ -169,13 +143,31 @@ const RoutePage = () => {
       />
 
       <Route
+        path="/upload-files"
+        element={
+          <PrivateRoute>
+            <UploadFiles />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/view-files"
+        element={
+          <PrivateRoute>
+            <ViewFiles />
+          </PrivateRoute>
+        }
+      />
+
+      {/* <Route
         path="/authentication"
         element={
           <ProtectedRoute>
             <Authentication />
           </ProtectedRoute>
         }
-      />
+      /> */}
 
       {/* <Route
         path="/merchant-dashboard"

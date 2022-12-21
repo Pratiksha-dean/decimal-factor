@@ -240,6 +240,8 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
           // getFiles();
           list.splice(i, 1);
           setFileList(list);
+        } else if (resp.status == "error") {
+          ToastMessage("Something went wrong!", "error");
         }
       });
     } else {
@@ -259,16 +261,22 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
       checkAccountingStatusClick();
 
-      if (data["obv_account_score_status"] == "Start") {
+      if (
+        data["obv_account_score_status"] == "Start"
+      ) {
         setBankingUrl(
           `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
         );
         setBankingStatus(false);
-      } else if (data["obv_account_score_status"] == "Completed") {
+      } else if (
+        data["obv_account_score_status"] == "Completed" ||
+        data["obv_account_score_status"] == "CompletedAddition" ||
+        data["obv_account_score_status"] == "OpenBankingCancelled"
+      ) {
         setBankingStatus(true);
-           setBankingUrl(
-             `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
-           );
+        setBankingUrl(
+          `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
+        );
       }
     } else {
       setLoadingBanking(true);
@@ -277,6 +285,10 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   }, [data]);
 
   const onSubmit = () => {
+    console.log(
+      "🚀 ~ file: link-banking&accounting.js:281 ~ onSubmit ~ uploadBankStatementToggle",
+      uploadBankStatementToggle
+    );
     if (uploadBankStatementToggle) {
       let identityProofDocs;
       identityProofDocs = fileList.map((item, i) => {
