@@ -38,11 +38,11 @@ export default function AssessProfitAndLoss(props) {
             name: name,
             data: resourceData[element.alt],
           })
-          
+
         }
     });
     setDataSeries(seriesData);
-    
+
   }
 
   const handleClassClick = () => {
@@ -187,7 +187,7 @@ export default function AssessProfitAndLoss(props) {
             },
           ]);
           const myTimeout = setTimeout(handleClassClick, 1000);
-        
+
           setStatementRatiosLoading(false);
           setShowStatementRatios(true);
         })
@@ -308,7 +308,7 @@ export default function AssessProfitAndLoss(props) {
                     <div className=" scroll-bar scroll-bar-2">
                       <table
                         id="assess-profitloss-table"
-                        class="table table-striped table-bordered"
+                        className="table table-striped table-bordered"
                         cellspacing="0"
                         width="100%"
                         border="0"

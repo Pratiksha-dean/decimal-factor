@@ -1040,7 +1040,7 @@ function BusinessInformation() {
                                                         </label>
 
                                                         <select
-                                                          class="form-select form-control"
+                                                          className="form-select form-control"
                                                           aria-label="Default select example"
                                                           name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
                                                           onChange={

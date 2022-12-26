@@ -31,6 +31,7 @@ import NotFound from "../NotFound";
 import { useDispatch } from "react-redux/es";
 import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
 import { dateSuffix, monthArray, weekDayArray } from "../Constants";
+import moment from "moment/moment";
 
 export const setCurrentTabIndex = (index) => {
   localStorage.setItem("activeTabIndex", index);
@@ -426,6 +427,14 @@ function MerchantHealth() {
     };
   }, []);
 
+  const applyDisabledClass = (value) => {
+    if (value == "0" || value == "0.00") {
+      return "text-disabled";
+    } else {
+      return "";
+    }
+  };
+
   useEffect(() => {
     if (dasboardData) {
       if (tabIndex == 0) {
@@ -503,14 +512,14 @@ function MerchantHealth() {
                         {!bankingUrl && !loadingBanking && !bankingStatus && (
                           <>
                             <button
-                              class="btn btn-primary banking-btn"
+                              className="btn btn-primary banking-btn"
                               onClick={() => {
                                 getLinkToBanking(true);
                               }}
                             >
                               Link To Banking{" "}
                               <i
-                                class="fa fa-chevron-right"
+                                className="fa fa-chevron-right"
                                 aria-hidden="true"
                               ></i>
                             </button>
@@ -539,45 +548,45 @@ function MerchantHealth() {
                           {bankingUrl && !loadingBanking && (
                             <div className="row">
                               <div className="col-md-9">
-                                <div class="banking-url">
-                                  <div class="form-group">
+                                <div className="banking-url">
+                                  <div className="form-group">
                                     <label>Banking URL</label>
                                     <input
                                       type="text"
                                       name="url"
                                       placeholder="https://www.domain.com/dummy-url-will-be-here"
-                                      class="form-control"
+                                      className="form-control"
                                       disabled
                                       value={bankingUrl}
                                     />
                                     <button
-                                      class="copyicon-col btn btn-primary"
+                                      className="copyicon-col btn btn-primary"
                                       onClick={() => {
                                         copyLinkToClipboard(bankingUrl);
                                       }}
                                     >
                                       <i
-                                        class="fa fa-clone"
+                                        className="fa fa-clone"
                                         aria-hidden="true"
                                       ></i>
                                     </button>
                                   </div>
                                 </div>
-                                <div class="banking-url">
-                                  <div class="form-group">
+                                <div className="banking-url">
+                                  <div className="form-group">
                                     <label>Status</label>
                                     <input
                                       type="text"
                                       name="Status"
                                       placeholder="Unlinked"
-                                      class="form-control"
+                                      className="form-control"
                                       disabled
                                       value={
                                         bankingStatus ? "Linked" : "Unlinked"
                                       }
                                     />
                                     <button
-                                      class="checkstatus-btn btn btn-primary"
+                                      className="checkstatus-btn btn btn-primary"
                                       onClick={() => checkBankingStatusClick()}
                                     >
                                       Check status
@@ -592,16 +601,16 @@ function MerchantHealth() {
                             <div className="after-check-status">
                               <div className="download-panel">
                                 <button
-                                  class="btn btn-primary banking-btn download-btn"
+                                  className="btn btn-primary banking-btn download-btn"
                                   onClick={handleOpen}
                                 >
                                   <i
-                                    class="fa fa-download"
+                                    className="fa fa-download"
                                     aria-hidden="true"
                                   ></i>{" "}
                                   Download{" "}
                                   <i
-                                    class="fa fa-chevron-down"
+                                    className="fa fa-chevron-down"
                                     aria-hidden="true"
                                   ></i>
                                 </button>
@@ -706,16 +715,20 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (on{" "}
+
                                                             {service.creditSummary.lastTransaction.substring(
                                                               0,
                                                               4
-                                                            ) >= "1997"
-                                                              ? service
-                                                                  .creditSummary
-                                                                  .lastTransaction
-                                                              : "--"}
-                                                            )
+                                                            ) >= "1997" &&
+                                                             '('+"on " +
+                                                                moment(
+                                                                  new Date(
+                                                                    service.creditSummary.lastTransaction
+                                                                  )
+                                                                ).format(
+                                                                  "DD MMM YYYY"
+                                                                )+')'}
+
                                                           </p>
                                                           <p>
                                                             <strong>
@@ -732,22 +745,32 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (last on{" "}
+
                                                             <span>
                                                               {service.debitSummary.lastTransaction.substring(
                                                                 0,
                                                                 4
-                                                              ) >= "1997"
-                                                                ? service
-                                                                    .debitSummary
-                                                                    .lastTransaction
-                                                                : "--"}
-                                                              )
+                                                              ) >= "1997" &&
+                                                                '('+"last on " +
+                                                                  moment(
+                                                                    new Date(
+                                                                      service.debitSummary.lastTransaction
+                                                                    )
+                                                                  ).format(
+                                                                    "DD MMM YYYY"
+                                                                  )+')'}
+
                                                             </span>
                                                           </p>
                                                           <div className="box-id-1">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total in: +£
                                                                 {
                                                                   service
@@ -757,19 +780,29 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.creditSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: +£
-                                                                {
-                                                                  service
-                                                                    .creditSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {service.creditSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
                                                           <div className="box-id-2">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.debitSummary.total.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total out: -£
                                                                 {service.debitSummary.total.toFixed(
                                                                   2
@@ -777,7 +810,13 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: -£
                                                                 {
                                                                   service
@@ -810,18 +849,22 @@ function MerchantHealth() {
                                                               .creditSummary
                                                               .transactionCount <
                                                             2
-                                                              ? "transaction"
-                                                              : "transactions"}{" "}
-                                                            (on{" "}
+                                                              ? "transaction "
+                                                              : "transactions "}
+
                                                             {service.creditSummary.lastTransaction.substring(
                                                               0,
                                                               4
-                                                            ) >= "1997"
-                                                              ? service
-                                                                  .creditSummary
-                                                                  .lastTransaction
-                                                              : "--"}
-                                                            )
+                                                            ) >= "1997" &&
+                                                             '('+"on " +
+                                                                moment(
+                                                                  new Date(
+                                                                    service.creditSummary.lastTransaction
+                                                                  )
+                                                                ).format(
+                                                                  "DD MMM YYYY"
+                                                                )+')'}
+
                                                           </p>
                                                           <p>
                                                             <strong>
@@ -838,22 +881,30 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (last on{" "}
                                                             <span>
-                                                              {service.debitSummary.lastTransaction.substring(
-                                                                0,
+                                                             {service.debitSummary.lastTransaction.substring(
+                                                              0,
                                                                 4
-                                                              ) >= "1997"
-                                                                ? service
-                                                                    .debitSummary
-                                                                    .lastTransaction
-                                                                : "--"}
-                                                              )
+                                                              ) >= "1997" &&
+                                                                '('+"last on " +
+                                                                  moment(
+                                                                    new Date(
+                                                                      service.debitSummary.lastTransaction
+                                                                    )
+                                                                  ).format(
+                                                                    "DD MMM YYYY"
+                                                                  )+')'}
                                                             </span>
                                                           </p>
                                                           <div className="box-id-1">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.creditSummary.total.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total in: +£
                                                                 {
                                                                   service
@@ -863,19 +914,29 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.creditSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: +£
-                                                                {
-                                                                  service
-                                                                    .creditSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {service.creditSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
                                                           <div className="box-id-2">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.debitSummary.total.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total out: -£
                                                                 {service.debitSummary.total.toFixed(
                                                                   2
@@ -883,13 +944,17 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  service.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: -£
-                                                                {
-                                                                  service
-                                                                    .debitSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {service.debitSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
@@ -902,13 +967,21 @@ function MerchantHealth() {
                                             <div className="card-bottom">
                                               <div className="box-id-1">
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      financialServicesTotalIn
+                                                    )}
+                                                  >
                                                     total in: +£
                                                     {financialServicesTotalIn}
                                                   </strong>
                                                 </p>
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      financialServicesMonthlyAvgIn
+                                                    )}
+                                                  >
                                                     monthly av: +£
                                                     {
                                                       financialServicesMonthlyAvgIn
@@ -918,15 +991,21 @@ function MerchantHealth() {
                                               </div>
                                               <div className="box-id-2">
                                                 <p>
-                                                  <strong>
-                                                    total out: -£
-                                                    {financialServicesTotalOut.toFixed(
-                                                      2
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      financialServicesTotalOut
                                                     )}
+                                                  >
+                                                    total out: -£
+                                                    {financialServicesTotalOut}
                                                   </strong>
                                                 </p>
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      financialServicesMonthlyAvgOut
+                                                    )}
+                                                  >
                                                     monthly av: -£
                                                     {
                                                       financialServicesMonthlyAvgOut
@@ -988,16 +1067,20 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (on{" "}
                                                             {income.creditSummary.lastTransaction.substring(
                                                               0,
                                                               4
-                                                            ) >= "1997"
-                                                              ? income
-                                                                  .creditSummary
-                                                                  .lastTransaction
-                                                              : "--"}
-                                                            )
+                                                            ) >= "1997" &&
+                                                              "(" +
+                                                                "on " +
+                                                                moment(
+                                                                  new Date(
+                                                                    income.creditSummary.lastTransaction
+                                                                  )
+                                                                ).format(
+                                                                  "DD MMM YYYY"
+                                                                ) +
+                                                                ")"}
                                                           </p>
                                                           <p>
                                                             <strong>
@@ -1013,44 +1096,62 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (last on{" "}
                                                             <span>
                                                               {income.debitSummary.lastTransaction.substring(
                                                                 0,
                                                                 4
-                                                              ) >= "1997"
-                                                                ? income
-                                                                    .debitSummary
-                                                                    .lastTransaction
-                                                                : "--"}
-                                                              )
+                                                              ) >= "1997" &&
+                                                                "(" +
+                                                                  "last on " +
+                                                                  moment(
+                                                                    new Date(
+                                                                      income.debitSummary.lastTransaction
+                                                                    )
+                                                                  ).format(
+                                                                    "DD MMM YYYY"
+                                                                  ) +
+                                                                  ")"}
                                                             </span>
                                                           </p>
                                                           <div className="box-id-1">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.creditSummary.total.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total in: +£
-                                                                {
-                                                                  income
-                                                                    .creditSummary
-                                                                    .total
-                                                                }
+                                                                {income.creditSummary.total.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.creditSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: +£
-                                                                {
-                                                                  income
-                                                                    .creditSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {income.creditSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
                                                           <div className="box-id-2">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total out: -£
                                                                 {
                                                                   income
@@ -1060,13 +1161,17 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: -£
-                                                                {
-                                                                  income
-                                                                    .debitSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {income.debitSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
@@ -1100,16 +1205,20 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (on{" "}
                                                             {income.creditSummary.lastTransaction.substring(
                                                               0,
                                                               4
-                                                            ) >= "1997"
-                                                              ? income
-                                                                  .creditSummary
-                                                                  .lastTransaction
-                                                              : "--"}
-                                                            )
+                                                            ) >= "1997" &&
+                                                              "(" +
+                                                                "on " +
+                                                                moment(
+                                                                  new Date(
+                                                                    income.creditSummary.lastTransaction
+                                                                  )
+                                                                ).format(
+                                                                  "DD MMM YYYY"
+                                                                ) +
+                                                                ")"}
                                                           </p>
                                                           <p>
                                                             <strong>
@@ -1125,22 +1234,32 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (last on{" "}
                                                             <span>
                                                               {income.debitSummary.lastTransaction.substring(
                                                                 0,
                                                                 4
-                                                              ) >= "1997"
-                                                                ? income
-                                                                    .debitSummary
-                                                                    .lastTransaction
-                                                                : "--"}
-                                                              )
+                                                              ) >= "1997" &&
+                                                                "(" +
+                                                                  "last on " +
+                                                                  moment(
+                                                                    new Date(
+                                                                      income.debitSummary.lastTransaction
+                                                                    )
+                                                                  ).format(
+                                                                    "DD MMM YYYY"
+                                                                  ) +
+                                                                  ")"}
                                                             </span>
                                                           </p>
                                                           <div className="box-id-1">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income
+                                                                    .creditSummary
+                                                                    .total
+                                                                )}
+                                                              >
                                                                 total in: +£
                                                                 {
                                                                   income
@@ -1150,19 +1269,29 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.creditSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: +£
-                                                                {
-                                                                  income
-                                                                    .creditSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {income.creditSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
                                                           <div className="box-id-2">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.debitSummary.total.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total out: -£
                                                                 {
                                                                   income
@@ -1172,13 +1301,17 @@ function MerchantHealth() {
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  income.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: -£
-                                                                {
-                                                                  income
-                                                                    .debitSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {income.debitSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
@@ -1191,13 +1324,21 @@ function MerchantHealth() {
                                             <div className="card-bottom bottom-2">
                                               <div className="box-id-1">
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      incomeAnalysisTotalIn
+                                                    )}
+                                                  >
                                                     total in: +£
                                                     {incomeAnalysisTotalIn}
                                                   </strong>
                                                 </p>
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      incomeAnalysisMonthlyAvgIn
+                                                    )}
+                                                  >
                                                     monthly av: +£
                                                     {incomeAnalysisMonthlyAvgIn}
                                                   </strong>
@@ -1205,13 +1346,21 @@ function MerchantHealth() {
                                               </div>
                                               <div className="box-id-2">
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      incomeAnalysisTotalOut
+                                                    )}
+                                                  >
                                                     total out: -£
                                                     {incomeAnalysisTotalOut}
                                                   </strong>
                                                 </p>
                                                 <p>
-                                                  <strong>
+                                                  <strong
+                                                    className={applyDisabledClass(
+                                                      incomeAnalysisMonthlyAvgOut
+                                                    )}
+                                                  >
                                                     monthly av: -£
                                                     {
                                                       incomeAnalysisMonthlyAvgOut
@@ -1280,22 +1429,25 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (last on{" "}
                                                             <span>
                                                               {regOutgoing.debitSummary.lastTransaction.substring(
                                                                 0,
                                                                 4
-                                                              ) >= "1997"
-                                                                ? regOutgoing
-                                                                    .debitSummary
-                                                                    .lastTransaction
-                                                                : "--"}
-                                                              )
+                                                              ) >= "1997" &&
+                                                                '('+"last on " +
+                                                                  moment(
+                                                                    new Date(
+                                                                      regOutgoing.debitSummary.lastTransaction
+                                                                    )
+                                                                  ).format(
+                                                                    "DD MMM YYYY"
+                                                                  )+')'}
+
                                                             </span>
                                                           </p>
                                                           <div className="calender-div float-left">
-                                                            <div class="today">
-                                                              <div class="today-piece  top  day">
+                                                            <div className="today">
+                                                              <div className="today-piece  top  day">
                                                                 {
                                                                   weekDayArray[
                                                                     date.getDay() -
@@ -1303,14 +1455,14 @@ function MerchantHealth() {
                                                                   ]
                                                                 }
                                                               </div>
-                                                              <div class="today-piece  middle  month">
+                                                              <div className="today-piece  middle  month">
                                                                 {
                                                                   monthArray[
                                                                     date.getMonth()
                                                                   ]
                                                                 }
                                                               </div>
-                                                              <div class="today-piece  middle  date">
+                                                              <div className="today-piece  middle  date">
                                                                 {date.getDate()}
                                                                 {
                                                                   dateSuffix[
@@ -1320,7 +1472,7 @@ function MerchantHealth() {
                                                                   ]
                                                                 }
                                                               </div>
-                                                              <div class="today-piece  bottom  year">
+                                                              <div className="today-piece  bottom  year">
                                                                 {date.getFullYear()}
                                                               </div>
                                                             </div>
@@ -1380,22 +1532,26 @@ function MerchantHealth() {
                                                             2
                                                               ? "transaction"
                                                               : "transactions"}{" "}
-                                                            (last on{" "}
+
                                                             <span>
                                                               {regOutgoing.debitSummary.lastTransaction.substring(
                                                                 0,
                                                                 4
-                                                              ) >= "1997"
-                                                                ? regOutgoing
-                                                                    .debitSummary
-                                                                    .lastTransaction
-                                                                : "--"}
-                                                              )
+                                                              ) >= "1997" &&
+                                                                '('+"last on " +
+                                                                  moment(
+                                                                    new Date(
+                                                                      regOutgoing.debitSummary.lastTransaction
+                                                                    )
+                                                                  ).format(
+                                                                    "DD MMM YYYY"
+                                                                  )+')'}
+
                                                             </span>
                                                           </p>
                                                           <div className="calender-div float-left">
-                                                            <div class="today">
-                                                              <div class="today-piece  top  day">
+                                                            <div className="today">
+                                                              <div className="today-piece  top  day">
                                                                 {
                                                                   weekDayArray[
                                                                     date.getDay() -
@@ -1403,14 +1559,14 @@ function MerchantHealth() {
                                                                   ]
                                                                 }
                                                               </div>
-                                                              <div class="today-piece  middle  month">
+                                                              <div className="today-piece  middle  month">
                                                                 {
                                                                   monthArray[
                                                                     date.getMonth()
                                                                   ]
                                                                 }
                                                               </div>
-                                                              <div class="today-piece  middle  date">
+                                                              <div className="today-piece  middle  date">
                                                                 {date.getDate()}
                                                                 {
                                                                   dateSuffix[
@@ -1420,30 +1576,38 @@ function MerchantHealth() {
                                                                   ]
                                                                 }
                                                               </div>
-                                                              <div class="today-piece  bottom  year">
+                                                              <div className="today-piece  bottom  year">
                                                                 {date.getFullYear()}
                                                               </div>
                                                             </div>
                                                           </div>
                                                           <div className="box-id-2">
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  regOutgoing.debitSummary.total.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 total out: -£
-                                                                {
-                                                                  regOutgoing
-                                                                    .debitSummary
-                                                                    .total
-                                                                }
+                                                                {regOutgoing.debitSummary.total.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                             <p>
-                                                              <strong>
+                                                              <strong
+                                                                className={applyDisabledClass(
+                                                                  regOutgoing.debitSummary.monthlyAverage.toFixed(
+                                                                    2
+                                                                  )
+                                                                )}
+                                                              >
                                                                 monthly av: -£
-                                                                {
-                                                                  regOutgoing
-                                                                    .debitSummary
-                                                                    .monthlyAverage
-                                                                }
+                                                                {regOutgoing.debitSummary.monthlyAverage.toFixed(
+                                                                  2
+                                                                )}
                                                               </strong>
                                                             </p>
                                                           </div>
@@ -1488,81 +1652,6 @@ function MerchantHealth() {
                                                                   Last credit on{" "}
                                                                   {ev.eventDate}
                                                                 </p>
-                                                                {/* <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-31T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Change in Income Profile (2020
-                                              May)
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-01T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-18T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Significant transaction
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-31T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>
-                                              Change in Income Profile (2020
-                                              May)
-                                            </strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-05-01T00:00:00+01:00
-                                          </p>
-                                          <p>
-                                            <strong>null</strong>
-                                          </p>
-                                          <p>
-                                            Last credit on
-                                            2020-06-05T00:00:00+01:00
-                                          </p> */}
                                                               </div>
                                                             </>
                                                           );
@@ -1598,14 +1687,14 @@ function MerchantHealth() {
                           !accountingStatus && (
                             <>
                               <button
-                                class="btn btn-primary accounting-btn"
+                                className="btn btn-primary accounting-btn"
                                 onClick={() => {
                                   getLinkToAccouting(true);
                                 }}
                               >
                                 Link To Accounting{" "}
                                 <i
-                                  class="fa fa-chevron-right"
+                                  className="fa fa-chevron-right"
                                   aria-hidden="true"
                                 ></i>
                               </button>
@@ -1636,8 +1725,8 @@ function MerchantHealth() {
                           {accoutingUrl &&
                             (!loadingAccouting || loadingAccouting) && (
                               <>
-                                <div class="banking-url">
-                                  <div class="form-group">
+                                <div className="banking-url">
+                                  <div className="form-group">
                                     <label>Accounting URL</label>
 
                                     <input
@@ -1650,33 +1739,33 @@ function MerchantHealth() {
                                       id="accouting-url"
                                     />
                                     <button
-                                      class="copyicon-col btn btn-primary"
+                                      className="copyicon-col btn btn-primary"
                                       onClick={() => {
                                         copyLinkToClipboard(accoutingUrl);
                                       }}
                                     >
                                       <i
-                                        class="fa fa-clone"
+                                        className="fa fa-clone"
                                         aria-hidden="true"
                                       ></i>
                                     </button>
                                   </div>
                                 </div>
-                                <div class="banking-url">
-                                  <div class="form-group">
+                                <div className="banking-url">
+                                  <div className="form-group">
                                     <label>Status</label>
                                     <input
                                       type="text"
                                       name="Status"
                                       placeholder=""
-                                      class="form-control"
+                                      className="form-control"
                                       disabled
                                       value={
                                         accountingStatus ? "Linked" : "Unlinked"
                                       }
                                     />
                                     <button
-                                      class="checkstatus-btn btn btn-primary"
+                                      className="checkstatus-btn btn btn-primary"
                                       onClick={() =>
                                         checkAccountingStatusClick()
                                       }

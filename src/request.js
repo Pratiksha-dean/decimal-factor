@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setStepNo } from "./component/requestaquote/components/request-leftpanel";
-export const API_URL = process.env.REACT_APP_STAGING_API_URL;
+export const API_URL = process.env.REACT_APP_PROD_API_URL;
 export const SEARCH_COMPANY_URL = `${API_URL}api/SearchCompanies.php?SearchValue=`;
 export const CREATE_ACCOUNT_URL = `${API_URL}api/CreateCustomerForUK`;
 export const USER_LOGIN_URL = `${API_URL}api/UKCustomerLogin`;
@@ -16,7 +16,7 @@ export const UPDATE_USER_DETAILS_URL = `${API_URL}api/UpdateCustomerForUK/`;
 export const RESET_PASSWORD_URL = `${API_URL}api/UKChangePassword`;
 
 // app-uat.codat.io/
-export const CODAT_BASE_URL = process.env.REACT_APP_STAGING_CODAT_BASE_URL;
+export const CODAT_BASE_URL = process.env.REACT_APP_PROD_CODAT_BASE_URL;
 
 export const FINANCIAL_SERVICE_URL = `${API_URL}api/accountScore/5944/FinancialServices`;
 export const INCOME_ANALYSIS_URL = `${API_URL}api/accountScore/5944/IncomeAnalysis`;
@@ -84,6 +84,7 @@ export const logout = () => {
   localStorage.removeItem("provideConcentData");
   localStorage.removeItem("activeTabIndex");
   localStorage.removeItem("uploadBankStatement");
+  localStorage.removeItem("open");
   setStepNo(1);
 };
 

@@ -107,26 +107,28 @@ export default function BusinessCreditScore() {
   const hiddenFileIndentityProofInput = useRef(null);
 
   const deleteFile = (item, i) => {
-    let list = [...fileList];
+    if (window.confirm("Are you sure remove the file!")) {
+      let list = [...fileList];
 
-    if (item["id"]) {
-      deleteDocuments(item["id"]).then((resp) => {
-        if (resp.status == "success") {
-          ToastMessage(resp.records, "success");
-          list.splice(i, 1);
-          setFileList(list);
-          if (!list.length) {
-            setHeadingText(disclaimerMsg);
+      if (item["id"]) {
+        deleteDocuments(item["id"]).then((resp) => {
+          if (resp.status == "success") {
+            ToastMessage(resp.records, "success");
+            list.splice(i, 1);
+            setFileList(list);
+            if (!list.length) {
+              setHeadingText(disclaimerMsg);
+            }
           }
+        });
+      } else {
+        list.splice(i, 1);
+        setFileList(list);
+        if (!list.length) {
+          setHeadingText(disclaimerMsg);
         }
-      });
-    } else {
-      list.splice(i, 1);
-      setFileList(list);
-      if (!list.length) {
-        setHeadingText(disclaimerMsg);
+        ToastMessage("Lead Attachments Deleted Successfully.", "success");
       }
-      ToastMessage("Lead Attachments Deleted Successfully.", "success");
     }
   };
 
@@ -219,7 +221,7 @@ export default function BusinessCreditScore() {
 
         if (url) {
           let alink = document.createElement("a");
-          alink.href = `${API_URL}api/${url}`;
+          alink.href = `${API_URL}${url}`;
           alink.download = "SamplePDF.pdf";
           alink.target = "_blank";
           alink.click();
@@ -249,7 +251,7 @@ export default function BusinessCreditScore() {
                     className="btn btn-primary download-score-btn"
                     onClick={downaloadCreditScore}
                   >
-                    <i class="fa fa-cloud-arrow-down"></i> Download Your
+                    <i className="fa fa-cloud-arrow-down"></i> Download Your
                     Business Credit Score
                   </button>
                 </div>
@@ -777,8 +779,8 @@ export default function BusinessCreditScore() {
                             <p>
                               <strong>File Uploaded:</strong>
                             </p>
-                            <div class="table-responsive">
-                              <table class="table table-bordered">
+                            <div className="table-responsive">
+                              <table className="table table-bordered">
                                 <thead>
                                   <tr>
                                     <th scope="col">File Name</th>

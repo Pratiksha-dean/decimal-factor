@@ -10,9 +10,20 @@ import {
 import { NavLink, useLocation } from "react-router-dom";
 import { Collapse } from "react-bootstrap";
 
+export const getSideNavState = () => {
+  let state = localStorage.getItem("open");
+  if (!state) {
+    localStorage.setItem("open", JSON.stringify(false));
+  }
+};
+
+export const setSideNavState = (state) => {
+  localStorage.setItem("open", JSON.stringify(state));
+};
+
 function SiderBarMenu() {
   const { collapseSidebar, collapsed } = useProSidebar();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(localStorage.getItem("open"));
   const location = useLocation();
 
   return (
@@ -48,47 +59,82 @@ function SiderBarMenu() {
               {!collapsed && "Personal Details"}
             </NavLink>
           </MenuItem>
-          <SubMenu
-            label="Files"
-            icon={<i className="fa fa-file" aria-hidden="true" />}
-            // open={
-            //   (location.pathname == "/upload-files" && open) ||
-            //   (location.pathname == "/view-files" && open)
-            // }
-            // onClick={() => {
-            //   console.log(
-            //     "🚀 ~ file: sidebar.js:62 ~ SiderBarMenu ~ open",
-            //     open
-            //   );
-            //   setOpen(!open);
-            // }}
-          >
-            <MenuItem
-              className="submenu"
-              active={location.pathname == "/upload-files"}
+          {!collapsed ? (
+            <SubMenu
+              label={collapsed ? "" : "Files"}
+              className="submenu-item"
+              open={open}
+              onClick={() => {
+                setOpen(!open);
+                setSideNavState(!open);
+              }}
+              style={{
+                backgroundColor:
+                  location.pathname == "/upload-files" ||
+                  location.pathname == "/view-files"
+                    ? "#e2eff4"
+                    : "",
+                borderLeft:
+                  location.pathname == "/upload-files" ||
+                  location.pathname == "/view-files"
+                    ? "3px solid #006090"
+                    : "",
+              }}
+              icon={<i className="fa fa-file" aria-hidden="true" />}
             >
-              <NavLink
-                to="/upload-files"
+              <MenuItem
+                className="submenu"
                 onClick={() => {
-                  setOpen(true);
+                  setSideNavState(true);
                 }}
               >
+                <NavLink
+                  className="sub-menu-item"
+                  to="/upload-files"
+                  onClick={() => {
+                    setSideNavState(true);
+                  }}
+                >
+                  {" "}
+                  <i className="fa fa-cloud-upload" aria-hidden="true"></i>
+                  {!collapsed && "Upload Files"}
+                </NavLink>{" "}
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setSideNavState(true);
+                }}
+                className="submenu"
+                active={location.pathname == "/view-files"}
+              >
                 {" "}
-                <i className="fa fa-cloud-upload" aria-hidden="true"></i>
-                {!collapsed && "Upload Files"}
-              </NavLink>{" "}
-            </MenuItem>
-            <MenuItem
-              className="submenu"
-              active={location.pathname == "/view-files"}
-            >
-              {" "}
-              <NavLink to="/view-files">
-                <i className="fa fa-eye" aria-hidden="true"></i>
-                {!collapsed && "View Files"}
-              </NavLink>
-            </MenuItem>
-          </SubMenu>
+                <NavLink
+                  to="/view-files"
+                  onClick={() => {
+                    setSideNavState(true);
+                  }}
+                >
+                  <i className="fa fa-eye" aria-hidden="true"></i>
+                  {!collapsed && "View Files"}
+                </NavLink>
+              </MenuItem>
+            </SubMenu>
+          ) : (
+            <>
+              <MenuItem>
+                {" "}
+                <NavLink to="/upload-files">
+                  <i className="fa fa-cloud-upload" aria-hidden="true"></i>
+                </NavLink>
+              </MenuItem>
+              <MenuItem>
+                {" "}
+                <NavLink to="/view-files">
+                  <i className="fa fa-eye" aria-hidden="true"></i>
+                </NavLink>
+              </MenuItem>
+            </>
+          )}
         </Menu>
         <p className="bottom-text">decimalFactor &copy; Copyright 2022</p>
       </Sidebar>

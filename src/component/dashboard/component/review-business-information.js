@@ -255,7 +255,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                   ? item["date_of_birth"]["day"]
                   : 1;
             }
-    
+
             delete item["address"];
             delete item["appointed_on"];
             delete item["links"];
@@ -910,7 +910,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                             <label>Choose Address</label>
 
                                             <select
-                                              class="form-select form-control"
+                                              className="form-select form-control"
                                               aria-label="Default select example"
                                               name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
                                               onChange={handleChange}

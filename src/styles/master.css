@@ -939,7 +939,7 @@ li.sc-ksBlkl.gmgIpm.menu-item {
   margin-right: 5px;
   width: 22px;
 }
-.sc-dkrFOg.fpTHfu.sidebar-inner {
+.sidebar-inner {
   background: #fff !important;
   border-radius: 0px 0px 10px 10px;
 }
@@ -2747,22 +2747,129 @@ button#RFS-StepButton {
   height: 43px;
 }
 
-.sidebar-panel .sub-menu a:first-child {
-  padding: 0px 10px 0px 15px !important;
+.sidebar-panel .sub-menu a.menu-anchor {
+  padding-right: 20px;
+  padding-left: 15px !important;
+  margin-bottom: 5px;
+  /* background-color: unset !important; */
 }
 
 .sidebar-panel .sub-menu .ejzYLa {
   background-color: unset !important;
+  padding-right: 0 !important;
 }
 
-.sidebar-panel .sub-menu .eVPmrC:hover {
+.view-files table th,
+.upload-files table th {
+  border-bottom-width: 1px !important ;
+}
+.sidebar-panel .submenu-item .menu-anchor:hover {
+  background-color: #e2eff4 !important;
+}
+#root
+  > div
+  > div.dashboard-panel
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > aside
+  > div
+  > nav
+  > ul
+  > li.sub-menu.menu-item.open.submenu-item
+  > div
+  > ul
+  > li:nth-child(1)
+  > a:hover,
+#root
+  > div
+  > div.dashboard-panel
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > aside
+  > div
+  > nav
+  > ul
+  > li.sub-menu.menu-item.open.submenu-item
+  > div
+  > ul
+  > li:nth-child(2)
+  > a:hover {
   background-color: unset !important;
 }
 
-.sidebar-panel .sub-menu .lkTtqM:hover {
-  background-color: #e2eff4 !important;
+#root
+  > div
+  > div.dashboard-panel
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > aside
+  > div
+  > nav
+  > ul
+  > li.sub-menu.menu-item.open.submenu-item
+  > div
+  > ul
+  > li.menu-item.active.submenu
+  > a {
+  background-color: unset !important;
+}
+
+.sub-menu-content {
+  background-color: transparent !important;
+}
+
+.expand-icon span {
+  height: 10px;
+  width: 10px;
+}
+
+.sidebar-panel .sub-menu {
+  margin-top: 5px;
 }
 
 .sidebar-panel .sub-menu .menu-icon {
   margin-right: 0 !important;
+}
+
+.sidebar-panel .sub-menu .menu-label a {
+  margin-left: 35px !important;
+}
+
+.view-files th {
+  position: sticky;
+}
+
+.sidebar-panel .eVPmrC {
+  padding-right: 0 !important;
+}
+
+.file-icon,
+.empty-text {
+  color: lightgray;
+}
+
+.file-icon {
+  font-size: 25px;
+}
+.empty-text {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.sidebar-panel .sub-menu-content {
+  background-color: rgba(249, 249, 249, 0.7);
+}
+
+.text-disabled {
+  color: #b3afaf;
+  font-weight: unset;
 }
