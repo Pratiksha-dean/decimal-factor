@@ -19,7 +19,13 @@ import { useState } from "react";
 import { getDashboardData, updateUpdateCustomerInfo } from "../../request";
 import { useEffect } from "react";
 import { getUserDetails } from "../login/loginpage";
-import { directorFieldNames, residentialStatusList } from "../Constants";
+import {
+  directorFieldNames,
+  formatNumberInput,
+  numberRegex,
+  removeComma,
+  residentialStatusList,
+} from "../Constants";
 import StickyBox from "react-sticky-box";
 import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
@@ -67,7 +73,7 @@ function BusinessInformation() {
   const PreviousArrayHelperRef = useRef();
 
   const validationSchema = Yup.object().shape({
-    [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
+    [fieldNames.CARDPAYMENTAMOUNT]: Yup.string().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
     [fieldNames.SUPPLIERDUEAMOUNT]: Yup.string().required(),
     [fieldNames.BUSINESSSECTOR]: Yup.string().required(),
@@ -294,33 +300,7 @@ function BusinessInformation() {
     return initialValues;
   };
 
-  // const initialValues = {
-  //   [fieldNames.BUSINESSSECTOR]: dasboardData
-  //     ? businessSectorList[
-  //         businessSectorList.findIndex(
-  //           (item) => dasboardData.lf_business_sector == item.value
-  //         )
-  //       ]
-  //     : "",
-  //   [fieldNames.BUSINESSSTARTDATE]: dasboardData
-  //     ? dasboardData["AppBusinessStartDate"]
-  //     : "",
 
-  //   [fieldNames.CARDPAYMENTAMOUNT]: dasboardData
-  //     ? dasboardData["lf_monthly_credit_card_volume"]
-  //     : "",
-  //   [fieldNames.SUPPLIERDUEAMOUNT]: dasboardData
-  //     ? dasboardData["AppCurrentValueOverdueInvoices"]
-  //     : "",
-  //   [fieldNames.BUSINESSLEGALNUMBER]: dasboardData
-  //     ? dasboardData["lmc_bi_business_number"]
-  //     : "",
-  //   [fieldNames.DIRECTORINFO]: patchDirectorData(dasboardData),
-  // };
-  // console.log(
-  //   "🚀 ~ file: business-information.js:306 ~ BusinessInformation ~ initialValues",
-  //   initialValues
-  // );
 
   const updateDirectorInfo = (payload, id, setAreTruthy, resetForm) => {
     updateUpdateCustomerInfo(payload, id)
@@ -383,7 +363,7 @@ function BusinessInformation() {
           });
         }
         return {
-          kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
+          kindofShareHolder: removeComma(item[directorFieldNames.KINDOFSHAREHOLDER]) || "",
           HiddenShareHolderId:
             item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
           natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
@@ -420,14 +400,6 @@ function BusinessInformation() {
 
   const [areTruthy, setAreTruthy] = useState(false);
 
-  function dateIsValid(date) {
-    console.log(
-      "🚀 ~ file: business-information.js:427 ~ dateIsValid ~ date",
-      date,
-      date instanceof Date && !isNaN(date)
-    );
-    return date instanceof Date && !isNaN(date);
-  }
 
   return (
     <div className="dashboard-panel">
@@ -460,6 +432,9 @@ function BusinessInformation() {
                       setIsTouched(true);
                       let isTrue;
                       let payload = { ...values };
+                      payload["cardPaymentAmount"] = removeComma(
+                        payload["cardPaymentAmount"]
+                      );
                       let prevAddress = [];
                       if (payload["directorInfo"]) {
                         prevAddress = generateDirectorListPayload(
@@ -659,8 +634,33 @@ function BusinessInformation() {
                                           !errors[fieldNames.CARDPAYMENTAMOUNT],
                                       }
                                     )}
-                                    onChange={handleChange}
-                                    value={values[fieldNames.CARDPAYMENTAMOUNT]}
+                                    onChange={(e) => {
+                                      if (e.target.value) {
+                                        if (
+                                          numberRegex.test(
+                                            removeComma(e.target.value)
+                                          )
+                                        ) {
+                                          setFieldValue(
+                                            fieldNames.CARDPAYMENTAMOUNT,
+                                            e.target.value
+                                          );
+                                        } else {
+                                          setFieldValue(
+                                            fieldNames.CARDPAYMENTAMOUNT,
+                                            values[fieldNames.CARDPAYMENTAMOUNT]
+                                          );
+                                        }
+                                      } else {
+                                        setFieldValue(
+                                          fieldNames.CARDPAYMENTAMOUNT,
+                                          ""
+                                        );
+                                      }
+                                    }}
+                                    value={formatNumberInput(
+                                      values[fieldNames.CARDPAYMENTAMOUNT]
+                                    )}
                                   />
                                 </div>
                               </div>
@@ -910,15 +910,44 @@ function BusinessInformation() {
                                                         <input
                                                           type="text"
                                                           name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`}
-                                                          onChange={
-                                                            handleChange
-                                                          }
-                                                          value={
+                                                          onChange={(e) => {
+                                                            if (
+                                                              e.target.value
+                                                            ) {
+                                                              if (
+                                                                numberRegex.test(
+                                                                  removeComma(
+                                                                    e.target
+                                                                      .value
+                                                                  )
+                                                                )
+                                                              ) {
+                                                                setFieldValue(
+                                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`,
+                                                                  e.target.value
+                                                                );
+                                                              } else {
+                                                                setFieldValue(
+                                                                  `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`,
+                                                                  item[
+                                                                    directorFieldNames
+                                                                      .KINDOFSHAREHOLDER
+                                                                  ]
+                                                                );
+                                                              }
+                                                            } else {
+                                                              setFieldValue(
+                                                                `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`,
+                                                                ""
+                                                              );
+                                                            }
+                                                          }}
+                                                          value={formatNumberInput(
                                                             item[
                                                               directorFieldNames
                                                                 .KINDOFSHAREHOLDER
                                                             ]
-                                                          }
+                                                          )}
                                                           className="form-control"
                                                           placeholder="% of Total Share Count"
                                                         />
@@ -2011,15 +2040,7 @@ function BusinessInformation() {
                                                                                 // ) !==
                                                                                 //   0
                                                                               ) {
-                                                                                console.log(
-                                                                                  "diff",
-                                                                                  diff_years(
-                                                                                    new Date(),
-                                                                                    new Date(
-                                                                                      e.target.value
-                                                                                    )
-                                                                                  )
-                                                                                );
+
                                                                                 if (
                                                                                   values
                                                                                     .directorInfo[
@@ -2065,17 +2086,13 @@ function BusinessInformation() {
                                                                                     ] =
                                                                                       index +
                                                                                       1;
-                                                                                    console.log(
-                                                                                      "insert"
-                                                                                    );
+
                                                                                     arrayHelpers.insert(
                                                                                       i +
                                                                                         1,
                                                                                       initialPreviousAddressObj
                                                                                     );
-                                                                                    console.log(
-                                                                                      "sdgs"
-                                                                                    );
+
                                                                                     setIsAddedPrevAddress(
                                                                                       true
                                                                                     );
@@ -2104,31 +2121,19 @@ function BusinessInformation() {
                                                                                     el,
                                                                                     elIndex
                                                                                   ) => {
-                                                                                    console.log(
-                                                                                      " elIndex",
-                                                                                      i !=
-                                                                                        elIndex &&
-                                                                                        elIndex >
-                                                                                          i
-                                                                                    );
+
                                                                                     if (
                                                                                       i !=
                                                                                         elIndex &&
                                                                                       elIndex >
                                                                                         i
                                                                                     ) {
-                                                                                      console.log(
-                                                                                        "🚀 ~ file: business-information.js:2044 ~ BusinessInformation ~ PreviousArrayHelperRef",
-                                                                                        PreviousArrayHelperRef
-                                                                                      );
+
                                                                                       arrayHelpers.pop(
                                                                                         elIndex
                                                                                       );
 
-                                                                                      console.log(
-                                                                                        "values",
-                                                                                        values
-                                                                                      );
+                                                                                     
                                                                                     }
 
                                                                                     // arrayHelpers.remove(

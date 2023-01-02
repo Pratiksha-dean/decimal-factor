@@ -203,7 +203,6 @@ export async function getAllDocuments(id) {
 }
 
 export async function uploadFiles(id, payload) {
-  console.log("🚀 ~ file: request.js:205 ~ uploadFiles ~ payload", payload);
   const { data } = await axios.post(`${UPLOAD_FILES}${id}`, payload, {
     headers: {
       "Content-Type": "multipart/form-data",

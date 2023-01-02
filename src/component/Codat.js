@@ -118,7 +118,7 @@ export default function Codat({ leadId }) {
           <div className="row">
             <div className="col-md-3">
               <label for="basic-url" className="form-label mb-0">
-                Accouting
+                Accounting
               </label>
 
               <div className="d-flex">

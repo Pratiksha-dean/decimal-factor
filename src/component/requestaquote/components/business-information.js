@@ -5,6 +5,7 @@ import { fieldNames } from "./application-information";
 import clsx from "clsx";
 import * as Yup from "yup";
 import { setStepNo } from "./request-leftpanel";
+import { formatNumberInput, numberRegex, removeComma } from "../../Constants";
 
 export const businessSectorList = [
   { value: "49001", label: "Hospitality - Cafe" },
@@ -56,7 +57,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
   const storedData = JSON.parse(localStorage.getItem("businessInfo"));
   const businessInfo = getCompanyInfo();
   const validationSchema = Yup.object().shape({
-    [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
+    [fieldNames.CARDPAYMENTAMOUNT]: Yup.string().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
     [fieldNames.ISPAYMENTPENDING]: Yup.boolean().required(),
     [fieldNames.SUPPLIERDUEAMOUNT]: Yup.string().when(
@@ -246,7 +247,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     </span>
                   </div>
                   <input
-                    type="number"
+                    type="text"
                     min={0}
                     placeholder="Monthly Card Payments Amount"
                     name={fieldNames.CARDPAYMENTAMOUNT}
@@ -263,11 +264,29 @@ function BusinessInformation({ setStep, showSelectedState }) {
                           !errors[fieldNames.CARDPAYMENTAMOUNT],
                       }
                     )}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        if (numberRegex.test(removeComma(e.target.value))) {
+                          setFieldValue(
+                            fieldNames.CARDPAYMENTAMOUNT,
+                            e.target.value
+                          );
+                        } else {
+                          setFieldValue(
+                            fieldNames.CARDPAYMENTAMOUNT,
+                            values[fieldNames.CARDPAYMENTAMOUNT]
+                          );
+                        }
+                      } else {
+                        setFieldValue(fieldNames.CARDPAYMENTAMOUNT, "");
+                      }
+                    }}
                     onBlur={() => {
                       setBusinessInfo(values);
                     }}
-                    value={values[fieldNames.CARDPAYMENTAMOUNT]}
+                    value={formatNumberInput(
+                      values[fieldNames.CARDPAYMENTAMOUNT]
+                    )}
                   />
                 </div>
               </div>
@@ -319,7 +338,7 @@ function BusinessInformation({ setStep, showSelectedState }) {
                     </span>
                   </div>
                   <input
-                    type="number"
+                    type="text"
                     min={0}
                     placeholder="Approx Amount due to you from supplier"
                     name={fieldNames.SUPPLIERDUEAMOUNT}
@@ -336,11 +355,29 @@ function BusinessInformation({ setStep, showSelectedState }) {
                           !errors[fieldNames.SUPPLIERDUEAMOUNT],
                       }
                     )}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        if (numberRegex.test(removeComma(e.target.value))) {
+                          setFieldValue(
+                            fieldNames.SUPPLIERDUEAMOUNT,
+                            e.target.value
+                          );
+                        } else {
+                          setFieldValue(
+                            fieldNames.SUPPLIERDUEAMOUNT,
+                            values[fieldNames.SUPPLIERDUEAMOUNT]
+                          );
+                        }
+                      } else {
+                        setFieldValue(fieldNames.SUPPLIERDUEAMOUNT, "");
+                      }
+                    }}
                     onBlur={() => {
                       setBusinessInfo(values);
                     }}
-                    value={values[fieldNames.SUPPLIERDUEAMOUNT]}
+                    value={formatNumberInput(
+                      values[fieldNames.SUPPLIERDUEAMOUNT]
+                    )}
                   />
                 </div>
               </div>

@@ -28,7 +28,7 @@ export default function BusinessCreditScore() {
   const [error, setError] = useState(false);
 
   const disclaimerMsg = {
-    text: "Disclaimer : In-order to view your business credit score, we will need to verify your identity. Please complete the below:",
+    text: "Disclaimer : In-order to view your business credit score, we will need to verify your identity. You can upload your documents below or through “Upload Files”.",
     type: "disclaimer",
   };
 

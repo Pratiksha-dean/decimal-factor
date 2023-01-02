@@ -22,6 +22,7 @@ import { ToastMessage } from "../ToastMessage";
 import Loaderspinner from "../loader";
 import { useDispatch } from "react-redux/es";
 import { TRIGGER_LEAD_DETAILS } from "../../redux/actions/actionTypes";
+import { formatNumberInput, numberRegex, removeComma } from "../Constants";
 
 function ApplicationInformation() {
   const [dasboardData, setDashboardData] = useState();
@@ -100,6 +101,12 @@ function ApplicationInformation() {
                       payload["businessEntity"] =
                         payload["businessEntity"].value;
                       payload["loanPurpose"] = payload["loanPurpose"].value;
+                      payload[fieldNames.AMOUNT] = removeComma(
+                        payload[fieldNames.AMOUNT]
+                      );
+                      payload[fieldNames.REQUIREDFUND] = removeComma(
+                        payload[fieldNames.REQUIREDFUND]
+                      );
 
                       updateUpdateCustomerInfo(payload, userDetails["lead_id"])
                         .then((resp) => {
@@ -149,9 +156,8 @@ function ApplicationInformation() {
                                     </span>
                                   </div>
                                   <input
-                                    type="number"
+                                    type="text"
                                     placeholder="90,000"
-                                    min={0}
                                     className={clsx(
                                       "form-control ",
                                       {
@@ -166,8 +172,31 @@ function ApplicationInformation() {
                                       }
                                     )}
                                     name={fieldNames.AMOUNT}
-                                    onChange={handleChange}
-                                    value={values[fieldNames.AMOUNT]}
+                                    onChange={(e) => {
+                              
+                                      if (e.target.value) {
+                                        if (
+                                          numberRegex.test(
+                                            removeComma(e.target.value)
+                                          )
+                                        ) {
+                                          setFieldValue(
+                                            fieldNames.AMOUNT,
+                                            e.target.value
+                                          );
+                                        } else {
+                                          setFieldValue(
+                                            fieldNames.AMOUNT,
+                                            values[fieldNames.AMOUNT]
+                                          );
+                                        }
+                                      } else {
+                                        setFieldValue(fieldNames.AMOUNT, "");
+                                      }
+                                    }}
+                                    value={formatNumberInput(
+                                      values[fieldNames.AMOUNT]
+                                    )}
                                   />
                                 </div>
                               </div>
@@ -210,12 +239,36 @@ function ApplicationInformation() {
                               <div className="form-group">
                                 <label>Term of Funds Required (Months)</label>
                                 <input
-                                  type="number"
-                                  min={0}
+                                  type="text"
                                   placeholder="12"
                                   name={fieldNames.REQUIREDFUND}
-                                  onChange={handleChange}
-                                  value={values[fieldNames.REQUIREDFUND]}
+                                  onChange={(e) => {
+                                    if (e.target.value) {
+                                      if (
+                                        numberRegex.test(
+                                          removeComma(e.target.value)
+                                        )
+                                      ) {
+                                        setFieldValue(
+                                          fieldNames.REQUIREDFUND,
+                                          e.target.value
+                                        );
+                                      } else {
+                                        setFieldValue(
+                                          fieldNames.REQUIREDFUND,
+                                          values[fieldNames.REQUIREDFUND]
+                                        );
+                                      }
+                                    } else {
+                                      setFieldValue(
+                                        fieldNames.REQUIREDFUND,
+                                        ""
+                                      );
+                                    }
+                                  }}
+                                  value={formatNumberInput(
+                                    values[fieldNames.REQUIREDFUND]
+                                  )}
                                   className={clsx(
                                     "form-control ",
                                     {

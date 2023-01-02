@@ -14,6 +14,7 @@ import { useNavigate } from "react-router";
 import { ToastMessage } from "../../ToastMessage";
 import { generateDirectorListPayload } from "../../requestaquote/components/personal-details";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { removeComma } from "../../Constants";
 
 export const setProvideContentchecks = (value) => {
   localStorage.setItem("provideConcentData", JSON.stringify(value));
@@ -56,6 +57,10 @@ function ProvideConsent({ setActiveStep, activeStep }) {
       payload["businessEntity"] = payload["businessEntity"].value;
       payload["businessSector"] = payload["businessSector"].value;
       payload["loanPurpose"] = payload["loanPurpose"].value;
+      payload["supplierDueAmount"] = removeComma(payload["supplierDueAmount"]);
+      payload["cardPaymentAmount"] = removeComma(payload["cardPaymentAmount"]);
+      payload["requiredFund"] = removeComma(payload["requiredFund"]);
+      payload["amount"] = removeComma(payload["amount"]);
       let directorData = getDirectorData();
 
       if (directorData !== []) {
@@ -94,6 +99,7 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                 <input
                   type="checkbox"
                   name="softCreditCheck"
+                  onChange={formik.handleChange}
                   {...formik.getFieldProps("softCreditCheck")}
                   className={clsx(
                     "upload-checkbox",
@@ -164,6 +170,7 @@ function ProvideConsent({ setActiveStep, activeStep }) {
                         !formik.errors.finalInformation,
                     }
                   )}
+                  onChange={formik.handleChange}
                   checked={formik.values.finalInformation}
                   onBlur={() => {
                     setProvideContentchecks(formik.values);

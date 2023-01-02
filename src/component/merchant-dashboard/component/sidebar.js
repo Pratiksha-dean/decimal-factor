@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../styles/master.css";
 import {
   Sidebar,
@@ -8,7 +8,6 @@ import {
   SubMenu,
 } from "react-pro-sidebar";
 import { NavLink, useLocation } from "react-router-dom";
-import { Collapse } from "react-bootstrap";
 
 export const getSideNavState = () => {
   let state = localStorage.getItem("open");
@@ -24,11 +23,39 @@ export const setSideNavState = (state) => {
 function SiderBarMenu() {
   const { collapseSidebar, collapsed } = useProSidebar();
   const [open, setOpen] = useState(localStorage.getItem("open"));
+
+  const [collapse, setCollapse] = useState(false);
   const location = useLocation();
+
+  const [windowDimenion, detectHW] = useState({
+    winWidth: window.innerWidth,
+    winHeight: window.innerHeight,
+  });
+
+  const detectSize = () => {
+    if (window.innerWidth <= 992) {
+      setCollapse(true);
+    } else {
+      setCollapse(false);
+    }
+    detectHW({
+      winWidth: window.innerWidth,
+      winHeight: window.innerHeight,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", detectSize);
+
+    return () => {
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimenion]);
+  // defaultCollapsed={true}
 
   return (
     <div className="sidebar-panel">
-      <Sidebar>
+      <Sidebar breakPoint="sm">
         <Menu>
           <MenuItem>
             {" "}
