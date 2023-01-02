@@ -3,11 +3,12 @@ import Header from "../../header/header";
 import SiderBarMenu from "../component/sidebar";
 import StickyBox from "react-sticky-box";
 import { useState } from "react";
-import { API_URL, getAllDocuments } from "../../../request";
+import { API_URL, deleteDocuments, getAllDocuments } from "../../../request";
 import { getUserDetails } from "../../login/loginpage";
 import { useEffect } from "react";
 import moment from "moment";
 import Loaderspinner from "../../loader-spinner-inner";
+import { ToastMessage } from "../../ToastMessage";
 
 export default function ViewFiles() {
   const [fileList, setFileList] = useState([]);
@@ -30,24 +31,8 @@ export default function ViewFiles() {
             resp["record_count"] !== 0
           ) {
             setLoading(false);
-
-            let countAddressProofApproved = 0;
-            let countIdentityProofApproved = 0;
-            //   setHeadingText(submitMsg);
             let list = [];
             resp.records.forEach((item) => {
-              if (
-                item["la_status"] == 1 &&
-                item["la_doc_type"] == "Proof of Identity"
-              ) {
-                countIdentityProofApproved = countIdentityProofApproved + 1;
-              } else if (
-                item["la_status"] == 1 &&
-                item["la_doc_type"] == "Proof of Address"
-              ) {
-                countAddressProofApproved = countAddressProofApproved + 1;
-              }
-
               list.push({
                 file: { name: item["la_file_description"] },
                 type: item["la_doc_type"],
@@ -55,10 +40,6 @@ export default function ViewFiles() {
                 date: moment(item["la_update_date"]).format("DD-MM-YYYY"),
                 path: item["la_filename"],
               });
-              console.log(
-                "🚀 ~ file: view-files.js:49 ~ resp.records.forEach ~ list",
-                list
-              );
             });
             setFileList(list);
           } else {
@@ -73,8 +54,18 @@ export default function ViewFiles() {
     }
   };
 
-
-  
+  const deleteFile = (item, i) => {
+    if (window.confirm("Are you sure remove the file!")) {
+      let list = [...fileList];
+      deleteDocuments(item["id"]).then((resp) => {
+        if (resp.status == "success") {
+          ToastMessage(resp.records, "success");
+          list.splice(i, 1);
+          setFileList(list);
+        }
+      });
+    }
+  };
 
   return (
     <div className="dashboard-panel">
@@ -98,42 +89,60 @@ export default function ViewFiles() {
                   </div>
                 ) : fileList.length > 0 ? (
                   <div className="uploaded-file mt-3">
-                    <p>
+                    {/* <p>
                       <strong>File Uploaded:</strong>
-                    </p>
-                    <div class="table-responsive">
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th scope="col">File Name</th>
-                            <th scope="col">Document Category</th>
-                            <th scope="col">Upload Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {fileList.map((item, i) => {
-                            return (
-                              <tr key={i}>
-                                <td className="file-name">
-                                  <a
-                                    href={`${API_URL}api/${item.path}`}
-                                    target="_blank"
-                                  >
-                                    {item.file ? item.file.name : ""}
-                                  </a>
-                                </td>
-                                <td>{item.type}</td>
-                                <td>{item.date}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                    </p> */}
+                    <div className="table-responsive view-files">
+                      <div style={{ maxHeight: "500px", overflowY: "auto" }}>
+                        <table className="table table-bordered collapse-border">
+                          <thead>
+                            <tr>
+                              <th scope="col">File Name</th>
+                              <th scope="col">Document Category</th>
+                              <th scope="col">Upload Date</th>
+                              <th scope="col" className="text-center">
+                                Delete
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {fileList.map((item, i) => {
+                              return (
+                                <tr key={i}>
+                                  <td className="file-name">
+                                    <a
+                                      href={`${API_URL}api/${item.path}`}
+                                      target="_blank"
+                                    >
+                                      {item.file ? item.file.name : ""}
+                                    </a>
+                                  </td>
+                                  <td>{item.type}</td>
+                                  <td>{item.date}</td>
+                                  <td className="text-center">
+                                    <i
+                                      className="fa fa-trash cursor-pointer"
+                                      style={{ float: "unset" }}
+                                      onClick={() => {
+                                        deleteFile(item, i);
+                                      }}
+                                    ></i>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="center">
-                    <h3>No Files</h3>
+                  <div className="center text-center">
+                    <i
+                      className="fa fa-file-text-o file-icon"
+                      aria-hidden="true"
+                    ></i>
+                    <div className="empty-text">No Files</div>
                   </div>
                 )}
               </div>

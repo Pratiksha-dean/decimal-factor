@@ -6,9 +6,13 @@ import { useState } from "react";
 import { useRef } from "react";
 import { ToastMessage } from "../../ToastMessage";
 import clsx from "clsx";
-import { uploadFiles } from "../../../request";
+import {
+  deleteDocuments,
+  getAllDocuments,
+  uploadFiles,
+} from "../../../request";
 import { getUserDetails } from "../../login/loginpage";
-import Loaderspinner from "../../loader-spinner-inner";
+import moment from "moment";
 
 export default function UploadFiles() {
   const [typeOfDocument, setTypeOfDocument] = useState();
@@ -17,16 +21,47 @@ export default function UploadFiles() {
   const userDetails = getUserDetails();
   const [loading, setLoading] = useState(false);
   const [customDocumentType, setCustomDocumentType] = useState("");
-  console.log(
-    "🚀 ~ file: upload-files.js:13 ~ UploadFiles ~ fileList",
-    fileList
-  );
 
-  console.log(
-    "🚀 ~ file: upload-files.js:9 ~ UploadFiles ~ typeOfDocument",
-    typeOfDocument,
-    customDocumentType
-  );
+  const getFiles = (list1) => {
+    if (userDetails && userDetails["lead_id"]) {
+      setLoading(true);
+      getAllDocuments(userDetails["lead_id"])
+        .then((resp) => {
+          if (
+            resp &&
+            resp.records &&
+            resp.records.length > 0 &&
+            resp["record_count"] !== 0
+          ) {
+            setLoading(false);
+            let list = [];
+            resp.records.forEach((item) => {
+              list.push({
+                file: { name: item["la_file_description"] },
+                type: item["la_doc_type"],
+                id: item["la_id"],
+                date: moment(item["la_update_date"]).format("DD-MM-YYYY"),
+                path: item["la_filename"],
+              });
+            });
+            let newList = [];
+            let length = list1.length - 1;
+            list.forEach((ele, i) => {
+              if (i <= length) {
+                newList.push(ele);
+              }
+            });
+
+            setFileList(newList);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+        });
+    }
+  };
 
   function handleChange(event) {
     if (event.target.files[0]) {
@@ -44,26 +79,46 @@ export default function UploadFiles() {
         };
         uploadFiles(userDetails["lead_id"], payload)
           .then((resp) => {
-            setLoading(false);
+            if (resp.isSuccess == 1) {
+              ToastMessage("Attachment uploaded successfully!", "success");
+              setCustomDocumentType("");
+              setLoading(false);
+              list.push({
+                file: event.target.files[0],
+                type:
+                  typeOfDocument !== "Others"
+                    ? typeOfDocument
+                    : typeOfDocument + "-" + customDocumentType,
+              });
+              setFileList(list);
+              getFiles(list);
+            }
           })
           .catch((err) => {
             setLoading(false);
+            ToastMessage("Something went wrong!", "error");
           });
-        list.push({
-          file: event.target.files[0],
-          type:
-            typeOfDocument !== "Others"
-              ? typeOfDocument
-              : typeOfDocument + "-" + customDocumentType,
-        });
-        setFileList(list);
       } else {
         ToastMessage("File size needs to be less than 5 MB", "error");
       }
+      event.target.value = null;
     }
   }
+
+  const deleteFile = (item, i) => {
+    if (window.confirm("Are you sure remove the file!")) {
+      let list = [...fileList];
+      deleteDocuments(item["id"]).then((resp) => {
+        if (resp.status == "success") {
+          ToastMessage(resp.records, "success");
+          list.splice(i, 1);
+          setFileList(list);
+        }
+      });
+    }
+  };
   return (
-    <div className="dashboard-panel">
+    <div className="dashboard-panel upload-files">
       <Header />
       <div className="dashboard-body bg-change-color">
         <div className="container-fluid  merchant-body">
@@ -155,7 +210,7 @@ export default function UploadFiles() {
                 </div>
 
                 <div className="row">
-                  <div className="col-xxl-5 col-xl-5 col-lg-5 col-md-6 col-sm-12 col-12">
+                  <div className="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
                     {typeOfDocument && (
                       <div className="mt-3">
                         <p>
@@ -186,7 +241,13 @@ export default function UploadFiles() {
                             id="Identity-Proof"
                             name="file"
                             className="upload-doc"
-                            accept="image/png,image/jpeg,.pdf"
+                            accept={
+                              typeOfDocument !== "Bank Statements" &&
+                              typeOfDocument !== "Financial Statements" &&
+                              typeOfDocument !== "Others"
+                                ? "image/png,image/jpeg,.pdf"
+                                : "image/png,image/jpeg,.pdf,.csv,.xlsx,.xml"
+                            }
                             ref={hiddenFileInput}
                             hidden
                             onChange={(e) => {
@@ -210,7 +271,14 @@ export default function UploadFiles() {
                           </button>
 
                           <p>Max file size: 5MB each</p>
-                          <p>Supported file types: PDF, JPG, PNG Bitmap etc.</p>
+                          <p>
+                            Supported file types: PDF, JPG, PNG
+                            {typeOfDocument === "Bank Statements" ||
+                            typeOfDocument === "Financial Statements" ||
+                            typeOfDocument === "Others"
+                              ? ",CSV,XLSX,XML"
+                              : ""}
+                          </p>
                         </div>
                       </div>
                     )}
@@ -218,16 +286,18 @@ export default function UploadFiles() {
                   <div className="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12">
                     {fileList.length > 0 && (
                       <div className="uploaded-file mt-3">
-                        <p>
+                        {/* <p>
                           <strong>File Uploaded:</strong>
-                        </p>
-                        <div class="table-responsive">
-                          <table class="table table-bordered">
+                        </p> */}
+                        <div className="table-responsive">
+                          <table className="table table-bordered">
                             <thead>
                               <tr>
                                 <th scope="col">File Name</th>
                                 <th scope="col">Document Category</th>
-                                <th scope="col">Delete</th>
+                                <th scope="col" className="text-center">
+                                  Delete
+                                </th>
                               </tr>
                             </thead>
                             <tbody>
@@ -243,7 +313,7 @@ export default function UploadFiles() {
                                       <i
                                         className="fa fa-trash cursor-pointer"
                                         style={{ float: "unset" }}
-                                        //   onClick={() => deleteFile(item, i)}
+                                        onClick={() => deleteFile(item, i)}
                                       ></i>
                                     </td>
                                   </tr>

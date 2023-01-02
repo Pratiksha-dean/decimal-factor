@@ -66,75 +66,107 @@ export default function AssessMarketing(props) {
     }
 
       return (
-          <div className="chart-panel">
-              <div className="col-md-12">
-              <h3>Marketing</h3>
-              <div className="row">
+        <div className="chart-panel">
+          <div className="col-md-12">
+            <h3>Marketing</h3>
+            <div className="row">
               <div className="col-md-3">
                 <div className=" col-for-logo">
-                <img src={require("../../images/gbp.png")} alt="" className="logo-dashboard" />
+                  <img
+                    src={require("../../images/gbp.png")}
+                    alt=""
+                    className="logo-dashboard"
+                  />
 
-                <h3><strong>GBP</strong>
-                <span>Great British Pound</span></h3>
-                </div></div>
-                {
-                    marketingLoading && (
-                        <div className="position-relative">
-                            <Loaderspinner size="45px" />
-                        </div>
-                    )
-                }
-                <div className="col-md-3 ">
+                  <h3>
+                    <strong>GBP</strong>
+                    <span>Great British Pound</span>
+                  </h3>
+                </div>
+              </div>
+              {marketingLoading && (
+                <div className="position-relative">
+                  <Loaderspinner size="45px" />
+                </div>
+              )}
+              <div className="col-md-3 ">
                 <div className="box-shape">
-                <label>Period Start</label>
-                <input type="month" name="" className="period-start" value={periodStart} onChange={(e)=>{setPeriodStart(e.target.value); getApiData(e.target.value, periodLength, periodCompare) }} />
-                </div></div>
-                <div className="col-md-3 ">
-                    <div className="box-shape">
-                <label>Period Length</label>
-                <select value={periodLength} onChange={(e)=>{setPeriodLength(e.target.value); getApiData(periodStart, e.target.value, periodCompare) }}>
+                  <label>Period Start</label>
+                  <input
+                    type="month"
+                    name=""
+                    className="period-start"
+                    value={periodStart}
+                    onChange={(e) => {
+                      setPeriodStart(e.target.value);
+                      getApiData(e.target.value, periodLength, periodCompare);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="col-md-3 ">
+                <div className="box-shape">
+                  <label>Period Length</label>
+                  <select
+                    value={periodLength}
+                    onChange={(e) => {
+                      setPeriodLength(e.target.value);
+                      getApiData(periodStart, e.target.value, periodCompare);
+                    }}
+                  >
                     <option value="1">1 Month</option>
                     <option value="2">2 Months</option>
                     <option value="3">3 Months</option>
                     <option value="4">4 Months</option>
                     <option value="5">5 Months</option>
-                </select>
-                </div></div>
-                <div className="col-md-3 ">
-                    <div class="box-shape">
-                <label>Period to Compare</label>
-                <input type="number" name="" className="period-compare" value={periodCompare} onChange={(e)=>{setPeriodCompare(e.target.value); getApiData(periodStart, periodLength, e.target.value) }}/>
-                </div></div>
-
+                  </select>
                 </div>
-                {
-                  showMarketing && (
-                    <>
-                        <div className="chart-div">
-                {marketingData!=='' && <Chart categories={dataCategoreis} series={dataSeries} />}
+              </div>
+              <div className="col-md-3 ">
+                <div className="box-shape">
+                  <label>Period to Compare</label>
+                  <input
+                    type="number"
+                    name=""
+                    className="period-compare"
+                    value={periodCompare}
+                    onChange={(e) => {
+                      setPeriodCompare(e.target.value);
+                      getApiData(periodStart, periodLength, e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            {showMarketing && (
+              <>
+                <div className="chart-div">
+                  {marketingData !== "" && (
+                    <Chart categories={dataCategoreis} series={dataSeries} />
+                  )}
 
-                <div className="table-data-div">
-                    <div className="col s12"  id="">
-                        <div className="">
+                  <div className="table-data-div">
+                    <div className="col s12" id="">
+                      <div className="">
                         <h3 className="groupbydebtor">Marketing</h3>
                         <div className=" scroll-bar scroll-bar-2">
-
-                            <table id="assess-profitloss-table" class="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
-                               {marketingData}
-                            </table>
-                            </div>
+                          <table
+                            id="assess-profitloss-table"
+                            className="table table-striped table-bordered"
+                            cellspacing="0"
+                            width="100%"
+                            border="0"
+                          >
+                            {marketingData}
+                          </table>
                         </div>
+                      </div>
                     </div>
-                    </div>
-              </div>
-
-                    </>
-
-                  )
-                }
-
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-        </div>
-
-    );
+      );
 }

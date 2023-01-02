@@ -63,7 +63,9 @@ export default function Datatables(props) {
   };
 
   useEffect(() => {
-    fetchApiData(1);
+    fetchApiData(1).catch((err) => {
+      setLoading(false);
+    });
   }, []);
 
   const subHeaderComponentMemo = useMemo(() => {
@@ -79,7 +81,15 @@ export default function Datatables(props) {
             onChange={(e) => {
               setFilterText(e.target.value);
               setCurrentPage(1);
-              fetchApiData(1, perPage, sortByColumn, sortByDir, e.target.value);
+              fetchApiData(
+                1,
+                perPage,
+                sortByColumn,
+                sortByDir,
+                e.target.value
+              ).catch((err) => {
+                setLoading(false);
+              });;
             }}
             value={filterText}
           />
@@ -92,13 +102,17 @@ export default function Datatables(props) {
 
   const handlePageChange = (page) => {
     if (isInitialize !== false) {
-      fetchApiData(page);
+      fetchApiData(page).catch((err) => {
+        setLoading(false);
+      });;
       setCurrentPage(page);
     }
   };
   const handlePerRowsChange = (newPerPage, page) => {
     if (isInitialize !== false) {
-      fetchApiData(page, newPerPage);
+      fetchApiData(page, newPerPage).catch((err) => {
+        setLoading(false);
+      });;
       setPerPage(newPerPage);
     }
   };
@@ -108,7 +122,9 @@ export default function Datatables(props) {
       let sortIndex = column.id - 1;
       setSortByDir(sortDirection);
       setSortByColumn(sortIndex);
-      fetchApiData(currentPage, perPage, sortIndex, sortByDir);
+      fetchApiData(currentPage, perPage, sortIndex, sortByDir).catch((err) => {
+        setLoading(false);
+      });;
     }
   };
 

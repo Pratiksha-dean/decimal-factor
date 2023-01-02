@@ -109,10 +109,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   };
 
   const getLinkToAccouting = (isClicked) => {
-    console.log(
-      "🚀 ~ file: link-banking&accounting.js:112 ~ getLinkToAccouting ~ isClicked",
-      isClicked
-    );
     let payload = {
       lm_id: userDetails["lead_id"],
       name: data["lf_business_name"],
@@ -124,10 +120,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
     getCompanyID(payload.lm_id)
       .then((resp) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js:127 ~ .then ~ resp",
-          resp
-        );
         if (resp["data"] && resp["data"]["codat_client_id"]) {
           setLoadingAccouting(false);
           setAccoutingUrl(`${CODAT_BASE_URL}${resp.data.codat_client_id}`);
@@ -177,10 +169,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         }
       })
       .catch((err) => {
-        console.log(
-          "🚀 ~ file: link-banking&accounting.js:170 ~ checkAccountingStatusClick ~ err",
-          err
-        );
         setAccoutingStatus(false);
         if (!accoutingUrl) {
           getLinkToAccouting();
@@ -231,23 +219,25 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   };
 
   const deleteFile = (item, i) => {
-    let list = [...fileList];
+    if (window.confirm("Are you sure remove the file!")) {
+      let list = [...fileList];
 
-    if (item["id"]) {
-      deleteDocuments(item["id"]).then((resp) => {
-        if (resp.status == "success") {
-          ToastMessage(resp.records, "success");
-          // getFiles();
-          list.splice(i, 1);
-          setFileList(list);
-        } else if (resp.status == "error") {
-          ToastMessage("Something went wrong!", "error");
-        }
-      });
-    } else {
-      list.splice(i, 1);
-      setFileList(list);
-      ToastMessage("Lead Attachments Deleted Successfully.", "success");
+      if (item["id"]) {
+        deleteDocuments(item["id"]).then((resp) => {
+          if (resp.status == "success") {
+            ToastMessage(resp.records, "success");
+            // getFiles();
+            list.splice(i, 1);
+            setFileList(list);
+          } else if (resp.status == "error") {
+            ToastMessage("Something went wrong!", "error");
+          }
+        });
+      } else {
+        list.splice(i, 1);
+        setFileList(list);
+        ToastMessage("Lead Attachments Deleted Successfully.", "success");
+      }
     }
   };
 
@@ -261,9 +251,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
 
       checkAccountingStatusClick();
 
-      if (
-        data["obv_account_score_status"] == "Start"
-      ) {
+      if (data["obv_account_score_status"] == "Start") {
         setBankingUrl(
           `https://connect.consents.online/decimalfactor?externalref=${data["obv_account_score_customer_ref_id"]}`
         );
@@ -285,10 +273,6 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
   }, [data]);
 
   const onSubmit = () => {
-    console.log(
-      "🚀 ~ file: link-banking&accounting.js:281 ~ onSubmit ~ uploadBankStatementToggle",
-      uploadBankStatementToggle
-    );
     if (uploadBankStatementToggle) {
       let identityProofDocs;
       identityProofDocs = fileList.map((item, i) => {
@@ -335,7 +319,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
         <h3>Link Banking & Accounting</h3>
         <div className="row">
           <div
-            className="col-md-7"
+            className="col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12"
             style={{
               pointerEvents: uploadBankStatementToggle ? "none" : "",
               opacity: uploadBankStatementToggle ? 0.3 : "",
@@ -344,7 +328,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
             {loadingBanking && <h6>Loading Banking Data...</h6>}
             <div className="Accounting-left-panel">
               {!bankingUrl && !loadingBanking && (
-                <>
+                <div>
                   <button
                     className="btn btn-primary banking-btn"
                     type="button"
@@ -385,7 +369,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                       )}
                     </OverlayTrigger>
                   </div>
-                </>
+                </div>
               )}
 
               {bankingUrl && !loadingBanking && (
@@ -406,7 +390,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                         type="button"
                         onClick={() => copyLinkToClipboard(bankingUrl)}
                       >
-                        <i class="fa fa-clone" aria-hidden="true"></i>
+                        <i className="fa fa-clone" aria-hidden="true"></i>
                       </button>
                     </div>
                   </div>
@@ -436,7 +420,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
               {loadingAccouting && <h6>Loading Accouting Data.....</h6>}
 
               {!accoutingUrl && !loadingAccouting && (
-                <>
+                <div>
                   <button
                     className="btn btn-primary accounting-btn"
                     onClick={() => {
@@ -480,7 +464,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                       )}
                     </OverlayTrigger>
                   </div>
-                </>
+                </div>
               )}
 
               {accoutingUrl && !loadingAccouting && (
@@ -505,7 +489,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                         type="button"
                         onClick={() => copyLinkToClipboard(accoutingUrl)}
                       >
-                        <i class="fa fa-clone" aria-hidden="true"></i>
+                        <i className="fa fa-clone" aria-hidden="true"></i>
                       </button>
                     </div>
                   </div>
@@ -533,9 +517,9 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
               )}
             </div>
           </div>
-          <div className="col-md-5">
+          <div className="col-xxl-5 col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12">
             <div className="upload-doc-panel">
-              <div className="form-group">
+              <div className="form-group d-flex">
                 <input
                   type="checkbox"
                   onClick={(e) => {
@@ -599,7 +583,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                       ref={hiddenFileInput}
                       onChange={handleChange}
                       className="upload-doc"
-                      accept="image/png,image/jpeg,.pdf"
+                      accept="image/png,image/jpeg,.pdf,.csv,.xlsx,.xml"
                       hidden
                     />
                     <button
@@ -609,7 +593,7 @@ function LinkBankingAccounting({ data, activeStep, setActiveStep, request }) {
                       Upload
                     </button>
                     <p>Max file size: 5MB</p>
-                    <p>Supported file types: PDF, PNG & JPEG</p>
+                    <p>Supported file types: PDF, PNG, JPEG, CSV, XLSX, XML </p>
                   </div>
                 </div>
               )}

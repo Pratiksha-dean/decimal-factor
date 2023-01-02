@@ -502,11 +502,15 @@ img.user-img {
   border-radius: 50%;
 }
 
-li.nav-item.business-btn {
+.nav-item.business-btn {
   padding: 2px 20px;
   background: #02547a;
   border-radius: 5px;
   position: relative;
+}
+
+.navbar-collapse {
+  justify-content: space-between;
 }
 .navbar-dark .navbar-nav .nav-link {
   color: #fff !important;
@@ -514,10 +518,10 @@ li.nav-item.business-btn {
 
 .border-divider {
   border-left: 1px #ccc solid;
-  width: 20px;
+  /* width: 20px; */
   height: 30px;
   margin-top: 7px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 }
 
 li.nav-item.dropdown.float-right {
@@ -861,6 +865,7 @@ span.logo-icon {
   position: absolute;
   top: 0;
   text-align: center;
+  position: relative;
 }
 
 .navbar-dark .navbar-brand strong {
@@ -939,7 +944,7 @@ li.sc-ksBlkl.gmgIpm.menu-item {
   margin-right: 5px;
   width: 22px;
 }
-.sc-dkrFOg.fpTHfu.sidebar-inner {
+.sidebar-inner {
   background: #fff !important;
   border-radius: 0px 0px 10px 10px;
 }
@@ -1114,6 +1119,7 @@ input#input-file {
   margin: 10px 0px;
   height: 350px;
   position: relative;
+  width: 100%;
 }
 
 .financial-service h4 {
@@ -1325,9 +1331,10 @@ i.fa.fa-chevron-down {
   padding: 20px;
 }
 
-.navbar-expand-lg .navbar-nav .dropdown-menu {
+/* .navbar-expand-lg .navbar-nav .dropdown-menu {
   position: relative;
-}
+} */
+
 a.nav-link.dropdown-toggle {
   text-align: right;
 }
@@ -1862,8 +1869,8 @@ img.commerce-img {
   background: none !important;
 }
 
-.rdt_TableCell div {
-  white-space: pre-wrap !important;
+.rdt_TableCell div:first-child {
+  white-space: pre-wrap;
 }
 
 table.company_info_table {
@@ -2007,6 +2014,10 @@ button.btn.btn-primary.generate-btn {
 }
 button.btn.btn-primary.generate-btn:hover {
   background: #07547a;
+}
+.navbar {
+  padding: 0;
+  height: 100%;
 }
 
 .scroll-bar {
@@ -2354,9 +2365,9 @@ input.chkbalance {
     float: left;
   }
 
-  .navbar-dark .navbar-toggler {
+  /* .navbar-dark .navbar-toggler {
     display: none;
-  }
+  } */
 
   div#navbarScroll {
     display: block;
@@ -2493,6 +2504,22 @@ input.chkbalance {
   display: flex;
   width: 180px;
   justify-content: flex-end;
+  color: #ffffff;
+}
+.navbar-nav .dropdown-menu {
+  right: 0;
+}
+
+#responsive-navbar-nav {
+  background-color: #006090;
+}
+
+.dropdown-nav ul {
+  margin-bottom: unset;
+}
+
+.dropdown-nav ul a {
+  padding: 5px 7px;
 }
 
 .profile-pic {
@@ -2511,13 +2538,6 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 650px;
 }
 
-.border-divider {
-  border-left: 0px #ccc solid;
-  width: 0;
-  height: 30px;
-  margin-top: 7px;
-  margin-left: 10px;
-}
 div#RFS-StepperContainer {
   overflow: auto;
   padding: 100px 0px 20px 0px !important;
@@ -2555,13 +2575,7 @@ div#RFS-StepContainer {
 .StepperContainer-0-2-1 {
   padding-top: 80px !important;
 }
-.border-divider {
-  border-left: 0px #ccc solid;
-  width: 0;
-  height: 30px;
-  margin-top: 7px;
-  margin-left: 10px;
-}
+
 div#RFS-StepperContainer {
   overflow: auto;
   padding: 100px 0px 20px 0px !important;
@@ -2602,20 +2616,13 @@ button#RFS-StepButton {
 .StepperContainer-0-2-1 {
   padding-top: 80px !important;
 }
-.border-divider {
-  border-left: 0px #ccc solid;
-  width: 0;
-  height: 30px;
-  margin-top: 7px;
-  margin-left: 10px;
-}
 
 .company-name {
   white-space: nowrap;
   width: 85%;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-left: 50px;
+  /* margin-left: 50px; */
 }
 
 .file-name {
@@ -2681,10 +2688,14 @@ button#RFS-StepButton {
   max-width: var(--content-with-sidebar-max-width);
   margin: 0 auto;
 }
+.dropdown-toggle {
+  cursor: pointer;
+}
 :root {
   --modal-border-radius: 10px;
   --header-height: 96px;
-  --content-min-width: 1100px;
+  --width: 96px;
+  --content-min-width: calc(var(--sidebar-width) - 100vw);
   --content-max-width: 1216px;
   --sidebar-width: 238px;
   --sidebar-margin-right: 2rem;
@@ -2743,26 +2754,168 @@ button#RFS-StepButton {
     font-size: 12px;
   }
 }
+
+@media (max-width: 992px) {
+  /* .navbar {
+    padding: 0.5rem 1rem;
+    height: 100%;
+  } */
+
+  /* .border-divider{
+    display: ;
+  } */
+}
+
 .mySelect__value-container {
   height: 43px;
 }
 
-.sidebar-panel .sub-menu a:first-child {
-  padding: 0px 10px 0px 15px !important;
+.sidebar-panel .sub-menu a.menu-anchor {
+  padding-right: 20px;
+  padding-left: 15px !important;
+  margin-bottom: 5px;
+  /* background-color: unset !important; */
 }
 
 .sidebar-panel .sub-menu .ejzYLa {
   background-color: unset !important;
+  padding-right: 0 !important;
 }
 
-.sidebar-panel .sub-menu .eVPmrC:hover {
+.view-files table th,
+.upload-files table th {
+  border-bottom-width: 1px !important ;
+}
+.sidebar-panel .submenu-item .menu-anchor:hover {
+  background-color: #e2eff4 !important;
+}
+#root
+  > div
+  > div.dashboard-panel
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > aside
+  > div
+  > nav
+  > ul
+  > li.sub-menu.menu-item.open.submenu-item
+  > div
+  > ul
+  > li:nth-child(1)
+  > a:hover,
+#root
+  > div
+  > div.dashboard-panel
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > aside
+  > div
+  > nav
+  > ul
+  > li.sub-menu.menu-item.open.submenu-item
+  > div
+  > ul
+  > li:nth-child(2)
+  > a:hover {
   background-color: unset !important;
 }
 
-.sidebar-panel .sub-menu .lkTtqM:hover {
-  background-color: #e2eff4 !important;
+#root
+  > div
+  > div.dashboard-panel
+  > div
+  > div
+  > div
+  > div:nth-child(1)
+  > div
+  > aside
+  > div
+  > nav
+  > ul
+  > li.sub-menu.menu-item.open.submenu-item
+  > div
+  > ul
+  > li.menu-item.active.submenu
+  > a {
+  background-color: unset !important;
+}
+
+.sub-menu-content {
+  background-color: transparent !important;
+}
+
+.expand-icon span {
+  height: 10px;
+  width: 10px;
+}
+
+.sidebar-panel .sub-menu {
+  margin-top: 5px;
 }
 
 .sidebar-panel .sub-menu .menu-icon {
   margin-right: 0 !important;
+}
+
+.sidebar-panel .sub-menu .menu-label a {
+  margin-left: 35px !important;
+}
+
+.view-files th {
+  position: sticky;
+}
+
+.sidebar-panel .eVPmrC {
+  padding-right: 0 !important;
+}
+
+.file-icon,
+.empty-text {
+  color: lightgray;
+}
+
+.file-icon {
+  font-size: 25px;
+}
+.empty-text {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.sidebar-panel .sub-menu-content {
+  background-color: rgba(249, 249, 249, 0.7);
+}
+
+.text-disabled,
+.text-disabled > strong {
+  color: #b3afaf;
+  font-weight: unset;
+}
+
+.text-gray {
+  color: #687473;
+}
+
+.Accounting-left-panel {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .upload-doc-panel:before {
+    background-color: unset;
+  }
+}
+
+.ellipsis-text {
+  white-space: nowrap !important;
+  width: 85% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }

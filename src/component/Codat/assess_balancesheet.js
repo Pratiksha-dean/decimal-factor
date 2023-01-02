@@ -39,11 +39,11 @@ export default function AssessBalanceSheet(props) {
             name: name,
             data: resourceData[element.alt],
           })
-          
+
         }
     });
     setDataSeries(seriesData);
-    
+
   }
 
 const handleClassClick = () => {
@@ -219,92 +219,136 @@ const handleClassClick = () => {
   };
 
       return (
-          <div className="chart-panel">
-              <div className="col-md-12">
-              <h3>Balance Sheet</h3>
-              <div className="row">
-
+        <div className="chart-panel">
+          <div className="col-md-12">
+            <h3>Balance Sheet</h3>
+            <div className="row">
               <div className="col-md-3">
                 <div className=" col-for-logo">
-                <img src={require("../../images/gbp.png")} alt="" className="logo-dashboard" />
+                  <img
+                    src={require("../../images/gbp.png")}
+                    alt=""
+                    className="logo-dashboard"
+                  />
 
-                <h3><strong>GBP</strong>
-                <span>Great British Pound</span></h3>
-                </div></div>
-                {
-                    statementRatiosLoading && (
-                        <div className="position-relative">
-                            <Loaderspinner size="45px" />
-                        </div>
-                    )
-                }
-                <div className="col-md-3 ">
+                  <h3>
+                    <strong>GBP</strong>
+                    <span>Great British Pound</span>
+                  </h3>
+                </div>
+              </div>
+              {statementRatiosLoading && (
+                <div className="position-relative">
+                  <Loaderspinner size="45px" />
+                </div>
+              )}
+              <div className="col-md-3 ">
                 <div className="box-shape">
-                <label>Period Start</label>
-                <input type="month" value={periodStart} className="period-start" onChange={(e)=>{
-                        setPeriodStart(e.target.value);
-                       getBalanceSheetData(periodLength, periodCompare, e.target.value);
-                }}/>
-                </div></div>
-                <div className="col-md-3 ">
-                    <div className="box-shape">
-                <label>Period Length</label>
-                <select value={periodLength} onChange={(e)=>{
-                        setPeriodLength(e.target.value);
-                       getBalanceSheetData(e.target.value, periodCompare, periodStart);
-                }}>
-                <option value="1">1 Month</option>
+                  <label>Period Start</label>
+                  <input
+                    type="month"
+                    value={periodStart}
+                    className="period-start"
+                    onChange={(e) => {
+                      setPeriodStart(e.target.value);
+                      getBalanceSheetData(
+                        periodLength,
+                        periodCompare,
+                        e.target.value
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="col-md-3 ">
+                <div className="box-shape">
+                  <label>Period Length</label>
+                  <select
+                    value={periodLength}
+                    onChange={(e) => {
+                      setPeriodLength(e.target.value);
+                      getBalanceSheetData(
+                        e.target.value,
+                        periodCompare,
+                        periodStart
+                      );
+                    }}
+                  >
+                    <option value="1">1 Month</option>
                     <option value="2">2 Months</option>
                     <option value="3">3 Months</option>
                     <option value="4">4 Months</option>
                     <option value="5">5 Months</option>
-                </select>
-                </div></div>
-                <div className="col-md-3 ">
-                    <div class="box-shape">
-                    <label>Period to Compare</label>
-                    <input type="number" className="period-compare" value={periodCompare} onChange={(e)=>{
-                    setPeriodCompare(e.target.value); getBalanceSheetData(periodLength,e.target.value,periodStart); }} name="" />
-
-                </div></div>
+                  </select>
                 </div>
-                {
-                    showStatementRatios && (
-                <div className="chart-div">
-                {statementData !== '' && <Chart categories={dataCategoreis} series={dataSeries} />}
-
-                        <>
-                            <div className="table-data-div">
-                                <div className="col s12"  id="">
-                                    <div className="">
-                                        <h3 className="groupbydebtor">Statement</h3>
-                                        <div className=" scroll-bar scroll-bar-2">
-                                        <table id="assess-profitloss-table" className="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
-                                        {statementData}
-
-                                        </table>
-                                    </div></div>
-                                </div>
-                            </div>
-                            <div className="table-data-div">
-                                <div className="col s12"  id="">
-                        <div className="">
-                            <h3 className="groupbydebtor">Ratios</h3>
-                            <div className=" scroll-bar scroll-bar-2">
-                            <table id="assess-profitloss-table" class="table table-striped table-bordered" cellspacing="0" width="100%" border="0">
-                            {ratioData}
-
-                            </table>
-                        </div></div>
-                                </div>
-                            </div>
-                        </>
-
               </div>
-                    )
-            }
-        </div>
-        </div>
+              <div className="col-md-3 ">
+                <div className="box-shape">
+                  <label>Period to Compare</label>
+                  <input
+                    type="number"
+                    className="period-compare"
+                    value={periodCompare}
+                    onChange={(e) => {
+                      setPeriodCompare(e.target.value);
+                      getBalanceSheetData(
+                        periodLength,
+                        e.target.value,
+                        periodStart
+                      );
+                    }}
+                    name=""
+                  />
+                </div>
+              </div>
+            </div>
+            {showStatementRatios && (
+              <div className="chart-div">
+                {statementData !== "" && (
+                  <Chart categories={dataCategoreis} series={dataSeries} />
+                )}
 
-    );
+                <>
+                  <div className="table-data-div">
+                    <div className="col s12" id="">
+                      <div className="">
+                        <h3 className="groupbydebtor">Statement</h3>
+                        <div className=" scroll-bar scroll-bar-2">
+                          <table
+                            id="assess-profitloss-table"
+                            className="table table-striped table-bordered"
+                            cellspacing="0"
+                            width="100%"
+                            border="0"
+                          >
+                            {statementData}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="table-data-div">
+                    <div className="col s12" id="">
+                      <div className="">
+                        <h3 className="groupbydebtor">Ratios</h3>
+                        <div className=" scroll-bar scroll-bar-2">
+                          <table
+                            id="assess-profitloss-table"
+                            className="table table-striped table-bordered"
+                            cellspacing="0"
+                            width="100%"
+                            border="0"
+                          >
+                            {ratioData}
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              </div>
+            )}
+          </div>
+        </div>
+      );
 }

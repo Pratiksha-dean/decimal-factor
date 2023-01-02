@@ -20,6 +20,7 @@ import {
   setDashboardStepNo,
   setReviewAppData,
 } from "../dashboard";
+import { formatNumberInput, numberRegex, removeComma } from "../../Constants";
 
 function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
   const storedData = getReviewAppData();
@@ -112,11 +113,24 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                           }
                         )}
                         name={fieldNames.AMOUNT}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            if (numberRegex.test(removeComma(e.target.value))) {
+                              setFieldValue(fieldNames.AMOUNT, e.target.value);
+                            } else {
+                              setFieldValue(
+                                fieldNames.AMOUNT,
+                                values[fieldNames.AMOUNT]
+                              );
+                            }
+                          } else {
+                            setFieldValue(fieldNames.AMOUNT, "");
+                          }
+                        }}
+                        value={formatNumberInput(values[fieldNames.AMOUNT])}
                         onBlur={(e) => {
                           setReviewAppData(values);
                         }}
-                        value={values[fieldNames.AMOUNT]}
                       />
                     </div>
                   </div>
@@ -162,11 +176,27 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                       type="text"
                       placeholder="12"
                       name={fieldNames.REQUIREDFUND}
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          if (numberRegex.test(removeComma(e.target.value))) {
+                            setFieldValue(
+                              fieldNames.REQUIREDFUND,
+                              e.target.value
+                            );
+                          } else {
+                            setFieldValue(
+                              fieldNames.REQUIREDFUND,
+                              values[fieldNames.REQUIREDFUND]
+                            );
+                          }
+                        } else {
+                          setFieldValue(fieldNames.REQUIREDFUND, "");
+                        }
+                      }}
+                      value={formatNumberInput(values[fieldNames.REQUIREDFUND])}
                       onBlur={(e) => {
                         setReviewAppData(values);
                       }}
-                      value={values[fieldNames.REQUIREDFUND]}
                       className={clsx(
                         "form-control ",
                         {
@@ -271,7 +301,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                       }}
                     /> */}
 
-                   {checkCompanyType(values[fieldNames.BUSINESSENTITY]) ? (
+                    {checkCompanyType(values[fieldNames.BUSINESSENTITY]) ? (
                       <AsyncSelect
                         closeMenuOnSelect={true}
                         value={{ label: values[fieldNames.BUSINESSNAME] }}
@@ -331,8 +361,7 @@ function ReviewApplicationInformation({ data, setActiveStep, activeStep }) {
                           }
                         )}
                       />
-                    )} 
-
+                    )}
                   </div>
                 </div>
               </div>

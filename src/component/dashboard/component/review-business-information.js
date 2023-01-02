@@ -14,7 +14,13 @@ import { setDashboardStepNo } from "../dashboard";
 import { useEffect } from "react";
 import { getDirectorList } from "../../../request";
 import { useState } from "react";
-import { directorFieldNames, residentialStatusList } from "../../Constants";
+import {
+  directorFieldNames,
+  formatNumberInput,
+  numberRegex,
+  removeComma,
+  residentialStatusList,
+} from "../../Constants";
 import { ToastMessage } from "../../ToastMessage";
 import moment from "moment";
 
@@ -111,7 +117,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
   const today = new Date();
 
   const validationSchema = Yup.object().shape({
-    [fieldNames.CARDPAYMENTAMOUNT]: Yup.number().required(),
+    [fieldNames.CARDPAYMENTAMOUNT]: Yup.string().required(),
     [fieldNames.BUSINESSSTARTDATE]: Yup.string().required(),
     [fieldNames.SUPPLIERDUEAMOUNT]: Yup.string().required(),
     [fieldNames.BUSINESSSECTOR]: Yup.string().required(),
@@ -255,7 +261,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                   ? item["date_of_birth"]["day"]
                   : 1;
             }
-    
+
             delete item["address"];
             delete item["appointed_on"];
             delete item["links"];
@@ -461,11 +467,29 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                               !errors[fieldNames.CARDPAYMENTAMOUNT],
                           }
                         )}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            if (numberRegex.test(removeComma(e.target.value))) {
+                              setFieldValue(
+                                fieldNames.CARDPAYMENTAMOUNT,
+                                e.target.value
+                              );
+                            } else {
+                              setFieldValue(
+                                fieldNames.CARDPAYMENTAMOUNT,
+                                values[fieldNames.CARDPAYMENTAMOUNT]
+                              );
+                            }
+                          } else {
+                            setFieldValue(fieldNames.CARDPAYMENTAMOUNT, "");
+                          }
+                        }}
+                        value={formatNumberInput(
+                          values[fieldNames.CARDPAYMENTAMOUNT]
+                        )}
                         onBlur={() => {
                           setReviewBusinessData(values);
                         }}
-                        value={values[fieldNames.CARDPAYMENTAMOUNT]}
                       />
                     </div>
                   </div>
@@ -498,11 +522,29 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                           }
                         )}
                         min="0"
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            if (numberRegex.test(removeComma(e.target.value))) {
+                              setFieldValue(
+                                fieldNames.SUPPLIERDUEAMOUNT,
+                                e.target.value
+                              );
+                            } else {
+                              setFieldValue(
+                                fieldNames.SUPPLIERDUEAMOUNT,
+                                values[fieldNames.SUPPLIERDUEAMOUNT]
+                              );
+                            }
+                          } else {
+                            setFieldValue(fieldNames.SUPPLIERDUEAMOUNT, "");
+                          }
+                        }}
+                        value={formatNumberInput(
+                          values[fieldNames.SUPPLIERDUEAMOUNT]
+                        )}
                         onBlur={() => {
                           setReviewBusinessData(values);
                         }}
-                        value={values[fieldNames.SUPPLIERDUEAMOUNT]}
                       />
                     </div>
                   </div>
@@ -738,13 +780,41 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                             <input
                                               type="text"
                                               name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`}
-                                              onChange={handleChange}
-                                              value={
+                                              onChange={(e) => {
+                                                if (e.target.value) {
+                                                  if (
+                                                    numberRegex.test(
+                                                      removeComma(
+                                                        e.target.value
+                                                      )
+                                                    )
+                                                  ) {
+                                                    setFieldValue(
+                                                      `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`,
+                                                      e.target.value
+                                                    );
+                                                  } else {
+                                                    setFieldValue(
+                                                      `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`,
+                                                      item[
+                                                        directorFieldNames
+                                                          .KINDOFSHAREHOLDER
+                                                      ]
+                                                    );
+                                                  }
+                                                } else {
+                                                  setFieldValue(
+                                                    `${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.KINDOFSHAREHOLDER}`,
+                                                    ""
+                                                  );
+                                                }
+                                              }}
+                                              value={formatNumberInput(
                                                 item[
                                                   directorFieldNames
                                                     .KINDOFSHAREHOLDER
                                                 ]
-                                              }
+                                              )}
                                               className="form-control"
                                               placeholder="% of Total Share Count"
                                               onBlur={() => {
@@ -910,7 +980,7 @@ function ReviewBusinessInformation({ data, setActiveStep, activeStep }) {
                                             <label>Choose Address</label>
 
                                             <select
-                                              class="form-select form-control"
+                                              className="form-select form-control"
                                               aria-label="Default select example"
                                               name={`${fieldNames.DIRECTORINFO}.${index}.${directorFieldNames.CHOOSEADDRESS}`}
                                               onChange={handleChange}

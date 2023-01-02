@@ -10,6 +10,7 @@ import { setStepNo } from "./request-leftpanel";
 import { setBusinessInfo, setCompanyInfo } from "./business-information";
 import { NavLink } from "react-router-dom";
 import { SEARCH_COMPANY_URL } from "../../../request";
+import { formatNumberInput, numberRegex, removeComma } from "../../Constants";
 
 export const fieldNames = {
   AMOUNT: "amount",
@@ -125,7 +126,7 @@ export const businessEntityList = [
 ];
 
 export const validationSchema = Yup.object().shape({
-  [fieldNames.AMOUNT]: Yup.number().required(),
+  [fieldNames.AMOUNT]: Yup.string().required(),
   [fieldNames.REQUIREDFUND]: Yup.string().required(),
   [fieldNames.LOANPURPOSE]: Yup.string().required(),
   [fieldNames.BUSINESSENTITY]: Yup.string().required(),
@@ -234,9 +235,8 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                   </span>
                 </div>
                 <input
-                  type="number"
+                  type="text"
                   placeholder="Enter amount"
-                  min={0}
                   className={clsx(
                     "form-control ",
                     {
@@ -250,11 +250,25 @@ function ApplicationInformation({ setStep, showSelectedState }) {
                     }
                   )}
                   name={fieldNames.AMOUNT}
-                  onChange={handleChange}
+                  onChange={(e) => {
+      
+                    if (e.target.value) {
+                      if (numberRegex.test(removeComma(e.target.value))) {
+                        setFieldValue(fieldNames.AMOUNT, e.target.value);
+                      } else {
+                        setFieldValue(
+                          fieldNames.AMOUNT,
+                          values[fieldNames.AMOUNT]
+                        );
+                      }
+                    } else {
+                      setFieldValue(fieldNames.AMOUNT, "");
+                    }
+                  }}
                   onBlur={(e) => {
                     setApplicationInfo(values);
                   }}
-                  value={values[fieldNames.AMOUNT]}
+                  value={formatNumberInput(values[fieldNames.AMOUNT])}
                 />
               </div>
               {/* <span className="dollor-col">
@@ -295,15 +309,28 @@ function ApplicationInformation({ setStep, showSelectedState }) {
             <div className="form-group">
               <label>Term of Funds Required (Months)</label>
               <input
-                type="number"
+                type="text"
                 placeholder="12"
                 min={0}
                 name={fieldNames.REQUIREDFUND}
-                onChange={handleChange}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    if (numberRegex.test(removeComma(e.target.value))) {
+                      setFieldValue(fieldNames.REQUIREDFUND, e.target.value);
+                    } else {
+                      setFieldValue(
+                        fieldNames.REQUIREDFUND,
+                        values[fieldNames.REQUIREDFUND]
+                      );
+                    }
+                  } else {
+                    setFieldValue(fieldNames.REQUIREDFUND, "");
+                  }
+                }}
                 onBlur={(e) => {
                   setApplicationInfo(values);
                 }}
-                value={values[fieldNames.REQUIREDFUND]}
+                value={formatNumberInput(values[fieldNames.REQUIREDFUND])}
                 className={clsx(
                   "form-control ",
                   {

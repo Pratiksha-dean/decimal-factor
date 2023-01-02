@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Alert } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { ToastMessage } from "../../ToastMessage";
-import { directorFieldNames } from "../../Constants";
+import { directorFieldNames, removeComma } from "../../Constants";
 
 export const removeData = () => {
   localStorage.removeItem("personalInfo");
@@ -37,7 +37,8 @@ export const generateDirectorListPayload = (data) => {
         year = splitDate[0];
       }
       return {
-        kindofShareHolder: item[directorFieldNames.KINDOFSHAREHOLDER] || "",
+        kindofShareHolder:
+          removeComma(item[directorFieldNames.KINDOFSHAREHOLDER]) || "",
         HiddenShareHolderId: item[directorFieldNames.HIDDENSHAREHOLDERID] || "",
         natures_of_control: item[directorFieldNames.NATUREOFCONTROL] || "",
         fullName: item[directorFieldNames.FIRSTNAME],
@@ -174,13 +175,25 @@ function PersonalDetails({ setStep, showSelectedState }) {
           payload["businessName"] = applicationInfo["businessName"];
           payload["businessEntity"] = payload["businessEntity"].value;
           payload["loanPurpose"] = payload["loanPurpose"].value;
+          payload[fieldNames.AMOUNT] = removeComma(payload[fieldNames.AMOUNT]);
+          payload[fieldNames.REQUIREDFUND] = removeComma(
+            payload[fieldNames.REQUIREDFUND]
+          );
 
           if (!payload["isPaymentPending"]) {
             payload["cardPaymentAmount"] = 0;
+          } else {
+            payload["cardPaymentAmount"] = removeComma(
+              payload["cardPaymentAmount"]
+            );
           }
 
           if (!payload["isPaymentProcessed"]) {
             payload["supplierDueAmount"] = 0;
+          } else {
+            payload["supplierDueAmount"] = removeComma(
+              payload["supplierDueAmount"]
+            );
           }
 
           createAccount(payload)
